@@ -1,0 +1,10 @@
+Qvelt
+Copyright 2026 Qvelt contributors.
+
+Original Qvelt code and documentation are licensed under Apache-2.0.
+Third-party agent skills, references, fonts and assets under .agents/skills/
+retain their own licenses and notices, recorded in docs/development/skills.lock.json.
+Project-authored test corpus files retain the permission notice in
+ tests/fixtures/tokenizer/PERMISSION.txt.
+This project does not redistribute pretrained model weights or approved external
+training corpora. The code license does not grant rights to unrelated datasets.

@@ -83,3 +83,15 @@ they do not establish external rights, a trustworthy historical training claim
 or representative compression/math performance. A manifest-less partial output
 is uncommitted; recovery must not silently overwrite it. M3.2 still needs data
 approval, cross-source dedup/split/decontamination and deterministic shard replay.
+
+## Expanded engineering foundation
+
+Portable model numerical/gradient references and synthetic same-topology CPU
+training/replay now have actual tests, including DDP and CPU DTensor/DCP shards.
+These do not establish GPU/NCCL/FSDP2/multi-node/shared-store correctness or
+large-model memory/throughput. The server recipe assumes Ubuntu24.04 and explicitly
+labels Slurm resources; the user's hardware has not been profiled. Optimizer/DCP
+inputs are trusted project checkpoints; checksums alone do not authenticate them.
+Numeric fixture descriptor hashes are not real BPE/corpus manifests. Optional
+backends are tested for local outputs, not full stochastic-model restart parity.
+Synthetic training does not close corpus contamination, quality or reasoning risks.

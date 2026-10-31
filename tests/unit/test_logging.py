@@ -10,7 +10,7 @@ from datetime import datetime
 
 import pytest
 
-from qvelt.logging import JsonFormatter, configure_logging
+from qvelt.utils.logging import JsonFormatter, configure_logging
 
 
 @pytest.fixture(autouse=True)

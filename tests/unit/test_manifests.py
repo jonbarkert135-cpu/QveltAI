@@ -8,13 +8,13 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from qvelt.manifest_types import (
+from qvelt.utils.manifest_types import (
     MAX_MANIFEST_BYTES,
     ArtifactFile,
     Manifest,
     ManifestError,
 )
-from qvelt.manifests import manifest_bytes, manifest_digest, parse_manifest
+from qvelt.utils.manifests import manifest_bytes, manifest_digest, parse_manifest
 
 
 @pytest.mark.parametrize("index", range(5))

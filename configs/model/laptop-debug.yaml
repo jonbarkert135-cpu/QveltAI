@@ -1,0 +1,10 @@
+schema_version: 1
+name: laptop-debug
+# Same ~20M dimensions as tiny, shorter context. No model is allocated by the CLI.
+model:
+  context: 128
+runtime:
+  seed: 20261031
+  device: cuda
+  precision: bf16
+  deterministic: true

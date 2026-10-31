@@ -2,7 +2,8 @@
 
 Date: 2026-10-31. Owner: Lead agent. **Proposal, not ingestion approval.**
 Intended planning use: train from scratch and potentially release a commercially
-usable model/framework; the project license is not selected. No raw corpus,
+usable model/framework. The code license was later set to Apache-2.0; this
+research snapshot does not approve dataset licenses. No raw corpus,
 teacher weights, or training split was downloaded. Only publisher cards/metadata
 and research papers were inspected. Sizes below are publisher numbers in their
 own units/tokenizers, not measurements with the untrained Qvelt tokenizer.

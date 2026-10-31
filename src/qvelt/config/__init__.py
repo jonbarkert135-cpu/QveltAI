@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import math
 import re
-from collections.abc import Hashable
+from collections.abc import Hashable, Sequence
 from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 from typing import Literal, cast
@@ -330,14 +331,19 @@ def parse_config(text: str) -> ExperimentConfig:
     )
 
 
-def load_config(path: str | Path) -> ExperimentConfig:
+def load_config(path: str | Path, overrides: Sequence[str] = ()) -> ExperimentConfig:
     """Read at most the size limit before parsing a UTF-8 configuration file."""
     with Path(path).open("rb") as stream:
         data = stream.read(MAX_CONFIG_BYTES + 1)
     if len(data) > MAX_CONFIG_BYTES:
         raise ConfigError("Config exceeds the 128 KiB size limit")
     try:
-        return parse_config(data.decode("utf-8-sig"))
+        config = parse_config(data.decode("utf-8-sig"))
+        return (
+            parse_config(yaml.safe_dump(apply_overrides(asdict(config), overrides)))
+            if overrides
+            else config
+        )
     except UnicodeError as error:
         raise ConfigError("Config must be valid UTF-8") from error
 
@@ -357,3 +363,30 @@ def config_digest(config: ExperimentConfig) -> str:
         ensure_ascii=False,
     )
     return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
+def apply_overrides(
+    values: dict[str, object], overrides: Sequence[str]
+) -> dict[str, object]:
+    """Copy resolved scalar leaves, then let the owning schema revalidate them."""
+    resolved = copy.deepcopy(values)
+    seen: set[str] = set()
+    for override in overrides:
+        name, separator, value = override.partition("=")
+        if not separator or name in seen:
+            raise ConfigError("Overrides require unique path=value assignments")
+        seen.add(name)
+        parts = name.split(".")
+        node = resolved
+        for part in parts[:-1]:
+            child = node.get(part)
+            if not isinstance(child, dict):
+                raise ConfigError("Unknown override path")
+            node = child
+        if parts[-1] not in node or isinstance(node[parts[-1]], dict):
+            raise ConfigError("Only known scalar override leaves are supported")
+        parsed = parse_yaml_mapping("value: " + value)
+        if set(parsed) != {"value"}:
+            raise ConfigError("An override must contain exactly one scalar value")
+        node[parts[-1]] = parsed["value"]
+    return resolved

@@ -15,8 +15,16 @@ from typing import BinaryIO
 
 import pytest
 
-from qvelt.artifacts import ArtifactIntegrityError, ArtifactStore, hash_file
-from qvelt.manifest_types import (
+from qvelt.tokenizer.core import TokenizerError, TokenizerSettings
+from qvelt.tokenizer.recipe import TokenizerRecipe, load_tokenizer_recipe
+from qvelt.tokenizer.workflow import (
+    evaluate_tokenizer,
+    iter_documents,
+    load_tokenizer_bundle,
+    train_tokenizer_bundle,
+)
+from qvelt.utils.artifacts import ArtifactIntegrityError, ArtifactStore, hash_file
+from qvelt.utils.manifest_types import (
     ArtifactFile,
     DataInfo,
     Manifest,
@@ -24,17 +32,9 @@ from qvelt.manifest_types import (
     SourceIdentity,
     TokenizerInfo,
 )
-from qvelt.manifests import manifest_bytes, manifest_digest, parse_manifest
-from qvelt.tokenization import TokenizerError, TokenizerSettings
-from qvelt.tokenizer_recipe import TokenizerRecipe, load_tokenizer_recipe
-from qvelt.tokenizer_workflow import (
-    evaluate_tokenizer,
-    iter_documents,
-    load_tokenizer_bundle,
-    train_tokenizer_bundle,
-)
+from qvelt.utils.manifests import manifest_bytes, manifest_digest, parse_manifest
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "tests/fixtures/tokenizer"
 RECIPE = load_tokenizer_recipe(ROOT / "configs/tokenizer_smoke.yaml")
 HELDOUT_ID = manifest_digest(
@@ -246,7 +246,7 @@ def test_provenance_links_checked(bundle: Path) -> None:
 
 
 def test_exact_reference_metrics(tmp_path: Path) -> None:
-    from qvelt.tokenization import train_tokenizer
+    from qvelt.tokenizer.core import train_tokenizer
 
     path, identity = corpus(
         tmp_path,
@@ -343,7 +343,7 @@ def test_empty_corpus_cannot_publish(tmp_path: Path) -> None:
 
 
 def test_record_size_limit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import qvelt.tokenizer_workflow as workflow
+    import qvelt.tokenizer.workflow as workflow
 
     path, identity = corpus(tmp_path, {"data.jsonl": b'{"text":"long value"}\n'}, 1)
     monkeypatch.setattr(workflow, "MAX_JSONL_BYTES", 12)
@@ -402,7 +402,7 @@ def test_recorded_tokenizer_semantics_checked(bundle: Path) -> None:
 
 
 def test_empty_evaluation_denominator(tmp_path: Path) -> None:
-    from qvelt.tokenization import train_tokenizer
+    from qvelt.tokenizer.core import train_tokenizer
 
     path, identity = corpus(tmp_path, {"empty.jsonl": b""}, 0)
     metrics = evaluate_tokenizer(train_tokenizer(["x"]), path, identity)

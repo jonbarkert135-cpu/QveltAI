@@ -565,3 +565,118 @@ for this session; future publication can follow the next user instruction.
   S13/S43/S44; no additional empirical claim imported from a skill.
 - **Revisit:** approved representative corpora, frozen model/data vocabulary,
   hardware/library changes or measurements supporting a different digit policy.
+
+## ADR-0024 — Complete the expanded foundation without replaying M3.1
+
+- **Date/status:** 2026-10-31; implemented; clean-checkout/current-CI gates pending.
+- **Context/options:** the user explicitly requested the detailed Phase2 scaffold
+  after M3.1; either repeat existing work, provide fake smoke functions, or extend
+  the foundation with the real numerical/training path needed for100 updates.
+- **Choice:** primary config/tokenizer/data/model/train/utils packages; scope-only
+  README files in future posttrain/eval/inference directories. Preserve existing
+  public imports with compatibility exports, flat config paths with internal
+  symlinks; canonical model presets live in configs/model. Tests split into unit
+  and integration. Scripts are thin entry points; Make/CI/hooks share locked tools.
+  A training-job dataclass embeds the unchanged experiment schema; shared strict
+  leaf overrides revalidate before hashing. No implicit schema1 digest migration.
+- **Rationale:** preserve tested interfaces and original manifest identities,
+  fulfill the new request and avoid claiming a real-data trainer exists. Advance
+  the RFC decoder and synthetic slice of M4/M5 explicitly; M3.2 and other gates
+  remain open. Linux symlink behavior is tested, native Windows layout is not.
+- **Sources:** [verified] user Phase2 specification, existing RFC-001/training RFC,
+  installed uv0.12.23/Hatchling1.27/PyYAML6.0.3 APIs, Python dataclasses/pathlib and
+  actual import/config/parity tests. Designs: foundation_design.md and ADR-0015.
+- **Revisit:** supported platform/package layout or schema changes, real-data needs.
+
+## ADR-0025 — Implement the RFC decoder and a bounded real synthetic trainer
+
+- **Date/status:** 2026-10-31; CPU implemented/numerically tested; GPU unvalidated.
+- **Options:** mock loss/steps; an unrelated toy network; a small config of the
+  actual selected decoder with independent numerical oracles.
+- **Choice:** original pre-RMSNorm, interleaved RoPE, full causal GQA, SwiGLU,
+  tied E and bias-free projections, FP32 norm/attention/loss accumulation. Explicit
+  document/padding masks avoid all-masked attention rows. Meta model counts for
+  all four tiers; real tiny CPU forward/backward. Smoke override117056 parameters,
+  B2/T32,100 AdamW updates. Stateless cyclic numeric-symbol documents define
+  sample IDs/next-token shifts; no text tokenizer or benchmark quality claim.
+  DDP uses world/global-target normalization; clip global L2 at1 after reduction.
+  Functional RFC WSD uses valid targets with fixed synthetic windows whose warmup/
+  tail boundaries align exactly; no variable-mask/accumulation promise yet.
+- **Sources:** [verified] *Root Mean Square Layer Normalization* (2019), *RoFormer*
+  (2021), *GLU Variants Improve Transformer* (2020), *GQA* (2023), tied embeddings
+  (survey S12) and *Language Models are Unsupervised Multitask Learners* (2019),
+  verified in the Phase1 survey/RFC. [verified] installed PyTorch2.9.1 Module,
+  autograd, cross_entropy/softmax/AdamW/clip_grad_norm APIs and actual independent
+  value/gradient/causality/document-mask/global-DDP tests. No copied model code.
+- **Revisit:** actual corpus packing, precision/kernel ablations, accumulation,
+  performance/memory, data/evaluation evidence; do not extrapolate fixture loss.
+
+## ADR-0026 — Checkpoint completed updates with explicit replay compatibility
+
+- **Date/status:** 2026-10-31; local CPU/DDP/DCP tested, GPU FSDP2 test provided.
+- **Options:** weights only; overwrite latest; manifest-committed state with
+  typed lineage, software/config/sample/token counters and rank RNG.
+- **Choice:** fresh step directories, fsync/manifest-last checksums; safetensors
+  weights and weights_only optimizer/RNG loading; FSDP2 bottom-up wrapping then
+  optimizer creation, DCP model/optimizer shards. Completed-step saves only.
+  Same resolved job, loaded-source digest, installed environment, Python/Torch/
+  NumPy/device/threads/world-size/precision required for replay. Scheduler is
+  functional, so saved tokens/step plus full job define its exact continuation.
+  Ignore uncommitted directories; corrupt latest fails rather than silently
+  falling back. Clear gradients before DCP optimizer template initialization.
+- **Rationale:** actual state/next-sample replay, not metadata-only M2.2. Synthetic
+  data/tokenizer slots hash saved explicit numeric generator/mapping descriptors;
+  they are not a claim to contain actual BPE/data manifests. Real-data lineage
+  must use those artifacts later. Normalized pip-compatible installed pins avoid
+  capturing direct URLs/editable paths/credentials; uv.lock controls installation.
+  Dirty source is identified by loaded Python bytes as well as observed Git.
+  DCP metadata remains trusted-project pickle; hashes are not signatures or a
+  sandbox for foreign checkpoints. GPU/shared-store/multi-node durability untested.
+- **Sources:** [verified] PyTorch2.9.1 installed fully_shard, DCP save/load and
+  state_dict get/set/StateDictOptions source/docstrings; _init_optim_state source
+  shows stale grads prevent state initialization. Public saver/loader module
+  functions are used because the top-level reexports are not explicit to mypy.
+  [verified] safetensors0.6.2 actual export/load, Python hashlib/IO/fsync protocol
+  (ADR-0018), two CPU ranks/real CPU DTensor shards and restart/RNG/Adam tests.
+- **Revisit:** topology migrations, new releases/devices/precision, hostile inputs,
+  shared/object stores, asynchronous or very-large-model memory constraints.
+
+## ADR-0027 — Local metrics with optional offline adapters and honest MFU
+
+- **Date/status:** 2026-10-31; implemented and actual local outputs tested.
+- **Choice:** typed MetricSink, JSON records per attempt, optional TensorBoard2.19.0
+  and W&B0.19.11 offline-only adapters behind explicit extras. No silent backend
+  fallback or online upload. Valid targets/s uses max step duration across ranks;
+  logging/checkpoint overhead is excluded. Gradient norm is preclip; estimated
+  MFU uses the RFC operation estimate divided by explicitly supplied peak FLOPs,
+  otherwise null. Never invent GPU peak rates/utilization.
+- **Options/rationale:** avoid mandatory SDKs and remote telemetry; per-attempt logs
+  preserve evidence after restart instead of truncating newer logs. Rank0 prints
+  distributed command summaries so concurrent JSON writes cannot interleave.
+- **Sources:** [verified] installed TensorBoard event reader/SummaryWriter and W&B
+  init/log/finish APIs; actual event file and offline .wandb output checks. The
+  SummaryWriter API lacks full type annotations, so its boundary is explicitly
+  cast; first-party interfaces are strict. [verified] RFC FLOP formula/reference
+  arithmetic; actual Gloo/DDP tests. No GPU utilization benchmark was run.
+- **Revisit:** online backend authorization, production logging/throughput profiling,
+  SDK updates, measured peak/capability assumptions or multi-node timing contracts.
+
+## ADR-0028 — Apache-2.0 and an assumed-platform server runbook
+
+- **Date/status:** 2026-10-31; user delegated license choice; Apache default selected.
+- **Context/options:** MIT versus Apache-2.0 for original project code/docs.
+- **Choice/rationale:** Apache-2.0 with explicit patent terms suits the intended
+  open/commercially reusable framework. Retain vendor/fixture notices; code
+  licensing grants no external dataset rights. Add LICENSE/NOTICE/contribution
+  policy and Ubuntu24.04 NVIDIA server instructions without executing driver,
+  scheduler, paid or final-scale jobs. Prefer CUDA12.8 GA driver baseline570.26+
+  over assuming older minor-compat drivers support every required feature.
+- **Sources:** [verified] user response delegating choice, official
+  https://www.apache.org/licenses/LICENSE-2.0.txt , SHA256
+  cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30.
+  [verified] NVIDIA CUDA12.8 GA release notes, driver570.26 / minor-compat525.60.13
+  tables, SHA256345ee17c724fedf831cb7a8cd3b84feb9547915ed835059468f3a07a7fc53cfc;
+  installed torchrun/Gloo/NCCL API declarations. Actual GPU/Slurm/server validation
+  remains [unverified]; runbook resource headers are labeled assumptions.
+- **Revisit:** user licensing direction, contributor/vendor obligations, actual
+  server OS/GPU/cluster topology or CUDA/PyTorch upgrades.

@@ -1,8 +1,8 @@
 # Phase 1 research package
 
 Date: 2026-10-31. Owner: Lead agent. Scope: design and analytical validation,
-not a model implementation or training result. Publication is paused by the
-user's instruction following environment publication; commit locally only.
+not a model implementation or training result. This is the historical Phase1
+snapshot; current implementation/publication status is in STATE.md/AGENTS.md.
 
 ## Design and interfaces
 
@@ -54,6 +54,8 @@ the root `SETUP.md`; these documents do not reapply environment settings.
 
 ## Subsequent implementation status
 
-M2.1 now supplies pinned application/tooling profiles and validated YAML/runtime
-infrastructure; see [development setup](../development/setup.md). The historical
-Phase 1 validation above remains analytical; no model/training has been added.
+The expanded foundation implements the portable RFC decoder and synthetic
+training/checkpoint replay, with parameter-count/numerical tests. M3.1 adds the
+byte-BPE workflow. See [foundation design](../development/foundation_design.md)
+and current STATE/PLAN; real-corpus training and GPU performance remain unverified.
+Historical Phase1 source/data/resource statements are not empirical model results.

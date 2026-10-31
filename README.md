@@ -1,98 +1,108 @@
 # Qvelt
 
-Qvelt is an open, from-scratch language-model framework under development, with
-an emphasis on mathematical reasoning. The roadmap covers tokenization, data,
-pretraining, post-training, evaluation and inference.
+An original language-model framework under development, focused on reproducible
+training and mathematical reasoning. Original code/docs: [Apache-2.0](LICENSE).
+Third-party skills/assets and test data retain their separate notices.
 
-**Current status: M3.1 tokenizer workflow complete; deterministic data preparation is next.**
-The repository includes a typed Python package, strict YAML configuration,
-reproducibility utilities, JSON logging, CPU diagnostics, typed provenance
-manifests, atomic local artifact storage, pinned dependencies and
-[source-audited research RFCs](docs/research/README.md). It includes a tested
-tokenizer API and YAML/CLI artifact workflow, but no
-model, training loop, pretrained weights or benchmark results. No language-model
-training ran.
+The engineering foundation now includes an RFC decoder and **real synthetic
+training**, not a general-purpose pretrained model. The CI smoke uses an explicit
+117,056-parameter dimension override, 100 updates and 6,400 next-token targets.
+The 19.34M/125.85M/493.55M/1.510B family parameter counts are checked on actual
+meta-device models; only the tiny reference has a CPU forward/backward check.
+No reasoning benchmark, real-corpus pretraining or GPU performance is claimed.
 
-The validated configuration targets are 19.34M, 125.85M, 493.55M and 1.510B
-unique model parameters. They are analytical specifications, not trained models.
-Current user hardware is an RTX 3060 Laptop/Core i5/16 GB RAM; server resources
-and laptop VRAM/driver measurements are not supplied. CPU correctness and tiny
-pilots come before larger user-operated training.
+## Quickstart
 
-## Development quickstart
-
-Use Python 3.11–3.13 and uv **0.12.23**. From this checkout:
+Prerequisites: Linux, Git, make and uv **0.12.23**; Python **3.11–3.13**.
+`.python-version` selects3.12.14; use UV_PYTHON to choose another tested interpreter.
+From a clean checkout:
 
 ```bash
-uv sync --frozen --extra cpu
-uv run --frozen --extra cpu qvelt config validate configs/tiny.yaml
-uv run --frozen --extra cpu qvelt config resolve configs/tiny.yaml
-uv run --frozen --extra cpu qvelt doctor --device cpu
-uv run --frozen --extra cpu pytest -q
-uv run --frozen --extra cpu ruff check .
-uv run --frozen --extra cpu ruff format --check .
-uv run --frozen --extra cpu mypy
+make setup
+make lint
+make typecheck
+make test
+make smoke
 ```
 
-The config commands resolve defaults and verify types/shapes without allocating
-a model. Doctor performs a small real tensor operation, not a training benchmark.
-The full 315-test suite passed on Linux/Python 3.11.14, 3.12.14 and 3.13.5. The checked-in
-GitHub CI workflow includes tokenizer smoke; remote status was not inspected.
+`make test` includes numerical references, actual tiny-model forward/backward,
+checkpoint/RNG replay and two CPU ranks. GPU tests are deselected; optional
+TensorBoard/W&B tests skip if their extras are absent. `make smoke` executes
+100 real AdamW updates, then stop 37/resume 100, comparing weights and Adam states.
+Outputs use a new temporary directory, printed with its actual metrics.
 
-For a CUDA environment use `uv sync --frozen --extra cuda` **instead of** `cpu`.
-This selects the matching PyTorch 2.9.1 CUDA 12.8 wheels. CUDA/Windows/laptop
-execution is not validated here; see [development setup](docs/development/setup.md)
-for driver checks, deterministic mode and limitations. Core config tools also
-work with `uv sync --frozen --no-dev` and no PyTorch extra.
+For CUDA setup use `make PROFILE=cuda setup` and the
+[server runbook](runbooks/00_server_setup.md). CPU and CUDA extras are exclusive;
+the pinned GPU build is PyTorch 2.9.1/CUDA 12.8. GPU/NCCL/FSDP2 hardware validation
+is pending. `make hooks` installs the local pre-commit hooks; `make format` fixes
+first-party formatting. Optional offline backend checks:
 
-## Provenance and artifact checks
+```bash
+make EXTRA_ARGS="--extra tensorboard --extra wandb" setup
+uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/test_metrics.py -q
+```
 
-`qvelt run init` creates a new resolved-config/lock/provenance bundle;
-`qvelt manifest inspect` reads metadata and `qvelt manifest verify` checks bytes
-and identities. These commands work without torch and do not start training.
-See [artifact contracts and examples](docs/development/artifacts.md).
-Write-once/fsync publication is validated on Linux local storage only; neither
-checkpoint metadata nor a file hash proves model-state replay or data rights.
+## Honest component status
 
-## Project documents
+| Component | Implemented | Actual verification / remaining gate |
+| --- | --- | --- |
+| Strict YAML/dataclasses/CLI overrides | Yes | CPU tests; resolved config/hash saved |
+| Layout, lock, Make, pre-commit, lint/types/CPU CI | Yes | Local checks; current CI evidence in validation report |
+| Byte-BPE tokenizer | Yes | Train/save/load/manifest/evaluation; Python 3.11–3.13 fixture replay |
+| Real corpus preparation/shards/packing | No | M3.2; no external dataset approved |
+| RMSNorm/RoPE/GQA/SwiGLU tied decoder | Yes | Independent value/gradient/causality/document-mask oracles; all four meta counts |
+| Synthetic training/AdamW/token LR | Yes | 100 CPU updates; source/config/software/topology-compatible replay |
+| DDP | Yes | Two CPU ranks, uneven-mask global-gradient oracle and runner replay |
+| Atomic checkpoints/safetensors export | Yes | Corruption/incomplete outputs/RNG/Adam/weight replay on Linux local storage |
+| DCP/DTensor shards | Yes | Two actual CPU ranks and DTensor shard round trip |
+| GPU FSDP2/NCCL | API path and tests | Hardware tests provided; not run here |
+| JSON/TensorBoard/W&B metrics | Yes | JSON/event files and actual W&B offline run; no online upload |
+| SFT/preferences/reasoning RL | No | Phase6; directory documents scope only |
+| Reasoning evaluation/serving/export formats beyond safetensors | No | Phases7–8; no fake commands |
 
-| Document | Purpose |
-| --- | --- |
-| [AGENTS.md](AGENTS.md) | Working protocol, required skills and main publication policy |
-| [PLAN.md](PLAN.md) | Phases, dependencies and acceptance gates |
-| [STATE.md](STATE.md) | Current state, verification and next tasks |
-| [DECISIONS.md](DECISIONS.md) | Choices, source evidence and revisit conditions |
-| [EXPERIMENTS.md](EXPERIMENTS.md) | Engineering checks and future ML experiments |
-| [RISKS.md](RISKS.md) | Resource, stability, data and release risks |
-| [DATA_CARD.md](DATA_CARD.md) | Dataset rights and provenance gate |
-| [Scaffold design](docs/development/scaffold.md) | Implemented infrastructure interfaces |
+See [current state](STATE.md), [roadmap](PLAN.md), [engineering design](docs/development/foundation_design.md),
+[validation](docs/development/validation_foundation.md), [decisions](DECISIONS.md),
+[experiment records](EXPERIMENTS.md) and [data rights](DATA_CARD.md).
 
-Next: M3.2 deterministic preparation of approved data. A project license
-has not been selected; public visibility alone does not grant reuse rights.
+## Commands and artifacts
 
-## Instructions for all AI development agents
+```bash
+uv run --frozen --extra cpu qvelt config resolve configs/model/tiny.yaml --set model.context=32
+uv run --frozen --extra cpu qvelt doctor --device cpu
+uv run --frozen --extra cpu qvelt train configs/train/smoke.yaml --directory /tmp/qvelt-run-01 --stop-after 37
+uv run --frozen --extra cpu qvelt train configs/train/smoke.yaml --directory /tmp/qvelt-run-01 --resume latest
+```
 
-Use the installed project-local [agent skills and complete catalog](docs/development/skills.md)
-under `.agents/skills/`, and follow [AGENTS.md](AGENTS.md). The installation includes
-408 skills from K-Dense, Continuous Claude (math), Hugging Face, Orchestra,
-Anthropic and OpenAI, pinned by commit and SHA-256. Six Anthropic entries are
-excluded because of restrictive or unspecified licenses.
+Choose a new run path; existing output is never silently overwritten. A training
+job embeds the shared experiment schema, and `--set path=value` overrides only
+known scalar leaves before full validation/hashing. Changing the configured
+horizon is not exact resume. Checkpoints keep fully resolved experiment/job YAML,
+run/config/data-descriptor identities, model/Adam/schedule/sampler/RNG, code and
+package observations. `pip-freeze.txt` is a normalized installed-version snapshot
+without editable paths/direct URLs; uv.lock is the installation authority.
 
-Before each task, read and apply relevant SKILL.md instructions; verify actual
-library APIs and run Qvelt's required tests. Mathematical checks use executable
-SymPy/exact arithmetic or NumPy/PyTorch reference computations. Read only relevant
-skills; the installed collection is not a dependency installation or a quality
-claim. Client entry files provide the same workflow for Claude, Gemini and Cursor.
+The synthetic data/tokenizer identity slots explicitly hash numeric-fixture
+**descriptors**, not the trained byte-BPE/data manifests from M3.1. Real-data
+training must add those actual artifacts after M3.2; no dataset approval is implied.
+Optimizer/DCP state is trusted project state, not an arbitrary uploaded checkpoint.
+Generic `manifest verify` checks bytes; semantic training/tokenizer loaders add
+compatibility checks. Metrics include valid targets/s, unclipped gradient norm,
+clipping and LR. Estimated MFU stays null without a user-supplied peak FLOP rate;
+it is not a measured hardware-utilization percentage.
 
-The user-supplied [ponytail skill](.agents/skills/ponytail/SKILL.md) is mandatory
-for all AI agents on every coding task, project-wide (`full` by default). Read
-and apply it: implement the smallest complete solution, reuse existing code,
-retain validation/tests, and report unchecked scope and material risks. There
-are 409 skill entries (408 vendor entries plus ponytail).
+Tokenizer workflow: [runbook](docs/development/tokenizer_workflow.md),
+[earlier validation](docs/development/validation_m3_1.md).
+Contributions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-The first [byte-BPE tokenizer API](docs/development/tokenizer.md) is implemented.
-The [YAML/CLI runbook](docs/development/tokenizer_workflow.md) trains on registered
-authored fixtures and verifies data/config/provenance links.
-[Validation](docs/development/validation_m3_1.md) records 315 passing tests per Python
-version and six independent fixture training runs. Next is M3.2; no external
-corpus or production vocabulary has been approved.
+## Instructions for every AI agent
+
+Read [AGENTS.md](AGENTS.md), STATE/PLAN and relevant RFC/decision entries before
+work. Apply the user-supplied [ponytail](.agents/skills/ponytail/SKILL.md) on every
+coding task (`full` default), plus relevant [installed skills](docs/development/skills.md).
+409 entries are pinned by commit/file hash: 408 vendor entries plus ponytail.
+Six vendor entries with restrictive or unspecified licenses are excluded.
+Skills are guidance, not verified APIs, authorization for paid jobs or a replacement
+for tests. Verify mathematical claims with executable exact arithmetic or independent
+NumPy/PyTorch references. All project agents share this rule through AGENTS and
+Claude/Gemini/Cursor entry files. Verified work/reports are published to main under
+the user's current authorization; never force-push or expose secrets/raw corpora.

@@ -19,8 +19,8 @@ from unittest.mock import patch
 
 import pytest
 
-import qvelt.artifacts as artifacts
-from qvelt.artifacts import (
+import qvelt.utils.artifacts as artifacts
+from qvelt.utils.artifacts import (
     CHUNK_BYTES,
     ArtifactDurabilityError,
     ArtifactError,
@@ -30,14 +30,14 @@ from qvelt.artifacts import (
     create_directory,
     hash_file,
 )
-from qvelt.manifest_types import (
+from qvelt.utils.manifest_types import (
     ArtifactFile,
     CheckpointInfo,
     Manifest,
     ManifestError,
     RunInfo,
 )
-from qvelt.manifests import manifest_bytes, manifest_digest
+from qvelt.utils.manifests import manifest_bytes, manifest_digest
 
 
 def populate(
@@ -218,7 +218,7 @@ def test_killed_writer_leaves_no_final_file_and_a_new_write_can_succeed(
     destination = tmp_path / "target"
     script = """
 import signal,sys
-from qvelt.artifacts import atomic_write
+from qvelt.utils.artifacts import atomic_write
 def write(stream):
     stream.write(b'partial')
     stream.flush()

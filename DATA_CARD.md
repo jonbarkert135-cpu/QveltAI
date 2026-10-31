@@ -76,3 +76,14 @@ Approve benchmarks with the same license gate as training sources. Preserve
 held-out identities, revisions, problem-family split rules, prompt templates,
 and extraction/scoring policy. Document overlap searches and residual uncertainty;
 do not claim decontamination merely because exact matches were not found.
+
+## Synthetic numeric-symbol engineering fixture
+
+The expanded foundation trainer uses the original `qvelt.data.synthetic` cyclic
+sequence generator (Apache-2.0 code): sample identity = (step*world_size+rank)*B+i;
+T+1 numeric symbols, IDs32+(sample_id+position) mod(V-32), shifted within that
+sequence. No downloaded text, personal data, teacher outputs or evaluation labels.
+This is approved only for code/learning/replay smoke tests, not reasoning quality.
+Run artifacts save data-spec.json and tokenizer-spec.json descriptor hashes;
+these intentionally describe numeric fixtures, not trained BPE or corpus manifests.
+Real-data training still requires M3.2 and approval of actual source revisions.

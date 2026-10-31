@@ -26,7 +26,7 @@ from qvelt.config import (
     parse_config,
 )
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_defaults_are_valid_immutable_and_round_trip() -> None:
@@ -214,3 +214,18 @@ def test_dimension_bounds_and_full_uint32_seed_range() -> None:
     with pytest.raises(ConfigError):
         parse_config("model: {layers: 2147483648}")
     assert parse_config("runtime: {seed: 4294967295}").runtime.seed == 2**32 - 1
+
+
+def test_shared_config_overrides_preserve_types_and_original() -> None:
+    from qvelt.config import apply_overrides
+
+    original: dict[str, object] = {"runtime": {"seed": 17, "deterministic": True}}
+    updated = apply_overrides(original, ["runtime.seed=42"])
+    assert original == {"runtime": {"seed": 17, "deterministic": True}}
+    assert updated == {"runtime": {"seed": 42, "deterministic": True}}
+    config = load_config(
+        ROOT / "configs/model/tiny.yaml", ["runtime.seed=42", "model.context=32"]
+    )
+    assert config.runtime.seed == 42 and config.model.context == 32
+    with pytest.raises(ConfigError):
+        load_config(ROOT / "configs/model/tiny.yaml", ["runtime.seed=true"])

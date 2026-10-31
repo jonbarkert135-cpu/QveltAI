@@ -14,11 +14,11 @@ from unittest.mock import patch
 import pytest
 
 from qvelt import __version__
-from qvelt.artifacts import ArtifactStore, hash_file
 from qvelt.config import ExperimentConfig, config_digest, dump_config
-from qvelt.manifest_types import RunInfo
-from qvelt.manifests import manifest_digest
-from qvelt.provenance import (
+from qvelt.utils.artifacts import ArtifactStore, hash_file
+from qvelt.utils.manifest_types import RunInfo
+from qvelt.utils.manifests import manifest_digest
+from qvelt.utils.provenance import (
     ProvenanceError,
     capture_code,
     capture_environment,
@@ -84,7 +84,7 @@ def test_unborn_non_git_and_missing_lock_are_not_invented(
 
 def test_git_timeout_has_no_untrusted_stderr_in_public_error(code_repo: Path) -> None:
     with patch(
-        "qvelt.provenance.subprocess.run",
+        "qvelt.utils.provenance.subprocess.run",
         side_effect=subprocess.TimeoutExpired("git", 30),
     ):
         with pytest.raises(ProvenanceError, match="Cannot query"):
@@ -109,12 +109,13 @@ def test_conflicting_and_missing_distribution_metadata_are_rejected() -> None:
     first = SimpleNamespace(metadata={"Name": "qvelt"}, version="1")
     second = SimpleNamespace(metadata={"Name": "Qvelt"}, version="2")
     with patch(
-        "qvelt.provenance.metadata.distributions", return_value=iter([first, second])
+        "qvelt.utils.provenance.metadata.distributions",
+        return_value=iter([first, second]),
     ):
         with pytest.raises(ProvenanceError, match="Conflicting"):
             capture_environment()
     with patch(
-        "qvelt.provenance.metadata.distributions",
+        "qvelt.utils.provenance.metadata.distributions",
         return_value=iter([SimpleNamespace(metadata={}, version="1")]),
     ):
         with pytest.raises(ProvenanceError, match="Cannot read"):

@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: qvelt-lint
+        name: Qvelt lint and format
+        entry: make lint
+        language: system
+        pass_filenames: false
+        types_or: [python, toml, yaml]
+      - id: qvelt-types
+        name: Qvelt strict types
+        entry: make typecheck
+        language: system
+        pass_filenames: false
+        types: [python]

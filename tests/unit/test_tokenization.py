@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from qvelt.tokenization import (
+from qvelt.tokenizer.core import (
     CONTROL_TOKENS,
     QveltTokenizer,
     TokenizerError,

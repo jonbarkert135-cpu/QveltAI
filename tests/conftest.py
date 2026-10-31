@@ -8,7 +8,7 @@ import pytest
 
 from qvelt import __version__
 from qvelt.config import ExperimentConfig, config_digest, dump_config
-from qvelt.manifest_types import (
+from qvelt.utils.manifest_types import (
     ArtifactFile,
     CheckpointInfo,
     CodeIdentity,
@@ -111,3 +111,9 @@ def manifest_cases(fixture_payloads: dict[str, bytes]) -> tuple[Manifest, ...]:
             ),
         ),
     )
+
+
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    for item in items:
+        marker = "integration" if "/integration/" in str(item.path) else "unit"
+        item.add_marker(getattr(pytest.mark, marker))

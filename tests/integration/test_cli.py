@@ -14,7 +14,7 @@ import qvelt
 from qvelt.cli import main
 from qvelt.config import config_digest, load_config, parse_config
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_package_version_and_import_have_no_torch_side_effect() -> None:
@@ -63,7 +63,7 @@ def test_cpu_doctor_runs_real_tensor_probe(capsys: pytest.CaptureFixture[str]) -
     assert data["requested_device"] == "cpu" and data["test_checksum"] == 8.0
 
 
-def test_unsupported_command_is_not_a_fake_training_interface() -> None:
+def test_train_requires_a_real_recipe_and_output() -> None:
     result = subprocess.run(
         [sys.executable, "-m", "qvelt", "train"], capture_output=True, text=True
     )

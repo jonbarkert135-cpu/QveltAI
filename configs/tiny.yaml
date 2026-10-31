@@ -1,15 +1,1 @@
-schema_version: 1
-name: tiny-cpu
-model:
-  layers: 8
-  hidden: 320
-  heads: 5
-  kv_heads: 1
-  ffn: 896
-  vocab: 32768
-  context: 512
-runtime:
-  seed: 20261031
-  device: cpu
-  precision: fp32
-  deterministic: true
+model/tiny.yaml

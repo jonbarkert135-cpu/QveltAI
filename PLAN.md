@@ -467,3 +467,24 @@ Acceptance: 408 vendor skill entries have intact source files and license notice
 6 entries with restrictive or unspecified licenses are explicitly excluded.
 The attached ponytail skill adds one required project-wide coding workflow. Source authenticity is Git provenance,
 not a claim of comprehensive security or third-party runtime validation.
+
+## Expanded Phase2 request — M2.3 engineering acceptance
+
+Owner: Lead agent. Status: in progress. Dependencies: M2.1/M2.2/M3.1 and the
+user's explicit expanded foundation request. The new request advances the RFC
+model/synthetic-training slice before M3.2; full M4/M5 acceptance remains separate.
+
+- [x] Requested primary layout, old import/config compatibility, scope-only future
+  directories and unit/integration tests; shared dataclass/CLI override rules.
+- [x] Pinned packaging, Make targets, local pre-commit, markers and expanded CI.
+- [x] Real RFC decoder with numerical/gradient references and all four meta counts.
+- [x] Real100-step synthetic trainer, JSON/optional offline metrics and token LR.
+- [x] Committed checkpoints, safetensors, rank RNG/Adam/sampler replay and CPU DCP/
+  DTensor shards. Actual CUDA/NCCL/FSDP2 tests provided but hardware unavailable.
+- [x] Apache-2.0/NOTICE, CONTRIBUTING and assumed-platform server/all-reduce runbook.
+- [ ] Pass the requested Make chain from an isolated clean clone, hooks/build/smoke.
+- [ ] Observe green GitHub Actions for the final published main revision.
+
+Acceptance: no fake training/checkpoint/backend commands; CPU, numerical,
+restart and distributed evidence recorded, optional/GPU skips distinguished.
+Future real-data/post-training/evaluation/serving work remains explicitly planned.

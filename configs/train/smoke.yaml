@@ -1,0 +1,30 @@
+schema_version: 1
+experiment:
+  schema_version: 1
+  name: ci-synthetic-smoke
+  model:
+    layers: 2
+    hidden: 64
+    heads: 4
+    kv_heads: 2
+    ffn: 192
+    vocab: 288
+    context: 32
+  runtime:
+    seed: 20261031
+    device: cpu
+    precision: fp32
+    deterministic: true
+training:
+  steps: 100
+  batch_size: 2
+  sequence_length: 32
+  learning_rate: 0.001
+  weight_decay: 0.1
+  grad_clip: 1.0
+  warmup_steps: 5
+  decay_steps: 10
+  checkpoint_every: 50
+  num_threads: 1
+  strategy: single
+  metrics_backend: json

@@ -135,3 +135,11 @@ The tokenizer workflow is verified with 315 tests on all three supported Linux
 Python versions. See [its runbook](tokenizer_workflow.md) and
 [validation matrix](validation_m3_1.md). M3.2 corpus preparation is next;
 standalone tokenizer operations also work in the base no-torch profile.
+
+The user expanded the engineering foundation after M3.1. The current acceptance
+interface is `make setup && make lint && make typecheck && make test`, with
+`make smoke` for actual100-step synthetic training/replay. See
+[foundation design](foundation_design.md), [validation](validation_foundation.md)
+and [server setup](../../runbooks/00_server_setup.md). Original code/docs now use
+Apache-2.0; vendor/fixture notices remain scoped. Canonical model presets are
+configs/model/; old flat paths are compatibility symlinks on tested Linux.

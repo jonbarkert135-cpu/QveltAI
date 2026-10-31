@@ -11,7 +11,7 @@ import pytest
 import torch
 
 from qvelt.config import RuntimeConfig
-from qvelt.reproducibility import (
+from qvelt.utils.reproducibility import (
     RuntimeUnavailableError,
     inspect_runtime,
     numpy_generator,

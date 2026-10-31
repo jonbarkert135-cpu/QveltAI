@@ -7,7 +7,7 @@ from typing import cast
 
 import pytest
 
-from qvelt.manifest_types import (
+from qvelt.utils.manifest_types import (
     ArtifactFile,
     CheckpointInfo,
     CodeIdentity,

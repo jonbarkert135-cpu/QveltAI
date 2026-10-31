@@ -1,6 +1,7 @@
 # RFC-001: Qvelt dense decoder baseline
 
-Date: 2026-10-31. Status: selected implementation baseline, not implemented.
+Date: 2026-10-31. Status: selected baseline; portable decoder implemented/tested on CPU.
+Optimized decode/KV cache and real-corpus/GPU validation remain separate gates.
 Owner: Lead agent. Sources refer to the verified ledger in `survey.md`.
 
 ## Constraints and decisions

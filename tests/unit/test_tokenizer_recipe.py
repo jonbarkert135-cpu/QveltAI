@@ -5,15 +5,15 @@ from pathlib import Path
 import pytest
 
 from qvelt.config import ConfigError
-from qvelt.manifest_types import ManifestError
-from qvelt.tokenization import TokenizerError, TokenizerSettings
-from qvelt.tokenizer_recipe import (
+from qvelt.tokenizer.core import TokenizerError, TokenizerSettings
+from qvelt.tokenizer.recipe import (
     TokenizerRecipe,
     dump_tokenizer_recipe,
     load_tokenizer_recipe,
     parse_tokenizer_recipe,
     tokenizer_recipe_digest,
 )
+from qvelt.utils.manifest_types import ManifestError
 
 DIGEST = "a" * 64
 

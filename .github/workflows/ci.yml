@@ -15,6 +15,7 @@ concurrency:
 jobs:
   cpu:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     env:
       UV_PYTHON: ${{ matrix.python }}
     strategy:
@@ -28,26 +29,54 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install pinned project manager
         run: python -m pip install uv==0.12.23
-      - name: Frozen CPU environment
-        run: uv sync --frozen --extra cpu --python "${{ matrix.python }}"
-      - name: Dependency and lock consistency
+      - name: Frozen setup
+        run: make setup
+      - name: Dependency consistency
         run: |
           uv lock --check
           uv pip check
-      - name: Lint, format and types
-        run: |
-          uv run --frozen --extra cpu ruff check .
-          uv run --frozen --extra cpu ruff format --check .
-          uv run --frozen --extra cpu mypy
-      - name: Unit and research tests
-        run: uv run --frozen --extra cpu pytest -q
+      - name: Lint and types
+        run: make lint typecheck
+      - name: CPU unit and integration tests (includes actual tiny decoder)
+        run: make test
       - name: Functional CLI and build
         run: |
-          uv run --frozen --extra cpu qvelt config validate configs/tiny.yaml
+          uv run --frozen --extra cpu qvelt config validate configs/model/tiny.yaml
           uv run --frozen --extra cpu qvelt doctor --device cpu
-          uv run --frozen --extra cpu qvelt run init configs/tiny.yaml --directory "$RUNNER_TEMP/qvelt-run" --repository .
+          uv run --frozen --extra cpu qvelt run init configs/model/tiny.yaml --directory "$RUNNER_TEMP/qvelt-run" --repository .
           uv run --frozen --extra cpu qvelt manifest verify "$RUNNER_TEMP/qvelt-run/manifest.json"
           uv run --frozen --extra cpu qvelt tokenizer train configs/tokenizer_smoke.yaml --data-manifest tests/fixtures/tokenizer/train.manifest.json --directory "$RUNNER_TEMP/qvelt-tokenizer" --repository .
           uv run --frozen --extra cpu qvelt tokenizer verify "$RUNNER_TEMP/qvelt-tokenizer/manifest.json"
-          uv run --frozen --extra cpu qvelt tokenizer evaluate "$RUNNER_TEMP/qvelt-tokenizer/manifest.json" --data-manifest tests/fixtures/tokenizer/heldout.manifest.json --data-sha256 0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4
-          uv run --frozen --extra cpu python -m build --no-isolation
+          make build
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_PYTHON: "3.12"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install uv==0.12.23
+      - run: make setup
+      - name: 100 real updates and stop37/resume100 exact Adam/weight replay
+        run: uv run --frozen --extra cpu python scripts/smoke.py --directory "$RUNNER_TEMP/qvelt-smoke"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: synthetic-smoke-logs-and-checkpoints
+          path: ${{ runner.temp }}/qvelt-smoke
+  optional-metrics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_PYTHON: "3.12"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install uv==0.12.23
+      - run: make EXTRA_ARGS="--extra tensorboard --extra wandb" setup
+      - name: Actual TensorBoard event and W&B offline run
+        run: uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/test_metrics.py -q
