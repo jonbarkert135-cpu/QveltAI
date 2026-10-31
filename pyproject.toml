@@ -1,0 +1,73 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "qvelt"
+version = "0.1.0.dev0"
+description = "Original, reproducible language-model research infrastructure"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = ["PyYAML==6.0.3", "numpy==2.2.6"]
+
+[project.optional-dependencies]
+cpu = ["torch==2.9.1"]
+cuda = ["torch==2.9.1; sys_platform == 'linux' or sys_platform == 'win32'"]
+
+[project.scripts]
+qvelt = "qvelt.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest==8.3.5",
+  "ruff==0.11.13",
+  "mypy==1.15.0",
+  "types-PyYAML==6.0.12.20261030",
+  "build==1.6.1",
+  "hatchling==1.27.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qvelt"]
+
+[tool.uv]
+required-version = "==0.12.23"
+conflicts = [[{extra = "cpu"}, {extra = "cuda"}]]
+
+[tool.uv.sources]
+torch = [
+  {index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'"},
+  {index = "pytorch-cu128", extra = "cuda"},
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "docs/research"]
+addopts = ["--strict-config", "--strict-markers", "-ra"]
+filterwarnings = ["error"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "tests", "docs/research"]
+mypy_path = ["docs/research"]
+
+[[tool.mypy.overrides]]
+module = "torch.*"
+follow_imports = "silent"

@@ -1,0 +1,15 @@
+schema_version: 1
+name: small-server
+model:
+  layers: 16
+  hidden: 768
+  heads: 12
+  kv_heads: 4
+  ffn: 2048
+  vocab: 32768
+  context: 2048
+runtime:
+  seed: 20261031
+  device: cuda
+  precision: bf16
+  deterministic: true
