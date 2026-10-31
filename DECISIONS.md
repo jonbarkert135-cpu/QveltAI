@@ -753,3 +753,18 @@ for this session; future publication can follow the next user instruction.
   validate masks. No GPU throughput or uniform-permutation randomness claim.
 - **Revisit:** measured corpus-scale I/O/page-cache limits, scalable alternative
   permutations, cross-topology migration or pinned-memory GPU training evidence.
+
+Phase3 lifecycle refinement (2026-10-31): actual GitHub run41247260902 passed
+Python3.11/3.12 and smoke jobs but failed3.13 because SQLite connection context
+management commits/rolls back without closing. Use contextlib.closing, with explicit
+success commits and tests proving close on both success/error. [verified] installed
+Python3.13 sqlite3 Connection/contextlib docstrings and actual3.13 test execution;
+no ResourceWarning suppression. A stronger crash test abandons a live iterator
+with prefetch pending and compares against a separate uninterrupted oracle. That
+reproduced a worker shutdown abort during Tensor IPC. Batch workers now collate
+plain NumPy arrays over IPC, converted to tensors in the consumer; this avoids the
+shared-Tensor handle lifecycle in that reproducer at the cost of a batch copy.
+[verified] installed torch2.9.1 default collate shared-storage implementation and
+executed early-stop/replay tests. No private shutdown API is called. Re-profile
+GPU/pinned-memory transport before a server-throughput claim. HTTPS spec validation
+also explicitly rejects non-text and whitespace/control-byte URLs.

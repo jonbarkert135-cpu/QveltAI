@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 from typing import Any
 
@@ -56,7 +57,7 @@ def registry(
 
 
 def test_disk_dedup_exact_near_and_math_distinctions() -> None:
-    with sqlite3.connect(":memory:") as db:
+    with closing(sqlite3.connect(":memory:")) as db:
         dedup = DiskDeduplicator(db, DedupConfig(), 37)
         text = " ".join(f"unique{i}" for i in range(200))
         assert dedup.duplicate(text) is None
@@ -75,7 +76,7 @@ def test_disk_dedup_exact_near_and_math_distinctions() -> None:
 def test_lsh_collision_is_verified_and_candidate_cap_fails_closed(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    with sqlite3.connect(":memory:") as db:
+    with closing(sqlite3.connect(":memory:")) as db:
         dedup = DiskDeduplicator(
             db, DedupConfig(num_perm=8, bands=1, max_candidates=2), 2
         )
@@ -98,7 +99,7 @@ def test_every_registered_benchmark_is_checked(tmp_path: Path) -> None:
     names = sorted(MANDATORY_BENCHMARKS) + ["extra-planned"]
     path, checksum = registry(tmp_path, names)
     checked = BenchmarkRegistry.load(path, checksum, "demo")
-    with sqlite3.connect(":memory:") as db:
+    with closing(sqlite3.connect(":memory:")) as db:
         decontam = Decontaminator(db, checked, ngram_size=7)
         text = "prefix PROTECTED EXACT EQUATION α + 7421 = 9837 for all of these explicitly authored test registries. suffix"
         assert decontam.matches(text) == set(names)
@@ -161,7 +162,7 @@ def test_short_questions_and_unicode_normalization(tmp_path: Path) -> None:
     reg = BenchmarkRegistry.load(
         path, hashlib.sha256(path.read_bytes()).hexdigest(), "demo"
     )
-    with sqlite3.connect(":memory:") as db:
+    with closing(sqlite3.connect(":memory:")) as db:
         clean = Decontaminator(db, reg)
         assert clean.matches("prefix CAFE\u0301 + 37? suffix") == {"short"}
         assert clean.matches("café + 38?") == set()
@@ -171,7 +172,7 @@ def test_similar_math_templates_do_not_erase_distinct_numbers_or_signs() -> None
     template = " ".join(
         ["This is a long repeated mathematical explanation without numbers"] * 30
     )
-    with sqlite3.connect(":memory:") as db:
+    with closing(sqlite3.connect(":memory:")) as db:
         dedup = DiskDeduplicator(db, DedupConfig(), 37)
         dedup.add(template + " Equation x + 12 = 37.", "{}", "train")
         assert dedup.duplicate(template + " Equation x + 13 = 37.") is None

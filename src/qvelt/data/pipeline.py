@@ -10,6 +10,7 @@ import tempfile
 import time
 from collections import Counter
 from collections.abc import Iterator
+from contextlib import closing
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -136,7 +137,7 @@ def prepare_recipe(
     ) as scratch_name:
         scratch = Path(scratch_name)
         with (
-            sqlite3.connect(scratch / "curation.sqlite") as connection,
+            closing(sqlite3.connect(scratch / "curation.sqlite")) as connection,
             tempfile.TemporaryFile(dir=scratch) as audit,
         ):
             connection.execute("PRAGMA cache_size=-32768")

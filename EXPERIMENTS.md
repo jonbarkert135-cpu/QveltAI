@@ -168,3 +168,11 @@ the consumer cursor despite worker prefetch. Design: data_design.md and ADR29–
 Initial full local suite:422 passed/2 GPU deselected in70.19s before the final
 math-atom preservation regression; targeted revised acceptance and measured
 compression/throughput evidence will be recorded below. No quality result yet.
+
+R007 lifecycle follow-up: the first actual GitHub run41247260902 had success on
+CPU3.11/3.12, synthetic100-step smoke, data smoke and optional metrics, but3.13
+reported unclosed SQLite ResourceWarnings (418 passed/3 failed/2 optional skips/
+2 GPU deselections). Closing contexts and success/error resource tests correct the
+cause. A stricter pending-prefetch abandonment test also reproduced a Tensor IPC
+worker abort; NumPy worker collation/consumer tensor conversion passes that
+reproducer. These failed checks are recorded rather than described as green CI.

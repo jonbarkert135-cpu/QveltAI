@@ -99,8 +99,11 @@ def test_download_rejects_wrong_hash_and_oversize(
         "https://host/a?token=secret",
         "file:///tmp/source",
         "https://host/a#fragment",
+        "https://host/a\n",
+        42,
+        None,
     ],
 )
-def test_source_urls_do_not_embed_credentials_or_plain_http(url: str) -> None:
+def test_source_urls_do_not_embed_credentials_or_plain_http(url: Any) -> None:
     with pytest.raises(ValueError):
         https_url(url)

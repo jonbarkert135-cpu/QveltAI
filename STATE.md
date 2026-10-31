@@ -72,3 +72,8 @@ gate and n-gram removal, original exact EN/RU math, compact shards, mixed-source
 passed,2 optional SDK skips and2 GPU deselections. Experiment/remote CI acceptance
 is still in progress. One explicitly approved
 GSM8K evaluation snapshot acquired/pinned; no external training corpus approved.
+
+Phase3 CI follow-up: run41247260902 exposed SQLite lifecycle warnings on3.13;
+closing on success/error and pending-prefetch shutdown/replay are now covered.
+Revised data suite:72 passed on local Python3.13.5;26 storage/integration cases
+pass on3.12. Final remote acceptance and clean-code receipts are next.

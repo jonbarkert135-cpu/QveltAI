@@ -310,6 +310,14 @@ class _PlannedBatches(Sampler[list[int]]):
         return max(0, self.owner.config.max_batches - int(self.owner.state["step"]))
 
 
+def _numpy_collate(samples: list[dict[str, Tensor]]) -> dict[str, np.ndarray[Any, Any]]:
+    """Plain NumPy IPC avoids shared-Tensor handle races on early worker shutdown."""
+    return {
+        key: np.stack([np.asarray(sample[key]) for sample in samples])
+        for key in samples[0]
+    }
+
+
 class ResumableLoader:
     """Only delivered batches advance state; sampler/worker prefetch is speculative."""
 
@@ -380,13 +388,14 @@ class ResumableLoader:
             "batch_sampler": _PlannedBatches(self),
             "in_order": True,
             "generator": torch.Generator().manual_seed(config.seed),
+            "collate_fn": _numpy_collate,
         }
         if config.workers:
             kwargs.update(
                 multiprocessing_context="spawn", prefetch_factor=config.prefetch
             )
         self._loader = DataLoader(dataset, **kwargs)
-        self._iterator: Iterator[dict[str, Tensor]] | None = None
+        self._iterator: Iterator[dict[str, np.ndarray[Any, Any]]] | None = None
 
     def plan(self, state: dict[str, Any]) -> tuple[list[int], dict[str, Any]]:
         step = state["step"]
@@ -434,9 +443,13 @@ class ResumableLoader:
         if self.state["step"] >= self.config.max_batches:
             raise StopIteration
         if self._iterator is None:
-            self._iterator = iter(self._loader)
+            self._iterator = cast(
+                Iterator[dict[str, np.ndarray[Any, Any]]], iter(self._loader)
+            )
         keys, next_state = self.plan(self.state)
-        batch = next(self._iterator)
+        batch = {
+            key: torch.from_numpy(value) for key, value in next(self._iterator).items()
+        }
         if batch["sample_index"].tolist() != keys:
             raise RuntimeError("Worker ordering disagrees with the committed plan")
         if self.config.attention_mode == "causal":

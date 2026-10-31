@@ -117,13 +117,16 @@ def test_prefetch_simulated_crash_resumes_consumer_position(
     config = LoaderConfig(
         batch_size=3, workers=first_workers, prefetch=3, max_batches=9
     )
+    with ResumableLoader(
+        PackedDataset(path), replace(config, workers=0), recipe.mixing
+    ) as oracle:
+        expected = list(oracle)[3:]
     with ResumableLoader(PackedDataset(path), config, recipe.mixing) as live:
         for _ in range(3):
             next(live)
         live.save_state(tmp_path / "cursor.json")
         assert live.state_dict()["step"] == 3
-        expected = list(live)
-    # Only the consumer cursor, not speculative sampler/worker progress, survives.
+    # Abandon the live iterator with prefetched work pending, before draining it.
     with ResumableLoader(
         PackedDataset(path),
         replace(config, workers=next_workers, prefetch=1),
@@ -237,3 +240,46 @@ def test_data_smoke_cli_entrypoint(tmp_path: Path) -> None:
     assert result["replay_bit_exact"] and result["resumed_batches"] == 7
     assert result["verification"]["blocks_checked"] > 0
     assert not result["production_ready"]
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_preparer_closes_sqlite_on_success_and_failure(
+    prepared_demo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, fail: bool
+) -> None:
+    import sqlite3
+    from typing import Any
+
+    from qvelt.data.cleaning import Cleaner
+
+    connect = sqlite3.connect
+    opened: list[sqlite3.Connection] = []
+
+    def tracked(database: str | Path, *args: Any, **kwargs: Any) -> sqlite3.Connection:
+        connection: sqlite3.Connection = connect(database, *args, **kwargs)
+        opened.append(connection)
+        return connection
+
+    monkeypatch.setattr("qvelt.data.pipeline.sqlite3.connect", tracked)
+    if fail:
+
+        def reject(self: Cleaner, text: str) -> None:
+            raise RuntimeError("deliberate interrupted curation")
+
+        monkeypatch.setattr(Cleaner, "clean", reject)
+        with pytest.raises(RuntimeError, match="interrupted curation"):
+            prepare_data(
+                prepared_demo / "recipe.yaml",
+                tmp_path / "output",
+                Path(__file__).resolve().parents[2],
+            )
+        assert not (tmp_path / "output/manifest.json").exists()
+    else:
+        prepare_data(
+            prepared_demo / "recipe.yaml",
+            tmp_path / "output",
+            Path(__file__).resolve().parents[2],
+        )
+    assert len(opened) == 1
+    for connection in opened:
+        with pytest.raises(sqlite3.ProgrammingError, match="closed database"):
+            connection.execute("SELECT 1")

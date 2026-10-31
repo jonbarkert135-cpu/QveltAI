@@ -31,11 +31,15 @@ def run_data_smoke(
     )
     stages = load_data_recipe(directory / "recipe.yaml").mixing
     config = LoaderConfig(batch_size=3, workers=2, prefetch=3, max_batches=10)
+    with ResumableLoader(
+        PackedDataset(path), replace(config, workers=0), stages
+    ) as oracle:
+        expected = list(oracle)[3:]
     with ResumableLoader(PackedDataset(path), config, stages) as live:
         for _ in range(3):
             next(live)
         live.save_state(directory / "cursor-step-3.json")
-        expected = list(live)
+        # Discard prefetched work at the simulated crash, before draining it.
     with ResumableLoader(
         PackedDataset(path),
         replace(config, workers=0),
@@ -59,6 +63,7 @@ def run_data_smoke(
         "dataset_sha256": manifest_digest(manifest),
         "verification": verification,
         "replay_bit_exact": equal,
+        "discarded_prefetched_iterator": True,
         "saved_consumer_step": 3,
         "resumed_batches": len(actual),
         "final_step": final["step"],

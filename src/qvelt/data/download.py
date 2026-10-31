@@ -22,6 +22,14 @@ from qvelt.utils.manifests import _reject_constant, _unique_mapping
 
 
 def https_url(value: str) -> None:
+    if (
+        not isinstance(value, str)
+        or len(value) > 2048
+        or any(ord(c) <= 32 for c in value)
+    ):
+        raise ValueError(
+            "Source URL must be bounded text without whitespace/control bytes"
+        )
     parts = urlsplit(value)
     if (
         parts.scheme != "https"
