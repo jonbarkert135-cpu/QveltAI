@@ -6,6 +6,14 @@ to main; never force-push. This supersedes the earlier publication pause.
 
 ## Required agent skills
 
+Before EVERY code-writing task, read and apply the user-supplied
+[ponytail skill](.agents/skills/ponytail/SKILL.md), project-wide. Default mode is
+`full`, unless the user selects another level or disables it. Make the smallest
+complete change, reuse existing code, preserve trust-boundary validation and
+required tests, and end reports with unchecked scope and material risks.
+The project requirements for evidence, unit/reference tests, licensing and
+reproducibility remain mandatory; minimal code does not mean incomplete work.
+
 Use the project-local skills in `.agents/skills/` for applicable development tasks.
 Read [the catalog and usage policy](docs/development/skills.md), select and read
 relevant SKILL.md files before using them, and announce the selection. All AI

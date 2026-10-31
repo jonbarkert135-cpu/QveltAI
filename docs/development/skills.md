@@ -72,7 +72,7 @@ also provide explicit access when discovery differs by client version. Claude,
 Gemini and Cursor entry files point here. This is a shared file installation,
 not proof that every client has hot-reloaded skill metadata or registered plugins.
 Restart/rescan when a client requires it; reading the catalog works without a
-plugin marketplace. No new attachment was present for the user's “one in a file”.
+plugin marketplace.
 
 ## Exclusions
 
@@ -505,3 +505,14 @@ checked against the copied bytes; every catalog path exists and all six excluded
 paths are absent. Qvelt checks after integration: 220 tests passed in 4.35s,
 Ruff/format passed, strict mypy passed on 21 first-party files. Vendor scripts
 were not executed or certified by these checks. Upstream formatting is preserved.
+
+## User-supplied mandatory coding skill
+
+[ponytail](../../.agents/skills/ponytail/SKILL.md) was supplied on 2026-10-31 and
+retained byte-for-byte; see lock local_skills/file hash. Its frontmatter declares
+MIT. All project AI agents must read and apply it to coding, fixing, reviewing,
+refactoring and dependency selection. Default level is full, until the user changes
+or disables it. Preserve project-required unit/reference tests, numerical evidence,
+validation and reproducibility. Report unchecked scope and material risks at the
+end of delivery. The mistakenly supplied trace skill was removed before commit.
+Total installed SKILL.md entries: 409.

@@ -46,7 +46,12 @@ license obligations and exact corpus revisions, has passed.
 
 ## Locally authored test fixtures
 
-No fixtures exist yet. M3.2 and subsequent numerical/training tests should use
+M3.1a uses project-authored English/Russian/LaTeX strings in
+`tests/test_tokenization.py` and the smoke recipe in
+`docs/development/tokenizer.md`; no external corpus or teacher was used. These
+software-test fixtures are approved for local correctness tests, not a released
+training corpus or quality evaluation. No broader project license is asserted.
+M3.2 and subsequent numerical/training tests should use
 small project-authored deterministic fixtures when possible. Register authored
 text/problems and any third-party fragments before treating them as a corpus.
 Fixture learning is not evidence of general mathematical reasoning.

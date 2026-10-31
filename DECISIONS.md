@@ -490,3 +490,29 @@ for this session; future publication can follow the next user instruction.
   until checked for each development task. No upstream popularity/safety claim adopted.
 - **Revisit:** source/license changes, verified incompatibilities, malicious or
   obsolete content; upgrades require a reviewed diff and refreshed hashes.
+
+## ADR-0021 — Mandatory ponytail skill and initial byte-BPE API
+
+- **Date/status:** 2026-10-31; accepted, tokenizer subtask M3.1a CPU-tested.
+- **Context/options:** ignore attachment versus mandatory coding workflow; whole-text BPE versus ASCII-digit-isolated reversible byte BPE.
+- **Choice:** project-wide application of user-attached ponytail in full mode: minimal
+  complete changes with required validation and tests. Tokenizers
+  0.22.2, no normalization/padding/truncation, all byte symbols and 32 fixed
+  controls; default ASCII digit isolation, optional comparison baseline. Ordinary
+  text cannot inject control IDs; no BOS/EOS insertion implicit in encode.
+- **Rationale:** preserve exact valid UTF-8, whitespace and equations while
+  keeping role boundaries explicit. Reject lone surrogates and documents over
+  1 MiB. Vocabulary is a ceiling, not a guaranteed trained size on small data.
+  Pair-statistic memory still grows with corpus diversity. Fixing these IDs now
+  is an artifact compatibility contract, not a mathematical quality claim.
+- **Sources:** [verified] tokenizers 0.22.2 installed API docstrings and executed
+  BPE/ByteLevel/Split/Regex/BpeTrainer/encode_special_tokens/save/load behavior;
+  Apache-2.0 text at https://raw.githubusercontent.com/huggingface/tokenizers/v0.22.2/LICENSE.
+  [verified] read vendored Orchestra huggingface-tokenizers SKILL.md/training
+  reference and attached ponytail instructions (MIT declared in frontmatter);
+  upstream skill performance claims remain [unverified]. Scoped mypy missing-import
+  override documents tokenizers' absent py.typed marker; wrapper typing passes,
+  third-party internals are not statically checked. No helper scripts executed.
+- **Revisit:** corpus-scale memory/segmentation results, tokenizer upgrades,
+  chat templates, proven need for digit policy changes; changing IDs invalidates
+  tokenizer/data/model compatibility. YAML/manifest integration stays in M3.1.

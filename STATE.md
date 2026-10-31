@@ -4,10 +4,11 @@ Updated: 2026-10-31. Owner: Lead agent.
 
 ## Current phase and last completed task
 
-Phase 2 is complete: M2.1 package/config/runtime tooling and M2.2 typed manifests,
-observed provenance, bounded IO and atomic local artifacts. Next is M3.1 tokenizer
-implementation/workflows. No tokenizer, model, trainer, inference service or
-semantic model/optimizer checkpoint loader exists.
+Phase 2 is complete. M3.1 is in progress: M3.1a byte-BPE library API and 32
+new tests are implemented. Tokenizer YAML/CLI recipes and data-manifest linkage
+remain pending. No model, trainer, inference service or semantic checkpoint
+loader exists. The user-attached ponytail skill is installed and must be read and applied
+for all coding tasks, project-wide (full by default).
 
 Checkout `/workspace/newai_cddevel`, branch `main`, repository
 `jonbarkert135-cpu/QveltAI`. M2.2 code commits: `9027efe`, `f4fd2cc`, followed by
@@ -55,12 +56,22 @@ job or helper script executed. Next remains M3.1. See ADR-0020. Integration chec
 - No dataset is approved or ingested; source licenses in manifests are declarations.
   Project license/Russian-data priority are undecided, not blockers for core tests.
 
+## Latest verification (M3.1a)
+
+252 tests passed on Linux/Python 3.12.14 in 4.59s, no skips; Ruff/format and
+strict mypy passed on 23 files. Tokenizers 0.22.2 and transitive dependencies
+locked; installed library lacks py.typed, so a scoped external import override
+is explicit. Small authored segmentation pilot and limitations: R004 and
+`docs/development/tokenizer.md`. Earlier 220-test Python matrix remains historical;
+new tokenizer behavior has not yet been tested across that matrix or on CUDA.
+409 skill entries, with the new attachment retained byte-for-byte.
+
 ## Next three tasks
 
-1. M3.1: verify and pin the byte-BPE dependency/API/license; implement tokenizer
-   train/save/load using approved project-authored fixtures initially.
-2. M3.1: validate stable IDs, control tokens, byte/Unicode/Cyrillic/LaTeX/numeral
-   round trips and registered tokenizer/data manifests without quality claims.
+1. M3.1: add strict YAML/CLI training recipes and registered raw-data/tokenizer
+   manifest linkage to the tested byte-BPE API.
+2. M3.1: extend cross-process/version reproducibility and held-out segmentation
+   measurements; stable IDs and round-trip baseline tests already pass.
 3. M3.2: deterministic bounded ingestion, cross-source dedup/splits, checksummed
    token shards, packing/masks and rank/worker resume-order tests. External data
    remains gated by DATA_CARD.md; actual tensor training is not started here.
@@ -78,6 +89,6 @@ git diff --check
 git status --short --branch
 ```
 
-Expected: 220 passing tests, lint/format/types green, clean main with local
+Expected: 252 passing tests, lint/format/types green, clean main with local
 commits. Functional CLI example is in `docs/development/artifacts.md`; use a new
 output directory under an existing parent. No train/serve command exists yet.

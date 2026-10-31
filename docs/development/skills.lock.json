@@ -3715,8 +3715,19 @@
     ".agents/skills/orchestra/22-agent-native-research-artifact/research-manager/references/session-protocol.md": "7d43697d5861d8e0102cad713a86e169572c533a54519b88f570c19a48157b08",
     ".agents/skills/orchestra/22-agent-native-research-artifact/rigor-reviewer/SKILL.md": "5a8169a5d069caf36a30e0106e523503ffba685215c3cd0067a72aa64a7e2dbb",
     ".agents/skills/orchestra/22-agent-native-research-artifact/rigor-reviewer/references/review-dimensions.md": "423cd73b7b660857811230a7d8eb255fbac954d626e4471e784a1553ff9f5aaa",
-    ".agents/skills/orchestra/LICENSE": "80b5899a9ab121a2d4aae63724f0c11defba7f23da487086932bb9abfb0f2a00"
+    ".agents/skills/orchestra/LICENSE": "80b5899a9ab121a2d4aae63724f0c11defba7f23da487086932bb9abfb0f2a00",
+    ".agents/skills/ponytail/SKILL.md": "9badd22a32e19cb884e46dfa8d3aae82bb81dfa5484105b8b4f0262df823a509"
   },
+  "local_skills": [
+    {
+      "declared_license": "MIT (attachment frontmatter)",
+      "name": "ponytail",
+      "path": ".agents/skills/ponytail/SKILL.md",
+      "scope": "Mandatory project-wide on coding tasks; full by default until the user changes mode",
+      "sha256": "9badd22a32e19cb884e46dfa8d3aae82bb81dfa5484105b8b4f0262df823a509",
+      "source": "User-uploaded SKILL (9).md, 2026-10-31"
+    }
+  ],
   "retrieved": "2026-10-31",
   "schema_version": 1,
   "sources": [

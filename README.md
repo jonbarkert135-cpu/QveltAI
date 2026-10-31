@@ -4,11 +4,11 @@ Qvelt is an open, from-scratch language-model framework under development, with
 an emphasis on mathematical reasoning. The roadmap covers tokenization, data,
 pretraining, post-training, evaluation and inference.
 
-**Current status: Phase 2 infrastructure complete; tokenizer/model work is next.**
+**Current status: Phase 2 infrastructure complete; tokenizer work is in progress.**
 The repository includes a typed Python package, strict YAML configuration,
 reproducibility utilities, JSON logging, CPU diagnostics, typed provenance
 manifests, atomic local artifact storage, pinned dependencies and
-[source-audited research RFCs](docs/research/README.md). It has no tokenizer,
+[source-audited research RFCs](docs/research/README.md). It includes an initial tested tokenizer API, but no
 model, training loop, pretrained weights or benchmark results. No training ran.
 
 The validated configuration targets are 19.34M, 125.85M, 493.55M and 1.510B
@@ -81,3 +81,12 @@ library APIs and run Qvelt's required tests. Mathematical checks use executable
 SymPy/exact arithmetic or NumPy/PyTorch reference computations. Read only relevant
 skills; the installed collection is not a dependency installation or a quality
 claim. Client entry files provide the same workflow for Claude, Gemini and Cursor.
+
+The user-supplied [ponytail skill](.agents/skills/ponytail/SKILL.md) is mandatory
+for all AI agents on every coding task, project-wide (`full` by default). Read
+and apply it: implement the smallest complete solution, reuse existing code,
+retain validation/tests, and report unchecked scope and material risks. There
+are 409 skill entries (408 vendor entries plus ponytail).
+
+The first [byte-BPE tokenizer API](docs/development/tokenizer.md) is implemented;
+M3.1 remains in progress pending YAML/CLI and corpus-manifest integration.

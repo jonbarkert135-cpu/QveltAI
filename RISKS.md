@@ -71,3 +71,9 @@ or immediate paid jobs. Read the selected skill and helpers before use; verify
 APIs, pin dependencies, preserve root authorization and original Qvelt code.
 Six restrictive Anthropic entries are omitted. Inventory hashes detect drift,
 not malicious upstream content; upgrades require source/license diff review.
+
+Tokenizer M3.1a: byte coverage applies to whole valid UTF-8 strings; isolated
+byte fragments may decode with replacement. Lone surrogates are rejected.
+Trainer pair statistics are not globally memory-bounded. Corpus-scale training,
+YAML/CLI/manifests and cross-environment reproducibility remain unvalidated.
+Ponytail simplicity must retain required validation, tests and reproducibility.

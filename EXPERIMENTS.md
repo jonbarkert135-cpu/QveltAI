@@ -111,3 +111,15 @@ before they are cited as release evidence.
 Numerical thresholds and actual step counts must be chosen from the implemented
 reference contract before these experiments run. None of these checks, even if
 successful, would establish general mathematical reasoning quality.
+
+## R004 — Byte-BPE fixture segmentation (engineering only)
+
+2026-10-31; M3.1a, CPU, Python 3.12.14, tokenizers 0.22.2. Hypothesis:
+byte-level training preserves authored Unicode and digit isolation changes
+compression. Config: target384, min_frequency2, three authored strings repeated
+four times. Exact recipe/results: docs/development/tokenizer.md. Plain BPE actual
+V381 and token counts9/9/16; isolated digits V371 and9/9/26, both full round trips.
+252 tests passed in4.59s (32 new), Ruff/format/mypy green on23 files. This is not
+model training or evidence of reasoning quality. First attempt found untyped
+third-party imports and a callback return annotation; both were addressed without
+weakening tests. Further YAML/manifest/corpus validation remains M3.1.

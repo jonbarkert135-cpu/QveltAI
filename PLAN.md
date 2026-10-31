@@ -120,7 +120,7 @@ matrix. Completion covers metadata and byte integrity, not model state replay.
 
 ### M3.1 — Train and validate a mathematical-text tokenizer
 
-Owner: Lead agent. Status: planned. Dependencies: M2.2.
+Owner: Lead agent. Status: in progress. Dependencies: M2.2.
 
 - [ ] Select a tokenizer algorithm/library after source and license review;
   train it from scratch on a small approved corpus before scaling.
@@ -132,6 +132,12 @@ Owner: Lead agent. Status: planned. Dependencies: M2.2.
 
 Acceptance: a versioned tokenizer artifact and training recipe are reproducible;
 coverage and tokens-per-text measurements are recorded with no math-quality claim.
+
+Completed subtask M3.1a: pinned tokenizers 0.22.2; byte-BPE API with 32
+controls, ASCII digit option, Unicode/byte coverage and atomic JSON save/load;
+32 tests and a fixture compression pilot. Remaining: YAML/CLI training recipe,
+approved raw-data/tokenizer manifest linkage, cross-process/version reproducibility
+and broader held-out segmentation measurements. No corpus-scale tokenizer is frozen.
 
 ### M3.2 — Build deterministic, auditable data preparation
 
