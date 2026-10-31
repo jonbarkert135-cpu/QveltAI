@@ -2,9 +2,12 @@
 
 Last updated: 2026-10-31. Owner: Lead agent.
 
-**No datasets have been downloaded, recommended for ingestion, or approved.**
-No tokenizer corpus, pretraining mixture, post-training source, or benchmark
-revision has been selected. A paper in `DECISIONS.md` is not a dataset approval.
+**No raw corpus has been downloaded and no dataset is approved for ingestion.**
+Phase 1 assessed 13 candidate dataset cards and proposed conditional stage
+mixtures in [docs/research/data_mix.md](docs/research/data_mix.md). Exact immutable
+card revisions, declared licenses, hashes, access failures, and approval=false
+are in [docs/research/sources.json](docs/research/sources.json). Metadata/paper
+retrieval is not corpus ingestion. A paper or wrapper license is not approval.
 
 ## Approval gate
 
@@ -35,8 +38,11 @@ raw corpora, personal information, or credentials in Git.
 | Source / revision | Role | License / evidence | Permitted intended use | Approval |
 | --- | --- | --- | --- | --- |
 
-The inventory has zero entries. Populate real records rather than illustrative
-dataset names whose licenses have not been checked.
+The candidate inventory is D01–D13 in `docs/research/data_mix.md`, with publisher
+license statements and all known restrictions per row. The approved inventory
+above still has zero entries. Promote a candidate only after the full gate,
+including authoritative terms/upstream rights, actual shard access, transforms,
+license obligations and exact corpus revisions, has passed.
 
 ## Locally authored test fixtures
 

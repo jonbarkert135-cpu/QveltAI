@@ -137,6 +137,12 @@ Python/PyTorch/toolchain combination and recheck relevant APIs.
 
 ## Research reading queue — not selected designs
 
+Historical bootstrap queue: Phase 1 has now verified the corresponding primary
+texts in `docs/research/survey.md` and `sources.json`, including the accessed v1
+title of the AdamW preprint. The old labels below record what was unknown at
+bootstrap; use ADR-0008 onward for current choices. Scientific verification is
+claim-scoped, not empirical validation of Qvelt.
+
 Each item is **[unverified]**: the paper text and its applicability have not yet
 been read in this project. Titles/years are starting bibliographic entries to
 check, not claimed results. Record exact links/revisions and findings during M1.1
@@ -186,3 +192,129 @@ publication. This supersedes the feature-branch review preference. Fetch and
 integrate current main before normal fast-forward pushes; never force-push.
 PR API access is optional and does not block Git publication. Source: latest
 user instruction; no new library or scientific claim.
+
+### Publication pause (2026-10-31)
+
+After publishing the environment, the user explicitly said not to republish or
+reapply old edits. The current research request authorizes local research/files,
+not an explicit lifting of that publication pause. Keep this session's commits
+local and do not change the environment draft. This supersedes automatic pushes
+for this session; future publication can follow the next user instruction.
+
+## ADR-0008 — Select a dense, tied, GQA baseline and exact size family
+
+- **Date/status:** 2026-10-31; accepted for implementation, empirically unvalidated.
+- **Context:** actual hardware is a laptop RTX 3060/Core i5/16 GB RAM; future
+  server unknown. Need original, referenceable core code and realistic scaling.
+- **Options:** dense GQA+tied embeddings; MHA+untied head; eight-expert top-2 MoE;
+  MLA/local attention as separate candidates.
+- **Choice:** pre-RMSNorm, RoPE theta=10000, SwiGLU, bias-free GQA, tied E,
+  full block-diagonal causal attention. Sizes 19,338,560 / 125,854,464 /
+  493,553,920 / 1,510,082,560 unique parameters, with exact dimensions and
+  equations in `docs/research/architecture_rfc.md`. No QK-norm by default.
+- **Rationale:** lower KV/state cost and simpler correctness oracles. Reference
+  full-vocabulary loss and document masks precede optional fused paths. Reject
+  MoE's total storage/routing overhead as a baseline, not as universally inferior.
+- **Sources:** [verified] *Root Mean Square Layer Normalization* (2019),
+  *On Layer Normalization in the Transformer Architecture* (2020), *RoFormer*
+  (2021), *GLU Variants Improve Transformer* (2020), *GQA* (2023), *Using the
+  Output Embedding to Improve Language Models* (2016 v1), *MobileLLM* (2024),
+  *Switch Transformers* (2021), official Llama source. Exact titles/links,
+  versions and claim limits are in survey S02/S03/S07/S09/S12/S14/S32/S37/S45.
+  [verified] analytical enumeration/hand-case tests; **not** an instantiated model.
+- **Revisit:** actual memory/throughput, tokenizer freeze, equal-budget MHA/GQA
+  ablations or instability justify a changed design. No hidden method additions.
+
+## ADR-0009 — Freeze the tokenizer budget, not untested tokenizer quality
+
+- **Date/status:** 2026-10-31; accepted design baseline, artifact not trained.
+- **Options:** large multilingual vocabulary; fixed small vocabulary; byte-only.
+- **Choice:** byte-level BPE, 32768 total symbols including 256 byte symbols and
+  32 controls, individual ASCII digits, preserved whitespace/Unicode. Train from
+  scratch only after approved corpus selection; token IDs/hash freeze in M3.1.
+- **Rationale:** common parameter budget across model sizes and laptop memory
+  constraints; digit policy has public precedent but needs our own compression/
+  math/Russian checks. No claim of mathematical superiority.
+- **Sources:** [verified] *Neural Machine Translation of Rare Words with Subword
+  Units* (2015 v1), *Language Models are Unsupervised Multitask Learners* (2019),
+  *LLaMA* (2023), survey S43/S44/S13. 32768/32 are explicit project choices.
+- **Revisit:** poor Russian/LaTeX coverage, excessive token inflation or repeatable
+  reasoning/latency evidence; changes invalidate tokenizer/model/data compatibility.
+
+## ADR-0010 — Use AdamW/WSD and staged budgets as tested hypotheses
+
+- **Date/status:** 2026-10-31; selected starting recipe, no executed optimization.
+- **Options:** cosine, WSD, muP transfer; AdamW, Lion, Muon; ~20P versus longer
+  inference-oriented training. No optimizer is assumed universally best.
+- **Choice:** FP32 AdamW state, supported BF16 compute, beta=(0.9,0.95), clip=1,
+  token-based WSD warmup/stable/10% linear decay. Tiny 10M debug targets; small
+  10B, base 50B, large 150B extended targets, with ~20P research decision gates.
+  Exact size-specific LR/batch/mask/replay semantics in `training_rfc.md`.
+- **Rationale:** transparent optimizer reference and extendible stable checkpoints;
+  match data/horizon/endpoint when comparing schedules. Token budgets and LRs
+  are engineering hypotheses, not predictions from an independently fitted law.
+- **Sources:** [verified] AdamW's accessed *Fixing Weight Decay Regularization in
+  Adam* (2017 v1), *LLaMA* (2023), *Training Compute-Optimal Large Language Models*
+  (2022), *MiniCPM* (2024), *SmolLM2* (2025), *Muon is Scalable for LLM Training*
+  (2025), *Symbolic Discovery of Optimization Algorithms* (2023), *Tensor Programs
+  V* (2022); survey S13/S15–S20/S30. Source-reported gains are not our results.
+- **Revisit:** bounded LR/batch/schedule trials, source capacity, measured budget,
+  optimizer/sharding correctness and quality-per-compute support a different plan.
+
+## ADR-0011 — Separate the laptop development path from server training
+
+- **Date/status:** 2026-10-31; accepted planning contract, hardware not benchmarked.
+- **Options:** promise all sizes on the laptop; offload large state to 16 GB RAM;
+  tiny/short-context pilots plus independently justified server scaling.
+- **Choice:** CPU FP32 references, laptop tiny and profiled short-context small;
+  single GPU where it fits; DDP first on adequate nodes, FSDP for memory pressure.
+  Defer tensor/pipeline/expert parallelism. Assume 6 GiB laptop VRAM only until
+  inventory confirms it. No paid/final training or automatic resource provisioning.
+- **Rationale:** 16P persistent AdamW state alone is ~22.5 GiB for large. Explicit
+  FLOP/memory formulas are not profiler peaks. Include vocabulary head, attention,
+  activation workspaces, checkpoint/gather margins, and separate inference KV.
+- **Sources:** [verified] PyTorch distributed documentation in ADR-0002, SDPA
+  v2.6.0 source (S46), *FlashAttention* (2022; S36). Hardware description from
+  the user's reply; estimates are project derivations verified by research tests.
+- **Revisit:** exact VRAM/OS/driver, throughput, actual server/interconnect,
+  measured memory, budget or a future larger model requires another strategy.
+
+## ADR-0012 — Treat data mixtures as conditional proposals, not approvals
+
+- **Date/status:** 2026-10-31; accepted provenance gate, all ingestion unapproved.
+- **Options:** trust wrapper badges; reject research on all public data; inspect
+  immutable publisher cards and flag unresolved underlying rights precisely.
+- **Choice:** catalog 13 candidate sources in `docs/research/data_mix.md` and
+  `sources.json`; token-weighted main/anneal/SFT mixtures and prompt-weighted RL
+  with explicit denominators. Current code-data slot has no approved corpus.
+  Prefer authored fixtures for software validation; no corpus download now.
+- **Rationale:** publisher license assertions and metadata access can be verified
+  without claiming every underlying right is cleared. ODC-By/CC legal-text
+  endpoints were inaccessible; SmolTalk imported components have their own
+  licenses; web/code/contest derivatives need separate review.
+- **Sources:** [verified] exact publisher README snapshots, Common Crawl terms,
+  Apache-2.0 text; URLs/hashes/access failures in `sources.json`. [verified]
+  *The FineWeb Datasets* (2024), *Deduplicating Training Data Makes Language
+  Models Better* (2021), *SmolLM2* (2025), *2 OLMo 2 Furious* (2025), survey
+  S21/S22/S30/S42. Complete rights verification remains **[unverified]**.
+- **Revisit:** authoritative license/terms evidence, per-file provenance,
+  tokenizer-measured capacity, user language goals and actual data audits.
+
+## ADR-0013 — Build math supervision before verifier-based RL
+
+- **Date/status:** 2026-10-31; selected staged research direction, not implemented.
+- **Options:** immediate long-trace RL; expensive process reward/teacher tools;
+  concise verified SFT, rejection sampling, defensible preference pairs, then RL.
+- **Choice:** bounded exact-answer fixtures and frozen held-out families; SFT
+  first, preference objective when valid pairs exist, GRPO-style G=4 pilot only
+  after verifier/correctness gates. Explicit zero-variance/truncation handling,
+  no style reward, no host execution of generated code. Tools/Lean optional later.
+- **Rationale:** correct answers do not certify traces; small models may have
+  no useful RL signal. Fixed token budgets and out-of-family controls are needed
+  to distinguish real gains from length, contamination and verifier exploitation.
+- **Sources:** [verified] *Chain of Thought Prompting Elicits Reasoning in Large
+  Language Models* (2022), *Let's Verify Step by Step* (2023), *STaR* (2022),
+  *DeepSeekMath* (2024), *Direct Preference Optimization* (2023), *ToRA* (2023),
+  *DeepSeek-Prover* (2024); full titles/versions in survey S23–S28/S40.
+- **Revisit:** verified math success rates, legal supervision supply, independent
+  verifier audits, and actual rollout cost justify process/tool/formal tracks.

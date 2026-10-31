@@ -3,9 +3,31 @@
 Last updated: 2026-10-31. Owner: Lead agent.
 
 **Completed ML experiments: 0. Training runs: 0. Benchmark results: 0.**
-The initial session creates documentation only. Repository inspection and
-document checks are engineering verification, not ML experiments; their evidence
-belongs in `STATE.md`.
+The initial session created documentation only. Phase 1 adds source review and
+analytical checks, not ML experiments. Their evidence is recorded below and in
+`docs/research/validation.md`; no learning or GPU smoke result is claimed.
+
+## R001 — Analytical size and resource validation (not an ML experiment)
+
+- Date/owner/status: 2026-10-31; Lead agent; completed within analytical scope.
+- Hypothesis: the selected four dense specifications have consistent unique
+  parameter counts and dimensionally consistent FLOP/memory/cost calculations.
+- Config: dataclasses in `docs/research/estimates.py`; baseline `db35482` plus
+  Phase 1 local changes. No dataset/tokenizer/seed/accelerator required for pure
+  integer enumeration and deterministic report generation.
+- Control: explicit tensor-shape enumeration, a hand-counted 172-parameter case,
+  dimensional unit cases and exact RFC totals, not a second model implementation.
+- Commands: calculator, 30 unit/reference-arithmetic/CLI/manifest/mix checks,
+  Ruff, formatting, strict mypy, byte comparison; full commands/outcomes and
+  artifact hashes in `docs/research/validation.md`. All final checks exited 0.
+- Result: 19,338,560 / 125,854,464 / 493,553,920 / 1,510,082,560 parameters;
+  exact report regeneration. Initial test-arithmetic/type failures were corrected
+  and retained in the validation account, not hidden as training failures.
+- Conclusion: analytical contracts are internally consistent. They do not prove
+  model correctness, learning, measured peak memory, throughput, or math quality.
+  Next: implement the pinned config/package scaffold, then actual module oracles.
+- Artifacts: committed research source, tests, JSON reports, source manifest and
+  validation record. Paper caches in `/tmp` are not durable release evidence.
 
 ## Required record for an actual experiment
 

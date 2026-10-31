@@ -5,7 +5,7 @@ is named. Likelihoods are qualitative judgments, not measured probabilities.
 
 | ID | Risk | Status / impact | Mitigation and acceptance evidence | Review gate |
 | --- | --- | --- | --- | --- |
-| R01 | No training servers, device inventory, or budget supplied | Open; blocks real scale validation and final training | Deliver tiny CPU correctness first; estimate memory/compute explicitly; require user hardware details and approval before expensive runs | M1.2, M5.2–M5.3 |
+| R01 | Laptop RTX 3060/Core i5/16 GB RAM supplied; server/budget and exact VRAM unknown | Open; blocks real scale validation and final training | Deliver tiny CPU correctness first; estimate memory/compute explicitly; require user hardware details and approval before expensive runs | M1.2, M5.2–M5.3 |
 | R02 | Ambition mistaken for demonstrated quality or lab parity | Open; misleading expectations | Publish only artifact-backed capability and quality claims; compare fixed-budget held-out results; never equate engineering scope with model strength | Every delivery, M7.2 |
 | R03 | Unstable optimization, bad initialization, or mixed-precision overflow | Open; lost compute or silent damage | Reference tests, finite-value diagnostics, gradient checks/clipping, tiny overfit, checkpoint recovery, and controlled learning-rate/precision studies | M4.1–M5.3 |
 | R04 | Causal masking, label shift, normalization, or gradient accumulation is wrong | Open; plausible but invalid learning | Independent forward/gradient oracles; future-token perturbation tests; uneven valid-token and partial-accumulation comparisons | M3.2, M4.1, M5.1–M5.2 |
@@ -31,3 +31,12 @@ is named. Likelihoods are qualitative judgments, not measured probabilities.
 - The project-license choice and name availability need resolution before public
   release/brand commitments, not before reversible local research and code work.
 - There is no evidence of an application bug: no application exists yet.
+
+## Phase 1 update (2026-10-31)
+
+The user has a laptop RTX 3060, Core i5 and 16 GB RAM. Server training remains
+unallocated; assumed 6 GiB VRAM is not a measured inventory. See
+`docs/research/risks.md` for resource/cost uncertainty, conditional corpus rights,
+missing approved code data, math repetition and RL verifier risks. The explicit
+exclusion list defers MoE/MLA, FP8, untested long context, costly teacher/final
+training, unsafe tool execution and publication during the current pause.

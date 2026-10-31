@@ -1,5 +1,10 @@
 # Qvelt contributor and agent instructions
 
+Current publication override (2026-10-31): after publishing the environment,
+the user paused publication and reapplication of earlier edits. Phase 1 research
+is authorized locally; do not push or publish the environment until a new
+publication instruction. This overrides the older automatic-main-push policy.
+
 ## Start every session
 
 1. Read this file, `STATE.md`, `PLAN.md`, and relevant entries in `DECISIONS.md`.

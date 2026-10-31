@@ -50,15 +50,15 @@ Evidence: `STATE.md`, documentation checks recorded on 2026-10-31.
 
 ### M1.1 — Establish an evidence-backed architecture proposal
 
-Owner: Lead agent. Status: planned. Dependencies: M0.
+Owner: Lead agent. Status: complete. Dependencies: M0.
 
-- [ ] Read and version primary sources for a dense causal-decoder baseline,
+- [x] Read and version primary sources for a dense causal-decoder baseline,
   normalization, positional encoding, MLP activation, attention, and initialization.
-- [ ] Compare architecture candidates in `DECISIONS.md`; specify tensor shapes,
+- [x] Compare architecture candidates in `DECISIONS.md`; specify tensor shapes,
   residual paths, masking, loss, special tokens, and supported context lengths.
-- [ ] Derive parameter counts for tiny, approximately 100M, and 500M–1.5B tiers;
+- [x] Derive parameter counts for tiny, approximately 100M, and 500M–1.5B tiers;
   distinguish embedding, non-embedding, and tied parameters.
-- [ ] Choose numerical reference paths and optional optimized attention paths;
+- [x] Choose numerical reference paths and optional optimized attention paths;
   document prerequisites, licensing, precision, and fallback behavior.
 
 Acceptance: an approved-by-evidence design and interface document exists with
@@ -68,15 +68,15 @@ is selected merely because a candidate is listed in `DECISIONS.md`.
 
 ### M1.2 — Define resource, reproducibility, and math-evaluation contracts
 
-Owner: Lead agent. Status: planned. Dependencies: M1.1.
+Owner: Lead agent. Status: complete. Dependencies: M1.1.
 
-- [ ] Specify tokens, optimizer updates, global/per-device batch semantics,
+- [x] Specify tokens, optimizer updates, global/per-device batch semantics,
   sequence lengths, precision, and a reproducible run-manifest schema.
-- [ ] Estimate weights, gradients, optimizer state, activation, and checkpoint
+- [x] Estimate weights, gradients, optimizer state, activation, and checkpoint
   memory with stated assumptions; provide CPU/tiny and GPU capability tiers.
-- [ ] Define a fixed mathematical validation protocol, held-out split policy,
+- [x] Define a fixed mathematical validation protocol, held-out split policy,
   answer extraction rules, contamination checks, and evidence required for claims.
-- [ ] Separate exact same-topology resume from cross-topology migration;
+- [x] Separate exact same-topology resume from cross-topology migration;
   define supported deterministic mode and explicit failure conditions.
 
 Acceptance: a documented resource matrix and testable training/evaluation
@@ -420,8 +420,21 @@ or rollback; unsupported combinations are never silently treated as verified.
 This follow-up does not complete M2.1: no package, ML runtime, or project CI
 has been implemented. See `SETUP.md` for commands and access limitations.
 
+## Research acceptance evidence (2026-10-31)
+
+`docs/research/` contains the verified survey/source manifest, architecture and
+training RFCs, conditional data proposal, risks/exclusions, and reproducible
+parameter/FLOP/memory calculations. Actual user hardware is RTX 3060 Laptop,
+Core i5, 16 GB RAM; VRAM is an explicit unverified planning assumption.
+Analytical/reference arithmetic tests, Ruff and strict mypy passed; no model,
+GPU benchmark, dataset ingestion or training ran. M1.1/M1.2 completion refers to
+the design contracts, not implementation or measured resource feasibility.
+No corpus is approved; proposed budgets/LRs/data weights require later trials.
+
 ## Immediate next session
 
-Start M1.1 by reviewing the sources listed in `DECISIONS.md`, writing the
-architecture/interface proposal, and documenting alternatives. Do not skip
-directly to scaffold or model code. No final-scale training is authorized.
+Start M2.1: inspect the research RFCs, select compatible Python/PyTorch CPU/CUDA
+pins, and implement the typed config/package/test scaffold. Then M2.2 manifests.
+Preserve the publication pause from the user's environment-published message:
+keep commits local until a new publication instruction. Do not reapply old cloud
+settings or launch final-scale/paid training.

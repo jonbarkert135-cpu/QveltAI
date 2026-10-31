@@ -2,69 +2,73 @@
 
 Updated: 2026-10-31. Owner: Lead agent.
 
-## Current phase
+## Current phase and last completed task
 
-M0 documentation bootstrap and development-tool setup are complete. Architecture
-research M1.1 is next; no model code, training, or benchmark results exist.
-The user authorizes direct development and publication on `main`, without PRs
-as a prerequisite. Preserve history and user files; never force-push.
+Phase 1 design milestones M1.1/M1.2 are complete. `docs/research/` contains the
+verified-source survey, architecture/training RFCs, conditional data proposal,
+risks/exclusions and tested analytical estimates. This is design acceptance,
+not acceptance of a model implementation, GPU support, training or benchmarks.
 
-## Last completed task
+Current checkout: `/workspace/newai_cddevel`, branch `main`; canonical repository
+`jonbarkert135-cpu/QveltAI`. Preserve the user's uploaded brief and all history.
+**Publication is paused** by the user's environment-published instruction.
+Research commits remain local; no push, cloud draft edit or republication occurred.
 
-Installed isolated hash-locked development tools; saved install/start cloud
-instructions; preserved the uploaded brief and prepared direct main publication.
+## Selected baseline
 
-## Repository and tools
+Dense pre-RMSNorm/RoPE/SwiGLU/GQA, tied embeddings, bias-free layers; V=32768.
+Exact parameters: tiny 19,338,560; small 125,854,464; base 493,553,920;
+large 1,510,082,560. AdamW/WSD and conditional stage mixtures are starting
+hypotheses. Accepted choices/revisit criteria: ADR-0008 through ADR-0013.
 
-- Checkout: `/workspace/newai_cddevel`; branch `main`.
-- Canonical origin: `https://github.com/jonbarkert135-cpu/QveltAI.git`.
-- Both initial histories and `llm_build_prompts-2.md` are preserved.
-- Python 3.12.14, uv 0.12.23, Git 2.52.0, gh 2.46.0.
-- `/workspace/qvelt-tools/venv`: pytest 8.3.5, Ruff 0.11.13, mypy 1.15.0,
-  PyYAML 6.0.3; nine total packages pinned with hashes in the external lock.
-- PyTorch is not installed; no GPU capabilities have been profiled.
+User hardware: ASUS TUF Gaming F15, RTX 3060 Laptop, Core i5, 16 GB RAM.
+Exact VRAM/power/OS are unverified; 6 GiB is only a planning assumption.
+Tiny and short-context small pilots are the laptop path; full base/large training
+requires separately assessed hardware. No server, budget or GPU profiling exists.
 
-## Verification
+## Verification and limitations
 
-- Documentation local links/structure and whitespace checked. The uploaded user
-  brief was compared byte-for-byte with its original main version.
-- Exact cloud install script ran twice; tool version/startup and dependency
-  consistency checks passed. These are not application-test or ML-test passes.
-- Feature branch push and remote SHA verification succeeded. Final main
-  publication uses a normal non-forced push after fetching current main.
-- GitHub API/PR attempts returned `Forbidden`; no PR was created. Git pushes
-  work and PRs are optional under the latest instruction.
-- Cloud draft saved: `install_script`, `start_skill`, and `api.github.com` custom
-  domain, preserving presets. Draft application/publication remains unverified.
+- 43 scientific primary texts accepted in the survey, exact source hashes/versions
+  recorded; one wrong-paper lookup excluded. Scientific claims are attributed,
+  not independently replicated. Official source/API evidence is separate.
+- 13 dataset candidates assessed; publisher license claims and unresolved upstream
+  rights recorded. No dataset approved or corpus downloaded. Some legal-text
+  endpoints returned 403, one gated dataset card returned 401.
+- Calculator: formula, independent tensor enumeration, hand-counted control,
+  exact four-size totals, memory/FLOP units and CLI/report consistency checked.
+- 30 tests passed; Ruff check/format and strict mypy passed on the two research
+  Python files. Exact JSON regeneration and documentation consistency passed.
+- Commands, outcomes and hashes: `docs/research/validation.md`; engineering
+  experiment R001 in `EXPERIMENTS.md`. No ML smoke test or training ran.
+- PyTorch is not installed. Application dependency pins, YAML config loaders,
+  numerical model modules and runtime/CI support remain unimplemented.
 
 ## Next three tasks
 
-1. M1.1: review primary architecture sources and record verified findings.
-2. M1.1: specify architecture, equations, shapes, masks, and parameter counts.
-3. M1.2: establish resource/replay and mathematical evaluation contracts before
-   implementing the M2.1 package scaffold.
+1. M2.1: select compatible pinned Python/PyTorch CPU/CUDA and tooling dependencies;
+   establish package layout, config dataclasses/YAML validation and tests.
+2. M2.2: implement versioned manifests/artifact identity and atomic/checksummed IO.
+3. M3.1 preparation: resolve source rights/project license and train/test the
+   tokenizer only on approved data, preserving the mathematical/Russian contract.
 
-## Blockers and limitations
+No external answer blocks M2.1 work. Before paid training or release, user input
+matters most for server budget, Russian-language priority and project/data license
+policy. These are not permission to consume unapproved data or run costly jobs.
 
-No blocker prevents source review or direct Git publication. Servers/budget,
-approved datasets, architecture, ML dependencies, and project license remain
-unprovided or undecided. GitHub API remains unavailable; optional API operations
-require saving the prepared environment settings and publishing the environment,
-then retrying. Existing GH_TOKEN is present; its value was never inspected.
-
-## Reproduce the tooling checks
+## Reproduce the last verified state
 
 ```bash
 cd /workspace/newai_cddevel
-git status --short --branch
-git log -3 --oneline
+python3 docs/research/estimates.py --output /tmp/qvelt-estimates.json
+cmp docs/research/estimates.json /tmp/qvelt-estimates.json
+/workspace/qvelt-tools/venv/bin/python -m pytest -q docs/research/test_estimates.py
+/workspace/qvelt-tools/venv/bin/ruff check docs/research/*.py
+/workspace/qvelt-tools/venv/bin/ruff format --check docs/research/*.py
+/workspace/qvelt-tools/venv/bin/mypy --strict docs/research/*.py
 git diff --check
-source /workspace/qvelt-tools/venv/bin/activate
-python -m pytest --version
-ruff --version
-mypy --version
-uv pip check --python /workspace/qvelt-tools/venv/bin/python
+git status --short --branch
 ```
 
-See `SETUP.md`. Expected: clean main and compatible tool dependencies. No train
-command exists yet. No claim of hardware scalability or model quality is made.
+Expected: reproducible analytical report, 30 passing tests, lint/format/type
+checks green, clean main with local Phase 1 commits. See research README for
+source/evidence scope. No train/serve command exists yet.
