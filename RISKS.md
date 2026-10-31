@@ -62,3 +62,12 @@ M5 work. R06 distributed transactions/multi-node recovery remain open. Native
 Windows, object stores, NFS/shared-storage durability and physical power loss
 were not validated. Source license strings do not close R07 ingestion rights;
 no corpus or trained checkpoint was created.
+
+## Third-party agent skill instructions
+
+408 installed skills are pinned instructions/assets, not an audited execution
+layer. Some assume different client tools, unpinned libraries, network services
+or immediate paid jobs. Read the selected skill and helpers before use; verify
+APIs, pin dependencies, preserve root authorization and original Qvelt code.
+Six restrictive Anthropic entries are omitted. Inventory hashes detect drift,
+not malicious upstream content; upgrades require source/license diff review.
