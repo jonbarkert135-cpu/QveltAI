@@ -275,3 +275,17 @@ Conclusion:reuse the implementation. Record missing dedicated initialization,
 non-finite policy and tied-embedding combined-gradient checks before full M4.1
 acceptance; KV-cache/activation checkpointing remain M4.2. No new test/model code,
 GPU run or trained-model quality result. Report:decoder_rfc_review.md.
+
+## R012 — Initialization, tied gradients and non-finite fail-stop
+
+Date:2026-11-01. Hypothesis:the remaining RFC invariants hold for the existing
+portable model without changing architecture. Tests add seeded state equality,
+changed-seed inequality, L3/d128/H8/KV2/f256 initialization mean/variance checks
+(at least4096 matrix elements, variance rtol.08), independently split embedding
+input/head gradient sum (rtol2e-5/atol2e-6), and NaN/+Inf/-Inf loss/norm propagation.
+An actual numeric trainer run with injected non-finite logits must stop before
+AdamW.step and publish no completed checkpoint. No invalid values are sanitized.
+Commands: `uv run --frozen --extra cpu pytest tests/unit/test_model.py tests/integration/test_training.py::test_nonfinite_loss_stops_before_optimizer_update -q`
+and `make lint typecheck test`. Observed24 targeted passed in4.08s;433 full-suite
+passed/2 optional SDK skips/2 GPU deselections in69.69s; Ruff and mypy82 files pass.
+Conclusion:M4.1 portable gate closes, GPU/cache/recomputation remain M4.2.

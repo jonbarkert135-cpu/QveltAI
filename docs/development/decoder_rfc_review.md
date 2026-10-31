@@ -59,3 +59,14 @@ uv run --frozen --extra cpu pytest tests/unit/test_model.py tests/integration/te
 
 Executed result:18 passed in6.56s, CPU. These are existing tests rerun for the
 review, not18 newly added tests or an additional training experiment.
+
+## M4.1 coverage closure
+
+The initial follow-up gaps above were closed on2026-11-01. Seven new regressions
+check identical seeded states/different seeds, matrix mean/variance and residual
+scales, sum of independent input/output embedding gradients, NaN/Inf propagation
+(including masked rows), and trainer failure before optimizer step/checkpoint.
+No core architectural change was needed. Targeted24 tests pass in4.08s; full
+suite433 passed/2 optional SDK skips/2 GPU deselections in69.69s. Ruff and mypy82
+files pass. Full suite includes actual two-rank uneven-mask loss/gradient references.
+M4.1 is complete; cached/optimized/mixed-precision paths retain separate M4.2 gates.

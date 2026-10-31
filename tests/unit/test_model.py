@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
+from typing import cast
 
 import pytest
 import torch
@@ -11,7 +12,7 @@ from torch import Tensor
 from torch.nn import functional as F
 
 from qvelt.config import ModelConfig, load_config
-from qvelt.model.decoder import Decoder
+from qvelt.model.decoder import Block, Decoder
 from qvelt.model.layers import Attention, RMSNorm, RotaryEmbedding, SwiGLU
 from qvelt.model.loss import causal_loss
 
@@ -236,3 +237,90 @@ def test_invalid_forward_inputs(case: str) -> None:
             model(ids, torch.tensor([[-1, 0]]))
         if case == "mask":
             model(ids, valid_mask=ids)
+
+
+def test_seeded_initialization_and_residual_variances() -> None:
+    config = ModelConfig(
+        layers=3, hidden=128, heads=8, kv_heads=2, ffn=256, vocab=288, context=8
+    )
+    with torch.random.fork_rng():
+        torch.manual_seed(41)
+        first = Decoder(config)
+        torch.manual_seed(41)
+        second = Decoder(config)
+        assert all(
+            torch.equal(value, second.state_dict()[name])
+            for name, value in first.state_dict().items()
+        )
+        torch.manual_seed(42)
+        different = Decoder(config)
+    assert not torch.equal(first.embedding.weight, different.embedding.weight)
+    scaled = {
+        id(p)
+        for block in first.blocks
+        for p in (
+            cast(Block, block).attention.output.weight,
+            cast(Block, block).ffn.down.weight,
+        )
+    }
+    for parameter in first.parameters():
+        if parameter.ndim == 1:
+            torch.testing.assert_close(
+                parameter, torch.ones_like(parameter), rtol=0, atol=0
+            )
+            continue
+        variance = 0.02**2 / (2 * config.layers) if id(parameter) in scaled else 0.02**2
+        # At least4096 elements per matrix; this checks the distribution, not init calls.
+        assert parameter.numel() >= 4096
+        torch.testing.assert_close(
+            parameter.detach().var(unbiased=True),
+            torch.tensor(variance),
+            rtol=0.08,
+            atol=0,
+        )
+        assert abs(float(parameter.detach().mean())) < 0.1 * math.sqrt(variance)
+
+
+def test_tied_embedding_gradient_equals_independent_input_and_output_sum() -> None:
+    model = Decoder(SMALL)
+    tokens = torch.tensor([[32, 32, 33, 34]])
+    positions = torch.arange(4)[None]
+    documents = torch.zeros_like(tokens)
+    valid = torch.ones_like(tokens, dtype=torch.bool)
+    input_weight = model.embedding.weight.detach().clone().requires_grad_()
+    output_weight = model.embedding.weight.detach().clone().requires_grad_()
+    hidden = F.embedding(tokens, input_weight)
+    for block in model.blocks:
+        hidden = block(hidden, positions, documents, valid)
+    separate_logits = F.linear(model.norm(hidden), output_weight)
+    upstream = torch.randn_like(separate_logits)
+    input_grad, output_grad = torch.autograd.grad(
+        (separate_logits * upstream).sum(), (input_weight, output_weight)
+    )
+    actual_logits = model(tokens, positions, documents, valid)
+    (tied_grad,) = torch.autograd.grad(
+        (actual_logits * upstream).sum(), (model.embedding.weight,)
+    )
+    torch.testing.assert_close(
+        tied_grad, input_grad + output_grad, rtol=2e-5, atol=2e-6
+    )
+    assert bool((input_grad[torch.tensor([32, 33, 34])] != 0).any())
+    assert torch.equal(input_grad[:32], torch.zeros_like(input_grad[:32]))
+    assert bool((output_grad[:32] != 0).any())
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), -float("inf")])
+def test_nonfinite_logits_are_not_silently_sanitized(value: float) -> None:
+    logits = torch.full((1, 2, 288), value, requires_grad=True)
+    targets = torch.tensor([[32, 0]])
+    total, count = causal_loss(logits, targets)
+    assert count.item() == 1 and not bool(torch.isfinite(total))
+    norm = RMSNorm(8, 1e-6)
+    assert not bool(torch.isfinite(norm(torch.full((1, 8), value))).all())
+
+
+def test_nonfinite_padding_logits_still_surface_at_training_boundary() -> None:
+    logits = torch.zeros(1, 2, 288)
+    logits[:, 1] = float("nan")
+    loss, count = causal_loss(logits, torch.tensor([[32, 0]]))
+    assert count.item() == 1 and not bool(torch.isfinite(loss))

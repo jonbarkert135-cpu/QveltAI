@@ -791,3 +791,22 @@ No classifier placeholder or claimed learned quality result is shipped.
   docs/development/decoder_rfc_review.md; public component sources remain in RFC-001.
 - **Revisit:**a failing independent oracle, architecture/config changes or the
   implementation of cached/optimized paths. Review is not GPU/quality validation.
+
+## ADR-0033 — Close portable numerical coverage without rank-local sanitization
+
+- **Date/status:**2026-11-01; implementation-reference tests added.
+- **Choice:** fixed-seed exact repeatability and sufficiently large-matrix mean/
+  variance checks for RFC residual initialization; separate input/output embedding
+  gradients must sum to the tied parameter gradient. Preserve IEEE NaN/Inf
+  propagation and the existing trainer's collective finite-loss check before any
+  optimizer step. Even masked non-finite logits surface as a non-finite loss;
+  empty-target zero loss is defined only for finite logits. No silent clipping or
+  replacement, and no layer-local error that could strand distributed peers.
+- **Options/rationale:** per-layer eager scans/sanitization change performance or
+  hide instability; an all-rank training boundary is the established fail-stop
+  location. The current numeric fixture rejects globally empty windows as invalid.
+- **Sources:**[verified] RFC-001 initialization/loss equations; current original
+  model/runner and executed independent gradient/variance/NaN tests; PyTorch2.9.1
+  autograd and clip_grad_norm_(error_if_nonfinite=True) installed interfaces.
+- **Revisit:** precision/backend changes, stochastic layers, new distributed trainer
+  or a deliberately different empty-window policy. GPU behavior remains unverified.

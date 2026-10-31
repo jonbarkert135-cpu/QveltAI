@@ -153,3 +153,25 @@ def test_fsdp2_gpu_checkpoint_resume(tmp_path: Path) -> None:
         )
         assert result.returncode == 0, result.stdout + result.stderr
     assert latest_checkpoint(tmp_path / "fsdp").name == "step-00000004"
+
+
+def test_nonfinite_loss_stops_before_optimizer_update(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from typing import Any
+    from unittest.mock import patch
+
+    from torch import Tensor
+
+    def poisoned(self: Decoder, token_ids: Tensor, *args: Any, **kwargs: Any) -> Tensor:
+        return torch.full(
+            (*token_ids.shape, self.config.vocab), float("nan"), requires_grad=True
+        )
+
+    monkeypatch.setattr(Decoder, "forward", poisoned)
+    output = tmp_path / "nonfinite"
+    with patch.object(torch.optim.AdamW, "step") as step:
+        with pytest.raises(FloatingPointError, match="nonfinite"):
+            train_synthetic(short_job(), output, ROOT)
+        step.assert_not_called()
+    assert not list((output / "checkpoints").glob("step-*/manifest.json"))

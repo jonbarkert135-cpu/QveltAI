@@ -4,12 +4,12 @@ Updated:2026-11-01. Owner:Lead agent.
 
 ## Current task
 
-Small Phase4 task completed:reviewed the existing portable decoder at91e9dc8
-against RFC-001 and the packed-data interface.18 existing CPU numerical/integration
-tests passed in6.56s; no architecture/code change. Report:
-docs/development/decoder_rfc_review.md. M4.1 is in progress with explicit coverage
-gaps, not complete. Previous Phase3 implementation and green CI evidence remain
-valid below; production inputs remain blocked in M3.3. Publication to main is active.
+M4.1 portable numerical acceptance is complete:433 passed/2 optional SDK skips/
+2 GPU deselections in69.69s; lint/format and mypy82 files pass. Seven new tests
+close fixed-seed/residual variance, combined tied-embedding gradients and non-finite
+fail-stop before optimizer/checkpoint. M4.2 runtime/cache/recomputation design is
+in progress in docs/development/phase4_design.md. Publication to main is active;
+production input approvals remain blocked in M3.3. No paid/final-scale run.
 
 ## Implemented and verified
 
@@ -54,8 +54,8 @@ Windows, actual i5/16GB laptop performance, SFT/RL and serving remain unvalidate
 
 ## Next three tasks
 
-1. M4.1:add initialization/residual-scale, non-finite policy and tied-embedding
-   combined-gradient regressions identified by the completed decoder review.
+1. M4.2:implement explicit bounded KV-cache, tested SDPA execution and non-reentrant
+   activation checkpointing; compare values/gradients and exact replay.
 2. M3.3:clear production sources/benchmarks, freeze the distinct project final set,
    add rights-approved format adapters and corpus-scale labeled filtering audits.
 3. After M4.1,implement/test M4.2 KV-cache and activation checkpointing; then

@@ -191,16 +191,16 @@ GPU saturation and atomic packed-training replay are M5 hardware/trainer gates.
 
 ### M4.1 — Implement the portable decoder and numerical oracles
 
-Owner: Lead agent. Status: in progress. Dependencies: M3.2.
+Owner: Lead agent. Status: complete. Dependencies: M3.2.
 
 - [x] Review the existing M2.3 decoder against RFC-001 and the Phase3 packed-data
   contract; record inspected components, rerun references and remaining gaps.
 - [x] Implement the M1.1 architecture in small typed modules: embeddings,
   normalization, position handling, attention, MLP, blocks, output head, and loss.
-- [ ] Add independent small-tensor reference comparisons for values and
+- [x] Add independent small-tensor reference comparisons for values and
   gradients; test causality, shapes, initialization, padding, loss masking,
   non-finite inputs, and configuration errors.
-- [ ] Verify shifted next-token targets and global valid-token loss accounting;
+- [x] Verify shifted next-token targets and global valid-token loss accounting;
   enumerate actual parameter counts for each size configuration.
 
 Acceptance: tiny FP32 CPU forward/backward and all reference tests pass with
@@ -208,13 +208,13 @@ justified tolerances. Tests demonstrate no future-token leakage; declared model
 sizes match the implemented parameter counts.
 
 Review evidence (2026-11-01):docs/development/decoder_rfc_review.md;18 existing
-CPU reference/integration tests pass. Dedicated initialization, non-finite policy
-and tied-embedding combined-gradient regressions remain open in M4.1; the audit
-does not close the entire milestone.
+CPU reference/integration tests pass. The initial audit left initialization/non-finite/tied-gradient gaps. These are now
+covered:433 full-suite CPU tests pass, including seven new regressions, four meta
+counts and actual two-rank uneven-mask/global-loss references; see R012.
 
 ### M4.2 — Add measured accelerator and decoding paths
 
-Owner: Lead agent. Status: planned. Dependencies: M4.1.
+Owner: Lead agent. Status: in progress. Dependencies: M4.1.
 
 - [ ] Integrate supported optimized attention and mixed precision behind runtime
   capability checks; retain a usable portable path.
