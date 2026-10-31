@@ -446,3 +446,15 @@ string. M3.2 then supplies deterministic shard/packing/data-order behavior.
 Preserve the publication pause: commits remain local, no previous cloud edits
 are reapplied and no final-scale/paid training is launched. M5 must implement
 actual tensor/optimizer/RNG/sampler checkpoint semantics before claiming replay.
+
+## Supporting task — Pinned agent skills
+
+Owner: Lead agent. Status: complete. Dependencies: user request, source/license inspection.
+
+- [x] Vendor all redistributable requested collections and math subtree; retain licenses.
+- [x] Record commit/file identities, catalog, exclusions and task-specific usage rules.
+- [x] Add README/agent entry points; verify hashes, first-party tests and lint/types.
+
+Acceptance: 408 installed skill entries have intact source files and license notices;
+6 restrictive entries are explicitly excluded. Source authenticity is Git provenance,
+not a claim of comprehensive security or third-party runtime validation.

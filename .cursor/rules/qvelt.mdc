@@ -1,0 +1,8 @@
+---
+description: Qvelt development and required agent skills
+alwaysApply: true
+---
+
+Read and follow AGENTS.md and docs/development/skills.md. Select and read relevant
+SKILL.md files under .agents/skills before development; preserve project tests,
+license checks, evidence requirements and current publication authorization.

@@ -56,6 +56,7 @@ addopts = ["--strict-config", "--strict-markers", "-ra"]
 filterwarnings = ["error"]
 
 [tool.ruff]
+extend-exclude = [".agents/skills"]
 target-version = "py311"
 line-length = 88
 

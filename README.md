@@ -67,3 +67,17 @@ checkpoint metadata nor a file hash proves model-state replay or data rights.
 
 Next: M3.1 tokenizer training/workflows on approved data. A project license
 has not been selected; public visibility alone does not grant reuse rights.
+
+## Instructions for all AI development agents
+
+Use the installed project-local [agent skills and complete catalog](docs/development/skills.md)
+under `.agents/skills/`, and follow [AGENTS.md](AGENTS.md). The installation includes
+408 skills from K-Dense, Continuous Claude (math), Hugging Face, Orchestra,
+Anthropic and OpenAI, pinned by commit and SHA-256. Six Anthropic skills are
+excluded because their licenses prohibit retention/redistribution.
+
+Before each task, read and apply relevant SKILL.md instructions; verify actual
+library APIs and run Qvelt's required tests. Mathematical checks use executable
+SymPy/exact arithmetic or NumPy/PyTorch reference computations. Read only relevant
+skills; the installed collection is not a dependency installation or a quality
+claim. Client entry files provide the same workflow for Claude, Gemini and Cursor.

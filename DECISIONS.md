@@ -471,3 +471,22 @@ for this session; future publication can follow the next user instruction.
   `docs/development/validation_m2_2.md` records exact code and artifact identities.
 - **Revisit:** distributed launch, dirty-code snapshots, runtime/hardware capture,
   checkpoint semantic validation or stricter release provenance requirements.
+
+## ADR-0020 — Vendor pinned skill instructions with phase-specific use
+
+- **Date/status:** 2026-10-31; accepted at the user's explicit installation request.
+- **Context/options:** floating npx installers versus immutable project-local snapshots.
+- **Choice:** 408 skill entries, source-relative assets, license notices and SHA-256
+  inventory; omit six restrictive Anthropic skills. Use root agent policy and
+  phase-specific read-before-use; exclude third-party helpers from first-party Ruff.
+- **Rationale:** reproducible instruction access across agents without running
+  installers/hooks or replacing original model code. Vendor payment/publication
+  directives remain subordinate to current user authorization. Publish verified
+  local work to main following the user's explicit resumption instruction.
+- **Sources:** [verified] exact six Git source commits, license texts, SymPy,
+  Continuous Claude math and HF trainer entry instructions; full inventory in
+  docs/development/skills.lock.json and catalog. Remaining instructions are
+  installed, not exhaustively reviewed or executed; API claims remain [unverified]
+  until checked for each development task. No upstream popularity/safety claim adopted.
+- **Revisit:** source/license changes, verified incompatibilities, malicious or
+  obsolete content; upgrades require a reviewed diff and refreshed hashes.

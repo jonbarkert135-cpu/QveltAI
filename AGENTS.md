@@ -1,9 +1,19 @@
 # Qvelt contributor and agent instructions
 
-Current publication override (2026-10-31): after publishing the environment,
-the user paused publication and reapplication of earlier edits. Development
-is authorized locally; do not push or publish the environment until a new
-publication instruction. This overrides the older automatic-main-push policy.
+Current publication policy (2026-10-31): the user explicitly resumed publication
+of all completed work and reports to GitHub `main`. Commit verified work and push
+to main; never force-push. This supersedes the earlier publication pause.
+
+## Required agent skills
+
+Use the project-local skills in `.agents/skills/` for applicable development tasks.
+Read [the catalog and usage policy](docs/development/skills.md), select and read
+relevant SKILL.md files before using them, and announce the selection. All AI
+agents must follow this workflow. Verify mathematical claims with executed
+SymPy/exact arithmetic or numerical reference code, with explicit assumptions.
+Vendor examples are guidance; verify installed APIs and preserve Qvelt tests,
+licenses and original core implementation. Skills do not authorize paid compute,
+remote messaging, secret extraction or publication beyond current user scope.
 
 ## Start every session
 

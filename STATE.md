@@ -11,8 +11,15 @@ semantic model/optimizer checkpoint loader exists.
 
 Checkout `/workspace/newai_cddevel`, branch `main`, repository
 `jonbarkert135-cpu/QveltAI`. M2.2 code commits: `9027efe`, `f4fd2cc`, followed by
-documentation. Publication remains paused: no push, environment draft edit,
-republication or old setup-script replay occurred. User files/history preserved.
+documentation. The user resumed publication to main after the pause; publish completed local
+work including reports. Environment configuration remains unchanged.
+
+## Latest supporting task
+
+Installed 408 pinned agent skills with hashed source/assets and license
+notices; six restrictive Anthropic skills excluded. Catalog/lock and universal
+agent entry instructions are in docs/development/skills.md. No vendor installer,
+job or helper script executed. Next remains M3.1. See ADR-0020.
 
 ## Verified capabilities
 
