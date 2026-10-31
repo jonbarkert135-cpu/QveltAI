@@ -159,3 +159,22 @@ necessary even after a paper has been read.
 Dataset, model-weight, tokenizer-algorithm, external-runtime, and project-license
 choices are **not made** by this initial delivery. No source above authorizes
 copying implementation code or using an associated dataset.
+
+## ADR-0007 — Isolate bootstrap tooling and publish through a feature branch
+
+- **Date:** 2026-10-31. **Status:** accepted for environment setup.
+- **Context:** the user authorizes routine pushes and PR creation. Remote main
+  now contains an uploaded project brief and GitHub redirects to `QveltAI`.
+- **Options:** alter global Python; prematurely select the ML stack; isolate only
+  development tools while retaining the architecture/scaffold gates.
+- **Choice:** use `/workspace/qvelt-tools/venv`, a fully pinned hash-locked
+  requirements file, and a saved installation script. Preserve both Git histories
+  via a merge and publish `qvelt/environment-setup`; retain main for PR review.
+- **Rationale:** make tool installation repeatable without changing model
+  dependencies or losing the user's uploaded file. Git access and API access
+  are distinct: a successful push does not imply PR creation permission.
+- **Sources:** user authorization (2026-10-31); [verified] uv 0.12.23 installed
+  CLI documentation (`uv pip sync --help`, `uv pip compile --help`), hash
+  generation/requirements enforcement; observed successful sync and push.
+- **Revisit when:** M2.1 selects package dependencies, or GitHub API access is
+  applied. Bootstrap versions are not a claim of latest versions or ML support.

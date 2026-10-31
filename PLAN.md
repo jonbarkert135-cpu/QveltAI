@@ -408,6 +408,17 @@ Owner: Lead agent. Status: planned. Dependencies: M10.1; ongoing after release.
 Acceptance: upgrades have replay/regression evidence and a documented migration
 or rollback; unsupported combinations are never silently treated as verified.
 
+## Environment and publication follow-up (2026-10-31)
+
+- [x] Install isolated bootstrap tools with hash-locked transitive dependencies.
+- [x] Verify repeatable installation and tool startup; preserve the uploaded brief.
+- [x] Publish a feature branch without rewriting main or user history.
+- [x] Save install/start instructions and the GitHub API domain in the environment draft.
+- [ ] Create the pull request once GitHub API access is applied and verified.
+
+This follow-up does not complete M2.1: no package, ML runtime, or project CI
+has been implemented. See `SETUP.md` for commands and access limitations.
+
 ## Immediate next session
 
 Start M1.1 by reviewing the sources listed in `DECISIONS.md`, writing the

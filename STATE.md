@@ -6,7 +6,8 @@ Updated: 2026-10-31. Owner: Lead agent.
 
 Documentation bootstrap M0 is complete. Phase 1 (research and architecture
 decisions) is next and has not started. The explicit first-session boundary is
-documentation only; wait for the user's next prompt before implementation.
+documentation only. The user subsequently authorized cloud setup and GitHub
+publication; see the latest follow-up below.
 
 ## Last completed task
 
@@ -15,7 +16,7 @@ Inspected the empty repository and established project memory: `PLAN.md`,
 `README.md`, with this state file. The roadmap covers all ten requested phases
 and records owners, statuses, dependencies, tasks, and acceptance criteria.
 
-## Observed repository and environment
+## Initial observed repository and environment (historical)
 
 - Checkout: `/workspace/newai_cddevel`.
 - Origin identity: `github.com/jonbarkert135-cpu/newai_cddevel`.
@@ -31,7 +32,7 @@ and records owners, statuses, dependencies, tasks, and acceptance criteria.
   Official PyTorch v2.6.0 documentation/source was read through the platform
   proxy; see `DECISIONS.md` for the narrow verified claims.
 
-## Verification of this delivery
+## Initial documentation verification (historical)
 
 - A standard-library documentation checker passed: eight expected Markdown files,
   seven relative file links, ten ordered phases, 23 milestones with required
@@ -79,7 +80,7 @@ git ls-files
 git diff --check
 ```
 
-Expected: a clean `work` branch with a documentation commit and eight root
+Initial expectation: a clean `work` branch with a documentation commit and eight root
 Markdown files; no executable Qvelt package. Inspect the roadmap headings with:
 
 ```bash
@@ -89,3 +90,28 @@ rg '\[verified\]|\[unverified\]' DECISIONS.md
 
 There are intentionally no train/install/test commands yet. Add real commands
 when the associated implementations exist and have actually been exercised.
+
+## Latest follow-up: environment and GitHub publication
+
+- Canonical origin is now `https://github.com/jonbarkert135-cpu/QveltAI.git`,
+  following GitHub's rename notice. Current branch: `qvelt/environment-setup`.
+- Preserved remote main's uploaded `llm_build_prompts-2.md` byte-for-byte by
+  merging its history with the local documentation history. No force operations.
+- Published the feature branch; verified its SHA with `git ls-remote`. Main
+  remains unchanged. The final documentation update is pushed to the same branch.
+- Installed pytest 8.3.5, Ruff 0.11.13, mypy 1.15.0, PyYAML 6.0.3 into
+  `/workspace/qvelt-tools/venv`. Nine total packages are hash-locked. The exact
+  installation script ran twice; tool startup and dependency checks passed.
+  No application unit tests, numerical tests, lint/type analysis, or ML run occurred.
+- Saved cloud draft fields: `install_script`, `start_skill`, and custom allowed
+  domain `api.github.com`; existing package-manager presets preserved. Draft
+  persistence is confirmed; applying/publishing it is not.
+- GitHub API and PR creation return `Forbidden`. GH_TOKEN is present; no value
+  inspected and no duplicate secret requested. No PR was created.
+- Required external action: review/save environment settings, then publish the
+  environment. Retry API access before diagnosing any further credential need.
+- Next tasks: retry API and create the PR once access is applied; then M1.1
+  primary-source architecture review and M1.2 resource/evaluation contracts.
+- Activate with `source /workspace/qvelt-tools/venv/bin/activate`; run
+  `python -m pytest --version`, `ruff --version`, `mypy --version`, and
+  `uv pip check --python /workspace/qvelt-tools/venv/bin/python`. See `SETUP.md`.
