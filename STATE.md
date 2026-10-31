@@ -1,14 +1,15 @@
 # Qvelt current state
 
-Updated:2026-10-31. Owner:Lead agent.
+Updated:2026-11-01. Owner:Lead agent.
 
 ## Current task
 
-Expanded Phase3 offline tokenizer/data acceptance is complete (M3.2). Published
-implementation9f6cef941ceccf3c5eb929256e408a7644b65896; actual GitHub run41247846988
-has all6 jobs successful, including CPU3.11/3.12/3.13. Phase3 production source/
-benchmark clearance remains blocked separately in M3.3. No final training launched.
-Publication to main is active; do not reapply old environment draft changes.
+Small Phase4 task completed:reviewed the existing portable decoder at91e9dc8
+against RFC-001 and the packed-data interface.18 existing CPU numerical/integration
+tests passed in6.56s; no architecture/code change. Report:
+docs/development/decoder_rfc_review.md. M4.1 is in progress with explicit coverage
+gaps, not complete. Previous Phase3 implementation and green CI evidence remain
+valid below; production inputs remain blocked in M3.3. Publication to main is active.
 
 ## Implemented and verified
 
@@ -53,12 +54,12 @@ Windows, actual i5/16GB laptop performance, SFT/RL and serving remain unvalidate
 
 ## Next three tasks
 
-1. Phase4:review the already implemented portable decoder against the RFC/data
-   contract, then implement/test KV-cache and activation checkpointing (M4.2).
+1. M4.1:add initialization/residual-scale, non-finite policy and tied-embedding
+   combined-gradient regressions identified by the completed decoder review.
 2. M3.3:clear production sources/benchmarks, freeze the distinct project final set,
    add rights-approved format adapters and corpus-scale labeled filtering audits.
-3. Phase5:connect actual packed-data/tokenizer identities and committed loader
-   cursor to training/checkpoints; test full optimization/accumulation replay.
+3. After M4.1,implement/test M4.2 KV-cache and activation checkpointing; then
+   connect actual packed-data identities/cursor to atomic trainer checkpoints (M5).
 
 ## Reproduce
 

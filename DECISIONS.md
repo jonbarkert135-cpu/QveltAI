@@ -776,3 +776,18 @@ proposal; removal thresholds require independent slice precision/recall/false-dr
 measurements. [verified] installed PyTorch2.9.1 BCEWithLogitsLoss documentation/
 logit0 reference supports the loss definition only, not quality-prediction accuracy.
 No classifier placeholder or claimed learned quality result is shipped.
+
+## ADR-0032 — Review the existing portable decoder before extending Phase4
+
+- **Date/status:**2026-11-01; bounded review complete, M4.1 still in progress.
+- **Context/options:**the original Phase4 checklist predates the decoder built in
+  M2.3. Rewriting it would duplicate tested code; alternatively inspect and reuse it.
+- **Choice/rationale:**reuse the original implementation, map RFC equations to code
+  and existing reference tests, verify the Phase3 packed-data interface, and keep
+  uncovered initialization/non-finite/tied-gradient checks explicit in the plan.
+  No architecture or runtime behavior changes in this task.
+- **Sources:**[verified] RFC-001, model/layers.py,model/decoder.py,model/loss.py,
+  shared config and18 executed CPU tests at91e9dc8. Full mapping/results are in
+  docs/development/decoder_rfc_review.md; public component sources remain in RFC-001.
+- **Revisit:**a failing independent oracle, architecture/config changes or the
+  implementation of cached/optimized paths. Review is not GPU/quality validation.

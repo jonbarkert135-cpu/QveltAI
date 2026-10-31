@@ -261,3 +261,17 @@ for stop37/resume100. No real-corpus optimizer training is claimed. Data smoke
 212->194 documents,153 verified blocks,7 resumed batches from cursor3 to10,
 pending-prefetch iterator discarded. Committed receipts and validation_data.md
 record exact identities and limitations; production data approval remains blocked.
+
+## R011 — Bounded portable decoder/RFC review
+
+Date:2026-11-01 (Europe/Kiev). Hypothesis:the decoder already built in M2.3 matches
+the selected RFC equations and accepts Phase3 packed batches without modification.
+Reviewed code:91e9dc85956815e04fd7d5032a084060e59e51bb. Command:
+`uv run --frozen --extra cpu pytest tests/unit/test_model.py tests/integration/test_data_pipeline.py::test_packed_batch_runs_real_decoder_backward -q`.
+Result:18 existing tests passed in6.56s on CPU, including independent component
+values/gradients, four meta counts, actual tiny backward, causality/document
+isolation and a real BPE packed-batch backward. No inspected architecture mismatch.
+Conclusion:reuse the implementation. Record missing dedicated initialization,
+non-finite policy and tied-embedding combined-gradient checks before full M4.1
+acceptance; KV-cache/activation checkpointing remain M4.2. No new test/model code,
+GPU run or trained-model quality result. Report:decoder_rfc_review.md.

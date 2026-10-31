@@ -123,3 +123,9 @@ Synthetic training does not close corpus contamination, quality or reasoning ris
   checkpoint. The future real-corpus trainer must capture committed cursor and model
   state together and test full optimization replay. Current data replay is exact;
   the existing100-step trainer still uses numeric engineering fixtures.
+
+Phase4 bounded review (2026-11-01):existing reference/packed-batch tests pass,
+but dedicated initialization/residual-scale, non-finite-input policy and combined
+tied-embedding gradient regressions remain M4.1 acceptance gaps. Do not infer
+full Phase4 completion from the18-test review; preserve these checks before cache/
+accelerator extensions. The mapping and scope are in decoder_rfc_review.md.
