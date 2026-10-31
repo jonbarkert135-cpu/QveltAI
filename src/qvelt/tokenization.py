@@ -43,8 +43,8 @@ class TokenizerSettings:
     def __post_init__(self) -> None:
         if type(self.vocab_size) is not int or not 288 <= self.vocab_size <= 262144:
             raise TokenizerError("vocab_size must be an integer in [288, 262144]")
-        if type(self.min_frequency) is not int or self.min_frequency < 1:
-            raise TokenizerError("min_frequency must be a positive integer")
+        if type(self.min_frequency) is not int or not 1 <= self.min_frequency < 2**32:
+            raise TokenizerError("min_frequency must be an integer in [1, 2**32-1]")
         if type(self.isolate_digits) is not bool:
             raise TokenizerError("isolate_digits must be bool")
 
@@ -125,6 +125,11 @@ class QveltTokenizer:
         """Load bounded local JSON; never download or execute tokenizer code."""
         with path.open("rb") as stream:
             data = stream.read(MAX_TOKENIZER_BYTES + 1)
+        return cls.from_bytes(data)
+
+    @classmethod
+    def from_bytes(cls, data: bytes) -> QveltTokenizer:
+        """Validate a bounded JSON snapshot, including its complete byte alphabet."""
         if len(data) > MAX_TOKENIZER_BYTES:
             raise TokenizerError("Tokenizer exceeds the 64 MiB limit")
         try:

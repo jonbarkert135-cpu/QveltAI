@@ -435,3 +435,21 @@ def test_existing_parent_entries_are_synced_for_concurrent_creators(
     with patch.object(artifacts, "_sync_directory", wraps=synchronize) as sync:
         ArtifactStore(tmp_path).add_bytes("a/file", b"complete", role="data")
     assert [call.args[0] for call in sync.call_args_list] == [tmp_path, tmp_path / "a"]
+
+
+def test_public_reader_uses_safe_regular_file_policy(tmp_path: Path) -> None:
+    store = ArtifactStore(tmp_path)
+    store.add_bytes("payload.bin", b"known bytes", role="data")
+    with store.open_file("payload.bin") as stream:
+        assert stream.read() == b"known bytes"
+    with pytest.raises(ManifestError):
+        with store.open_file("../outside"):
+            pass
+    (tmp_path / "link").symlink_to(tmp_path / "payload.bin")
+    with pytest.raises(ArtifactIntegrityError, match="Symlink"):
+        with store.open_file("link"):
+            pass
+    (tmp_path / "directory").mkdir()
+    with pytest.raises(ArtifactIntegrityError, match="regular"):
+        with store.open_file("directory"):
+            pass

@@ -162,6 +162,12 @@ class ArtifactStore:
         if not self.root.is_dir():
             raise ArtifactError("Artifact root must be an existing directory")
 
+    @contextmanager
+    def open_file(self, relative: str) -> Iterator[BinaryIO]:
+        """Read a regular contained file; callers validate consumed byte hashes."""
+        with _regular_reader(self._path(relative)) as stream:
+            yield stream
+
     def _path(self, relative: str, *, create_parents: bool = False) -> Path:
         relative = artifact_path(relative)
         current = self.root

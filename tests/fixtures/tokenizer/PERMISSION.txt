@@ -1,0 +1,3 @@
+Project-authored text fixtures for Qvelt development and tests.
+Permission: use, copy, modify and redistribute these fixtures with Qvelt development/tests.
+Not an external dataset approval or a production training-data recommendation.

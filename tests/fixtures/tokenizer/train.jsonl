@@ -1,0 +1,48 @@
+{"text":"Qvelt fixture: preserve spaces, tabs\tand newlines.\n"}
+{"text":"Numbers are strings here: 0123456789, -23.75, 1.25e-4."}
+{"text":"Keep capital A distinct from lower-case a."}
+{"text":"Brackets: (a+b), [x,y], {k:v}; punctuation stays."}
+{"text":"Русский текст: ёж, ель, матрица, переменная."}
+{"text":"Пробелы  и переносы\nстрок сохраняются точно."}
+{"text":"АБВГД абвгд; числа 1020304050 и 9876543210."}
+{"text":"Имена переменных: длина, ширина, высота."}
+{"text":"\\frac{a+b}{c} + \\sqrt{x^2+y^2}"}
+{"text":"\\sum_{i=0}^{n} a_i; \\int_0^1 f(x)\\,dx"}
+{"text":"\\begin{matrix}a & b \\\\ c & d\\end{matrix}"}
+{"text":"def square(x):\n    return x * x\n"}
+{"text":"alpha beta gamma delta; tensor vector scalar."}
+{"text":"Addition: x + y = z; subtraction: a - b = c."}
+{"text":"Unicode: é, é, λ, Ω, →, ≤, ∞."}
+{"text":"Fractions as text: 1/3, 7/11; no proof claims."}
+{"text":"Qvelt fixture: preserve spaces, tabs\tand newlines.\n"}
+{"text":"Numbers are strings here: 0123456789, -23.75, 1.25e-4."}
+{"text":"Keep capital A distinct from lower-case a."}
+{"text":"Brackets: (a+b), [x,y], {k:v}; punctuation stays."}
+{"text":"Русский текст: ёж, ель, матрица, переменная."}
+{"text":"Пробелы  и переносы\nстрок сохраняются точно."}
+{"text":"АБВГД абвгд; числа 1020304050 и 9876543210."}
+{"text":"Имена переменных: длина, ширина, высота."}
+{"text":"\\frac{a+b}{c} + \\sqrt{x^2+y^2}"}
+{"text":"\\sum_{i=0}^{n} a_i; \\int_0^1 f(x)\\,dx"}
+{"text":"\\begin{matrix}a & b \\\\ c & d\\end{matrix}"}
+{"text":"def square(x):\n    return x * x\n"}
+{"text":"alpha beta gamma delta; tensor vector scalar."}
+{"text":"Addition: x + y = z; subtraction: a - b = c."}
+{"text":"Unicode: é, é, λ, Ω, →, ≤, ∞."}
+{"text":"Fractions as text: 1/3, 7/11; no proof claims."}
+{"text":"Qvelt fixture: preserve spaces, tabs\tand newlines.\n"}
+{"text":"Numbers are strings here: 0123456789, -23.75, 1.25e-4."}
+{"text":"Keep capital A distinct from lower-case a."}
+{"text":"Brackets: (a+b), [x,y], {k:v}; punctuation stays."}
+{"text":"Русский текст: ёж, ель, матрица, переменная."}
+{"text":"Пробелы  и переносы\nстрок сохраняются точно."}
+{"text":"АБВГД абвгд; числа 1020304050 и 9876543210."}
+{"text":"Имена переменных: длина, ширина, высота."}
+{"text":"\\frac{a+b}{c} + \\sqrt{x^2+y^2}"}
+{"text":"\\sum_{i=0}^{n} a_i; \\int_0^1 f(x)\\,dx"}
+{"text":"\\begin{matrix}a & b \\\\ c & d\\end{matrix}"}
+{"text":"def square(x):\n    return x * x\n"}
+{"text":"alpha beta gamma delta; tensor vector scalar."}
+{"text":"Addition: x + y = z; subtraction: a - b = c."}
+{"text":"Unicode: é, é, λ, Ω, →, ≤, ∞."}
+{"text":"Fractions as text: 1/3, 7/11; no proof claims."}

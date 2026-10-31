@@ -254,8 +254,8 @@ def _mapping(value: object, name: str, allowed: set[str]) -> dict[str, object]:
     return mapping
 
 
-def parse_config(text: str) -> ExperimentConfig:
-    """Parse bounded YAML, apply explicit defaults, and reject invalid schemas."""
+def parse_yaml_mapping(text: str) -> dict[str, object]:
+    """Parse Qvelt's bounded, non-coercing YAML subset for a schema decoder."""
     try:
         encoded = text.encode("utf-8")
     except UnicodeError as error:
@@ -269,7 +269,16 @@ def parse_config(text: str) -> ExperimentConfig:
         raise
     except (yaml.YAMLError, ValueError) as error:
         raise ConfigError("Invalid YAML syntax; no config values are echoed") from error
-    root = _mapping(raw, "config", {f.name for f in fields(ExperimentConfig)})
+    if not isinstance(raw, dict) or not all(isinstance(key, str) for key in raw):
+        raise ConfigError("YAML: expected a string-keyed mapping")
+    return cast("dict[str, object]", raw)
+
+
+def parse_config(text: str) -> ExperimentConfig:
+    """Parse bounded YAML, apply explicit defaults, and reject invalid schemas."""
+    root = _mapping(
+        parse_yaml_mapping(text), "config", {f.name for f in fields(ExperimentConfig)}
+    )
     m = _mapping(root.get("model", {}), "model", {f.name for f in fields(ModelConfig)})
     r = _mapping(
         root.get("runtime", {}), "runtime", {f.name for f in fields(RuntimeConfig)}

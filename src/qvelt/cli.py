@@ -1,4 +1,4 @@
-"""Implemented configuration and runtime diagnostics; no training entry point."""
+"""Configuration, artifacts and tokenizer workflows; no language-model trainer."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from qvelt.manifest_types import ManifestError
 from qvelt.manifests import manifest_digest
 from qvelt.provenance import ProvenanceError, initialize_run
 from qvelt.reproducibility import RuntimeUnavailableError, inspect_runtime
+from qvelt.tokenization import TokenizerError
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -58,6 +59,28 @@ def _parser() -> argparse.ArgumentParser:
         sub.add_argument(
             "--expected-sha256", help="Trusted canonical manifest identity"
         )
+    tokenizer = commands.add_parser(
+        "tokenizer", help="Train, verify or evaluate byte-BPE"
+    )
+    tokenizer_actions = tokenizer.add_subparsers(dest="action", required=True)
+    resolve = tokenizer_actions.add_parser(
+        "resolve", help="Resolve a strict YAML recipe"
+    )
+    resolve.add_argument("path", type=Path)
+    train = tokenizer_actions.add_parser(
+        "train", help="Train on registered raw JSONL data"
+    )
+    train.add_argument("path", type=Path, help="Tokenizer YAML recipe")
+    train.add_argument("--data-manifest", type=Path, required=True)
+    train.add_argument("--directory", type=Path, required=True)
+    train.add_argument("--repository", type=Path, default=Path("."))
+    for action in ("verify", "evaluate"):
+        sub = tokenizer_actions.add_parser(action)
+        sub.add_argument("path", type=Path, help="Tokenizer bundle manifest")
+        sub.add_argument("--expected-sha256")
+        if action == "evaluate":
+            sub.add_argument("--data-manifest", type=Path, required=True)
+            sub.add_argument("--data-sha256", required=True)
     return parser
 
 
@@ -103,6 +126,67 @@ def main(argv: Sequence[str] | None = None) -> int:
                     sort_keys=True,
                 )
             )
+        elif args.command == "tokenizer":
+            from qvelt.tokenizer_recipe import (
+                dump_tokenizer_recipe,
+                load_tokenizer_recipe,
+            )
+            from qvelt.tokenizer_workflow import (
+                evaluate_tokenizer,
+                load_tokenizer_bundle,
+                train_tokenizer_bundle,
+            )
+
+            if args.action == "resolve":
+                print(dump_tokenizer_recipe(load_tokenizer_recipe(args.path)), end="")
+            elif args.action == "train":
+                manifest = train_tokenizer_bundle(
+                    load_tokenizer_recipe(args.path),
+                    args.data_manifest,
+                    args.directory,
+                    args.repository,
+                )
+                print(
+                    json.dumps(
+                        {
+                            "kind": "tokenizer",
+                            "sha256": manifest_digest(manifest),
+                            "metadata": asdict(manifest.metadata),
+                        },
+                        sort_keys=True,
+                    )
+                )
+            else:
+                tokenizer, manifest = load_tokenizer_bundle(
+                    args.path, args.expected_sha256
+                )
+                if args.action == "verify":
+                    print(
+                        json.dumps(
+                            {
+                                "verified": True,
+                                "sha256": manifest_digest(manifest),
+                                "vocab_size": tokenizer.vocab_size,
+                            },
+                            sort_keys=True,
+                        )
+                    )
+                else:
+                    metrics = evaluate_tokenizer(
+                        tokenizer, args.data_manifest, args.data_sha256
+                    )
+                    print(
+                        json.dumps(
+                            {
+                                **asdict(metrics),
+                                "bytes_per_token": metrics.bytes_per_token,
+                                "roundtrips_verified": True,
+                                "tokenizer_sha256": manifest_digest(manifest),
+                                "data_sha256": args.data_sha256,
+                            },
+                            sort_keys=True,
+                        )
+                    )
         else:
             path = Path(args.path)
             store = ArtifactStore(path.parent)
@@ -141,6 +225,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         ManifestError,
         ArtifactError,
         ProvenanceError,
+        TokenizerError,
     ) as error:
         logger.error("%s", error)
         return 1

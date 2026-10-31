@@ -47,4 +47,7 @@ jobs:
           uv run --frozen --extra cpu qvelt doctor --device cpu
           uv run --frozen --extra cpu qvelt run init configs/tiny.yaml --directory "$RUNNER_TEMP/qvelt-run" --repository .
           uv run --frozen --extra cpu qvelt manifest verify "$RUNNER_TEMP/qvelt-run/manifest.json"
+          uv run --frozen --extra cpu qvelt tokenizer train configs/tokenizer_smoke.yaml --data-manifest tests/fixtures/tokenizer/train.manifest.json --directory "$RUNNER_TEMP/qvelt-tokenizer" --repository .
+          uv run --frozen --extra cpu qvelt tokenizer verify "$RUNNER_TEMP/qvelt-tokenizer/manifest.json"
+          uv run --frozen --extra cpu qvelt tokenizer evaluate "$RUNNER_TEMP/qvelt-tokenizer/manifest.json" --data-manifest tests/fixtures/tokenizer/heldout.manifest.json --data-sha256 0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4
           uv run --frozen --extra cpu python -m build --no-isolation

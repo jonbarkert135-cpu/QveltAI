@@ -1,0 +1,7 @@
+name: tokenizer-smoke
+schema_version: 1
+tokenizer:
+  isolate_digits: true
+  min_frequency: 2
+  vocab_size: 512
+training_data_sha256: 832c18b89e947c9953f0b79838b50223642c65c5fb66ed6672859552df42d57b
