@@ -4,114 +4,67 @@ Updated: 2026-10-31. Owner: Lead agent.
 
 ## Current phase
 
-Documentation bootstrap M0 is complete. Phase 1 (research and architecture
-decisions) is next and has not started. The explicit first-session boundary is
-documentation only. The user subsequently authorized cloud setup and GitHub
-publication; see the latest follow-up below.
+M0 documentation bootstrap and development-tool setup are complete. Architecture
+research M1.1 is next; no model code, training, or benchmark results exist.
+The user authorizes direct development and publication on `main`, without PRs
+as a prerequisite. Preserve history and user files; never force-push.
 
 ## Last completed task
 
-Inspected the empty repository and established project memory: `PLAN.md`,
-`DECISIONS.md`, `EXPERIMENTS.md`, `RISKS.md`, `DATA_CARD.md`, `AGENTS.md`, and
-`README.md`, with this state file. The roadmap covers all ten requested phases
-and records owners, statuses, dependencies, tasks, and acceptance criteria.
+Installed isolated hash-locked development tools; saved install/start cloud
+instructions; preserved the uploaded brief and prepared direct main publication.
 
-## Initial observed repository and environment (historical)
+## Repository and tools
 
-- Checkout: `/workspace/newai_cddevel`.
-- Origin identity: `github.com/jonbarkert135-cpu/newai_cddevel`.
-- Working branch: `work`; the initial inspection found an unborn HEAD, no
-  tracked/project files, no pre-existing user changes, and no `AGENTS.md`.
-  No branch reset, force operation, or push was performed.
-- Baseline tools observed: Python 3.12.14, Git 2.52.0, Node.js 24.19.0,
-  npm 11.9.0. Node is not a selected Qvelt dependency.
-- Python package metadata: PyYAML 6.0.3 is present; torch, pytest, Ruff, and mypy
-  are not installed. No dependency versions have been selected or installed
-  for Qvelt. Hardware capabilities have not been profiled.
-- Managed instance reports running/connected with enforced network policy.
-  Official PyTorch v2.6.0 documentation/source was read through the platform
-  proxy; see `DECISIONS.md` for the narrow verified claims.
+- Checkout: `/workspace/newai_cddevel`; branch `main`.
+- Canonical origin: `https://github.com/jonbarkert135-cpu/QveltAI.git`.
+- Both initial histories and `llm_build_prompts-2.md` are preserved.
+- Python 3.12.14, uv 0.12.23, Git 2.52.0, gh 2.46.0.
+- `/workspace/qvelt-tools/venv`: pytest 8.3.5, Ruff 0.11.13, mypy 1.15.0,
+  PyYAML 6.0.3; nine total packages pinned with hashes in the external lock.
+- PyTorch is not installed; no GPU capabilities have been profiled.
 
-## Initial documentation verification (historical)
+## Verification
 
-- A standard-library documentation checker passed: eight expected Markdown files,
-  seven relative file links, ten ordered phases, 23 milestones with required
-  metadata, four completed bootstrap tasks, six decision records, and 16 risks.
-  It also checked task status consistency, newlines, whitespace, and code fences.
-- No Python/model code, configs, tests, data, tokenizer artifacts, weights,
-  dependency lockfiles, or CI were added. No ML training or benchmark ran.
-- Unit tests, numerical tests, Ruff, and mypy are **not run / not applicable to
-  this documentation-only delivery**. Their tools and project configuration are
-  scheduled in M2.1; these checks are not reported as passing.
-- This delivery is a local documentation commit. Nothing has been pushed,
-  published, or saved as an environment installation/startup draft.
+- Documentation local links/structure and whitespace checked. The uploaded user
+  brief was compared byte-for-byte with its original main version.
+- Exact cloud install script ran twice; tool version/startup and dependency
+  consistency checks passed. These are not application-test or ML-test passes.
+- Feature branch push and remote SHA verification succeeded. Final main
+  publication uses a normal non-forced push after fetching current main.
+- GitHub API/PR attempts returned `Forbidden`; no PR was created. Git pushes
+  work and PRs are optional under the latest instruction.
+- Cloud draft saved: `install_script`, `start_skill`, and `api.github.com` custom
+  domain, preserving presets. Draft application/publication remains unverified.
 
 ## Next three tasks
 
-1. **M1.1:** read primary architecture sources and log verified findings; compare
-   a dense causal-decoder baseline and alternatives without implementing them.
-2. **M1.1:** write the chosen architecture/interface specification, including
-   equations, tensor shapes, masks, initialization, parameter counts, and reference
-   tests for tiny, approximately 100M, and planned 500M–1.5B tiers.
-3. **M1.2:** define resource/replay contracts and a held-out mathematical evaluation
-   protocol, then prepare the evidence needed for M2.1 dependency/scaffold work.
+1. M1.1: review primary architecture sources and record verified findings.
+2. M1.1: specify architecture, equations, shapes, masks, and parameter counts.
+3. M1.2: establish resource/replay and mathematical evaluation contracts before
+   implementing the M2.1 package scaffold.
 
-## Open blockers and uncertainty
+## Blockers and limitations
 
-- No blocker prevents the next source-review and design work.
-- No training servers, GPU inventory, memory/interconnect measurements, or budget
-  are supplied. Real distributed/performance validation and final training require
-  those prerequisites. Do not infer that full-size training fits on weak devices.
-- Architecture, tokenizer, optimizer, RL objective, dependency pins, datasets,
-  project license, and export/runtime formats remain undecided. No dataset is
-  approved. Qvelt brand/trademark/domain availability has not been checked.
-- `[unverified]` reading-queue entries are research candidates, not accepted
-  designs. No benchmark or parity claim with other labs is supported.
+No blocker prevents source review or direct Git publication. Servers/budget,
+approved datasets, architecture, ML dependencies, and project license remain
+unprovided or undecided. GitHub API remains unavailable; optional API operations
+require saving the prepared environment settings and publishing the environment,
+then retrying. Existing GH_TOKEN is present; its value was never inspected.
 
-## Reproduce the last verified state
-
-From the checkout:
+## Reproduce the tooling checks
 
 ```bash
 cd /workspace/newai_cddevel
 git status --short --branch
-git log -1 --oneline
-git ls-files
+git log -3 --oneline
 git diff --check
+source /workspace/qvelt-tools/venv/bin/activate
+python -m pytest --version
+ruff --version
+mypy --version
+uv pip check --python /workspace/qvelt-tools/venv/bin/python
 ```
 
-Initial expectation: a clean `work` branch with a documentation commit and eight root
-Markdown files; no executable Qvelt package. Inspect the roadmap headings with:
-
-```bash
-rg '^## Phase [0-9]+|^### M[0-9]+|^Owner:|^Acceptance:' PLAN.md
-rg '\[verified\]|\[unverified\]' DECISIONS.md
-```
-
-There are intentionally no train/install/test commands yet. Add real commands
-when the associated implementations exist and have actually been exercised.
-
-## Latest follow-up: environment and GitHub publication
-
-- Canonical origin is now `https://github.com/jonbarkert135-cpu/QveltAI.git`,
-  following GitHub's rename notice. Current branch: `qvelt/environment-setup`.
-- Preserved remote main's uploaded `llm_build_prompts-2.md` byte-for-byte by
-  merging its history with the local documentation history. No force operations.
-- Published the feature branch; verified its SHA with `git ls-remote`. Main
-  remains unchanged. The final documentation update is pushed to the same branch.
-- Installed pytest 8.3.5, Ruff 0.11.13, mypy 1.15.0, PyYAML 6.0.3 into
-  `/workspace/qvelt-tools/venv`. Nine total packages are hash-locked. The exact
-  installation script ran twice; tool startup and dependency checks passed.
-  No application unit tests, numerical tests, lint/type analysis, or ML run occurred.
-- Saved cloud draft fields: `install_script`, `start_skill`, and custom allowed
-  domain `api.github.com`; existing package-manager presets preserved. Draft
-  persistence is confirmed; applying/publishing it is not.
-- GitHub API and PR creation return `Forbidden`. GH_TOKEN is present; no value
-  inspected and no duplicate secret requested. No PR was created.
-- Required external action: review/save environment settings, then publish the
-  environment. Retry API access before diagnosing any further credential need.
-- Next tasks: retry API and create the PR once access is applied; then M1.1
-  primary-source architecture review and M1.2 resource/evaluation contracts.
-- Activate with `source /workspace/qvelt-tools/venv/bin/activate`; run
-  `python -m pytest --version`, `ruff --version`, `mypy --version`, and
-  `uv pip check --python /workspace/qvelt-tools/venv/bin/python`. See `SETUP.md`.
+See `SETUP.md`. Expected: clean main and compatible tool dependencies. No train
+command exists yet. No claim of hardware scalability or model quality is made.

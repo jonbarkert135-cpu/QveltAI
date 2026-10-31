@@ -55,7 +55,9 @@
 
 1. Make small, reviewable commits with clear messages when a coherent change is
    verified. The user authorizes publishing Qvelt branches and creating pull
-   requests. Preserve unrelated user changes; never force-push or reset history.
+   requests. The latest user instruction selects direct development and
+   publication on `main`; PRs are optional, not a gate. Preserve unrelated user
+   changes; never force-push or reset history.
 2. Run relevant unit/reference tests, Ruff, and mypy once M2.1 supplies these
    tools. Fix failures; report actual counts and distinguish skips and unrun tests.
    Documentation-only changes require document/link/consistency checks; do not

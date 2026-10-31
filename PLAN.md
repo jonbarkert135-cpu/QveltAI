@@ -414,7 +414,8 @@ or rollback; unsupported combinations are never silently treated as verified.
 - [x] Verify repeatable installation and tool startup; preserve the uploaded brief.
 - [x] Publish a feature branch without rewriting main or user history.
 - [x] Save install/start instructions and the GitHub API domain in the environment draft.
-- [ ] Create the pull request once GitHub API access is applied and verified.
+- [x] Follow the latest user instruction: publish directly to main; PR creation
+  is optional and its unavailable API is not a delivery blocker.
 
 This follow-up does not complete M2.1: no package, ML runtime, or project CI
 has been implemented. See `SETUP.md` for commands and access limitations.

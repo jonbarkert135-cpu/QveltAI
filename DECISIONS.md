@@ -178,3 +178,11 @@ copying implementation code or using an associated dataset.
   generation/requirements enforcement; observed successful sync and push.
 - **Revisit when:** M2.1 selects package dependencies, or GitHub API access is
   applied. Bootstrap versions are not a claim of latest versions or ML support.
+
+### ADR-0007 amendment — direct main workflow
+
+On 2026-10-31 the user explicitly selected `main` for all development and
+publication. This supersedes the feature-branch review preference. Fetch and
+integrate current main before normal fast-forward pushes; never force-push.
+PR API access is optional and does not block Git publication. Source: latest
+user instruction; no new library or scientific claim.

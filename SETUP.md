@@ -30,11 +30,13 @@ The checkout directory keeps its original name. The user authorizes routine
 project pushes and PR creation. Preserve unrelated work; never force-push.
 The uploaded brief from main was merged unchanged into `qvelt/environment-setup`
 alongside the Qvelt documents. The feature branch was pushed successfully;
-main was not rewritten or updated by this session.
+the latest user instruction now selects direct development and publication
+on `main`. Publish tested changes with `git push origin HEAD:main`; never
+force-push. Feature-branch PRs are optional and not a publication prerequisite.
 
 Existing `GH_TOKEN` is present; its value has not been inspected. GitHub REST
 and GraphQL/PR operations return `Forbidden` for `api.github.com`; no PR exists
-from this session. Git push access does not imply API access. The cloud draft
+from this session. This does not block direct Git pushes to main. Git push access does not imply API access. The cloud draft
 adds that domain, preserving existing package-manager presets. Review/save the
 prepared settings, then publish the environment. Saving the draft alone does
 not apply the network change or publish a snapshot. Retry the API operation
