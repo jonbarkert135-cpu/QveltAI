@@ -1,54 +1,37 @@
-# Cloud development environment
+# Cloud and project setup
 
-Verified on 2026-10-31: Python 3.12.14, uv 0.12.23, Git 2.52.0, gh 2.46.0.
-The isolated `/workspace/qvelt-tools/venv` contains pytest 8.3.5, Ruff 0.11.13,
-mypy 1.15.0, and PyYAML 6.0.3. All nine packages, including transitive
-dependencies, are pinned with hashes in `/workspace/qvelt-tools/requirements.lock`.
-These are cloud setup artifacts outside the checkout, not ML dependency choices.
+The environment was published by the user before M2.1. No old script was
+reapplied, no draft was edited and no new environment snapshot was published
+in this development session.
 
-The saved cloud draft embeds the complete lock in `install_script` and contains
-`start_skill` activation instructions. The exact script ran twice successfully.
-It enforces hashes and does not change global Python or tracked source files.
+## Current project workflow
 
-```bash
-source /workspace/qvelt-tools/venv/bin/activate
-cd /workspace/newai_cddevel
-python -m pytest --version
-ruff --version
-mypy --version
-uv pip check --python /workspace/qvelt-tools/venv/bin/python
-```
-
-Tool startup and dependency consistency are verified. No application tests or
-model code exist yet; PyTorch is not installed. No training ran. There is no
-service to start. Use the existing checkout, not a new worktree.
-
-## GitHub
-
-Canonical repository: `jonbarkert135-cpu/QveltAI`; GitHub reported the rename.
-The checkout directory keeps its original name. The user authorizes routine
-project pushes and PR creation. Preserve unrelated work; never force-push.
-The uploaded brief from main was merged unchanged into `qvelt/environment-setup`
-alongside the Qvelt documents. The feature branch was pushed successfully;
-the latest user instruction now selects direct development and publication
-on `main`. Publish tested changes with `git push origin HEAD:main`; never
-force-push. Feature-branch PRs are optional and not a publication prerequisite.
-
-Existing `GH_TOKEN` is present; its value has not been inspected. GitHub REST
-and GraphQL/PR operations return `Forbidden` for `api.github.com`; no PR exists
-from this session. This does not block direct Git pushes to main. Git push access does not imply API access. The cloud draft
-adds that domain, preserving existing package-manager presets. Review/save the
-prepared settings, then publish the environment. Saving the draft alone does
-not apply the network change or publish a snapshot. Retry the API operation
-before diagnosing additional credential needs; do not replace the existing token.
-
-After configuration is applied, check access and existing PRs before creating one:
+Use the repository's `pyproject.toml` and `uv.lock`, not the earlier standalone
+bootstrap-tool directory. From `/workspace/newai_cddevel`:
 
 ```bash
-gh api repos/jonbarkert135-cpu/QveltAI --jq '{default_branch,permissions}'
-gh pr list --repo jonbarkert135-cpu/QveltAI --head qvelt/environment-setup
+uv sync --frozen --extra cpu
+uv run --frozen --extra cpu qvelt config validate configs/tiny.yaml
+uv run --frozen --extra cpu qvelt doctor --device cpu
+uv run --frozen --extra cpu pytest -q
+uv run --frozen --extra cpu ruff check .
+uv run --frozen --extra cpu ruff format --check .
+uv run --frozen --extra cpu mypy
 ```
 
-Use `gh pr create --body-file` for the description. A branch compare link is
-not evidence that a PR was created. ML scaffold and hardware validation remain
-future roadmap milestones.
+See [development setup](docs/development/setup.md) for base-only/CUDA profiles,
+Python pins, supported scope, build commands and deterministic policy. The
+external `/workspace/qvelt-tools` directory is historical bootstrap tooling;
+it is not the selected project ML environment. The project `.venv` has CPU
+PyTorch; no GPU execution or final training has been validated.
+
+## Repository and publication
+
+Canonical repository: `jonbarkert135-cpu/QveltAI`; checkout keeps its original
+`newai_cddevel` directory name. Preserve the uploaded brief and both histories.
+The user's main-branch workflow resumes only after the later publication pause
+is explicitly lifted. Keep current commits local; never force-push.
+
+Previous-instance GitHub API denials are historical observations, not a current
+readiness result. No GitHub API operation is needed for local development,
+and API credentials/settings were not changed or retested in this session.

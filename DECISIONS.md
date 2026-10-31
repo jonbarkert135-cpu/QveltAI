@@ -12,8 +12,9 @@ research evidence. All decisions below date to 2026-10-31.
 
 The PyTorch references below are fixed to **v2.6.0** for a stable source revision.
 This is a documentation reference, **not a dependency version selection**.
-PyTorch is not installed in this instance. M2.1 must select and verify a supported
-Python/PyTorch/toolchain combination and recheck relevant APIs.
+At research bootstrap PyTorch was absent. M2.1 now pins/tests PyTorch 2.9.1+cpu
+and Python 3.11–3.13; CUDA dependencies resolve but are not hardware-validated.
+See ADR-0014 onward. Recheck model/kernel APIs when their modules are implemented.
 
 ## ADR-0001 — Start with project memory and explicit evidence gates
 
@@ -318,3 +319,76 @@ for this session; future publication can follow the next user instruction.
   *DeepSeek-Prover* (2024); full titles/versions in survey S23–S28/S40.
 - **Revisit:** verified math success rates, legal supervision supply, independent
   verifier audits, and actual rollout cost justify process/tool/formal tracks.
+
+## ADR-0014 — Package a lightweight core with locked, exclusive ML profiles
+
+- **Date/status:** 2026-10-31; accepted and CPU-validated for M2.1.
+- **Context:** config inspection should work without CUDA/torch, while actual
+  tensor/RNG features need an installed and tested PyTorch backend.
+- **Options:** one mandatory GPU-heavy dependency set; unpinned optional imports;
+  a pinned base plus mutually exclusive explicit CPU/CUDA uv extras.
+- **Choice:** source-layout `qvelt` package, Python >=3.11,<3.14, uv 0.12.23;
+  PyYAML 6.0.3/NumPy 2.2.6 core, PyTorch 2.9.1 CPU or cu128 profiles, pinned
+  development/build dependencies and checked-in universal `uv.lock` with hashes.
+  Build using the locked Hatchling environment, not a newly resolved isolated one.
+- **Rationale:** the same PyTorch release exists in both selected indexes, and
+  NumPy supports the declared Python floor. This conservative GPU-compatibility
+  baseline is not the latest PyTorch release or a promise of ongoing upstream
+  support. Pip wheel metadata alone does not preserve uv index routing; document
+  uv installation. No package license or public release is selected by setup.
+- **Sources:** [verified] uv 0.12.23 project configuration and PyTorch integration
+  documentation, PyPI version metadata, official CPU/cu128 index artifacts;
+  links in `docs/development/scaffold.md`. [verified] actual frozen CPU installs
+  on Python 3.11.14/3.12.14/3.13.5, built-wheel/base-without-torch checks and
+  installed API behavior. GitHub CI is defined, not remotely executed.
+- **Revisit:** actual laptop/server driver support, upstream patches/security
+  fixes, a new Python support range or model/kernel requirements. Every upgrade
+  must update the lock and revalidate the declared matrix.
+
+## ADR-0015 — Validate a small explicit YAML schema before runtime work
+
+- **Date/status:** 2026-10-31; accepted and unit/reference-validated.
+- **Context:** ambiguous YAML coercion, duplicates, unknown fields and unsafe
+  constructors can silently change experimental configuration.
+- **Options:** permissive dictionaries; a heavyweight config framework; frozen
+  dataclasses plus a bounded explicit SafeLoader subclass and schema checks.
+- **Choice:** schema 1 only covers model dimensions and runtime policy. Reject
+  aliases/anchors/tags/merges/duplicates/non-string keys and unknown fields;
+  bound bytes/depth/events; accept decimal signed-32-bit positive dimensions,
+  uint32 seeds, finite positive floats and lowercase true/false. Do not coerce
+  quoted numeric strings or bool-as-int. Normalize float fields, resolve defaults
+  and hash canonical UTF-8 JSON. No includes, interpolation or file overwrites.
+- **Rationale:** a narrow inspectable contract catches errors before allocation;
+  it does not guarantee hardware fit or implement training. Future training and
+  artifact schemas must be versioned explicitly. Equivalent YAML formatting
+  resolves to the same config digest, while meaningful settings change it.
+- **Sources:** [verified] PyYAML 6.0.3 SafeLoader/constructor/resolver sources;
+  Python 3.12 installed dataclasses/json source and docstrings; canonical digest,
+  malformed-input, bounds and frozen-constructor tests. Exact source links are
+  in `docs/development/scaffold.md`. Resource limits are project policy choices.
+- **Revisit:** schema migration, additional implemented components or measured
+  config needs. Never broaden parsing by disabling validation to accept a typo.
+
+## ADR-0016 — Make runtime diagnostics and seed guarantees narrow and explicit
+
+- **Date/status:** 2026-10-31; accepted; CPU validated, CUDA unrun.
+- **Options:** seed only torch; implicit GPU fallback; explicit Python/NumPy/
+  torch seeds, indexed NumPy streams and a small requested-device diagnostic.
+- **Choice:** seed utility consumes validated runtime settings, configures strict
+  deterministic algorithms when requested, disables cuDNN benchmarking/TF32,
+  and leaves PYTHONHASHSEED/complete checkpoint replay out of its guarantees.
+  CUDA requires availability, native BF16 capability when requested, and an
+  explicit supported cuBLAS workspace value for strict seeding. Doctor executes
+  a real FP32 2x2 matmul on the requested device and reports observed versions;
+  native operation errors are reported, never replaced by CPU success.
+  JSON logging uses a reserved Qvelt handler without changing the root logger.
+- **Rationale:** diagnostics distinguish an installed API, an operational CPU
+  path and untested GPU capability. A seed is necessary but insufficient for
+  resumable training; M5 must checkpoint all relevant progress/state.
+- **Sources:** [verified] PyTorch v2.9.1 reproducibility notes and installed
+  `torch.cuda.is_bf16_supported` source (`including_emulation=False`), NVIDIA
+  cuBLAS reproducibility documentation, Python logging source; links in scaffold
+  design. [verified] CPU RNG comparisons, exact tensor probe, logger isolation,
+  missing-runtime and mocked failure paths. Mocks are not CUDA validation.
+- **Revisit:** actual CUDA execution, distributed rank/worker RNG contracts,
+  checkpoint schemas or dtype/backend changes. No cross-device bitwise claim.

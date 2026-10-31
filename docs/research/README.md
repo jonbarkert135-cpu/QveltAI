@@ -8,8 +8,9 @@ user's instruction following environment publication; commit locally only.
 
 Deliver a source-audited survey, an exact dense-decoder specification, an
 assumption-based training recipe, a conditional data proposal, and a risk register.
-The hardware placeholders mean no hardware is supplied; use named hypothetical
-scenarios rather than inventing a GPU allocation, throughput measurement, or quote.
+The user supplied laptop RTX 3060/Core i5/16 GB RAM details during Phase 1.
+Use the architecture/training RFCs for that planning scenario and distinguish
+unallocated servers and unmeasured throughput/cost assumptions.
 
 `estimates.py` is a standalone standard-library research calculator. Immutable
 `ModelSpec` dataclasses describe four sizes. It enumerates parameter tensor
@@ -50,3 +51,9 @@ cmp docs/research/estimates.json /tmp/qvelt-estimates.json
 Application dependency pins, YAML runtime configuration, model code, and actual
 training remain later milestones. Bootstrap tooling versions are documented in
 the root `SETUP.md`; these documents do not reapply environment settings.
+
+## Subsequent implementation status
+
+M2.1 now supplies pinned application/tooling profiles and validated YAML/runtime
+infrastructure; see [development setup](../development/setup.md). The historical
+Phase 1 validation above remains analytical; no model/training has been added.

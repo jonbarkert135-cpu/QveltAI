@@ -40,3 +40,14 @@ unallocated; assumed 6 GiB VRAM is not a measured inventory. See
 missing approved code data, math repetition and RL verifier risks. The explicit
 exclusion list defers MoE/MLA, FP8, untested long context, costly teacher/final
 training, unsafe tool execution and publication during the current pause.
+
+## M2.1 update (2026-10-31)
+
+Pinned CPU environments, unit/RNG checks and strict type/lint checks passed on
+Linux/Python 3.11–3.13. Base-only configuration and built-wheel operation were
+validated separately. R11 portability risk is partially mitigated for this
+matrix; CUDA/native Windows, actual laptop resources, model kernels and training
+remain untested. The 2.9.1 PyTorch CPU/cu128 baseline is intentionally pinned,
+not a promise of latest dependencies or long-term upstream support; updates need
+fresh compatibility/security review and tests before deployment. Configuration
+hashes/seeds do not close R05 checkpoint/replay risk; M2.2/M5 remain pending.

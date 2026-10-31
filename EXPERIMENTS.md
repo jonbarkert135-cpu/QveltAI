@@ -29,6 +29,27 @@ analytical checks, not ML experiments. Their evidence is recorded below and in
 - Artifacts: committed research source, tests, JSON reports, source manifest and
   validation record. Paper caches in `/tmp` are not durable release evidence.
 
+## R002 — Pinned package/config/runtime verification (not ML training)
+
+- Date/owner/status: 2026-10-31; Lead agent; completed for M2.1 infrastructure.
+- Hypothesis: the typed scaffold rejects ambiguous configs, reproduces CPU RNG
+  streams, installs from a frozen lock and operates from a built wheel across
+  the declared Python range without requiring CUDA.
+- Code/config: `9348442`; five `configs/*.yaml` presets, exact lock/wheel hashes
+  and commands in `docs/development/validation_m2_1.md`. No corpus/tokenizer/model
+  artifacts or learning objective involved; RNG reference tests use fixed seeds.
+- Control: hand-counted config parameters, independent research counts, standard
+  Python/NumPy/torch RNG calls and a known 2x2 matmul checksum. Fresh no-torch
+  environment validates config but correctly refuses a tensor diagnostic.
+- Results: 121 tests passed on each of Linux/Python 3.11.14, 3.12.14, 3.13.5;
+  strict mypy on 12 files and Ruff/format passed; frozen dependency checks, wheel/
+  source build, installed-wheel CLI and conflicting-extra rejection verified.
+- Initial schema typing/frozen-test issues were corrected without ignores; see
+  the validation record for diagnoses. Mocked failures do not validate GPUs.
+- Conclusion: M2.1 package/config/CPU runtime contract is operational. No model,
+  dataset, GPU, benchmark, training or checkpoint-replay success is implied.
+- Next: M2.2 typed provenance manifests and atomic integrity-checked artifacts.
+
 ## Required record for an actual experiment
 
 Create an entry when a command is actually run. Before launch, specify its

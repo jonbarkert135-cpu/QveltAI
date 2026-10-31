@@ -87,13 +87,13 @@ scheduled without the user's hardware details and budget approval.
 
 ### M2.1 — Establish a pinned, typed, tested Python package
 
-Owner: Lead agent. Status: planned. Dependencies: M1.2.
+Owner: Lead agent. Status: complete. Dependencies: M1.2.
 
-- [ ] Create package layout, `pyproject.toml`, compatible dependency pins/lock,
+- [x] Create package layout, `pyproject.toml`, compatible dependency pins/lock,
   Python support policy, Ruff, mypy, and pytest configuration.
-- [ ] Implement strict YAML/dataclass configuration loading, validation, resolved
+- [x] Implement strict YAML/dataclass configuration loading, validation, resolved
   configuration output, seed utilities, logging, and command entry points.
-- [ ] Add unit tests for config errors, round trips, seeds, and public interfaces;
+- [x] Add unit tests for config errors, round trips, seeds, and public interfaces;
   establish lightweight CPU CI using the chosen dependency versions.
 
 Acceptance: installation from the lock works in a fresh environment; configured
@@ -433,8 +433,10 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 
 ## Immediate next session
 
-Start M2.1: inspect the research RFCs, select compatible Python/PyTorch CPU/CUDA
-pins, and implement the typed config/package/test scaffold. Then M2.2 manifests.
+M2.1 is complete: typed config/package/RNG/logging/CLI, frozen CPU/CUDA dependency
+profiles, CPU test matrix and build checks. Start M2.2 with a short design for
+versioned run/data/tokenizer/checkpoint manifests, integrity checks and atomic IO.
+M2.1 does not implement models, data ingestion or checkpoint replay.
 Preserve the publication pause from the user's environment-published message:
 keep commits local until a new publication instruction. Do not reapply old cloud
 settings or launch final-scale/paid training.
