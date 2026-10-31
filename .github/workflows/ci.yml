@@ -45,4 +45,6 @@ jobs:
         run: |
           uv run --frozen --extra cpu qvelt config validate configs/tiny.yaml
           uv run --frozen --extra cpu qvelt doctor --device cpu
+          uv run --frozen --extra cpu qvelt run init configs/tiny.yaml --directory "$RUNNER_TEMP/qvelt-run" --repository .
+          uv run --frozen --extra cpu qvelt manifest verify "$RUNNER_TEMP/qvelt-run/manifest.json"
           uv run --frozen --extra cpu python -m build --no-isolation
