@@ -65,15 +65,21 @@ no corpus or trained checkpoint was created.
 
 ## Third-party agent skill instructions
 
-408 installed skills are pinned instructions/assets, not an audited execution
+408 vendor skills are pinned instructions/assets, not an audited execution
 layer. Some assume different client tools, unpinned libraries, network services
 or immediate paid jobs. Read the selected skill and helpers before use; verify
 APIs, pin dependencies, preserve root authorization and original Qvelt code.
-Six restrictive Anthropic entries are omitted. Inventory hashes detect drift,
+Six Anthropic entries with restrictive or unspecified licenses are omitted. Inventory hashes detect drift,
 not malicious upstream content; upgrades require source/license diff review.
 
 Tokenizer M3.1a: byte coverage applies to whole valid UTF-8 strings; isolated
 byte fragments may decode with replacement. Lone surrogates are rejected.
-Trainer pair statistics are not globally memory-bounded. Corpus-scale training,
-YAML/CLI/manifests and cross-environment reproducibility remain unvalidated.
+Trainer pair statistics are not globally memory-bounded. YAML/CLI/manifests and Linux/Python 3.11–3.13 fixture replay are now tested;
+corpus-scale training/memory, cross-hardware/other-release equality remain unvalidated.
 Ponytail simplicity must retain required validation, tests and reproducibility.
+
+M3.1 byte/lineage checks and fixture permission reduce accidental input drift;
+they do not establish external rights, a trustworthy historical training claim
+or representative compression/math performance. A manifest-less partial output
+is uncommitted; recovery must not silently overwrite it. M3.2 still needs data
+approval, cross-source dedup/split/decontamination and deterministic shard replay.

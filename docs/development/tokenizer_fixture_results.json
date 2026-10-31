@@ -1,0 +1,211 @@
+{
+  "date": "2026-10-31",
+  "code_commit": "2d1a05a8e43c74fe23a4f13f974de44f226c3e98",
+  "lock_sha256": "2800ecf775dcc761699a31795c2476abd42c9285145395db6edb546403388db6",
+  "tested_wheel_sha256": "600f4313fd36983743216a9693d52da95fee7296ba666b55c19f33d3f8b5627f",
+  "training_documents": 48,
+  "heldout_documents": 12,
+  "matrix": [
+    {
+      "python": "3.11",
+      "isolate_digits": false,
+      "rayon_threads": "1",
+      "python_hash_seed": "1",
+      "manifest_sha256": "dc9499278dc114f59c77e1f784d645aa96c6d2ace66e20c20d186ff3646b5386",
+      "tokenizer_sha256": "51d802a3e3e3881c9af7099f005700e38f22eb2b7f1d63ff5cdac280482eb3e2",
+      "vocab_size": 512,
+      "evaluation": {
+        "bytes_per_token": 1.2341772151898733,
+        "characters": 315,
+        "data_sha256": "0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4",
+        "documents": 12,
+        "roundtrips_verified": true,
+        "tokenizer_sha256": "dc9499278dc114f59c77e1f784d645aa96c6d2ace66e20c20d186ff3646b5386",
+        "tokens": 316,
+        "utf8_bytes": 390
+      }
+    },
+    {
+      "python": "3.11",
+      "isolate_digits": true,
+      "rayon_threads": "1",
+      "python_hash_seed": "1",
+      "manifest_sha256": "a9183a256299b041429788ab984143a8bbbe9468c308b1947f10c9cb0aaff66b",
+      "tokenizer_sha256": "f7ee889d47afa402aabd464bf714ac5ea71a44da916aedda6ffde20ad18b90d6",
+      "vocab_size": 512,
+      "evaluation": {
+        "bytes_per_token": 1.2149532710280373,
+        "characters": 315,
+        "data_sha256": "0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4",
+        "documents": 12,
+        "roundtrips_verified": true,
+        "tokenizer_sha256": "a9183a256299b041429788ab984143a8bbbe9468c308b1947f10c9cb0aaff66b",
+        "tokens": 321,
+        "utf8_bytes": 390
+      }
+    },
+    {
+      "python": "3.12",
+      "isolate_digits": false,
+      "rayon_threads": "2",
+      "python_hash_seed": "42",
+      "manifest_sha256": "04032b2bfaf0dbc857b972c4afc21c50f35a9031377dc1507dd8493718772c4b",
+      "tokenizer_sha256": "51d802a3e3e3881c9af7099f005700e38f22eb2b7f1d63ff5cdac280482eb3e2",
+      "vocab_size": 512,
+      "evaluation": {
+        "bytes_per_token": 1.2341772151898733,
+        "characters": 315,
+        "data_sha256": "0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4",
+        "documents": 12,
+        "roundtrips_verified": true,
+        "tokenizer_sha256": "04032b2bfaf0dbc857b972c4afc21c50f35a9031377dc1507dd8493718772c4b",
+        "tokens": 316,
+        "utf8_bytes": 390
+      }
+    },
+    {
+      "python": "3.12",
+      "isolate_digits": true,
+      "rayon_threads": "2",
+      "python_hash_seed": "42",
+      "manifest_sha256": "12d2e6d4ad57a9cf2fffe0304f2c1a5c35be1974352ac047f39aec6dcacc7df0",
+      "tokenizer_sha256": "f7ee889d47afa402aabd464bf714ac5ea71a44da916aedda6ffde20ad18b90d6",
+      "vocab_size": 512,
+      "evaluation": {
+        "bytes_per_token": 1.2149532710280373,
+        "characters": 315,
+        "data_sha256": "0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4",
+        "documents": 12,
+        "roundtrips_verified": true,
+        "tokenizer_sha256": "12d2e6d4ad57a9cf2fffe0304f2c1a5c35be1974352ac047f39aec6dcacc7df0",
+        "tokens": 321,
+        "utf8_bytes": 390
+      }
+    },
+    {
+      "python": "3.13",
+      "isolate_digits": false,
+      "rayon_threads": "4",
+      "python_hash_seed": "20261031",
+      "manifest_sha256": "1cd53ace990d56c750058a07d6e58ab67676523e95cdde14104f0ec9a98efd63",
+      "tokenizer_sha256": "51d802a3e3e3881c9af7099f005700e38f22eb2b7f1d63ff5cdac280482eb3e2",
+      "vocab_size": 512,
+      "evaluation": {
+        "bytes_per_token": 1.2341772151898733,
+        "characters": 315,
+        "data_sha256": "0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4",
+        "documents": 12,
+        "roundtrips_verified": true,
+        "tokenizer_sha256": "1cd53ace990d56c750058a07d6e58ab67676523e95cdde14104f0ec9a98efd63",
+        "tokens": 316,
+        "utf8_bytes": 390
+      }
+    },
+    {
+      "python": "3.13",
+      "isolate_digits": true,
+      "rayon_threads": "4",
+      "python_hash_seed": "20261031",
+      "manifest_sha256": "8bfa8a3e7b0f727fcfde65b6dc99cc4c7c0ab50778d18a89b92db4580ba5419d",
+      "tokenizer_sha256": "f7ee889d47afa402aabd464bf714ac5ea71a44da916aedda6ffde20ad18b90d6",
+      "vocab_size": 512,
+      "evaluation": {
+        "bytes_per_token": 1.2149532710280373,
+        "characters": 315,
+        "data_sha256": "0f84b8ef256117e11ca0dd6f94bef4d006fb78692a257c11bca10964f2258be4",
+        "documents": 12,
+        "roundtrips_verified": true,
+        "tokenizer_sha256": "8bfa8a3e7b0f727fcfde65b6dc99cc4c7c0ab50778d18a89b92db4580ba5419d",
+        "tokens": 321,
+        "utf8_bytes": 390
+      }
+    }
+  ],
+  "heldout_rows": [
+    {
+      "label": "English",
+      "utf8_bytes": 42,
+      "characters": 42,
+      "plain_bpe_tokens": 35,
+      "isolated_digit_tokens": 35
+    },
+    {
+      "label": "Russian",
+      "utf8_bytes": 74,
+      "characters": 40,
+      "plain_bpe_tokens": 46,
+      "isolated_digit_tokens": 45
+    },
+    {
+      "label": "LaTeX limit",
+      "utf8_bytes": 34,
+      "characters": 34,
+      "plain_bpe_tokens": 29,
+      "isolated_digit_tokens": 29
+    },
+    {
+      "label": "LaTeX symbols",
+      "utf8_bytes": 40,
+      "characters": 40,
+      "plain_bpe_tokens": 30,
+      "isolated_digit_tokens": 30
+    },
+    {
+      "label": "ASCII digits",
+      "utf8_bytes": 40,
+      "characters": 40,
+      "plain_bpe_tokens": 37,
+      "isolated_digit_tokens": 40
+    },
+    {
+      "label": "Numeral variants",
+      "utf8_bytes": 42,
+      "characters": 36,
+      "plain_bpe_tokens": 39,
+      "isolated_digit_tokens": 42
+    },
+    {
+      "label": "Whitespace",
+      "utf8_bytes": 23,
+      "characters": 23,
+      "plain_bpe_tokens": 16,
+      "isolated_digit_tokens": 16
+    },
+    {
+      "label": "Scripts and emoji",
+      "utf8_bytes": 52,
+      "characters": 22,
+      "plain_bpe_tokens": 51,
+      "isolated_digit_tokens": 51
+    },
+    {
+      "label": "Control bytes",
+      "utf8_bytes": 5,
+      "characters": 5,
+      "plain_bpe_tokens": 5,
+      "isolated_digit_tokens": 5
+    },
+    {
+      "label": "Unicode extremes",
+      "utf8_bytes": 11,
+      "characters": 6,
+      "plain_bpe_tokens": 7,
+      "isolated_digit_tokens": 7
+    },
+    {
+      "label": "Literal controls",
+      "utf8_bytes": 27,
+      "characters": 27,
+      "plain_bpe_tokens": 21,
+      "isolated_digit_tokens": 21
+    },
+    {
+      "label": "Empty",
+      "utf8_bytes": 0,
+      "characters": 0,
+      "plain_bpe_tokens": 0,
+      "isolated_digit_tokens": 0
+    }
+  ],
+  "corrupt_verification_exit_code": 1
+}

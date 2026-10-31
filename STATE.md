@@ -4,77 +4,58 @@ Updated: 2026-10-31. Owner: Lead agent.
 
 ## Current phase and last completed task
 
-Phase 2 is complete. M3.1 is in progress: M3.1a byte-BPE library API and 32
-new tests are implemented. Tokenizer YAML/CLI recipes and data-manifest linkage
-remain pending. No model, trainer, inference service or semantic checkpoint
-loader exists. The user-attached ponytail skill is installed and must be read and applied
-for all coding tasks, project-wide (full by default).
+Phase 3, M3.1 complete for the authored-fixture tokenizer workflow. Last completed:
+strict YAML recipes, manifest-linked JSONL training, verified tokenizer bundles,
+held-out segmentation and independent process replay. Code commit `2d1a05a`,
+followed by documentation. Next is M3.2 deterministic corpus preparation.
+No neural model, trainer, inference service or semantic checkpoint loader exists.
 
-Checkout `/workspace/newai_cddevel`, branch `main`, repository
-`jonbarkert135-cpu/QveltAI`. M2.2 code commits: `9027efe`, `f4fd2cc`, followed by
-documentation. The user resumed publication to main after the pause. Push succeeded from
-`db35482` through `213965e`, including Phase 1 research, M2.1/M2.2 implementation
-and reports, and skill installation. Environment configuration remains unchanged.
+Checkout /workspace/newai_cddevel, main, jonbarkert135-cpu/QveltAI. Publication of
+verified work/reports to main is authorized and active. No environment draft
+change or paid computation. Ponytail full is required for all coding tasks;
+409 skills remain installed (408 vendor plus the user attachment).
 
-## Latest supporting task
+## Verified state
 
-Installed 408 pinned agent skills with hashed source/assets and license
-notices; six restrictive Anthropic skills excluded. Catalog/lock and universal
-agent entry instructions are in docs/development/skills.md. No vendor installer,
-job or helper script executed. Next remains M3.1. See ADR-0020. Integration checks: 220 tests passed in
-4.35s; Ruff/format/mypy green; 3716 file hashes and 408 skill entries checked.
+- CLI: tokenizer resolve/train/verify/evaluate; schema 1 recipe has no local paths
+  and pins canonical raw-data identity. Strict bounded ordered text-only JSONL.
+- Actual consumed file hashes/counts, safe regular-file reads, atomic manifest-last
+  publication, full BPE/controls/vocabulary/recipe/data/provenance-link validation.
+- 315 tests on each Linux/Python 3.11.14/3.12.14/3.13.5, no skips. Ruff/format and
+  strict mypy green on 27 files. 3.11/3.13 tested installed wheel,3.12 editable.
+- Wheel/source build and content checks pass; wheel Python module bytes match
+  checkout. Base-only3.12 wheel needs no torch and ran train/verify/evaluate.
+- Six clean-commit processes produce matching tokenizer JSON per policy across
+  three Python versions and varied hash seeds/Rayon counts. Fixture artifacts
+  contain actual observed code/environment; deliberate corruption exits1.
+- Exact identities/results/commands: docs/development/validation_m3_1.md and
+  tokenizer_fixture_results.json; experiment R005. Lock unchanged this session;
+  tokenizers 0.22.2 and existing CPU PyTorch 2.9.1 remain pinned.
+- CI includes tokenizer smoke; remote job status was not inspected this session.
 
-## Verified capabilities
+## Limits and blockers
 
-- Schema-1 run/data/tokenizer/checkpoint records and canonical SHA-256 identity;
-  strict bounds/unknown versions, lineage, file roles and actual config/lock checks.
-- POSIX write-once publication, streaming/snapshot hashing/copy, manifest-last
-  commit, symlink/nonregular/traversal checks, observed code/package provenance.
-- Actual concurrent writers, process killed mid-write, injected callback/fsync/
-  link failures and deliberate corruption tests pass. Directory-fsync failure
-  after publication retains complete bytes and reports uncertain durability.
-- 220 tests pass on each of Linux/Python 3.11.14, 3.12.14, 3.13.5; strict mypy
-  passes on 21 files for all three; Ruff/format green. No skipped Linux tests.
-- Built wheel/source archive and fresh installed-wheel matrix pass; a no-torch
-  separate-process CLI init/inspect/verify flow passes. Corruption/wrong ID fail.
-- Exact commands, code/wheel/manifest IDs and temporary evidence:
-  `docs/development/validation_m2_2.md`; engineering experiment R003. Lock
-  unchanged, no new dependencies. Remote CI has not run; no ML training ran.
-
-## Limits and open prerequisites
-
-- Artifacts are tested on Linux local storage. Native Windows, object/network
-  stores, physical power loss and distributed transactions are not validated.
-- Metadata/byte validity does not prove dataset rights, tokenizer semantics,
-  valid neural state or training replay. Dirty flags/package inventory are
-  observations, not code snapshots or execution/environment locks.
-- Init declares one process and seed intent; it does not seed RNG, test CUDA,
-  start training or create a checkpoint. Actual launch/replay contracts remain M5.
-- Research baseline: dense pre-RMSNorm/RoPE/SwiGLU/GQA, tied embeddings, V=32768.
-  Config counts remain analytical. User hardware RTX 3060 Laptop/Core i5/16 GB
-  RAM has not been profiled; exact VRAM/OS/driver/server budget are unknown.
-- No dataset is approved or ingested; source licenses in manifests are declarations.
-  Project license/Russian-data priority are undecided, not blockers for core tests.
-
-## Latest verification (M3.1a)
-
-252 tests passed on Linux/Python 3.12.14 in 4.59s, no skips; Ruff/format and
-strict mypy passed on 23 files. Tokenizers 0.22.2 and transitive dependencies
-locked; installed library lacks py.typed, so a scoped external import override
-is explicit. Small authored segmentation pilot and limitations: R004 and
-`docs/development/tokenizer.md`. Earlier 220-test Python matrix remains historical;
-new tokenizer behavior has not yet been tested across that matrix or on CUDA.
-409 skill entries, with the new attachment retained byte-for-byte.
+No external corpus approved or ingested. Registered 48/12 authored software
+fixtures have development/test permission only; no representative corpus or
+production 32768-token tokenizer is frozen. Model parameter counts stay analytical.
+Streaming limits document/record size, not BPE pair-statistic memory. JSON byte
+identity was measured on this Linux release/fixture, not promised universally.
+Source/license strings are declarations, hashes are not signatures, provenance
+is observational and dirty code is not snapshotted. Dataset payloads are checked
+when consumed; a copied data manifest alone does not prove historical training.
+Linux local filesystem only; no native Windows/network-store/power-loss/GPU test.
+User's RTX3060 Laptop/Core i5/16GB RAM has not been profiled; exact VRAM/driver/
+OS/server budget are unknown. Project-wide release license/language priorities
+remain user decisions; they do not block authored-fixture development.
 
 ## Next three tasks
 
-1. M3.1: add strict YAML/CLI training recipes and registered raw-data/tokenizer
-   manifest linkage to the tested byte-BPE API.
-2. M3.1: extend cross-process/version reproducibility and held-out segmentation
-   measurements; stable IDs and round-trip baseline tests already pass.
-3. M3.2: deterministic bounded ingestion, cross-source dedup/splits, checksummed
-   token shards, packing/masks and rank/worker resume-order tests. External data
-   remains gated by DATA_CARD.md; actual tensor training is not started here.
+1. M3.2: implement bounded deterministic preparation of approved local documents,
+   explicit transformation/source IDs and content hashes, with authored fixtures.
+2. M3.2: exact/near dedup, document-level split isolation and decontamination
+   contracts; retain audited source/license provenance. External data stays gated.
+3. M3.2: checksummed token shards, packing/loss masks, deterministic rank/worker
+   allocation and resume-order/corruption tests, before model/training work.
 
 ## Reproduce
 
@@ -86,9 +67,9 @@ uv run --frozen --extra cpu ruff check .
 uv run --frozen --extra cpu ruff format --check .
 uv run --frozen --extra cpu mypy
 git diff --check
-git status --short --branch
 ```
 
-Expected: 252 passing tests, lint/format/types green, clean main with local
-commits. Functional CLI example is in `docs/development/artifacts.md`; use a new
-output directory under an existing parent. No train/serve command exists yet.
+Expected: 315 tests, lint/format/types green. CLI runbook:
+docs/development/tokenizer_workflow.md; choose a fresh output directory.
+No language-model training/serving command exists. Earlier M2/R004 evidence
+remains in the experiment log and validation reports, not current capability claims.

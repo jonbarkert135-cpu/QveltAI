@@ -14,9 +14,10 @@ combining marks and LaTeX. Lone surrogates and inputs over1MiB are rejected.
 Arbitrary byte-token slices can decode with replacement characters.
 
 `save(Path)` uses M2.2 write-once atomic local storage. `load(Path)` bounds JSON
-to64MiB, validates the supported pipeline, controls and full byte alphabet.
-This file is not yet a lineage-tracked tokenizer bundle. It has no checksum
-trust anchor by itself. Use trusted local files; M3.1 will integrate manifests.
+to 64 MiB, validates the supported pipeline, controls and full byte alphabet.
+A standalone JSON file has no external checksum trust anchor. For lineage,
+use the completed [M3.1 bundle workflow](tokenizer_workflow.md), which pins raw
+data, recipe, code and dependencies and verifies the tokenizer semantics.
 The wrapper is typed; tokenizers has no py.typed marker and its internal methods
 are outside static checking. Runtime contract tests remain required.
 
@@ -38,7 +39,7 @@ for digits in (False, True):
     assert all(t.decode(t.encode(x)) == x for x in texts)
 ```
 
-Executed 2026-10-31, Python3.12.14, CPU. Output:
+Executed 2026-10-31, Python 3.12.14, CPU. Output:
 
 ```text
 False 381 [9, 9, 16]
@@ -48,19 +49,19 @@ True 371 [9, 9, 26]
 UTF-8 lengths43/74/37 bytes. Repeated authored fixtures are only software probes;
 these counts say nothing about model reasoning or real corpus compression.
 Default digit isolation follows the research RFC, with no claimed quality gain.
-252 tests passed in4.59s, including32 tokenizer cases; Ruff/format/mypy pass.
+252 tests passed in 4.59s, including32 tokenizer cases; Ruff/format/mypy pass.
 Test coverage includes both policies, controls, non-Latin unseen bytes, malformed
 Unicode/JSON, modified normalization, empty corpus, stable training and save/load.
 No external corpora, LLM training, browser trace or GPU execution occurred.
 
-## Remaining M3.1 work
+## Completed workflow and next scope
 
-Add strict YAML/CLI recipes, registered raw-data/tokenizer lineage, independent
-process/version reproducibility checks and held-out segmentation measurements.
-Do not freeze a production32768-token artifact from these toy fixtures. Although
+YAML/CLI recipes, registered raw-data/tokenizer lineage and independent Python
+3.11–3.13 probes are complete for authored fixtures; see
+[validation](validation_m3_1.md). M3.2 handles production corpus preparation.
+Do not freeze a production 32768-token artifact from toy fixtures. Although
 inputs stream and document sizes are bounded, BPE pair statistics grow with
 corpus diversity; larger training requires measured memory and approved data.
 
-The attached ponytail skill applies in full mode. This subtask reuses the
-existing atomic IO and library BPE implementation; no new framework or browser
-dependency was introduced. Remaining milestone gates are explicitly listed above.
+Ponytail applies in full mode. The implementation reuses strict YAML construction,
+atomic IO, typed manifests, observed provenance and the pinned BPE dependency.

@@ -116,10 +116,25 @@ successful, would establish general mathematical reasoning quality.
 
 2026-10-31; M3.1a, CPU, Python 3.12.14, tokenizers 0.22.2. Hypothesis:
 byte-level training preserves authored Unicode and digit isolation changes
-compression. Config: target384, min_frequency2, three authored strings repeated
+compression. Config: target384, min_frequency 2, three authored strings repeated
 four times. Exact recipe/results: docs/development/tokenizer.md. Plain BPE actual
 V381 and token counts9/9/16; isolated digits V371 and9/9/26, both full round trips.
-252 tests passed in4.59s (32 new), Ruff/format/mypy green on23 files. This is not
+252 tests passed in 4.59s (32 new), Ruff/format/mypy green on23 files. This is not
 model training or evidence of reasoning quality. First attempt found untyped
 third-party imports and a callback return annotation; both were addressed without
 weakening tests. Further YAML/manifest/corpus validation remains M3.1.
+
+## R005 — Manifest-linked tokenizer workflow and independent fixture replay
+
+Date: 2026-10-31; code `2d1a05a`; engineering/tokenizer experiment, no LLM training.
+Hypothesis: pinned ordered inputs/settings reproduce learned byte-BPE JSON across
+independent supported Python processes; held-out whole-text byte coverage survives.
+Config: configs/tokenizer_smoke.yaml,48 authored records, V=512, min_frequency 2;
+plain versus ASCII-digit isolation,12 separate held-out records/390 bytes.
+Result:315 tests pass on Python 3.11.14/3.12.14/3.13.5 with lint/types green.
+Six installed-wheel CLI runs match JSON SHA-256 per policy despite varied seeds/
+Rayon threads. All round trips pass. Plain316 tokens, isolated 321; both V=512.
+Conclusion: M3.1 fixture workflow gate passed; no reasoning/production-quality
+claim, no external dataset approval. Full commands, hashes, cases, limitations
+and an early oversized test-ID/exec-environment harness failure: docs/development/validation_m3_1.md.
+Reproduce using its workflow runbook and checked-in structured fixture results.

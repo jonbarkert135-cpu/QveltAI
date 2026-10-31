@@ -17,7 +17,8 @@ uv run --frozen --extra cpu qvelt --version
 uv run --frozen --extra cpu qvelt doctor --device cpu
 ```
 
-The base runtime pins NumPy 2.2.6 and PyYAML 6.0.3; CPU adds PyTorch 2.9.1+cpu.
+The base runtime pins NumPy 2.2.6, PyYAML 6.0.3 and tokenizers 0.22.2;
+CPU adds PyTorch 2.9.1+cpu.
 `uv.lock` pins transitive artifacts/hashes and environment markers, including
 different compatible dependencies for Python 3.11 versus 3.12+. Do not rewrite
 the lock during routine installation. An intentional upgrade is a tested change.
@@ -122,11 +123,15 @@ uv run --frozen --extra cpu python -m build --no-isolation
 
 The pinned development group includes Hatchling and build; `--no-isolation`
 uses those locked build dependencies rather than resolving new ones. Build
-outputs are ignored under `dist/`. Never publish them during the current pause.
+outputs are ignored under `dist/`. Publishing a package or model release is a
+separate milestone; source/report commits are published to main as authorized.
 
 The CPU GitHub workflow uses commit-pinned checkout/setup-python actions and
-Python 3.11/3.12/3.13 jobs. Local equivalents passed; the remote workflow has
-not run. There is no training, benchmark, model export or serving command yet.
-M2.2 now provides [manifest and atomic artifact operations](artifacts.md);
-M3.1 tokenizer/data work is next. The 220-test suite passes locally on the
-three Linux Python versions listed above.
+Python 3.11/3.12/3.13 jobs. Local equivalents passed; remote status was not
+inspected this session. No language-model training/export/serving command exists.
+M2.2 provides [manifest and atomic artifact operations](artifacts.md).
+
+The tokenizer workflow is verified with 315 tests on all three supported Linux
+Python versions. See [its runbook](tokenizer_workflow.md) and
+[validation matrix](validation_m3_1.md). M3.2 corpus preparation is next;
+standalone tokenizer operations also work in the base no-torch profile.

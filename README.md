@@ -4,12 +4,14 @@ Qvelt is an open, from-scratch language-model framework under development, with
 an emphasis on mathematical reasoning. The roadmap covers tokenization, data,
 pretraining, post-training, evaluation and inference.
 
-**Current status: Phase 2 infrastructure complete; tokenizer work is in progress.**
+**Current status: M3.1 tokenizer workflow complete; deterministic data preparation is next.**
 The repository includes a typed Python package, strict YAML configuration,
 reproducibility utilities, JSON logging, CPU diagnostics, typed provenance
 manifests, atomic local artifact storage, pinned dependencies and
-[source-audited research RFCs](docs/research/README.md). It includes an initial tested tokenizer API, but no
-model, training loop, pretrained weights or benchmark results. No training ran.
+[source-audited research RFCs](docs/research/README.md). It includes a tested
+tokenizer API and YAML/CLI artifact workflow, but no
+model, training loop, pretrained weights or benchmark results. No language-model
+training ran.
 
 The validated configuration targets are 19.34M, 125.85M, 493.55M and 1.510B
 unique model parameters. They are analytical specifications, not trained models.
@@ -34,8 +36,8 @@ uv run --frozen --extra cpu mypy
 
 The config commands resolve defaults and verify types/shapes without allocating
 a model. Doctor performs a small real tensor operation, not a training benchmark.
-The full 220-test suite passed on Linux/Python 3.11.14, 3.12.14 and 3.13.5. The checked-in
-GitHub CI workflow has not run remotely during the publication pause.
+The full 315-test suite passed on Linux/Python 3.11.14, 3.12.14 and 3.13.5. The checked-in
+GitHub CI workflow includes tokenizer smoke; remote status was not inspected.
 
 For a CUDA environment use `uv sync --frozen --extra cuda` **instead of** `cpu`.
 This selects the matching PyTorch 2.9.1 CUDA 12.8 wheels. CUDA/Windows/laptop
@@ -56,7 +58,7 @@ checkpoint metadata nor a file hash proves model-state replay or data rights.
 
 | Document | Purpose |
 | --- | --- |
-| [AGENTS.md](AGENTS.md) | Working protocol and current publication pause |
+| [AGENTS.md](AGENTS.md) | Working protocol, required skills and main publication policy |
 | [PLAN.md](PLAN.md) | Phases, dependencies and acceptance gates |
 | [STATE.md](STATE.md) | Current state, verification and next tasks |
 | [DECISIONS.md](DECISIONS.md) | Choices, source evidence and revisit conditions |
@@ -65,7 +67,7 @@ checkpoint metadata nor a file hash proves model-state replay or data rights.
 | [DATA_CARD.md](DATA_CARD.md) | Dataset rights and provenance gate |
 | [Scaffold design](docs/development/scaffold.md) | Implemented infrastructure interfaces |
 
-Next: M3.1 tokenizer training/workflows on approved data. A project license
+Next: M3.2 deterministic preparation of approved data. A project license
 has not been selected; public visibility alone does not grant reuse rights.
 
 ## Instructions for all AI development agents
@@ -73,8 +75,8 @@ has not been selected; public visibility alone does not grant reuse rights.
 Use the installed project-local [agent skills and complete catalog](docs/development/skills.md)
 under `.agents/skills/`, and follow [AGENTS.md](AGENTS.md). The installation includes
 408 skills from K-Dense, Continuous Claude (math), Hugging Face, Orchestra,
-Anthropic and OpenAI, pinned by commit and SHA-256. Six Anthropic skills are
-excluded because their licenses prohibit retention/redistribution.
+Anthropic and OpenAI, pinned by commit and SHA-256. Six Anthropic entries are
+excluded because of restrictive or unspecified licenses.
 
 Before each task, read and apply relevant SKILL.md instructions; verify actual
 library APIs and run Qvelt's required tests. Mathematical checks use executable
@@ -88,5 +90,9 @@ and apply it: implement the smallest complete solution, reuse existing code,
 retain validation/tests, and report unchecked scope and material risks. There
 are 409 skill entries (408 vendor entries plus ponytail).
 
-The first [byte-BPE tokenizer API](docs/development/tokenizer.md) is implemented;
-M3.1 remains in progress pending YAML/CLI and corpus-manifest integration.
+The first [byte-BPE tokenizer API](docs/development/tokenizer.md) is implemented.
+The [YAML/CLI runbook](docs/development/tokenizer_workflow.md) trains on registered
+authored fixtures and verifies data/config/provenance links.
+[Validation](docs/development/validation_m3_1.md) records 315 passing tests per Python
+version and six independent fixture training runs. Next is M3.2; no external
+corpus or production vocabulary has been approved.

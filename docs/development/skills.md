@@ -83,9 +83,9 @@ plugin marketplace.
 - anthropic: `skills/xlsx/SKILL.md` — Restrictive license prohibits retaining/redistributing copies.
 - anthropic: `template/SKILL.md` — No license file found in skill or ancestor directories.
 
-No bytes from the excluded skill directories are vendored. Their terms explicitly
-prohibit retention/redistribution outside the services; user authorization to
-install skills cannot grant those missing rights.
+No bytes from the excluded skill directories are vendored. Four carry explicit
+retention/redistribution restrictions; two have no located license file. User
+authorization to install skills cannot establish those missing reuse rights.
 
 ## Complete installed catalog
 

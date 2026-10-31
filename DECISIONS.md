@@ -477,7 +477,7 @@ for this session; future publication can follow the next user instruction.
 - **Date/status:** 2026-10-31; accepted at the user's explicit installation request.
 - **Context/options:** floating npx installers versus immutable project-local snapshots.
 - **Choice:** 408 skill entries, source-relative assets, license notices and SHA-256
-  inventory; omit six restrictive Anthropic skills. Use root agent policy and
+  inventory; omit six Anthropic entries with restrictive or unspecified licenses. Use root agent policy and
   phase-specific read-before-use; exclude third-party helpers from first-party Ruff.
 - **Rationale:** reproducible instruction access across agents without running
   installers/hooks or replacing original model code. Vendor payment/publication
@@ -516,3 +516,52 @@ for this session; future publication can follow the next user instruction.
 - **Revisit:** corpus-scale memory/segmentation results, tokenizer upgrades,
   chat templates, proven need for digit policy changes; changing IDs invalidates
   tokenizer/data/model compatibility. YAML/manifest integration stays in M3.1.
+
+## ADR-0022 — Bind tokenizer recipes to ordered byte-verified raw manifests
+
+- **Date/status:** 2026-10-31; accepted and fixture-validated, M3.1 complete.
+- **Context:** YAML/CLI training needs inspectable source/config/code lineage.
+- **Options:** bare input globs/unversioned JSON; a new data framework; reuse
+  M2 strict YAML, manifests, atomic storage and observed provenance.
+- **Choice:** path-free schema 1 recipe with canonical data-manifest ID and
+  TokenizerSettings. Separate CLI paths. Strict text-only JSONL in canonical
+  manifest-path/physical-line order, bounded records/documents, consumed-byte
+  SHA-256 and exact document count checks. Publish tokenizer, recipe, source
+  manifest, provenance and lock before the final commit marker; never overwrite.
+  Semantic tokenizer verification adds recipe/data/control/vocabulary/digit and
+  provenance-link checks to generic byte verification.
+- **Rationale:** reuse existing boundaries without a downloader, plugin service,
+  implicit legal approval or full corpus copies. A stopped iterator is not a
+  verified corpus. File growth is bounded by declared bytes; BPE statistics still
+  grow with corpus diversity. Metadata declarations do not prove rights, actual
+  historical training, installed-lock equality or signed authenticity.
+- **Sources:** [verified] installed Python 3.12 json object_pairs_hook docstring,
+  buffered file reads, hashlib/dataclasses APIs; PyYAML 6.0.3 SafeLoader rules
+  already reviewed in ADR-0015, reused strict parser and executed malformed-input
+  tests. [verified] tokenizers 0.22.2 installed API behavior and byte-BPE tests,
+  M2.2 POSIX protocol (ADR-0018), lineage/corruption/concurrent-edit and real CLI
+  tests. Design/contract: docs/development/tokenizer_workflow.md. Limits/order
+  are explicit project policies, not upstream performance claims.
+- **Revisit:** actual corpus formats/scale, measured memory, larger manifests,
+  schema migrations, remote storage or changed preprocessing/ID contracts.
+
+## ADR-0023 — Gate tokenizer workflow on authored fixtures and measured replay
+
+- **Date/status:** 2026-10-31; accepted, scoped CPU evidence recorded.
+- **Options:** infer reproducibility from seeds; unapproved web sample; registered
+  authored train/held-out fixtures with exact manifests and independent processes.
+- **Choice:** 48/12 authored records with development/test permission; compare
+  plain/ASCII-digit BPE V=512. Six clean-commit installed-wheel processes across
+  Python 3.11–3.13, varied hash seeds/Rayon counts, matching JSON bytes per policy.
+  Keep the researched digit-isolated default without claiming a reasoning gain.
+- **Rationale:** confirms a concrete portable workflow, not a production tokenizer.
+  Held-out token counts 316 versus 321 on 390 bytes are only tiny segmentation probes.
+  Corpus-scale quality/memory, model reasoning and cross-hardware equivalence need
+  separate evidence. No production 32768-token artifact is frozen.
+- **Sources:** [verified] actual commands/configs/IDs and results in
+  docs/development/validation_m3_1.md and tokenizer_fixture_results.json; exact
+  authored source hashes/permission in DATA_CARD.md and fixture manifests.
+  [verified] previous research basis for byte-BPE/digit policy, architecture RFC
+  S13/S43/S44; no additional empirical claim imported from a skill.
+- **Revisit:** approved representative corpora, frozen model/data vocabulary,
+  hardware/library changes or measurements supporting a different digit policy.

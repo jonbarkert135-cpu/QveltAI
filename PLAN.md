@@ -120,24 +120,25 @@ matrix. Completion covers metadata and byte integrity, not model state replay.
 
 ### M3.1 — Train and validate a mathematical-text tokenizer
 
-Owner: Lead agent. Status: in progress. Dependencies: M2.2.
+Owner: Lead agent. Status: complete. Dependencies: M2.2.
 
-- [ ] Select a tokenizer algorithm/library after source and license review;
+- [x] Select a tokenizer algorithm/library after source and license review;
   train it from scratch on a small approved corpus before scaling.
-- [ ] Specify Unicode handling, byte fallback, special/chat tokens, vocabulary
+- [x] Specify Unicode handling, byte fallback, special/chat tokens, vocabulary
   size, and number/LaTeX handling; measure candidate segmentation rather than
   assuming that digit splitting improves reasoning.
-- [ ] Test round trips on English, Cyrillic, numbers, equations, and malformed or
+- [x] Test round trips on English, Cyrillic, numbers, equations, and malformed or
   unusual Unicode; verify stable IDs and save/load compatibility.
 
 Acceptance: a versioned tokenizer artifact and training recipe are reproducible;
 coverage and tokens-per-text measurements are recorded with no math-quality claim.
 
-Completed subtask M3.1a: pinned tokenizers 0.22.2; byte-BPE API with 32
-controls, ASCII digit option, Unicode/byte coverage and atomic JSON save/load;
-32 tests and a fixture compression pilot. Remaining: YAML/CLI training recipe,
-approved raw-data/tokenizer manifest linkage, cross-process/version reproducibility
-and broader held-out segmentation measurements. No corpus-scale tokenizer is frozen.
+Evidence: M3.1a library API plus M3.1 YAML/CLI bundle workflow; code `2d1a05a`,
+`docs/development/validation_m3_1.md` and authored fixture results. 315 tests pass
+on Linux/Python 3.11/3.12/3.13; six installed-wheel training processes produce
+matching tokenizer bytes per policy. No production 32768-token artifact or
+external-corpus quality claim. Corpus-scale selection/training remains gated
+by DATA_CARD and measured resources; M3.2 is next.
 
 ### M3.2 — Build deterministic, auditable data preparation
 
@@ -427,8 +428,8 @@ or rollback; unsupported combinations are never silently treated as verified.
 - [x] Follow the latest user instruction: publish directly to main; PR creation
   is optional and its unavailable API is not a delivery blocker.
 
-This follow-up does not complete M2.1: no package, ML runtime, or project CI
-has been implemented. See `SETUP.md` for commands and access limitations.
+Historical bootstrap scope: this follow-up preceded M2.1. Package/runtime/CI
+were implemented in later milestones. See `SETUP.md` for bootstrap context.
 
 ## Research acceptance evidence (2026-10-31)
 
@@ -443,15 +444,16 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 
 ## Immediate next session
 
-Phase 2 is complete. Start M3.1: inspect/freeze a supported byte-BPE library and
-its license/API, implement the bounded-memory tokenizer workflow and math/LaTeX/
-Unicode/Cyrillic tests, and use approved project-authored fixtures first. Actual
-external corpus ingestion remains gated by DATA_CARD.md, not a manifest's license
-string. M3.2 then supplies deterministic shard/packing/data-order behavior.
+M3.1 is complete for the registered authored-fixture tokenizer workflow. Start
+M3.2 bounded deterministic corpus preparation, provenance, dedup/splits and
+checksummed token shards/packing. External data still requires DATA_CARD approval;
+manifest license strings do not grant permission. Preserve source and token order
+and test restart/rank/worker allocation before model implementation.
 
-Preserve the publication pause: commits remain local, no previous cloud edits
-are reapplied and no final-scale/paid training is launched. M5 must implement
-actual tensor/optimizer/RNG/sampler checkpoint semantics before claiming replay.
+Publish verified work and reports directly to main under the user's resumed
+publication authorization. Do not reapply old cloud configuration changes or
+launch final-scale/paid training. M5 must implement actual tensor/optimizer/RNG/
+sampler checkpoint semantics before claiming training replay.
 
 ## Supporting task — Pinned agent skills
 
@@ -461,6 +463,7 @@ Owner: Lead agent. Status: complete. Dependencies: user request, source/license 
 - [x] Record commit/file identities, catalog, exclusions and task-specific usage rules.
 - [x] Add README/agent entry points; verify hashes, first-party tests and lint/types.
 
-Acceptance: 408 installed skill entries have intact source files and license notices;
-6 restrictive entries are explicitly excluded. Source authenticity is Git provenance,
+Acceptance: 408 vendor skill entries have intact source files and license notices;
+6 entries with restrictive or unspecified licenses are explicitly excluded.
+The attached ponytail skill adds one required project-wide coding workflow. Source authenticity is Git provenance,
 not a claim of comprehensive security or third-party runtime validation.
