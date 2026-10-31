@@ -1,0 +1,560 @@
+{
+  "date": "2026-10-31",
+  "scope": "Primary-source claim verification, not replication or dataset approval",
+  "papers": [
+    {
+      "id": "S01",
+      "url": "https://arxiv.org/pdf/1706.03762v1",
+      "sha256": "0a9bff1be3575cf9fe26a4a3d3a9175bc791ecec90de8b9deba4cff75d2b9476",
+      "bytes": 2128686,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S02",
+      "url": "https://arxiv.org/pdf/1910.07467v1",
+      "sha256": "a38ab771022fc10525d2b6b23de40307b2ca7b2bf463f5219da6a0ba1c41225f",
+      "bytes": 555031,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S03",
+      "url": "https://arxiv.org/pdf/2104.09864v1",
+      "sha256": "2987844c31e154ee10c2e59b64b0ba2f793447bc0c6eeeb2bf435141ed0b69db",
+      "bytes": 437245,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S04",
+      "url": "https://arxiv.org/pdf/2309.00071v1",
+      "sha256": "91f003ae8ce67f57260b0a6cc8a3244a176eaebdbfd071d552c0c469e6534d50",
+      "bytes": 413798,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S05",
+      "url": "https://arxiv.org/pdf/2306.15595v1",
+      "sha256": "2398a01735aeaa0daf624e61ec2b100399c1e287d09d3b45bde2ff07a92c651f",
+      "bytes": 752097,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S06",
+      "url": "https://arxiv.org/pdf/2010.04245v1",
+      "sha256": "58a6664c06617b191d46e595be77f7122897ec85a9a719e5d1a960c3f9734970",
+      "bytes": 568174,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S07",
+      "url": "https://arxiv.org/pdf/2002.05202v1",
+      "sha256": "7398ae8b163722a6b5410fb975722adbe6b5f6f9c7f1efa584f1c6b79eaa93e2",
+      "bytes": 109135,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S08",
+      "url": "https://arxiv.org/pdf/1911.02150v1",
+      "sha256": "3250947d7be32f1a15531ab3062134edd431b9cf79e669d324ab5cbddd9a2094",
+      "bytes": 142627,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S09",
+      "url": "https://arxiv.org/pdf/2305.13245v1",
+      "sha256": "7b27c9aee2fd1eb8cbd2a2f25ba5e9268a9a72965f9c3567103dc72e7ed18d52",
+      "bytes": 254148,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S10",
+      "url": "https://arxiv.org/pdf/2405.04434v1",
+      "sha256": "e930bb96dd1f0ecbe57b47b7a27141f8c165cd4a9de41b1cc2e46f54ec96e96b",
+      "bytes": 1576608,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S11",
+      "url": "https://arxiv.org/pdf/2310.06825v1",
+      "sha256": "dfbac4e7035344b305c947481f2e7e8a02f7a24a563917eb6e47f6591d14c5ae",
+      "bytes": 3749788,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S12",
+      "url": "https://arxiv.org/pdf/1608.05859v1",
+      "sha256": "f0d1f3513e0c73e9695bfa41536d0cbb2a26bc6c8b93fc974b911a74b8f1ac93",
+      "bytes": 88583,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S13",
+      "url": "https://arxiv.org/pdf/2302.13971v1",
+      "sha256": "2e663675ae36ad12adb2f5a05281bac2747ecf8d23d92bedd9f937a89fee7136",
+      "bytes": 726566,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S14",
+      "url": "https://arxiv.org/pdf/2101.03961v1",
+      "sha256": "0dba4abc34422f49a5363f63c90d2103e4a982c921c597b8c3560cc34fd80d9c",
+      "bytes": 1182747,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S15",
+      "url": "https://arxiv.org/pdf/2203.15556v1",
+      "sha256": "3fd3632a8ef48171bd25282990221d49535d75356192f068b3b2ebe08f2aedd4",
+      "bytes": 6004349,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S16",
+      "url": "https://arxiv.org/pdf/2404.06395v1",
+      "sha256": "46bd6d935ba60d5dec6ab4a1bfe9fbce6a8b81a03be9dd91c4502f4aabe5b880",
+      "bytes": 16483866,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S17",
+      "url": "https://arxiv.org/pdf/2203.03466v1",
+      "sha256": "8a9f656028be045c804601918ccb288e6bb9a9c07961380a7694c445c9fc4ae1",
+      "bytes": 3189616,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S18",
+      "url": "https://arxiv.org/pdf/1711.05101v1",
+      "sha256": "0da9719c9879d249dd3fd1f33dd0545cd0fd15b7fc7dc3bd333c80c1d12d4454",
+      "bytes": 5115767,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S19",
+      "url": "https://arxiv.org/pdf/2302.06675v1",
+      "sha256": "611c531e1020317be7e1123b23f99a02ca58fadc0cbc845cb3ec201f5d0cdc51",
+      "bytes": 1553329,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S20",
+      "url": "https://arxiv.org/pdf/2502.16982v1",
+      "sha256": "6b8e3b47da4db09c952a35486c905f416c57081a32b445a36a3744c441b1c7f3",
+      "bytes": 2077505,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S21",
+      "url": "https://arxiv.org/pdf/2406.17557v1",
+      "sha256": "457e415c435b54928582f6ea13b05129993df94304709102362b7a563a78e028",
+      "bytes": 3027693,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S22",
+      "url": "https://arxiv.org/pdf/2107.06499v1",
+      "sha256": "4b4cf7473526703d33abef8d983d42cdeaad63645551b8faf53a9ae048016def",
+      "bytes": 720098,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S23",
+      "url": "https://arxiv.org/pdf/2201.11903v1",
+      "sha256": "3d40493ec4bcba922882db6e29e394eb9a2449721a5eb94f05e47aee7ad46752",
+      "bytes": 1454242,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S24",
+      "url": "https://arxiv.org/pdf/2305.20050v1",
+      "sha256": "fbd170e2042c32950c3fe97d3a558d89e8a8dffaadc942e774ccb4b751abc123",
+      "bytes": 4384742,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S25",
+      "url": "https://arxiv.org/pdf/2203.14465v1",
+      "sha256": "63eed872af6a4cc040110649db34ae39ed92cdcc1b67759284d4d3194e7b9a88",
+      "bytes": 559110,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S26",
+      "url": "https://arxiv.org/pdf/2402.03300v1",
+      "sha256": "500ce2fae51dd4e06d27423c9b8ec6ca2013eb577e74e5e15fd87510018c6e53",
+      "bytes": 1843099,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S27",
+      "url": "https://arxiv.org/pdf/2309.17452v1",
+      "sha256": "7f17aaa78ef9308aa2e679acd196d91dc29e7db41458a5b8c673fdfb7bd97644",
+      "bytes": 1105194,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S28",
+      "url": "https://arxiv.org/pdf/2405.14333v1",
+      "sha256": "5731f6e680035a6aab3e35f11eedcc558b7939de5b290a589f43322251eb3e04",
+      "bytes": 601408,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S29",
+      "url": "https://arxiv.org/pdf/2412.19437v1",
+      "sha256": "a67e18a4ca6e2c81abc030239a3ee53705f656b79efab8ce1d6b5ac25630c2a5",
+      "bytes": 1887607,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S30",
+      "url": "https://arxiv.org/pdf/2502.02737v1",
+      "sha256": "a95fbda201d21cd25c89e949636373d36c288bd2d287e3cabd208e2041ea36d3",
+      "bytes": 640228,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S31",
+      "url": "https://arxiv.org/pdf/2412.15115v1",
+      "sha256": "367bbeef22d21b6a11efbb114d8d4e72cdf3ebb5662c55d59bf2fa10e8c3da6c",
+      "bytes": 1935303,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S32",
+      "url": "https://arxiv.org/pdf/2402.14905v1",
+      "sha256": "884b2e7051962d03cd85f8141ea193fad7794428a6ae2f398ccb9ea1384507a0",
+      "bytes": 1204699,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S33",
+      "url": "https://arxiv.org/pdf/2404.14219v1",
+      "sha256": "54fe7b2ddc32ff3de643ca2384e0ceab39214d97191248375d6063c362350106",
+      "bytes": 2049157,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S34",
+      "url": "https://arxiv.org/pdf/2304.01373v1",
+      "sha256": "9b506dd9272b093c4c85971fead4892ba20e40bee7e98e9227a985227bfde92c",
+      "bytes": 1094777,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S35",
+      "url": "https://arxiv.org/pdf/2401.02385v1",
+      "sha256": "8bcc47ff0b18d69a5df98cd13fc98e861b3a036342b2409cb8e9423576b5bbd0",
+      "bytes": 2545756,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S36",
+      "url": "https://arxiv.org/pdf/2205.14135v1",
+      "sha256": "be21f20c749ba8443988b479bece93617dd37b214ea9099413f951f756d4104f",
+      "bytes": 2004922,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S37",
+      "url": "https://arxiv.org/pdf/2002.04745v1",
+      "sha256": "af4234e423f7e89acc075fee9edf45a9317689524baac1071da30100d8a26bb8",
+      "bytes": 751652,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S38",
+      "url": "https://arxiv.org/pdf/1812.06162v1",
+      "sha256": "599208f2c34252d458ca9785b0929b922234da29e04d72ae95e8b606172e9b68",
+      "bytes": 4061840,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S39",
+      "url": "https://arxiv.org/pdf/2306.11644v1",
+      "sha256": "35144e4c99923c4c0806115cf313d7cf08e2f2a6444c823014a4122e153c890a",
+      "bytes": 1439522,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S40",
+      "url": "https://arxiv.org/pdf/2305.18290v1",
+      "sha256": "304d57efe53317673ee5e93e1e1d990e3231fb4e24198aedd4829968e2c3cfbb",
+      "bytes": 1286755,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S41",
+      "url": "https://arxiv.org/pdf/2407.14342v1",
+      "sha256": "81df54d8bac7b171d9539b1b9ad44137fac5eb92c1eacb4b5bbb0dcbae337fd0",
+      "bytes": 629803,
+      "status": "excluded_title_mismatch",
+      "reason": "2407.14342v1 is Quantifying the value of positive transfer: An experimental case study, not the intended math paper. No claim uses it."
+    },
+    {
+      "id": "S42",
+      "url": "https://arxiv.org/pdf/2501.00656v1",
+      "sha256": "72ffc805b342af3567e3727b88e02e2dd4b2b42c7344e0b3cf435d267e62f59c",
+      "bytes": 4267917,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    },
+    {
+      "id": "S43",
+      "url": "https://arxiv.org/pdf/1508.07909v1",
+      "sha256": "1c3665998df191f8a63488eff25beb7313ce27137d8f3a153b00ce94a51d0f60",
+      "bytes": 219664,
+      "status": "retrieved",
+      "review_scope": "Abstract and relevant design/method/report passages inspected; claim scope in survey.md. No replication."
+    }
+  ],
+  "dataset_cards": [
+    {
+      "repo": "HuggingFaceFW/fineweb-edu",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9",
+      "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu/raw/87f09149ef4734204d70ed1d046ddc9ca3f2b8f9/README.md",
+      "sha256": "a0cc8998a20499432b28b6575f3046b714938eb8e11b8d59a1d25ddf3716061e",
+      "license": "odc-by",
+      "gated": false,
+      "status": "retrieved",
+      "id": "D01",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "HuggingFaceTB/finemath",
+      "revision": "e92b25a616738fe95dc186b64dfb19f9c8525594",
+      "url": "https://huggingface.co/datasets/HuggingFaceTB/finemath/raw/e92b25a616738fe95dc186b64dfb19f9c8525594/README.md",
+      "sha256": "77b9162c99fc6b5944da8793f18fb99c3b520ab7cdce0cc67ec8a1e47871da61",
+      "license": "odc-by",
+      "gated": false,
+      "status": "retrieved",
+      "id": "D02",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "open-web-math/open-web-math",
+      "revision": "fde8ef8de2300f5e778f56261843dab89f230815",
+      "url": "https://huggingface.co/datasets/open-web-math/open-web-math/raw/fde8ef8de2300f5e778f56261843dab89f230815/README.md",
+      "sha256": "c4497f073cd93dfe104d8960f152fcbcbecd97ca1a7245a4cf66b8b8c79936ec",
+      "license": null,
+      "gated": false,
+      "status": "retrieved",
+      "id": "D03",
+      "ingestion_approved": false,
+      "license_readme_statement": "ODC-By 1.0; nested card metadata and License section, not top-level API field"
+    },
+    {
+      "repo": "HuggingFaceFW/fineweb-2",
+      "revision": "af9c13333eb981300149d5ca60a8e9d659b276b9",
+      "url": "https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/raw/af9c13333eb981300149d5ca60a8e9d659b276b9/README.md",
+      "sha256": "08d38a7e5cb7aae4b6fcc284fec4dd636ea653e4e5e74ef66a60d9616005b090",
+      "license": "odc-by",
+      "gated": false,
+      "status": "retrieved",
+      "id": "D04",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "OpenCoder-LLM/opc-fineweb-code-corpus",
+      "revision": "9e8e48e666c226294d6f9e6c2e13f2c84c1c06f3",
+      "url": "https://huggingface.co/datasets/OpenCoder-LLM/opc-fineweb-code-corpus/raw/9e8e48e666c226294d6f9e6c2e13f2c84c1c06f3/README.md",
+      "sha256": "f3bb986ed02b934b222589876d7490477a195bf8b635693693db35939abd8e34",
+      "license": "mit",
+      "status": "retrieved",
+      "id": "D05",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "HuggingFaceTB/smollm-corpus",
+      "revision": "3ba9d605774198c5868892d7a8deda78031a781f",
+      "url": "https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus/raw/3ba9d605774198c5868892d7a8deda78031a781f/README.md",
+      "sha256": "e09544d7132303ae6bbc6e156e984db0305d81561615476be49eabd4be4b8bed",
+      "license": "odc-by",
+      "status": "retrieved",
+      "id": "D06",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "wikimedia/wikipedia",
+      "revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+      "url": "https://huggingface.co/datasets/wikimedia/wikipedia/raw/b04c8d1ceb2f5cd4588862100d08de323dccfbaa/README.md",
+      "sha256": "a0f2055ac612f924721e9981fa2a49a18adec1c67cc8026f6c97d12f17211b21",
+      "license": [
+        "cc-by-sa-3.0",
+        "gfdl"
+      ],
+      "gated": false,
+      "status": "retrieved",
+      "id": "D07",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "HuggingFaceTB/cosmopedia",
+      "revision": "0ae6ec63f91742bd2d1eaef4f02232c55d719385",
+      "url": "https://huggingface.co/datasets/HuggingFaceTB/cosmopedia/raw/0ae6ec63f91742bd2d1eaef4f02232c55d719385/README.md",
+      "sha256": "73c533fd5f9471d1a4bd24192b026b34d4e799e19bc2240324b0043faa023f49",
+      "license": "apache-2.0",
+      "gated": false,
+      "status": "retrieved",
+      "id": "D08",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "HuggingFaceTB/smoltalk",
+      "revision": "5feaf2fd3ffca7c237fc38d1861bc30365d48ffa",
+      "url": "https://huggingface.co/datasets/HuggingFaceTB/smoltalk/raw/5feaf2fd3ffca7c237fc38d1861bc30365d48ffa/README.md",
+      "sha256": "b6ff197df18e272fe15361db889638f9679b8443f299034137b5234acd8d3487",
+      "license": null,
+      "gated": false,
+      "status": "retrieved",
+      "id": "D09",
+      "ingestion_approved": false,
+      "license_readme_statement": "Apache-2.0 for named newly created components; imported components retain individual licenses"
+    },
+    {
+      "repo": "AI-MO/NuminaMath-CoT",
+      "revision": "9d8d210c9f6a36c8f3cd84045668c9b7800ef517",
+      "url": "https://huggingface.co/datasets/AI-MO/NuminaMath-CoT/raw/9d8d210c9f6a36c8f3cd84045668c9b7800ef517/README.md",
+      "sha256": "2e6fead04b0c3a7eb3d219267ca84d81f91d9b90830cfbb1fde73ddd7118a149",
+      "license": "apache-2.0",
+      "gated": false,
+      "status": "retrieved",
+      "id": "D10",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "open-r1/OpenR1-Math-220k",
+      "revision": "e4e141ec9dea9f8326f4d347be56105859b2bd68",
+      "url": "https://huggingface.co/datasets/open-r1/OpenR1-Math-220k/raw/e4e141ec9dea9f8326f4d347be56105859b2bd68/README.md",
+      "sha256": "87a0390ba632618254d50c1614feb6a5a7803a28710118e1705bab18bda5e64e",
+      "license": "apache-2.0",
+      "gated": false,
+      "status": "retrieved",
+      "id": "D11",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "nvidia/OpenMathInstruct-2",
+      "revision": "469216e3f46f4dacf476b382e192485ea51a143e",
+      "url": "https://huggingface.co/datasets/nvidia/OpenMathInstruct-2/raw/469216e3f46f4dacf476b382e192485ea51a143e/README.md",
+      "sha256": "8d0513c2f85e6ee1258f109017c2565f638cc10a72f1ffbee34ab8601c0dc199",
+      "license": "cc-by-4.0",
+      "gated": false,
+      "status": "retrieved",
+      "id": "D12",
+      "ingestion_approved": false
+    },
+    {
+      "repo": "bigcode/starcoderdata",
+      "status": "unavailable",
+      "error": "HTTP Error 401: Unauthorized",
+      "id": "D13",
+      "ingestion_approved": false
+    }
+  ],
+  "additional_sources": [
+    {
+      "name": "gpt2.pdf",
+      "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
+      "sha256": "d9d852e2894556e73f53cb22b7c605a9643d6f0b19bf604b429ed6192fa24f4e",
+      "status": "retrieved",
+      "id": "S44"
+    },
+    {
+      "name": "odc.html",
+      "url": "https://opendatacommons.org/licenses/by/1-0/",
+      "error": "HTTP Error 403: Forbidden",
+      "status": "unavailable"
+    },
+    {
+      "name": "apache.txt",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "status": "retrieved"
+    },
+    {
+      "name": "cc-by.txt",
+      "url": "https://creativecommons.org/licenses/by/4.0/legalcode.txt",
+      "error": "HTTP Error 403: Forbidden",
+      "status": "unavailable"
+    },
+    {
+      "name": "code-card.md",
+      "url": "https://huggingface.co/datasets/OpenCoder-LLM/opc-fineweb-code-corpus/raw/main/README.md",
+      "sha256": "f3bb986ed02b934b222589876d7490477a195bf8b635693693db35939abd8e34",
+      "status": "retrieved"
+    },
+    {
+      "name": "smollm-corpus.md",
+      "url": "https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus/raw/main/README.md",
+      "sha256": "e09544d7132303ae6bbc6e156e984db0305d81561615476be49eabd4be4b8bed",
+      "status": "retrieved"
+    },
+    {
+      "name": "commoncrawl.html",
+      "url": "https://commoncrawl.org/terms-of-use",
+      "sha256": "3eca2d53345ecba5f1dd4416f5d3d62076bde61e0dbe26dd9188de94c8c5c483",
+      "status": "retrieved"
+    },
+    {
+      "id": "S45",
+      "name": "llama_model.py",
+      "url": "https://raw.githubusercontent.com/meta-llama/llama/main/llama/model.py",
+      "sha256": "b409ea3db2a4029afd4129246d3b5e76ea95b6503364842545403dbcd7476281",
+      "status": "retrieved"
+    },
+    {
+      "id": "S46",
+      "name": "torch_functional.py",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/v2.6.0/torch/nn/functional.py",
+      "sha256": "724c30072ca0cb69228553a636b2937ff88b60a2a2c80b806bd2a3827033e2b6",
+      "status": "retrieved"
+    },
+    {
+      "id": "S47",
+      "name": "fsdp.rst",
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/v2.6.0/docs/source/fsdp.rst",
+      "sha256": "8da93fbfe47801579180d5a08c0b1ebc6db150960c8d199b9f40ea455f0df846",
+      "status": "retrieved"
+    }
+  ]
+}

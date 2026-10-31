@@ -1,0 +1,7 @@
+{
+  "pretrain_target_tokens": {"educational_web": 50, "math": 25, "code": 10, "synthetic": 10, "russian": 5},
+  "anneal_target_tokens": {"educational_web": 25, "math": 45, "code": 10, "synthetic": 15, "russian": 5},
+  "sft_target_tokens": {"general": 30, "math": 50, "code": 10, "russian": 10},
+  "preference_pairs": {"math": 70, "general": 20, "russian": 10},
+  "rl_prompts": {"arithmetic": 50, "algebra": 30, "word_problems": 15, "russian": 5}
+}
