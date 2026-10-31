@@ -187,8 +187,9 @@ class ArtifactStore:
                         raise ArtifactIntegrityError(
                             "Invalid artifact parent directory"
                         ) from None
-                else:
-                    _sync_directory(parent)
+                # Another writer may have just created this directory but not
+                # synced its parent yet. Each writer confirms the path entries.
+                _sync_directory(parent)
         return current
 
     def add_stream(

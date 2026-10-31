@@ -425,3 +425,13 @@ def test_new_directory_creation_never_reuses_existing_work(tmp_path: Path) -> No
     with pytest.raises(FileExistsError):
         create_directory(created)
     assert (created / "user.txt").read_text() == "keep"
+
+
+def test_existing_parent_entries_are_synced_for_concurrent_creators(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "a").mkdir()
+    synchronize = artifacts._sync_directory
+    with patch.object(artifacts, "_sync_directory", wraps=synchronize) as sync:
+        ArtifactStore(tmp_path).add_bytes("a/file", b"complete", role="data")
+    assert [call.args[0] for call in sync.call_args_list] == [tmp_path, tmp_path / "a"]
