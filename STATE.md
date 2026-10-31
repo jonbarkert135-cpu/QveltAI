@@ -63,3 +63,12 @@ main is authorized/active. Do not reapply old cloud-environment configuration.
 Final foundation evidence:354 passed/2 optional skips/2 GPU deselections in the
 clean CPU clone;356 passed with local extras; actual remote three-Python CPU
 jobs plus smoke and optional SDK job all successful. See validation_foundation.md.
+
+Phase3 implementation checkpoint: strict recipe/raw metadata/usage policy,
+seeded LID/PII/heuristics, SQLite exact+math-aware MinHash-LSH, complete benchmark
+gate and n-gram removal, original exact EN/RU math, compact shards, mixed-source
+0/2-worker consumer cursor replay and data CLI/smoke are implemented locally.
+67 focused data tests passed; CPU Make setup/lint/types/test passed with421
+passed,2 optional SDK skips and2 GPU deselections. Experiment/remote CI acceptance
+is still in progress. One explicitly approved
+GSM8K evaluation snapshot acquired/pinned; no external training corpus approved.

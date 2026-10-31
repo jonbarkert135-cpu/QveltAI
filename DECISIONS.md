@@ -680,3 +680,76 @@ for this session; future publication can follow the next user instruction.
   remains [unverified]; runbook resource headers are labeled assumptions.
 - **Revisit:** user licensing direction, contributor/vendor obligations, actual
   server OS/GPU/cluster topology or CUDA/PyTorch upgrades.
+
+## ADR-0029 — Versioned controls and exact original math environments
+
+- **Date/status:** 2026-10-31; implementation and local tests, expanded acceptance pending.
+- **Context/options:** preserve all old IDs versus silently redefine reserved IDs.
+- **Choice:** V2 retains BOS/EOS/PAD/role IDs0–7, allocates think/end-think/tool-call/
+  end-tool-call/tool-result IDs8–12 and19 reserves; load old V1 as V1 without
+  conversion. The32-control budget and RFC32768 vocabulary ceiling remain fixed.
+  Plain text never creates control IDs. Default single-digit policy remains until
+  the separately measured compression study; no math-skill claim follows from it.
+- **Math choice:** original bilingual templates, stdlib Fraction/math answers
+  cross-checked by SymPy1.14.0 exact arithmetic/solvers. Bounded integer/rational
+  reward parser; never evaluate untrusted model text with SymPy or Python.
+- **Sources:** [verified] tokenizers0.22.2 installed BPE/AddedToken/ByteLevel and
+  serialized tokenizer policy, legacy/V2 round-trip tests; [verified] SymPy1.14.0
+  installed Rational/solve/gcd/lcm/binomial/factorial APIs and executed independent
+  answer checks. SymPy installed license BSD-3-Clause. Public design/claims from
+  Phase1 cited in survey.md; no copied generator/model implementation.
+- **Revisit:** reasoning ablations, new control protocol/vocabulary migration,
+  multilingual corpus fitting and richer reward/environment security requirements.
+
+## ADR-0030 — Fail-closed licensed curation and benchmark completeness
+
+- **Date/status:** 2026-10-31; local offline gates tested; public coverage incomplete.
+- **Choice:** raw manifest contract plus aligned optional metadata/explicit usage
+  policy; strict approved HTTPS spec with immutable revision/checksums and retained
+  license. Evaluation-only acquisition cannot train. Original synthetic fixtures
+  support CI; all research-catalog sources remain blocked absent clearance.
+- **Curation choice:** seeded offline langdetect1.0.9 annotation, auditable heuristics,
+  pattern PII scrubbing, explicit phrase quarantine; no fake learned classifier.
+  SQLite SHA256 exact and datasketch1.6.5 MinHash band candidates, verified Jaccard,
+  bounded candidate overflow rejects. Ordered numeric/operator atoms must match
+  before near deletion, preserving distinct equations despite similar prose.
+  Family hash splits precede train-only BPE.
+- **Decontamination:** NFC/casefold math-aware token n-grams, all registered sets,
+  complete short-phrase rule. Production always requires GSM8K/MATH/AIME/MMLU/project-final plus
+  any additional registered required sets. Authored fixtures never satisfy that
+  gate. Missing licenses/snapshots stop preparation, not silently disable it.
+- **Options/rationale:** in-memory LSH scales RAM with the corpus; disk index fits
+  development hardware. Probabilistic LSH and n-grams have stated recall limits;
+  neither proves semantic or translated exclusion. Preserve math numerals/signs.
+- **Sources:** [verified] installed datasketch1.6.5 MinHash source/API and MIT LICENSE,
+  SQLite3 parameterized index/transaction behavior in actual IO tests; [verified]
+  langdetect1.0.9 DetectorFactory local seed/profile APIs, actual Apache-2.0
+  LICENSE/NOTICE despite inconsistent MIT metadata. [verified] Phase1 survey S21/S22
+  MinHash/dedup evidence. [verified] OpenAI GSM8K immutable README/repository MIT
+  license, full hashes and narrowly approved evaluation use in DATA_CARD.md.
+- **Revisit:** labeled dedup/PII/LID audit, learned classifier approval, benchmark
+  rights/coverage, multilingual semantic leakage and corpus-scale index profiling.
+
+## ADR-0031 — Compact packed shards and consumer-committed loading
+
+- **Date/status:** 2026-10-31; local value/replay tests pass, host profiling pending.
+- **Choice:** raw little-endian uint16 (V<=65536) / uint32,24-byte segment and16-byte
+  block indices, readonly lazy memmaps with checksums and bounded caches. One
+  BOS/text/EOS frame per document; one-token overlap between windows retains
+  every original adjacent target once; default document-causal attention, explicit
+  cross-document causal option. Padding never contributes loss.
+- **Sampling/resume:** stage-weighted sources, coprime affine seeded per-source
+  epoch permutation (bijection, not uniformly selected from all N! permutations).
+  Global source cursors allocate disjoint rank slots before intentional exhaustion
+  reuse. Only delivered batches advance saved state; ordered speculative worker
+  prefetch never does. Worker/prefetch changes supported; topology/batch/attention/
+  data/seed/schedule changes rejected. Loader seeding uses its own Torch generator.
+- **Alternatives/rationale:** expanded six-array samples waste disk; saving the
+  DataLoader's prefetched sampler cursor loses data on restart; random full-corpus
+  permutations consume RAM. Copy only active batch arrays to int64 tensors.
+- **Sources:** [verified] installed NumPy2.2.6 memmap/dtype serialization; PyTorch2.9.1
+  DataLoader signature/source (in_order,spawn,prefetch_factor,generator) and actual
+  0/2-worker bit-exact replay tests. Existing Qvelt decoder/loss numerical references
+  validate masks. No GPU throughput or uniform-permutation randomness claim.
+- **Revisit:** measured corpus-scale I/O/page-cache limits, scalable alternative
+  permutations, cross-topology migration or pinned-memory GPU training evidence.

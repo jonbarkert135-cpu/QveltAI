@@ -95,3 +95,31 @@ inputs are trusted project checkpoints; checksums alone do not authenticate them
 Numeric fixture descriptor hashes are not real BPE/corpus manifests. Optional
 backends are tested for local outputs, not full stochastic-model restart parity.
 Synthetic training does not close corpus contamination, quality or reasoning risks.
+
+## Expanded Phase3 data scope
+
+- Production public-benchmark clearance is incomplete: GSM8K test was acquired
+  under its publisher MIT license for exclusion/evaluation only. MATH/AIME/MMLU
+  snapshots/rights remain unresolved; preparation fails closed without all required
+  sets. Authored CI fixtures do not establish real benchmark decontamination.
+- Sorted/seeded langdetect can mislabel short equations and code; retain declared
+  language separately, annotate by default. PII patterns miss obfuscated contacts,
+  names/addresses and novel secrets; phrase quarantine is not a toxicity classifier.
+  A learned quality filter requires approved labels, slice metrics and calibration.
+- MinHash/LSH has probabilistic false negatives; preserving math atoms sacrifices
+  some web dedup recall. Literal n-grams miss translated/semantic leakage. Inspect
+  labeled pairs and audit source/domain/family leakage before any production claim.
+- Disk-backed indices bound page cache, not total storage or index construction
+  time; HF BPE pair statistics still scale with the distinct corpus. Large tokenizer
+  fitting on16GB RAM requires a separately approved representative train-only sample.
+- Compact document fragments reset positions across blocks and cannot attend to
+  previous blocks. Optional cross-document attention changes the learning task and
+  is included in the loader state identity. Affine epoch permutations are bijections,
+  not uniform N! shuffles; measure ordering effects before long training runs.
+- CPU host delivery benchmarks include intentional source reuse and warm filesystem
+  cache; they do not demonstrate laptop performance, GPU saturation, cold remote
+  storage, native Windows spawn behavior or corpus-scale multi-node durability.
+- A loader cursor saved separately from model/optimizer is not an atomic training
+  checkpoint. The future real-corpus trainer must capture committed cursor and model
+  state together and test full optimization replay. Current data replay is exact;
+  the existing100-step trainer still uses numeric engineering fixtures.

@@ -159,3 +159,12 @@ run 41242952575 succeeded in all five jobs; each Python CPU job354 passed, optio
 SDK job 3 passed; uploaded smoke artifact 13058222452 exists. Actual clean-provenance
 100-step/replay metrics match the early smoke. See validation_foundation.md for
 commands, wheel/lock/manifest hashes and scope. Phase 3 data work now begins.
+
+## R007 — Phase3 curation, packing and consumer replay (in progress)
+
+Hypothesis: approved original raw text can be curated, excluded against every
+registered authored holdout, split before BPE, packed compactly and replayed from
+the consumer cursor despite worker prefetch. Design: data_design.md and ADR29–31.
+Initial full local suite:422 passed/2 GPU deselected in70.19s before the final
+math-atom preservation regression; targeted revised acceptance and measured
+compression/throughput evidence will be recorded below. No quality result yet.

@@ -49,7 +49,9 @@ uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/
 | Strict YAML/dataclasses/CLI overrides | Yes | CPU tests; resolved config/hash saved |
 | Layout, lock, Make, pre-commit, lint/types/CPU CI | Yes | Local checks; current CI evidence in validation report |
 | Byte-BPE tokenizer | Yes | Train/save/load/manifest/evaluation; Python 3.11–3.13 fixture replay |
-| Real corpus preparation/shards/packing | No | M3.2; no external dataset approved |
+| Cleaning/dedup/decontamination/shards/packing/mixing | Yes | Offline EN/RU end-to-end tests; public-benchmark production gate remains blocked |
+| Multi-worker data resume | Yes | Consumer-committed cursor, 0/2-worker crash replay and uint16/uint32 pair references |
+| Math fixtures and bounded exact rewards | Yes | Original bilingual templates, SymPy/stdlib cross-checks; no reasoning quality result |
 | RMSNorm/RoPE/GQA/SwiGLU tied decoder | Yes | Independent value/gradient/causality/document-mask oracles; all four meta counts |
 | Synthetic training/AdamW/token LR | Yes | 100 CPU updates; source/config/software/topology-compatible replay |
 | DDP | Yes | Two CPU ranks, uneven-mask global-gradient oracle and runner replay |
@@ -82,13 +84,27 @@ package observations. `pip-freeze.txt` is a normalized installed-version snapsho
 without editable paths/direct URLs; uv.lock is the installation authority.
 
 The synthetic data/tokenizer identity slots explicitly hash numeric-fixture
-**descriptors**, not the trained byte-BPE/data manifests from M3.1. Real-data
-training must add those actual artifacts after M3.2; no dataset approval is implied.
+**descriptors**, not the trained byte-BPE/data manifests from M3.1. The next real-data
+trainer must consume the actual Phase3 artifacts; no dataset approval is implied.
 Optimizer/DCP state is trusted project state, not an arbitrary uploaded checkpoint.
 Generic `manifest verify` checks bytes; semantic training/tokenizer loaders add
 compatibility checks. Metrics include valid targets/s, unclipped gradient norm,
 clipping and LR. Estimated MFU stays null without a user-supplied peak FLOP rate;
 it is not a measured hardware-utilization percentage.
+
+Offline tokenizer/data preparation (no external download):
+
+```bash
+uv run --frozen --extra cpu python scripts/data_smoke.py --directory /tmp/qvelt-data-smoke-01
+uv run --frozen --extra cpu qvelt data benchmark /tmp/qvelt-data-smoke-01/prepared/manifest.json --workers 0 2
+```
+
+The [data runbook](runbooks/01_data_preparation.md) documents source/license gates,
+cleaning limits, exact/near dedup, complete planned-benchmark exclusion, binary
+layout, deterministic mixing/cursor replay and laptop resource assumptions.
+GSM8K test has a working evaluation-only downloader; MATH/AIME/MMLU rights/snapshots
+remain blocked. The offline demo is explicitly non-production. The existing
+training command uses numeric fixtures until the real-data trainer milestone.
 
 Tokenizer workflow: [runbook](docs/development/tokenizer_workflow.md),
 [earlier validation](docs/development/validation_m3_1.md).

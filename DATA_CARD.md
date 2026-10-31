@@ -2,7 +2,8 @@
 
 Last updated: 2026-10-31. Owner: Lead agent.
 
-**No external raw corpus has been downloaded or approved for ingestion.**
+**No external training corpus is approved.** One GSM8K test snapshot is now
+approved/acquired for evaluation and decontamination only (Phase3 entry below).
 Small project-authored software fixtures are approved only as described below.
 Phase 1 assessed 13 candidate dataset cards and proposed conditional stage
 mixtures in [docs/research/data_mix.md](docs/research/data_mix.md). Exact immutable
@@ -40,8 +41,8 @@ raw corpora, personal information, or credentials in Git.
 | --- | --- | --- | --- | --- |
 
 The candidate inventory is D01–D13 in `docs/research/data_mix.md`, with publisher
-license statements and all known restrictions per row. The approved external inventory
-above still has zero entries. Promote a candidate only after the full gate,
+license statements and all known restrictions per row. The Phase1 inventory initially had zero approved external entries; the later
+Phase3 GSM8K evaluation-only entry is the sole exception. Promote a candidate only after the full gate,
 including authoritative terms/upstream rights, actual shard access, transforms,
 license obligations and exact corpus revisions, has passed.
 
@@ -87,3 +88,55 @@ This is approved only for code/learning/replay smoke tests, not reasoning qualit
 Run artifacts save data-spec.json and tokenizer-spec.json descriptor hashes;
 these intentionally describe numeric fixtures, not trained BPE or corpus manifests.
 Real-data training still requires M3.2 and approval of actual source revisions.
+
+## Phase3 approved original math and offline fixtures
+
+Approved before consumption, 2026-10-31: `qvelt.data.math` and `data.demo` generate
+original EN/RU arithmetic, rational linear equations, gcd/lcm and combinations/
+permutations. Apache-2.0 (this repository LICENSE); no teacher, scraped material,
+external inputs or personal data. Rights permit development, training, evaluation
+and redistribution with Apache notices. Seed/count/language/difficulty, generator
+code revision and actual raw payload hashes are recorded in generated manifests.
+Template-family holdouts share no families with training; these simple tasks do
+not establish broad mathematical reasoning. Deliberate fake PII/toxic phrases and
+contamination/duplicate canaries exist only to test removal. Authored holdout
+questions are **not** GSM8K/MATH/AIME/MMLU replacements for production clearance.
+
+## GSM8K evaluation snapshot approval
+
+Approved **evaluation/decontamination indexing only**, not tokenizer fitting or
+training-source selection: OpenAI `grade-school-math`, immutable revision
+`3101c7d5072418e28b9008a6636bde82a006892c`, original
+`grade_school_math/data/test.jsonl`. Before downloading data, read the publisher's
+README (explicit dataset release and question/answer JSONL format) and repository
+MIT LICENSE, copyright2021 OpenAI. No separate data restriction is stated in this
+snapshot. Preserve the complete MIT text and immutable URL with any local derived
+bundle. This is a documented publisher-license determination, not an audit of
+all contributors' upstream rights. No teacher-generated socratic/model-solutions
+files are approved. Original URL: `https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/test.jsonl`.
+
+License URL: `https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/LICENSE`;
+SHA256 `86bbb73e855821d7c401912fd4bf82e34313e6e3b6fd6f909f2b6cc9e209a53b`.
+README SHA256 `27e1676d572f2289210170ff6dbb8c2ef7d9f6950c0f08c978ea8ee6b39dca29`.
+Exact acquired payload count/size/hash are recorded after acquisition in the
+per-source spec and experiment receipt. The preparer copies only questions into
+the exclusion index; gold answers never enter train text. Other mandatory public
+benchmark rights/snapshots remain blocked; one permitted snapshot does not make
+a production training corpus ready. No raw benchmark content is published in Git.
+
+GSM8K acquisition executed: raw payload **749738 bytes /1319 rows**, SHA256
+`3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14`.
+Working checksum-pinned spec: `configs/data/gsm8k_test.yaml`; emitted local raw
+question manifest identity
+`5f5fb9b48439db1928555aa5e19eeff6e4b4d0efe96f9df78b578ac5b892ba84`.
+The license text is retained verbatim in PERMISSION.txt; usage.json permits only
+evaluation/decontamination. No answers or questions were used in the math-digit
+experiment or tokenizer corpus. No public raw content is committed to Git.
+
+Training sources D01–D13 remain unapproved. This evaluation approval supersedes
+the earlier blanket zero-external-input status only for this narrow snapshot/use.
+MinHash defaults preserve differing numeric/operator sequences to avoid dropping
+distinct math problems just because their surrounding prose templates match.
+NFC/casefold n-gram exclusion is lexical, not semantic; translated variants and
+unknown copies are residual risks. PII/toxicity heuristics are incomplete; source
+rights and audits are still required even after a successful offline demo.

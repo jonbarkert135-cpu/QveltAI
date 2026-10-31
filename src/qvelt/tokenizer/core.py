@@ -14,7 +14,7 @@ from tokenizers import Regex, Tokenizer, decoders, models, pre_tokenizers, train
 
 from qvelt.utils.artifacts import atomic_write
 
-CONTROL_TOKENS = (
+LEGACY_CONTROL_TOKENS = (
     "<|pad|>",
     "<|bos|>",
     "<|eos|>",
@@ -24,6 +24,17 @@ CONTROL_TOKENS = (
     "<|end_turn|>",
     "<|tool|>",
 ) + tuple(f"<|reserved_{index:02d}|>" for index in range(24))
+CONTROL_TOKENS = (
+    LEGACY_CONTROL_TOKENS[:8]
+    + (
+        "<think>",
+        "</think>",
+        "<|tool_call|>",
+        "<|end_tool_call|>",
+        "<|tool_result|>",
+    )
+    + tuple(f"<|reserved_{index:02d}|>" for index in range(19))
+)
 MAX_DOCUMENT_BYTES = 1024 * 1024
 MAX_TOKENIZER_BYTES = 64 * 1024 * 1024
 
@@ -83,11 +94,27 @@ class QveltTokenizer:
     """
 
     def __init__(self, backend: Tokenizer) -> None:
-        for index, token in enumerate(CONTROL_TOKENS):
+        observed = tuple(backend.id_to_token(i) for i in range(32))
+        if observed not in (CONTROL_TOKENS, LEGACY_CONTROL_TOKENS):
+            raise TokenizerError("Unrecognized Qvelt control-token version")
+        self.control_tokens = tuple(str(token) for token in observed)
+        for index, token in enumerate(self.control_tokens):
             if backend.token_to_id(token) != index:
                 raise TokenizerError("Control-token IDs do not match Qvelt schema 1")
         backend.encode_special_tokens = True
         self._backend = backend
+
+    @property
+    def control_version(self) -> int:
+        return 2 if self.control_tokens == CONTROL_TOKENS else 1
+
+    def control_id(self, token: str) -> int:
+        try:
+            return self.control_tokens.index(token)
+        except ValueError as error:
+            raise TokenizerError(
+                "Control token unavailable in this tokenizer version"
+            ) from error
 
     @property
     def vocab_size(self) -> int:
@@ -154,6 +181,9 @@ class QveltTokenizer:
         if not matched:
             raise TokenizerError("Unsupported normalization, padding or model policy")
         controls = raw["added_tokens"]
+        contents = tuple(item["content"] for item in controls)
+        if contents not in (CONTROL_TOKENS, LEGACY_CONTROL_TOKENS):
+            raise TokenizerError("Unrecognized Qvelt control-token version")
         if controls != [
             {
                 "id": i,
@@ -164,7 +194,7 @@ class QveltTokenizer:
                 "normalized": False,
                 "special": True,
             }
-            for i, token in enumerate(CONTROL_TOKENS)
+            for i, token in enumerate(contents)
         ]:
             raise TokenizerError("Exactly 32 special controls are required")
         vocab = backend.get_vocab()

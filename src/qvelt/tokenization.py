@@ -1,6 +1,7 @@
 """Compatibility exports; primary implementation is qvelt.tokenizer.core."""
 
 from qvelt.tokenizer.core import CONTROL_TOKENS as CONTROL_TOKENS
+from qvelt.tokenizer.core import LEGACY_CONTROL_TOKENS as LEGACY_CONTROL_TOKENS
 from qvelt.tokenizer.core import MAX_DOCUMENT_BYTES as MAX_DOCUMENT_BYTES
 from qvelt.tokenizer.core import MAX_TOKENIZER_BYTES as MAX_TOKENIZER_BYTES
 from qvelt.tokenizer.core import QveltTokenizer as QveltTokenizer

@@ -144,19 +144,22 @@ by DATA_CARD and measured resources; M3.2 is next.
 
 Owner: Lead agent. Status: in progress. Dependencies: M3.1.
 
-- [ ] Approve each dataset revision/license in `DATA_CARD.md`; retain provenance,
+- [x] Approve each consumed dataset revision/license in `DATA_CARD.md`; retain provenance,
   source IDs, transformation rules, and redistribution restrictions.
-- [ ] Implement bounded-memory ingestion, filtering, exact/near deduplication,
+- [x] Implement bounded-memory ingestion, filtering, exact/near deduplication,
   stable document-level splits, decontamination, and configured data mixtures.
-- [ ] Implement checksummed token shards, causal sequence packing with explicit
+- [x] Implement checksummed token shards, causal sequence packing with explicit
   document-boundary policy, loss masks, deterministic shuffling, and resumable
   rank/worker allocation without accidental loss or duplication.
-- [ ] Test ordering, restart positions, shard corruption, label shifting,
+- [x] Test ordering, restart positions, shard corruption, label shifting,
   packing boundaries, and split isolation with local synthetic fixtures.
 
 Acceptance: rebuilding fixture shards produces matching hashes; interrupted
 iteration resumes with the documented sample order; tokenizer/data versions and
 licenses are traceable from the run manifest. No unapproved corpus is consumed.
+Measured digit/fertility/host-delivery evidence, offline CI and the preparation
+runbook close expanded Phase3 acceptance; production source/benchmark approval
+remains a separately blocked prerequisite for actual corpus training.
 
 ## Phase 4 — Model implementation
 

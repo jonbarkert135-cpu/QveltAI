@@ -1,0 +1,12 @@
+schema_version: 1
+name: gsm8k-test
+revision: 3101c7d5072418e28b9008a6636bde82a006892c
+url: https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/test.jsonl
+sha256: 3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14
+license_id: MIT
+license_url: https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/LICENSE
+license_sha256: 86bbb73e855821d7c401912fd4bf82e34313e6e3b6fd6f909f2b6cc9e209a53b
+approved: true
+use: evaluation
+format: gsm8k-questions
+max_bytes: 1000000

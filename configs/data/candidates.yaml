@@ -1,0 +1,135 @@
+schema_version: 1
+kind: blocked-research-catalog
+sources:
+- id: D01
+  repository: HuggingFaceFW/fineweb-edu
+  card_revision: 87f09149ef4734204d70ed1d046ddc9ca3f2b8f9
+  card_url: https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu/raw/87f09149ef4734204d70ed1d046ddc9ca3f2b8f9/README.md
+  card_sha256: a0cc8998a20499432b28b6575f3046b714938eb8e11b8d59a1d25ddf3716061e
+  declared_license: odc-by
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D02
+  repository: HuggingFaceTB/finemath
+  card_revision: e92b25a616738fe95dc186b64dfb19f9c8525594
+  card_url: https://huggingface.co/datasets/HuggingFaceTB/finemath/raw/e92b25a616738fe95dc186b64dfb19f9c8525594/README.md
+  card_sha256: 77b9162c99fc6b5944da8793f18fb99c3b520ab7cdce0cc67ec8a1e47871da61
+  declared_license: odc-by
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D03
+  repository: open-web-math/open-web-math
+  card_revision: fde8ef8de2300f5e778f56261843dab89f230815
+  card_url: https://huggingface.co/datasets/open-web-math/open-web-math/raw/fde8ef8de2300f5e778f56261843dab89f230815/README.md
+  card_sha256: c4497f073cd93dfe104d8960f152fcbcbecd97ca1a7245a4cf66b8b8c79936ec
+  declared_license: null
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D04
+  repository: HuggingFaceFW/fineweb-2
+  card_revision: af9c13333eb981300149d5ca60a8e9d659b276b9
+  card_url: https://huggingface.co/datasets/HuggingFaceFW/fineweb-2/raw/af9c13333eb981300149d5ca60a8e9d659b276b9/README.md
+  card_sha256: 08d38a7e5cb7aae4b6fcc284fec4dd636ea653e4e5e74ef66a60d9616005b090
+  declared_license: odc-by
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D05
+  repository: OpenCoder-LLM/opc-fineweb-code-corpus
+  card_revision: 9e8e48e666c226294d6f9e6c2e13f2c84c1c06f3
+  card_url: https://huggingface.co/datasets/OpenCoder-LLM/opc-fineweb-code-corpus/raw/9e8e48e666c226294d6f9e6c2e13f2c84c1c06f3/README.md
+  card_sha256: f3bb986ed02b934b222589876d7490477a195bf8b635693693db35939abd8e34
+  declared_license: mit
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D06
+  repository: HuggingFaceTB/smollm-corpus
+  card_revision: 3ba9d605774198c5868892d7a8deda78031a781f
+  card_url: https://huggingface.co/datasets/HuggingFaceTB/smollm-corpus/raw/3ba9d605774198c5868892d7a8deda78031a781f/README.md
+  card_sha256: e09544d7132303ae6bbc6e156e984db0305d81561615476be49eabd4be4b8bed
+  declared_license: odc-by
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D07
+  repository: wikimedia/wikipedia
+  card_revision: b04c8d1ceb2f5cd4588862100d08de323dccfbaa
+  card_url: https://huggingface.co/datasets/wikimedia/wikipedia/raw/b04c8d1ceb2f5cd4588862100d08de323dccfbaa/README.md
+  card_sha256: a0f2055ac612f924721e9981fa2a49a18adec1c67cc8026f6c97d12f17211b21
+  declared_license:
+  - cc-by-sa-3.0
+  - gfdl
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D08
+  repository: HuggingFaceTB/cosmopedia
+  card_revision: 0ae6ec63f91742bd2d1eaef4f02232c55d719385
+  card_url: https://huggingface.co/datasets/HuggingFaceTB/cosmopedia/raw/0ae6ec63f91742bd2d1eaef4f02232c55d719385/README.md
+  card_sha256: 73c533fd5f9471d1a4bd24192b026b34d4e799e19bc2240324b0043faa023f49
+  declared_license: apache-2.0
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D09
+  repository: HuggingFaceTB/smoltalk
+  card_revision: 5feaf2fd3ffca7c237fc38d1861bc30365d48ffa
+  card_url: https://huggingface.co/datasets/HuggingFaceTB/smoltalk/raw/5feaf2fd3ffca7c237fc38d1861bc30365d48ffa/README.md
+  card_sha256: b6ff197df18e272fe15361db889638f9679b8443f299034137b5234acd8d3487
+  declared_license: null
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D10
+  repository: AI-MO/NuminaMath-CoT
+  card_revision: 9d8d210c9f6a36c8f3cd84045668c9b7800ef517
+  card_url: https://huggingface.co/datasets/AI-MO/NuminaMath-CoT/raw/9d8d210c9f6a36c8f3cd84045668c9b7800ef517/README.md
+  card_sha256: 2e6fead04b0c3a7eb3d219267ca84d81f91d9b90830cfbb1fde73ddd7118a149
+  declared_license: apache-2.0
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D11
+  repository: open-r1/OpenR1-Math-220k
+  card_revision: e4e141ec9dea9f8326f4d347be56105859b2bd68
+  card_url: https://huggingface.co/datasets/open-r1/OpenR1-Math-220k/raw/e4e141ec9dea9f8326f4d347be56105859b2bd68/README.md
+  card_sha256: 87a0390ba632618254d50c1614feb6a5a7803a28710118e1705bab18bda5e64e
+  declared_license: apache-2.0
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D12
+  repository: nvidia/OpenMathInstruct-2
+  card_revision: 469216e3f46f4dacf476b382e192485ea51a143e
+  card_url: https://huggingface.co/datasets/nvidia/OpenMathInstruct-2/raw/469216e3f46f4dacf476b382e192485ea51a143e/README.md
+  card_sha256: 8d0513c2f85e6ee1258f109017c2565f638cc10a72f1ffbee34ab8601c0dc199
+  declared_license: cc-by-4.0
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.
+- id: D13
+  repository: bigcode/starcoderdata
+  card_revision: null
+  card_url: null
+  card_sha256: null
+  declared_license: null
+  ingestion_approved: false
+  download_spec: null
+  blocked_reason: See exact rights/format/availability concerns in docs/research/data_mix.md;
+    card permission does not authorize corpus ingestion.

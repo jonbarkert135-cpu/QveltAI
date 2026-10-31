@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from pathlib import Path
 
 import pytest
 
@@ -117,3 +118,14 @@ def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
     for item in items:
         marker = "integration" if "/integration/" in str(item.path) else "unit"
         item.add_marker(getattr(pytest.mark, marker))
+
+
+@pytest.fixture(scope="session")
+def prepared_demo(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    from pathlib import Path
+
+    from qvelt.data.demo import create_demo
+
+    root = tmp_path_factory.mktemp("data-demo") / "bundle"
+    create_demo(root, Path(__file__).resolve().parents[1], documents=96)
+    return root
