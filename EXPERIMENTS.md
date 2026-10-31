@@ -50,6 +50,32 @@ analytical checks, not ML experiments. Their evidence is recorded below and in
   dataset, GPU, benchmark, training or checkpoint-replay success is implied.
 - Next: M2.2 typed provenance manifests and atomic integrity-checked artifacts.
 
+## R003 — Manifest/integrity/interruption validation (not ML training)
+
+- Date/owner/status: 2026-10-31; Lead agent; completed for M2.2 metadata/local IO.
+- Hypothesis: strict manifest IDs and no-overwrite/manifest-last publication
+  distinguish complete registered bytes from partial, corrupted or mismatched
+  artifacts without deserializing models or requiring torch.
+- Code/config: `9027efe`, `f4fd2cc`; unchanged lock. Typed synthetic metadata/
+  opaque byte fixtures plus real temporary Git repositories; no approved corpus
+  or neural checkpoint. Commands/hashes in `docs/development/validation_m2_2.md`.
+- Controls: known SHA-256 vector, fixed artifact bytes, same-size corruption,
+  wrong trusted ID, real competing writers and SIGKILL, injected IO failures,
+  growing-file mutation and observed committed/dirty Git/package identities.
+- Result: 220 tests passed on each of Linux/Python 3.11.14, 3.12.14, 3.13.5;
+  strict mypy on 21 files, Ruff/format, dependency/build checks passed. Installed
+  no-torch CLI created/inspected/verified a clean-code bundle; corrupted clone
+  and wrong expected ID both failed with exit 1. Final run code was `f4fd2cc`.
+- Diagnosis: an early growing-file test exposed an unbounded EOF-following loop;
+  it was interrupted and the snapshot read was bounded. Parent-entry syncing
+  was strengthened for concurrent creators. Final checks used corrected code;
+  no assertions or verification were disabled.
+- Conclusion: artifact metadata and raw-byte contracts pass within the documented
+  Linux local-filesystem scope. No power-loss, GPU, distributed checkpoint,
+  model replay, training or reasoning-quality result is established.
+- Next: M3.1 byte-BPE workflow/tests on approved authored fixtures, then M3.2
+  actual data-shard/packing/order semantics. Semantic training replay stays M5.
+
 ## Required record for an actual experiment
 
 Create an entry when a command is actually run. Before launch, specify its

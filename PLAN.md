@@ -102,15 +102,19 @@ No CLI advertises commands that have no working implementation.
 
 ### M2.2 — Define artifacts and run provenance
 
-Owner: Lead agent. Status: planned. Dependencies: M2.1.
+Owner: Lead agent. Status: complete. Dependencies: M2.1.
 
-- [ ] Define versioned run, data, tokenizer, and checkpoint manifests with hashes,
+- [x] Define versioned run, data, tokenizer, and checkpoint manifests with hashes,
   code revision, dirty-tree state, environment versions, and artifact ownership.
-- [ ] Implement atomic local writes, schema checks, and corruption/error tests.
-- [ ] Keep generated artifacts outside tracked source and exclude credentials.
+- [x] Implement atomic local writes, schema checks, and corruption/error tests.
+- [x] Keep generated artifacts outside tracked source and exclude credentials.
 
 Acceptance: manifest round trips, incompatible versions, interrupted writes,
 and corrupted artifacts are tested; another process can inspect a run's identity.
+
+Evidence: `docs/development/validation_m2_2.md`; schema/identity and real local
+IO tests, clean-commit CLI bundle verification/corruption detection, CPU Python
+matrix. Completion covers metadata and byte integrity, not model state replay.
 
 ## Phase 3 — Tokenizer and data
 
@@ -433,10 +437,12 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 
 ## Immediate next session
 
-M2.1 is complete: typed config/package/RNG/logging/CLI, frozen CPU/CUDA dependency
-profiles, CPU test matrix and build checks. Start M2.2 with a short design for
-versioned run/data/tokenizer/checkpoint manifests, integrity checks and atomic IO.
-M2.1 does not implement models, data ingestion or checkpoint replay.
-Preserve the publication pause from the user's environment-published message:
-keep commits local until a new publication instruction. Do not reapply old cloud
-settings or launch final-scale/paid training.
+Phase 2 is complete. Start M3.1: inspect/freeze a supported byte-BPE library and
+its license/API, implement the bounded-memory tokenizer workflow and math/LaTeX/
+Unicode/Cyrillic tests, and use approved project-authored fixtures first. Actual
+external corpus ingestion remains gated by DATA_CARD.md, not a manifest's license
+string. M3.2 then supplies deterministic shard/packing/data-order behavior.
+
+Preserve the publication pause: commits remain local, no previous cloud edits
+are reapplied and no final-scale/paid training is launched. M5 must implement
+actual tensor/optimizer/RNG/sampler checkpoint semantics before claiming replay.

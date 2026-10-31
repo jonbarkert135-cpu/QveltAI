@@ -392,3 +392,82 @@ for this session; future publication can follow the next user instruction.
   missing-runtime and mocked failure paths. Mocks are not CUDA validation.
 - **Revisit:** actual CUDA execution, distributed rank/worker RNG contracts,
   checkpoint schemas or dtype/backend changes. No cross-device bitwise claim.
+
+## ADR-0017 — Use strict typed manifests and canonical content identities
+
+- **Date/status:** 2026-10-31; accepted and validated for M2.2 metadata/bytes.
+- **Context:** future run/data/tokenizer/checkpoint artifacts need inspectable
+  identities without importing models or trusting executable serialization.
+- **Options:** arbitrary dictionaries/pickle; raw-file hashes only; immutable
+  schema-versioned typed metadata plus registered file hashes.
+- **Choice:** schema-1 frozen records, exact required fields and role contracts,
+  strict bounded JSON, normalized UTC timestamps, explicit source/license
+  declarations and lineage IDs. Canonical metadata ID is SHA-256 of sorted
+  compact UTF-8 JSON plus newline; raw artifact IDs hash raw bytes. No implicit
+  version migration or arbitrary environment dictionary. Expected metadata IDs
+  can be supplied from a trusted creator/registry.
+- **Rationale:** another process can inspect and verify without torch or unsafe
+  object loading. Format-normalized metadata IDs and raw byte IDs are distinct.
+  Neither license strings nor opaque checkpoint roles prove rights or replay;
+  those semantic gates belong to M3/M5. Hashes provide integrity, not signatures.
+- **Sources:** [verified] installed Python 3.12 `json` documentation/hooks,
+  dataclass helpers, `hashlib.sha256`, datetime APIs; actual round-trip, duplicate,
+  unknown-field/version, range, identity and corruption tests. Design/limits:
+  `docs/development/artifacts.md`; limits are project policy, not library defaults.
+- **Revisit:** new implemented formats, a justified schema migration, signatures,
+  hierarchical shard manifests or larger metadata needs. Never silently accept
+  incompatible versions or relabel metadata tests as training-state validation.
+
+## ADR-0018 — Commit write-once local artifacts before the manifest marker
+
+- **Date/status:** 2026-10-31; accepted, Linux local filesystem tests passed.
+- **Context:** interrupted writes, concurrent producers and corrupted inputs
+  must not publish a successful-looking partial artifact/checkpoint bundle.
+- **Options:** direct overwrite; replace-in-place; private same-directory temp
+  files and a no-overwrite hard-link commit followed by directory fsync.
+- **Choice:** stream in bounded chunks, flush/fsync temp, link to an absent final
+  name, fsync its parent, remove only the owned temp. Each writer confirms all
+  parent directory entries, even if another writer created them. Verify all
+  declared files/config/lock, then publish the manifest last. Root creation
+  requires an existing parent; existing run directories are never reused.
+- **Rationale:** caught prepublication failures leave no final name; process
+  death may leave uncommitted temps. Postpublication directory-fsync errors
+  preserve complete bytes and report durability uncertainty rather than false
+  rollback. Growing source hashing is bounded to its initial size plus one;
+  source copying has an initial-size ceiling and post-copy checks. No automatic
+  deletion of unknown partial outputs, distributed transaction or hostile-root
+  sandbox is claimed. Network storage/native Windows need separate validation.
+- **Sources:** [verified] Python `os.link`, `os.fsync`, `tempfile.mkstemp`, file
+  and stat APIs; Linux [link(2)](https://man7.org/linux/man-pages/man2/link.2.html)
+  (existing names are not overwritten) and
+  [fsync(2)](https://man7.org/linux/man-pages/man2/fsync.2.html)
+  (directory entries require separate sync), read 2026-10-31. [verified] real
+  competing writers/SIGKILL tests and injected callback/fsync/link failures;
+  these are not physical power-loss or multi-node storage tests.
+- **Revisit:** object/network stores, async/sharded writers, validated native
+  Windows support or a new checkpoint transaction/recovery protocol in M5.
+
+## ADR-0019 — Capture observed provenance without copying credentials or patches
+
+- **Date/status:** 2026-10-31; accepted and exercised from an installed wheel.
+- **Context:** a run should identify code/config/dependencies without assuming
+  a remote branch, GPU, clean checkout or credential value exists.
+- **Options:** infer remote versions/defaults; dump environment/source patches;
+  query actual local Git, installed package metadata and the selected lock.
+- **Choice:** full local HEAD, dirty flag, lock hash/copy, resolved config/digest,
+  interpreter/OS/machine and installed distribution name/version inventory.
+  UUID/UTC identify the bundle; init declares seed/world_size=1 but does not
+  apply RNG policy or start training. Unborn/unreadable code is an error, never
+  an invented revision. CLI inspect is explicitly metadata-only; verify audits
+  registered bytes, config/lock consistency and optional trusted identity.
+- **Rationale:** no process-environment values, remote URLs, source patches or
+  arbitrary credential files are captured. Dirty status is an observation, not
+  a code snapshot or execution lease. Package inventory does not prove lock
+  agreement or that installed code equals the checkout. M5 binds actual launch,
+  ranks, sampler/RNG/optimizer contents and environment compatibility.
+- **Sources:** [verified] Python `importlib.metadata`/`subprocess.run` docs and
+  installed Git `rev-parse`/`status`; actual temporary committed/unborn/dirty Git
+  tests, installed package inventory, and separate-process no-torch CLI workflow.
+  `docs/development/validation_m2_2.md` records exact code and artifact identities.
+- **Revisit:** distributed launch, dirty-code snapshots, runtime/hardware capture,
+  checkpoint semantic validation or stricter release provenance requirements.

@@ -51,3 +51,14 @@ remain untested. The 2.9.1 PyTorch CPU/cu128 baseline is intentionally pinned,
 not a promise of latest dependencies or long-term upstream support; updates need
 fresh compatibility/security review and tests before deployment. Configuration
 hashes/seeds do not close R05 checkpoint/replay risk; M2.2/M5 remain pending.
+
+## M2.2 update (2026-10-31)
+
+R05 is partially mitigated for typed provenance and raw-byte integrity: bounded
+hash/copy, no-overwrite publication, manifest-last commit, process interruption,
+concurrent writers and corruption checks passed on Linux local storage. This
+does not close model/optimizer/scheduler/RNG/sampler replay risk, which remains
+M5 work. R06 distributed transactions/multi-node recovery remain open. Native
+Windows, object stores, NFS/shared-storage durability and physical power loss
+were not validated. Source license strings do not close R07 ingestion rights;
+no corpus or trained checkpoint was created.

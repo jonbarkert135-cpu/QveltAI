@@ -127,4 +127,6 @@ outputs are ignored under `dist/`. Never publish them during the current pause.
 The CPU GitHub workflow uses commit-pinned checkout/setup-python actions and
 Python 3.11/3.12/3.13 jobs. Local equivalents passed; the remote workflow has
 not run. There is no training, benchmark, model export or serving command yet.
-M2.2 adds versioned artifact manifests/integrity before tokenizer/data work.
+M2.2 now provides [manifest and atomic artifact operations](artifacts.md);
+M3.1 tokenizer/data work is next. The 220-test suite passes locally on the
+three Linux Python versions listed above.
