@@ -1,6 +1,6 @@
 # Engineering foundation completion design
 
-Date: 2026-10-31. Owner: Lead agent. Status: in progress.
+Date: 2026-10-31. Owner: Lead agent. Status: CPU foundation acceptance complete; actual CI/clone evidence in validation_foundation.md.
 
 The user explicitly requests the expanded Phase 2 deliverables after M3.1.
 Implement these without replaying completed tokenizer/research work. This adds

@@ -142,7 +142,7 @@ by DATA_CARD and measured resources; M3.2 is next.
 
 ### M3.2 — Build deterministic, auditable data preparation
 
-Owner: Lead agent. Status: planned. Dependencies: M3.1.
+Owner: Lead agent. Status: in progress. Dependencies: M3.1.
 
 - [ ] Approve each dataset revision/license in `DATA_CARD.md`; retain provenance,
   source IDs, transformation rules, and redistribution restrictions.
@@ -468,9 +468,9 @@ Acceptance: 408 vendor skill entries have intact source files and license notice
 The attached ponytail skill adds one required project-wide coding workflow. Source authenticity is Git provenance,
 not a claim of comprehensive security or third-party runtime validation.
 
-## Expanded Phase2 request — M2.3 engineering acceptance
+## Expanded Phase 2 request — M2.3 engineering acceptance
 
-Owner: Lead agent. Status: in progress. Dependencies: M2.1/M2.2/M3.1 and the
+Owner: Lead agent. Status: complete. Dependencies: M2.1/M2.2/M3.1 and the
 user's explicit expanded foundation request. The new request advances the RFC
 model/synthetic-training slice before M3.2; full M4/M5 acceptance remains separate.
 
@@ -482,9 +482,37 @@ model/synthetic-training slice before M3.2; full M4/M5 acceptance remains separa
 - [x] Committed checkpoints, safetensors, rank RNG/Adam/sampler replay and CPU DCP/
   DTensor shards. Actual CUDA/NCCL/FSDP2 tests provided but hardware unavailable.
 - [x] Apache-2.0/NOTICE, CONTRIBUTING and assumed-platform server/all-reduce runbook.
-- [ ] Pass the requested Make chain from an isolated clean clone, hooks/build/smoke.
-- [ ] Observe green GitHub Actions for the final published main revision.
+- [x] Pass the requested Make chain from an isolated clean clone, hooks/build/smoke.
+- [x] Observe green GitHub Actions for the final published main revision.
 
 Acceptance: no fake training/checkpoint/backend commands; CPU, numerical,
 restart and distributed evidence recorded, optional/GPU skips distinguished.
 Future real-data/post-training/evaluation/serving work remains explicitly planned.
+
+
+Evidence for M2.3: code 9ee9443, actual GitHub run 41242952575 (all five jobs
+successful), clean-clone Make/hooks/build and100-step/replay logs recorded in
+validation_foundation.md. New user request starts expanded Phase 3 below.
+
+## Expanded Phase 3 — Tokenizer and data pipeline
+
+Owner: Lead agent. Status: in progress. Dependencies: M3.1 and M2.3.
+
+- [ ] Extend versioned controls for reasoning/tool delimiters without silently
+  reinterpreting old tokenizer artifacts; measure EN/RU fertility and digit policy.
+- [ ] Register original exact-answer math/demo data and optional source acquisition
+  with pinned checksums, rights records and fail-closed approval rules.
+- [ ] Streaming cleaning/LID/quality/PII/toxic policy, exact and MinHash-LSH dedup,
+  with auditable counts and no blanket privacy/quality guarantee.
+- [ ] Mandatory benchmark registry/n-gram decontamination; reject production mode
+  unless all planned evaluation snapshots and their rights are approved/present.
+- [ ] Checksummed uint16/uint32 memmap shards, document-aware packing/attention/loss
+  masks, deterministic rank/worker order, stage mixtures and resumable loaders.
+- [ ] Program-verifiable arithmetic/algebra/number-theory/combinatorics generators,
+  documented difficulty and bounded answer verifier for later RL environments.
+- [ ] Offline end-to-end/crash/decontamination tests, measured host throughput,
+  runbooks/01_data_preparation.md with measured demo disk and labeled i5 estimates.
+
+Acceptance: genuine raw-to-batch pipeline and exact committed cursor replay,
+including worker prefetch; real benchmark/data availability is a mandatory
+production gate, never faked with toy fixtures. Observe current-head CI.

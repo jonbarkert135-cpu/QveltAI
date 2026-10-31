@@ -139,7 +139,7 @@ claim, no external dataset approval. Full commands, hashes, cases, limitations
 and an early oversized test-ID/exec-environment harness failure: docs/development/validation_m3_1.md.
 Reproduce using its workflow runbook and checked-in structured fixture results.
 
-## R006 — Expanded foundation numerical and training acceptance (in progress)
+## R006 — Expanded foundation numerical and training acceptance (complete)
 
 2026-10-31. User-requested real100-update CPU smoke of the RFC decoder with
 explicit117056-parameter override, B2/T32,6400 synthetic targets. Initial actual
@@ -152,3 +152,10 @@ interleaved rank stdout issues were fixed with actual regression tests.
 Clean-clone/current-main CI gates pending; final evidence will be added to
 validation_foundation.md. Early dirty-source smoke remains temporary evidence,
 not the final reproducible release state. Original code uses Apache-2.0.
+
+R006 final evidence: code 9ee9443; clean clone: 354 passed/2 optional skips/2 GPU
+cases deselected,55.04s, Make/hooks/build green, clean tree. Actual GitHub
+run 41242952575 succeeded in all five jobs; each Python CPU job354 passed, optional
+SDK job 3 passed; uploaded smoke artifact 13058222452 exists. Actual clean-provenance
+100-step/replay metrics match the early smoke. See validation_foundation.md for
+commands, wheel/lock/manifest hashes and scope. Phase 3 data work now begins.

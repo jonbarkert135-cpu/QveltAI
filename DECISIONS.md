@@ -568,8 +568,8 @@ for this session; future publication can follow the next user instruction.
 
 ## ADR-0024 — Complete the expanded foundation without replaying M3.1
 
-- **Date/status:** 2026-10-31; implemented; clean-checkout/current-CI gates pending.
-- **Context/options:** the user explicitly requested the detailed Phase2 scaffold
+- **Date/status:** 2026-10-31; accepted; clean-checkout and actual CI gates passed (code 9ee9443/run 41242952575).
+- **Context/options:** the user explicitly requested the detailed Phase 2 scaffold
   after M3.1; either repeat existing work, provide fake smoke functions, or extend
   the foundation with the real numerical/training path needed for100 updates.
 - **Choice:** primary config/tokenizer/data/model/train/utils packages; scope-only
@@ -583,7 +583,7 @@ for this session; future publication can follow the next user instruction.
   fulfill the new request and avoid claiming a real-data trainer exists. Advance
   the RFC decoder and synthetic slice of M4/M5 explicitly; M3.2 and other gates
   remain open. Linux symlink behavior is tested, native Windows layout is not.
-- **Sources:** [verified] user Phase2 specification, existing RFC-001/training RFC,
+- **Sources:** [verified] user Phase 2 specification, existing RFC-001/training RFC,
   installed uv0.12.23/Hatchling1.27/PyYAML6.0.3 APIs, Python dataclasses/pathlib and
   actual import/config/parity tests. Designs: foundation_design.md and ADR-0015.
 - **Revisit:** supported platform/package layout or schema changes, real-data needs.

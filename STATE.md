@@ -4,11 +4,11 @@ Updated: 2026-10-31. Owner: Lead agent.
 
 ## Current task
 
-User requested the expanded Phase 2 engineering foundation after M3.1. M2.3 is
-in progress: implementation/local checks complete, clean-clone/remote current-CI
-acceptance pending. M3.1 remains complete. Real-data M3.2 and full M4/M5 gates are
-not bypassed by the synthetic path. Ponytail full and relevant installed skills
-remain mandatory; original code/docs are now Apache-2.0 by delegated user choice.
+Expanded Phase 2 foundation M2.3 is complete: clean-clone Make/hooks/build/smoke
+and actual GitHub run 41242952575 passed for code 9ee9443. The user now requests
+expanded Phase 3 tokenizer/data pipeline. M3.2 is in progress; implementation design
+and license/benchmark gates are next. M3.1 baseline remains complete. Ponytail
+full is mandatory; original code/docs use Apache-2.0 by delegated user choice.
 
 ## Implemented and observed
 
@@ -39,12 +39,12 @@ MFU is an estimate only with supplied peak FLOPs; null otherwise.
 
 ## Next three actions
 
-1. Clean clone: make setup && make lint && make typecheck && make test; real
-   make smoke, build, pre-commit checks and package validation.
-2. Publish to main and observe current-revision GitHub Actions. Update M2.3 status
-   with actual CI/clone evidence; preserve logs/negative diagnoses in experiments.
-3. Resume M3.2 deterministic real-data preparation, dedup/splits and token shards
-   on approved local fixtures before any external corpus or production training.
+1. Phase 3 design: versioned reasoning/tool tokenizer controls, verifiable authored
+   math sources and explicit production benchmark/source approval registry.
+2. Implement/test cleaning, exact/near dedup, n-gram decontamination and compact
+   binary shards/document packing with deterministic mixing/loader cursor replay.
+3. Offline end-to-end demo, worker throughput/fertility/digit experiments, data
+   preparation runbook and current CI; keep production gates fail-closed.
 
 ## Reproduce
 
@@ -59,3 +59,7 @@ make smoke
 Use uv 0.12.23 and Linux/Python 3.11–3.13. CPU is default; GPU setup instructions
 and exact all-reduce launcher are in runbooks/00_server_setup.md. Publication to
 main is authorized/active. Do not reapply old cloud-environment configuration.
+
+Final foundation evidence:354 passed/2 optional skips/2 GPU deselections in the
+clean CPU clone;356 passed with local extras; actual remote three-Python CPU
+jobs plus smoke and optional SDK job all successful. See validation_foundation.md.
