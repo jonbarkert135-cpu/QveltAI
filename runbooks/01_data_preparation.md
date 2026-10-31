@@ -194,6 +194,11 @@ SQLite indices and temporary snapshots. uint32 doubles token payload. The report
 scratch_snapshot_bytes is a point-in-time sum, not a measured peak and excludes
 anonymous temporary buffers. Index disk/RAM/time must be profiled before scale.
 
+Measured cloud demo192:404 raw/374 retained documents,18098 stored tokens,
+483224 prepared bytes/599036 total files,2.886784s generation/preparation.
+These totals include the dependency-lock/provenance/tokenizer copies and exclude
+the Python environment and ephemeral peak buffers. Measured delivery was51315
+(valid targets/s,0 workers) and64540 (2 workers);2-worker startup was3.82s.
 The exact cloud CPU evidence and disk totals are in
 `docs/development/validation_data.md`. On the unmeasured i5/16GB laptop, budget
 **1–5 minutes and100MB dataset workspace** for this demo after setup, and

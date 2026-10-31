@@ -142,7 +142,7 @@ by DATA_CARD and measured resources; M3.2 is next.
 
 ### M3.2 — Build deterministic, auditable data preparation
 
-Owner: Lead agent. Status: in progress. Dependencies: M3.1.
+Owner: Lead agent. Status: complete (offline framework acceptance). Dependencies: M3.1.
 
 - [x] Approve each consumed dataset revision/license in `DATA_CARD.md`; retain provenance,
   source IDs, transformation rules, and redistribution restrictions.
@@ -160,6 +160,32 @@ licenses are traceable from the run manifest. No unapproved corpus is consumed.
 Measured digit/fertility/host-delivery evidence, offline CI and the preparation
 runbook close expanded Phase3 acceptance; production source/benchmark approval
 remains a separately blocked prerequisite for actual corpus training.
+
+Evidence:code9f6cef9; actual GitHub run41247846988 (6 successful jobs), fresh
+clone426 passed/2 optional skips/2 GPU deselections,82 typed files, exact binary
+rebuild/pending-prefetch replay, EXPERIMENTS R007–R010 and validation_data.md.
+Measured768/384-document digit study and0/2-worker host throughput are recorded;
+runbooks/01_data_preparation.md is runnable offline. This is not production-corpus
+approval or real-data optimizer replay.
+
+### M3.3 — Clear and validate production-scale inputs
+
+Owner:Lead agent. Status:blocked. Dependencies:M3.2, exact source/benchmark rights,
+actual data/storage resources and the frozen project-final evaluation contract.
+
+- [ ] Approve complete MATH/AIME/MMLU and project-final exclusion snapshots;
+  retain exact questions/solutions/derivatives where permitted and test coverage.
+- [ ] Approve actual training-source revisions (D01–D13 remain blocked), implement
+  tested format-specific Parquet/WARC/code-provenance adapters only when needed.
+- [ ] Calibrate LSH/math-atom/PII/LID/toxicity heuristics on labeled EN/RU/domain
+  slices; develop a licensed learned quality classifier using the documented protocol.
+- [ ] Profile representative source/tokenizer samples for16GB RAM/SSD and future
+  server I/O; freeze production data/tokenizer identities before final training.
+
+Acceptance:production recipe succeeds against every planned approved exclusion
+set, while removal audits/rights/size/resource evidence and residual semantic
+leakage risks are explicit. No flag bypasses missing licenses or mandatory sets.
+GPU saturation and atomic packed-training replay are M5 hardware/trainer gates.
 
 ## Phase 4 — Model implementation
 
@@ -447,16 +473,13 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 
 ## Immediate next session
 
-M3.1 is complete for the registered authored-fixture tokenizer workflow. Start
-M3.2 bounded deterministic corpus preparation, provenance, dedup/splits and
-checksummed token shards/packing. External data still requires DATA_CARD approval;
-manifest license strings do not grant permission. Preserve source and token order
-and test restart/rank/worker allocation before model implementation.
-
-Publish verified work and reports directly to main under the user's resumed
-publication authorization. Do not reapply old cloud configuration changes or
-launch final-scale/paid training. M5 must implement actual tensor/optimizer/RNG/
-sampler checkpoint semantics before claiming training replay.
+M3.2 expanded offline acceptance is complete; M3.3 production approvals remain
+blocked. Proceed with the user's next Phase4 scope. The portable RFC decoder was
+implemented/tested early in M2.3; review/integrate it rather than duplicate it.
+M4.2 cache/checkpointing and M5 actual packed-data trainer are still planned.
+Preserve all rights/benchmark gates and distinguish loader replay from atomic
+model/optimizer/loader training replay. Publish verified work and reports to main;
+no paid/final-scale runs or old environment configuration changes.
 
 ## Supporting task — Pinned agent skills
 

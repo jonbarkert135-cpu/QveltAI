@@ -683,7 +683,7 @@ for this session; future publication can follow the next user instruction.
 
 ## ADR-0029 — Versioned controls and exact original math environments
 
-- **Date/status:** 2026-10-31; implementation and local tests, expanded acceptance pending.
+- **Date/status:** 2026-10-31; offline acceptance complete; measured receipts and green6-job CI recorded.
 - **Context/options:** preserve all old IDs versus silently redefine reserved IDs.
 - **Choice:** V2 retains BOS/EOS/PAD/role IDs0–7, allocates think/end-think/tool-call/
   end-tool-call/tool-result IDs8–12 and19 reserves; load old V1 as V1 without
@@ -732,7 +732,7 @@ for this session; future publication can follow the next user instruction.
 
 ## ADR-0031 — Compact packed shards and consumer-committed loading
 
-- **Date/status:** 2026-10-31; local value/replay tests pass, host profiling pending.
+- **Date/status:** 2026-10-31; local value/replay and host profiling verified; accelerator performance unverified.
 - **Choice:** raw little-endian uint16 (V<=65536) / uint32,24-byte segment and16-byte
   block indices, readonly lazy memmaps with checksums and bounded caches. One
   BOS/text/EOS frame per document; one-token overlap between windows retains
@@ -768,3 +768,11 @@ shared-Tensor handle lifecycle in that reproducer at the cost of a batch copy.
 executed early-stop/replay tests. No private shutdown API is called. Re-profile
 GPU/pinned-memory transport before a server-throughput claim. HTTPS spec validation
 also explicitly rejects non-text and whitespace/control-byte URLs.
+
+The documented M3.3 learned-quality proposal uses fixed-seed hashed character
+ngrams and a regularized logistic head before a multilingual encoder, to fit a
+small labeled EN/RU baseline within limited RAM. This is a future, untrained
+proposal; removal thresholds require independent slice precision/recall/false-drop
+measurements. [verified] installed PyTorch2.9.1 BCEWithLogitsLoss documentation/
+logit0 reference supports the loss definition only, not quality-prediction accuracy.
+No classifier placeholder or claimed learned quality result is shipped.

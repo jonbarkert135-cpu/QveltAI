@@ -1,0 +1,82 @@
+{
+  "artifacts": [
+    {
+      "bytes": 129914,
+      "id": 13059896976,
+      "name": "offline-data-smoke-and-cursor"
+    },
+    {
+      "bytes": 6749990,
+      "id": 13059827229,
+      "name": "synthetic-smoke-logs-and-checkpoints"
+    }
+  ],
+  "cpu_tests_per_python": {
+    "gpu_deselected": 2,
+    "passed": 426,
+    "skipped": 2
+  },
+  "head_sha": "9f6cef941ceccf3c5eb929256e408a7644b65896",
+  "jobs": [
+    {
+      "completed_at": "2026-10-31T22:22:11Z",
+      "conclusion": "success",
+      "id": 124674899026,
+      "name": "optional-metrics",
+      "started_at": "2026-10-31T22:21:52Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-31T22:22:24Z",
+      "conclusion": "success",
+      "id": 124674899228,
+      "name": "smoke",
+      "started_at": "2026-10-31T22:21:53Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-31T22:23:53Z",
+      "conclusion": "success",
+      "id": 124674899254,
+      "name": "cpu (3.13)",
+      "started_at": "2026-10-31T22:21:53Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-31T22:23:02Z",
+      "conclusion": "success",
+      "id": 124674899262,
+      "name": "cpu (3.11)",
+      "started_at": "2026-10-31T22:21:53Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-31T22:22:17Z",
+      "conclusion": "success",
+      "id": 124674899275,
+      "name": "data-smoke",
+      "started_at": "2026-10-31T22:21:53Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-31T22:23:23Z",
+      "conclusion": "success",
+      "id": 124674899298,
+      "name": "cpu (3.12)",
+      "started_at": "2026-10-31T22:21:52Z",
+      "status": "completed"
+    }
+  ],
+  "log_note": "Used direct job log for the training result; the gh merged-log display misassociated step payloads.",
+  "run_id": 41247846988,
+  "training_smoke_from_direct_job_log": {
+    "first_loss": 5.6883039474487305,
+    "last_loss": 5.023181915283203,
+    "parameters": 117056,
+    "processed_tokens": 6400.0,
+    "replay_optimizer_equal": true,
+    "replay_weights_equal": true,
+    "steps": 100
+  },
+  "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/41247846988"
+}

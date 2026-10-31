@@ -1,0 +1,21 @@
+{
+  "documents": {
+    "gsm8k": 1319
+  },
+  "elapsed_seconds": 0.35209444900101516,
+  "exact_question_canary_matches": [
+    "gsm8k"
+  ],
+  "indexed_unique_ngrams": 55284,
+  "missing_production_coverage": [
+    "math",
+    "aime",
+    "mmlu",
+    "qvelt-math-heldout"
+  ],
+  "ngram_size": 13,
+  "production_ready": false,
+  "raw_manifest_sha256": "5f5fb9b48439db1928555aa5e19eeff6e4b4d0efe96f9df78b578ac5b892ba84",
+  "scope": "GSM8K question-index audit only, no training or benchmark scoring",
+  "unrelated_control_matches": []
+}

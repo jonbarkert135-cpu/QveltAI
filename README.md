@@ -107,7 +107,8 @@ remain blocked. The offline demo is explicitly non-production. The existing
 training command uses numeric fixtures until the real-data trainer milestone.
 
 Tokenizer workflow: [runbook](docs/development/tokenizer_workflow.md),
-[earlier validation](docs/development/validation_m3_1.md).
+[earlier validation](docs/development/validation_m3_1.md),
+[data validation and measured receipts](docs/development/validation_data.md).
 Contributions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Instructions for every AI agent

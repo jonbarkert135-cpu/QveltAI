@@ -1,6 +1,6 @@
 # Phase3 data pipeline design
 
-Date:2026-10-31. Owner: Lead agent. Status: implementation in progress.
+Date:2026-10-31. Owner: Lead agent. Status: offline implementation verified; production approvals blocked.
 
 Apply ponytail full, the installed tokenizer/SymPy skills and data-curation
 principles. The NeMo skill is a checklist of stages, not a verified claim about
@@ -121,3 +121,27 @@ surrounding template has high Jaccard overlap. This trades web dedup recall for
 avoiding removal of distinct equations/answers. It is configurable and not symbolic
 equivalence detection; equivalent reformulations can remain. Exact byte duplicates
 are still removed. Calibrate the setting per approved source using labeled pairs.
+
+
+Final lifecycle policy: SQLite handles use explicit closing on success/error.
+Workers collate plain NumPy batches for IPC and the consumer constructs tensors;
+this adds a copy and avoids the shared-Tensor early-shutdown failure reproduced
+by pending-prefetch abandonment. The smoke uses a separate uninterrupted oracle
+and discards the live iterator before consuming its prefetched tail. The default
+production exclusion IDs also include qvelt-math-heldout, the frozen final set
+planned by the research RFC; generated Phase3 samples are not that final suite.
+
+The first proposed learned quality baseline (M3.3, **not implemented/trained**) is
+fixed-seed hashed character3–5-gram features with a regularized binary logistic
+head, p(good|x)=sigmoid(w^T x+b), optimized by binary cross-entropy on logits. Start
+with this auditable low-memory option before considering a licensed multilingual
+encoder. Human labels should distinguish educational explanation, coherent code,
+mathematical formatting/correctness and garbage; toxicity/PII stay separate policies.
+Use family/source-separated EN/RU train/calibration/final slices, double-reviewed
+ambiguous labels, and calibrate per-language thresholds from measured precision/
+recall and false-removal costs. Never treat surface fluency as proof of correct
+mathematics. Source: [verified] installed PyTorch2.9.1 BCEWithLogitsLoss documentation
+and the logit0=>log(2) executed reference; the feature/model/annotation proposal
+has **no trained-model accuracy or corpus-retention evidence**. Log its future
+model hash, label license/provenance, feature seed and calibrated thresholds before
+it can remove any real document. No evaluator text may enter its fit/calibration.

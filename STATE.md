@@ -1,50 +1,64 @@
 # Qvelt current state
 
-Updated: 2026-10-31. Owner: Lead agent.
+Updated:2026-10-31. Owner:Lead agent.
 
 ## Current task
 
-Expanded Phase 2 foundation M2.3 is complete: clean-clone Make/hooks/build/smoke
-and actual GitHub run 41242952575 passed for code 9ee9443. The user now requests
-expanded Phase 3 tokenizer/data pipeline. M3.2 is in progress; implementation design
-and license/benchmark gates are next. M3.1 baseline remains complete. Ponytail
-full is mandatory; original code/docs use Apache-2.0 by delegated user choice.
+Expanded Phase3 offline tokenizer/data acceptance is complete (M3.2). Published
+implementation9f6cef941ceccf3c5eb929256e408a7644b65896; actual GitHub run41247846988
+has all6 jobs successful, including CPU3.11/3.12/3.13. Phase3 production source/
+benchmark clearance remains blocked separately in M3.3. No final training launched.
+Publication to main is active; do not reapply old environment draft changes.
 
-## Implemented and observed
+## Implemented and verified
 
-- Primary config/tokenizer/data/model/train/utils packages; compatible old imports
-  and model-preset paths; future posttrain/eval/inference scope documents only.
-- Make/hooks/markers/strict YAML/CLI scalar overrides, resolved job/config and
-  code/environment/normalized pip-compatible package snapshot next to checkpoints.
-- Actual pre-RMSNorm/RoPE/GQA/SwiGLU tied decoder; independent value/gradient/mask
-  references, all four meta parameter counts, real tiny CPU forward/backward.
-- Real 117056-parameter synthetic trainer,100 updates,6400 targets; early smoke
-  loss 5.6883 to 5.0232, exact stop 37/resume 100 weights and Adam states.
-- 356 tests passed with optional backends ; 2 GPU cases deselected. Two actual CPU
-  ranks verify DDP/global-token gradients/replay and DCP/DTensor shards. Actual
-  TensorBoard event and W&B offline run checked. No online SDK upload.
-- Local validation details: docs/development/validation_foundation.md. Checkpoints
-  validate config/source/software/topology, completed steps, scheduler/sample
-  cursor, RNG and integrity; corrupt latest fails, partial directories ignored.
+- Byte-BPE default vocab ceiling32768; V2 reasoning/tool controls, old V1 loading,
+  exact Unicode/code/LaTeX/RU round trips. Original exact EN/RU math with bounded
+  rational rewards and independent SymPy/stdlib checks; no teacher/public training data.
+- Strict source recipes, license/usage gates and actual pinned GSM8K eval-only
+  downloader. Seeded LID/heuristics/PII patterns/phrase policy, disk exact+math-aware
+  MinHash-LSH, family splits, train-only BPE and all-registry n-gram exclusion.
+- Compact uint16/uint32 shards, document-pair packing/masks and optional cross-doc
+  attention, weighted pretrain/anneal batch schedules, readonly memmaps and exact
+  consumer cursor replay across0/2 workers. Pending prefetch is actually abandoned;
+  SQLite closes on success/error; worker NumPy IPC avoids the reproduced shutdown issue.
+- Fresh clone:Make setup/lint/types/test/build, lock/dependency checks pass;
+  426 passed/2 optional SDK skips/2 GPU deselections in64.72s; mypy82 files.
+  All3 remote CPU versions also pass426; optional metrics job passes3 tests.
+- Offline smoke:212 inputs/194 retained,153 blocks verified, cursor3->10 with7
+  tensor-exact replay batches. New-seed digit study:12700 individual/9454 grouped
+  tokens (-25.559055%),0 round-trip failures. No trained-math result.
+- Cloud host delivery B8/T64:51315/64540 valid targets/s with0/2 workers;
+  startup0.015/3.819s, small cached/reused fixture. Laptop/GPU not measured.
+- Earlier engineering foundation remains:actual RFC decoder/counts/references,
+ 100-update numeric-fixture trainer with exact Adam/weight replay, two-rank CPU
+  DDP and DCP/DTensor tests, atomic checkpoints/provenance and optional metrics.
 
-## Limits
+Evidence:docs/development/validation_data.md, committed evidence JSON, EXPERIMENTS
+R007–R010, runbooks/01_data_preparation.md. Foundation evidence remains separate.
 
-Synthetic descriptor hashes are not actual BPE/data manifests; real-corpus
-pretraining, accumulation/packing, SFT/RL, reasoning evaluation, cache/serving and
-non-safetensors export remain later work. GPU/NCCL/FSDP2/Slurm/shared-store and
-multi-node training durability are unvalidated. Native Windows symlink layout is
-unvalidated. User laptop VRAM/OS/driver/server resources remain unknown. No paid
-or final-scale run and no environment draft change. No external corpus approved.
-MFU is an estimate only with supplied peak FLOPs; null otherwise.
+## Open limits
 
-## Next three actions
+No approved external training corpus. GSM8K questions were acquired/indexed only;
+MATH/AIME/MMLU and the frozen project-final evaluation snapshots/rights are missing.
+Production preparation rejects incomplete coverage. Gold GSM8K solutions are not
+indexed by its question adapter. Lexical exclusion/LSH/PII/toxicity/LID are incomplete
+and need corpus-specific audits; no trained quality classifier is provided.
 
-1. Phase 3 design: versioned reasoning/tool tokenizer controls, verifiable authored
-   math sources and explicit production benchmark/source approval registry.
-2. Implement/test cleaning, exact/near dedup, n-gram decontamination and compact
-   binary shards/document packing with deterministic mixing/loader cursor replay.
-3. Offline end-to-end demo, worker throughput/fertility/digit experiments, data
-   preparation runbook and current CI; keep production gates fail-closed.
+HF BPE pair-statistics RAM can grow with corpus diversity. Affine epoch shuffles
+are bijections, not uniform N! permutations. Loader replay is tested separately;
+the existing trainer still uses numeric fixtures and does not yet atomically
+checkpoint the real-data loader. GPU/NCCL/FSDP2/Slurm/multi-node/shared-store/native
+Windows, actual i5/16GB laptop performance, SFT/RL and serving remain unvalidated.
+
+## Next three tasks
+
+1. Phase4:review the already implemented portable decoder against the RFC/data
+   contract, then implement/test KV-cache and activation checkpointing (M4.2).
+2. M3.3:clear production sources/benchmarks, freeze the distinct project final set,
+   add rights-approved format adapters and corpus-scale labeled filtering audits.
+3. Phase5:connect actual packed-data/tokenizer identities and committed loader
+   cursor to training/checkpoints; test full optimization/accumulation replay.
 
 ## Reproduce
 
@@ -53,27 +67,9 @@ make setup
 make lint
 make typecheck
 make test
-make smoke
+uv run --frozen --extra cpu python scripts/data_smoke.py --directory /tmp/qvelt-data-check-01 --repository .
+uv run --frozen --extra cpu qvelt data benchmark /tmp/qvelt-data-check-01/prepared/manifest.json --workers 0 2
 ```
 
-Use uv 0.12.23 and Linux/Python 3.11–3.13. CPU is default; GPU setup instructions
-and exact all-reduce launcher are in runbooks/00_server_setup.md. Publication to
-main is authorized/active. Do not reapply old cloud-environment configuration.
-
-Final foundation evidence:354 passed/2 optional skips/2 GPU deselections in the
-clean CPU clone;356 passed with local extras; actual remote three-Python CPU
-jobs plus smoke and optional SDK job all successful. See validation_foundation.md.
-
-Phase3 implementation checkpoint: strict recipe/raw metadata/usage policy,
-seeded LID/PII/heuristics, SQLite exact+math-aware MinHash-LSH, complete benchmark
-gate and n-gram removal, original exact EN/RU math, compact shards, mixed-source
-0/2-worker consumer cursor replay and data CLI/smoke are implemented locally.
-67 focused data tests passed; CPU Make setup/lint/types/test passed with421
-passed,2 optional SDK skips and2 GPU deselections. Experiment/remote CI acceptance
-is still in progress. One explicitly approved
-GSM8K evaluation snapshot acquired/pinned; no external training corpus approved.
-
-Phase3 CI follow-up: run41247260902 exposed SQLite lifecycle warnings on3.13;
-closing on success/error and pending-prefetch shutdown/replay are now covered.
-Revised data suite:72 passed on local Python3.13.5;26 storage/integration cases
-pass on3.12. Final remote acceptance and clean-code receipts are next.
+Choose a new output path. uv0.12.23; Linux/Python3.11–3.13, CPU default. The exact
+preparation commands/disk and explicitly assumed laptop times are in runbook01.

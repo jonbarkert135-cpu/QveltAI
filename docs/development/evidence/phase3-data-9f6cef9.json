@@ -1,0 +1,222 @@
+{
+  "code": {
+    "commit": "9f6cef941ceccf3c5eb929256e408a7644b65896",
+    "dirty": false,
+    "lock_sha256": "0da2d2e3aa43780f7a4d01cdf5f125704a1e329ece8287882a5ccd3150e75314"
+  },
+  "curation": {
+    "benchmark_overlaps": {
+      "authored-holdout": 2
+    },
+    "benchmark_questions": {
+      "authored-holdout": 1
+    },
+    "benchmark_registry_sha256": "fc616ed6a64937ea725cb20910a9537cca4ad8921cfe1047f24bbc227c7bf7bf",
+    "counts": {
+      "benchmark_overlap": 2,
+      "exact_duplicate": 24,
+      "input": 404,
+      "near_duplicate": 2,
+      "retained": 374,
+      "test": 146,
+      "toxic_phrase_quarantine": 2,
+      "train": 146,
+      "validation": 82
+    },
+    "detected_languages": {
+      "af": 4,
+      "bg": 48,
+      "ca": 2,
+      "en": 204,
+      "ru": 146
+    },
+    "elapsed_seconds_before_publish": 2.622045972999331,
+    "limitations": [
+      "Pattern PII and phrase toxicity are incomplete",
+      "Probabilistic LSH can miss duplicates",
+      "N-grams do not exclude semantic/translated leaks",
+      "Demo fixtures do not scan public benchmarks"
+    ],
+    "production_ready": false,
+    "redactions": {
+      "api_key": 0,
+      "email": 2,
+      "key_assignment": 0,
+      "phone": 2,
+      "private_key": 0
+    },
+    "scope": "demo",
+    "scratch_snapshot_bytes": 566396,
+    "sources": {
+      "math-en": {
+        "benchmark_overlap": 1,
+        "exact_duplicate": 9,
+        "input": 202,
+        "near_duplicate": 1,
+        "retained": 190,
+        "toxic_phrase_quarantine": 1
+      },
+      "math-ru": {
+        "benchmark_overlap": 1,
+        "exact_duplicate": 15,
+        "input": 202,
+        "near_duplicate": 1,
+        "retained": 184,
+        "toxic_phrase_quarantine": 1
+      }
+    },
+    "stored_tokens_including_boundaries": 18098,
+    "tokenizer_sha256": "649d16c5242b1d5482d5661176e3fca33cdca2cb04f22c3a5d64e0cb8988c7a9",
+    "train_only_tokenizer_documents": 146,
+    "valid_targets": 17724
+  },
+  "demo_prepare_seconds": 2.88678397500189,
+  "demo_prepared_file_bytes": 483224,
+  "demo_total_file_bytes": 599036,
+  "digit_experiment": {
+    "corpus_sha256": "b80d8d3baf828cb1943fe32de8d8091da6b84df1dcd96d06a93cae1b4cdbb4fb",
+    "heldout_documents": 384,
+    "policies": [
+      {
+        "actual_vocab": 509,
+        "example_digit_token_ids": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          47
+        ],
+        "languages": {
+          "en": {
+            "documents": 192,
+            "roundtrip_failures": 0,
+            "tokens": 6422,
+            "tokens_per_word": 2.6233660130718954,
+            "whitespace_words": 2448
+          },
+          "ru": {
+            "documents": 192,
+            "roundtrip_failures": 0,
+            "tokens": 6278,
+            "tokens_per_word": 2.7828014184397163,
+            "whitespace_words": 2256
+          }
+        },
+        "settings": {
+          "isolate_digits": true,
+          "min_frequency": 2,
+          "vocab_size": 1024
+        },
+        "tokenizer_json_sha256": "4e94663c9b73fa887be7e148d7f6ab88aa1df8e4f01dea57f4feb26e23b2c7da",
+        "training_seconds": 0.029401756000879686
+      },
+      {
+        "actual_vocab": 1024,
+        "example_digit_token_ids": [
+          616,
+          617,
+          835,
+          548
+        ],
+        "languages": {
+          "en": {
+            "documents": 192,
+            "roundtrip_failures": 0,
+            "tokens": 4799,
+            "tokens_per_word": 1.960375816993464,
+            "whitespace_words": 2448
+          },
+          "ru": {
+            "documents": 192,
+            "roundtrip_failures": 0,
+            "tokens": 4655,
+            "tokens_per_word": 2.063386524822695,
+            "whitespace_words": 2256
+          }
+        },
+        "settings": {
+          "isolate_digits": false,
+          "min_frequency": 2,
+          "vocab_size": 1024
+        },
+        "tokenizer_json_sha256": "2841973c0f2338c286a172d4fc87d362a8a6ac409b4b32829641c1596a849b06",
+        "training_seconds": 0.05634563099738443
+      }
+    ],
+    "scope": "Authored exact math only; different generation seeds, shared templates; no public evaluation content",
+    "training_documents": 768
+  },
+  "loader_benchmarks": [
+    {
+      "capacity_tokens": 32768,
+      "capacity_tokens_per_second": 52392.81644610281,
+      "dataset_sha256": "f1fba440d234dbcb5a8f6b59409f38cbf83984baedbc5ec621736fb7e5752b9b",
+      "epoch_reuse": "Intentional source repetition after exhaustion; filesystem cache may be warm",
+      "final_source_cursors": {
+        "math-en": 120,
+        "math-ru": 456
+      },
+      "loader": {
+        "attention_mode": "document",
+        "batch_size": 8,
+        "max_batches": 72,
+        "prefetch": 2,
+        "rank": 0,
+        "seed": 20261031,
+        "workers": 0,
+        "world_size": 1
+      },
+      "measured_batches": 64,
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "processor": "",
+      "scope": "CPU host batch delivery, not GPU saturation or model training",
+      "startup_seconds": 0.015052004000608576,
+      "steady_seconds": 0.6254292519988667,
+      "torch": "2.9.1+cpu",
+      "torch_threads": 1,
+      "unique_available_blocks": 83,
+      "valid_targets": 32094,
+      "valid_targets_per_second": 51315.15658634105,
+      "warmup_batches": 8
+    },
+    {
+      "capacity_tokens": 32768,
+      "capacity_tokens_per_second": 65895.25751767088,
+      "dataset_sha256": "f1fba440d234dbcb5a8f6b59409f38cbf83984baedbc5ec621736fb7e5752b9b",
+      "epoch_reuse": "Intentional source repetition after exhaustion; filesystem cache may be warm",
+      "final_source_cursors": {
+        "math-en": 120,
+        "math-ru": 456
+      },
+      "loader": {
+        "attention_mode": "document",
+        "batch_size": 8,
+        "max_batches": 72,
+        "prefetch": 2,
+        "rank": 0,
+        "seed": 20261031,
+        "workers": 2,
+        "world_size": 1
+      },
+      "measured_batches": 64,
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "processor": "",
+      "scope": "CPU host batch delivery, not GPU saturation or model training",
+      "startup_seconds": 3.8188064269997994,
+      "steady_seconds": 0.4972740259981947,
+      "torch": "2.9.1+cpu",
+      "torch_threads": 1,
+      "unique_available_blocks": 83,
+      "valid_targets": 32094,
+      "valid_targets_per_second": 64539.86800452054,
+      "warmup_batches": 8
+    }
+  ],
+  "python": "3.12.14",
+  "torch": "2.9.1+cpu"
+}

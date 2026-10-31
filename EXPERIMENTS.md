@@ -160,7 +160,7 @@ SDK job 3 passed; uploaded smoke artifact 13058222452 exists. Actual clean-prove
 100-step/replay metrics match the early smoke. See validation_foundation.md for
 commands, wheel/lock/manifest hashes and scope. Phase 3 data work now begins.
 
-## R007 — Phase3 curation, packing and consumer replay (in progress)
+## R007 — Phase3 curation, packing and consumer replay (complete for offline scope)
 
 Hypothesis: approved original raw text can be curated, excluded against every
 registered authored holdout, split before BPE, packed compactly and replayed from
@@ -176,3 +176,88 @@ reported unclosed SQLite ResourceWarnings (418 passed/3 failed/2 optional skips/
 cause. A stricter pending-prefetch abandonment test also reproduced a Tensor IPC
 worker abort; NumPy worker collation/consumer tensor conversion passes that
 reproducer. These failed checks are recorded rather than described as green CI.
+
+
+## R008 — Math digit segmentation and EN/RU fertility
+
+- Hypothesis: grouping digits reduces token cost; single digits may provide a
+  simpler numeric representation, but compression cannot establish reasoning gain.
+- Executed clean code:9f6cef941ceccf3c5eb929256e408a7644b65896, dirty=false,
+  Python3.12.14/tokenizers0.22.2. Command:
+  `uv run --frozen --extra cpu python scripts/data_experiments.py --directory /tmp/qvelt-data-measured-9f6cef9 --repository .`.
+-768 original verified EN/RU math train texts (seed113),384 different-seed texts
+  (997,192 per language), shared eight template families, requested vocab1024,
+  minimum frequency2. Corpus SHA256
+  `b80d8d3baf828cb1943fe32de8d8091da6b84df1dcd96d06a93cae1b4cdbb4fb`.
+  No public benchmark inputs or gold answers were used.
+
+| Policy | Actual vocab | EN tokens / whitespace words | EN fertility | RU tokens / words | RU fertility | Round-trip failures |
+| --- | ---: | --- | ---: | --- | ---: | ---: |
+| Individual digits |509 |6422/2448 |2.623366 |6278/2256 |2.782801 |0/384 |
+| Grouped digits |1024 |4799/2448 |1.960376 |4655/2256 |2.063387 |0/384 |
+
+Total12700 vs9454 tokens: grouping reduces25.559055% on this sample. Learned JSON
+hashes and exact example digit IDs are in the committed receipt. Vocabulary is a
+ceiling, so the individual-digit grammar learns fewer merges. Conclusion: retain
+both explicit policies and the RFC individual-digit controlled baseline; this study
+supports grouping for compression only. Revisit the default using approved corpus
+fertility and fixed-budget trained-model math evaluations, not this toy result.
+Whitespace-word fertility is explicitly defined and is not morphological coverage.
+
+## R009 — Compact data preparation and CPU host delivery
+
+- Hypothesis: compact shards and ordered worker prefetch support useful host batch
+  delivery while preserving target counts/order. No GPU/model work is measured.
+- Same clean9f6cef9 code/command/receipt as R008. Cloud CPU: Intel Xeon Platinum8370C,
+  container cpu.max400000/100000 (4 CPU quota), memory.max34359738368 (32GiB).
+  Linux/Python3.12.14/PyTorch2.9.1+cpu; one main-process Torch thread. The user's
+  i5/16GB/RTX3060 Laptop was not accessed or benchmarked.
+- Demo192 math documents/language +20 canaries =404 inputs. Retained374
+  (train146/validation82/test146); removed24 exact,2 near,2 protected overlaps,
+  2 phrase quarantines;2 emails/2 phone patterns redacted. LID mislabeled some
+  short Russian templates as Bulgarian, so annotation remains non-filtering.
+- Preparation including raw generation:2.886784s;599036 bytes total demo files,
+  483224 prepared bytes. SQLite/snapshot observed566396 bytes at the recorded
+  point; this is not peak disk/RAM. Stored18098 tokens including boundaries,
+  17724 valid targets.83 available train blocks; repeated sources are intentional.
+
+| Workers | First-batch startup s |64-batch steady s | Valid targets | Valid targets/s | Capacity tokens/s |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+|0 |0.015052 |0.625429 |32094 |51315.16 |52392.82 |
+|2 |3.818806 |0.497274 |32094 |64539.87 |65895.26 |
+
+B=8,T=64,prefetch2,8 warmup then64 measured batches. Both runs have identical
+final cursors EN120/RU456 after72 batches. NumPy IPC then consumer tensor conversion
+is included. Small reused/cached input, short single measurements; no uncertainty
+interval, cold-storage, laptop, GPU-saturation or training-throughput claim. Initial
+pre-refinement run752a6ca measured51374/45604 targets/s for0/2 workers; this is
+historical transport/timing evidence, not averaged into the final receipt. Measure
+on the intended machine/source size before choosing worker count.
+
+## R010 — Actual permitted GSM8K exclusion-index audit
+
+- Hypothesis: the implementation can index every approved question and detect a
+  copied question without training on the evaluation source.
+- Acquired publisher revision3101c7d5072418e28b9008a6636bde82a006892c via the
+  pinned eval-only spec;749738 bytes/1319 original rows. MIT license and payload
+  hashes are recorded in DATA_CARD.md. No raw content is committed.
+- Actual SQLite index of1319 question texts, ngram13:55284 unique grams. One
+  protected-question canary with surrounding original prose matched gsm8k;
+  unrelated authored control matched nothing. Elapsed0.352094s on this host.
+- Conclusion: this checks real question acquisition/indexing/matching only.
+  Gold solutions are not indexed by the question adapter. MATH/AIME/MMLU and the
+  frozen project-final suite remain missing; production_ready=false. No evaluation
+  score, semantic/translated leakage guarantee or full public coverage is claimed.
+  Full numeric audit receipt: docs/development/evidence/phase3-gsm8k-index.json.
+
+
+Final R007 acceptance:9f6cef9, separate fresh-clone frozen Make setup/lint/types/
+test/build pass;426 passed/2 optional SDK skips/2 GPU deselections in64.72s.
+Actual GitHub run41247846988:6 jobs successful; CPU3.11/3.12/3.13 each426 passed,
+optional metrics3 passed, independent data smoke and numeric100-step training
+smoke successful. Direct per-job training log confirms117056 parameters/6400
+numeric targets, loss5.6883039474487305->5.023181915283203, bit-exact Adam/weights
+for stop37/resume100. No real-corpus optimizer training is claimed. Data smoke
+212->194 documents,153 verified blocks,7 resumed batches from cursor3 to10,
+pending-prefetch iterator discarded. Committed receipts and validation_data.md
+record exact identities and limitations; production data approval remains blocked.

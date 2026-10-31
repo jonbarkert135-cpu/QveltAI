@@ -140,3 +140,13 @@ distinct math problems just because their surrounding prose templates match.
 NFC/casefold n-gram exclusion is lexical, not semantic; translated variants and
 unknown copies are residual risks. PII/toxicity heuristics are incomplete; source
 rights and audits are still required even after a successful offline demo.
+
+
+Actual question-index audit: all1319 approved GSM8K questions were indexed
+(55284 unique13-grams); a copied-question canary matched and an unrelated authored
+control did not. Receipt: `docs/development/evidence/phase3-gsm8k-index.json`.
+This adapter does not index gold solution text. It establishes neither complete
+planned-benchmark coverage nor semantic/translated exclusion. Additional licensed
+solution/derivative exclusion snapshots need explicit registration before promotion.
+Original demo receipts, actual transformations/removals and tokenizer/loader
+measurements are in EXPERIMENTS R007–R010 and the Phase3 evidence JSON files.
