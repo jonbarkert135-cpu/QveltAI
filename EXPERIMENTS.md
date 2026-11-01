@@ -289,3 +289,18 @@ Commands: `uv run --frozen --extra cpu pytest tests/unit/test_model.py tests/int
 and `make lint typecheck test`. Observed24 targeted passed in4.08s;433 full-suite
 passed/2 optional SDK skips/2 GPU deselections in69.69s; Ruff and mypy82 files pass.
 Conclusion:M4.1 portable gate closes, GPU/cache/recomputation remain M4.2.
+
+## R013 — Cached decoding, native SDPA and block recomputation
+
+Date:2026-11-01. Hypothesis:explicit cache metadata/compact KV heads reproduce
+full causal/document logits; native SDPA and non-reentrant checkpointing preserve
+the reference values/gradients and resumable optimizer state. Tests cover MHA/MQA/
+GQA, multiple prefix/suffix partitions, packed reset positions/padding, stale/load/
+replaced weights, weak owner lifetime, malformed caches and BF16 policy changes.
+Reference QK/softmax now explicitly disables autocast for RFC FP32 semantics.
+Targeted49 execution/cache tests initially passed; storage/recompute tests2 passed
+and actual four-step checkpointed training/replay passes for both backends.
+`make lint typecheck test`:487 passed/2 absent optional SDK skips/4 GPU cases
+deselected in81.70s; Ruff and strict mypy89 files pass. The additional GPU FP32/
+BF16 tests are supplied, not executed. CPU timing/storage profile receipt follows
+from clean committed code; none of the tests establishes GPU/quality performance.

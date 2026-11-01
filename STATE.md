@@ -7,8 +7,10 @@ Updated:2026-11-01. Owner:Lead agent.
 M4.1 portable numerical acceptance is complete:433 passed/2 optional SDK skips/
 2 GPU deselections in69.69s; lint/format and mypy82 files pass. Seven new tests
 close fixed-seed/residual variance, combined tied-embedding gradients and non-finite
-fail-stop before optimizer/checkpoint. M4.2 runtime/cache/recomputation design is
-in progress in docs/development/phase4_design.md. Publication to main is active;
+fail-stop before optimizer/checkpoint. M4.2 reference/SDPA execution, non-reentrant recomputation and compact request-local
+KV caching are implemented. Full suite487 passed/2 optional SDK skips/4 GPU
+deselections in81.70s; Ruff/mypy89 files pass. Clean-code CPU profile and remote CI
+are next. Design:docs/development/phase4_design.md. Publication to main is active;
 production input approvals remain blocked in M3.3. No paid/final-scale run.
 
 ## Implemented and verified

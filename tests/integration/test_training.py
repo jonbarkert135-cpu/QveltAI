@@ -175,3 +175,43 @@ def test_nonfinite_loss_stops_before_optimizer_update(
             train_synthetic(short_job(), output, ROOT)
         step.assert_not_called()
     assert not list((output / "checkpoints").glob("step-*/manifest.json"))
+
+
+@pytest.mark.parametrize("backend", ["reference", "sdpa"])
+def test_execution_policy_training_replay(tmp_path: Path, backend: str) -> None:
+    from qvelt.config.execution import ModelExecution
+
+    job = short_job()
+    job = replace(
+        job,
+        training=replace(
+            job.training,
+            steps=4,
+            warmup_steps=1,
+            decay_steps=1,
+            checkpoint_every=2,
+            execution=ModelExecution(backend, True),
+        ),
+    )
+    full, replay = tmp_path / "full", tmp_path / "replayed"
+    train_synthetic(job, full, ROOT)
+    train_synthetic(job, replay, ROOT, stop_after=2)
+    train_synthetic(job, replay, ROOT, resume=True)
+    for name in ("model.safetensors", "optimizer.pt"):
+        a, b = latest_checkpoint(full) / name, latest_checkpoint(replay) / name
+        left = (
+            load_file(str(a))
+            if name.endswith("safetensors")
+            else torch.load(a, weights_only=True)
+        )
+        right = (
+            load_file(str(b))
+            if name.endswith("safetensors")
+            else torch.load(b, weights_only=True)
+        )
+        torch.testing.assert_close(left, right, rtol=0, atol=0)
+    incompatible = replace(
+        job, training=replace(job.training, execution=ModelExecution(backend, False))
+    )
+    with pytest.raises(ArtifactIntegrityError):
+        train_synthetic(incompatible, replay, ROOT, resume=True)

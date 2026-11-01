@@ -10,6 +10,8 @@ from torch import Tensor, nn
 from torch.nn import functional as F
 
 from qvelt.config import ModelConfig
+from qvelt.config.execution import ModelExecution
+from qvelt.model.cache import LayerKV
 
 
 class RMSNorm(nn.Module):
@@ -56,8 +58,9 @@ class RotaryEmbedding(nn.Module):
 class Attention(nn.Module):
     """Full GQA with causal/document/padding masks; padded queries return zero."""
 
-    def __init__(self, config: ModelConfig) -> None:
+    def __init__(self, config: ModelConfig, backend: str = "reference") -> None:
         super().__init__()
+        self.backend = ModelExecution(attention_backend=backend).attention_backend
         self.heads, self.kv_heads = config.heads, config.kv_heads
         self.head_dim = config.hidden // config.heads
         kv = self.kv_heads * self.head_dim
@@ -67,28 +70,88 @@ class Attention(nn.Module):
         self.output = nn.Linear(config.hidden, config.hidden, bias=False)
         self.rope = RotaryEmbedding(self.head_dim, config.rope_theta)
 
-    def forward(
-        self, x: Tensor, positions: Tensor, documents: Tensor, valid: Tensor
-    ) -> Tensor:
+    def _project(self, x: Tensor, positions: Tensor) -> tuple[Tensor, Tensor, Tensor]:
         b, t, _ = x.shape
         q = self.query(x).view(b, t, self.heads, self.head_dim).transpose(1, 2)
         k = self.key(x).view(b, t, self.kv_heads, self.head_dim).transpose(1, 2)
         v = self.value(x).view(b, t, self.kv_heads, self.head_dim).transpose(1, 2)
-        q, k = self.rope(q, positions), self.rope(k, positions)
-        k = k.repeat_interleave(self.heads // self.kv_heads, dim=1)
-        v = v.repeat_interleave(self.heads // self.kv_heads, dim=1)
-        causal = torch.ones(t, t, dtype=torch.bool, device=x.device).tril()
-        allowed = causal[None, None] & (
-            documents[:, None, :, None] == documents[:, None, None, :]
+        return self.rope(q, positions), self.rope(k, positions), v
+
+    def _attend(
+        self,
+        q: Tensor,
+        k: Tensor,
+        v: Tensor,
+        documents: Tensor,
+        valid: Tensor,
+        key_documents: Tensor,
+        key_valid: Tensor,
+        offset: int,
+    ) -> Tensor:
+        batch, _, queries, _ = q.shape
+        keys = k.shape[2]
+        causal = (
+            torch.arange(keys, device=q.device)[None, :]
+            <= (offset + torch.arange(queries, device=q.device))[:, None]
         )
-        allowed = allowed & valid[:, None, :, None] & valid[:, None, None, :]
-        scores = (q.float() @ k.float().transpose(-1, -2)) / math.sqrt(self.head_dim)
-        scores = scores.masked_fill(~allowed, -torch.inf)
-        # A padded query must not feed an all-infinity row into softmax.
-        scores = torch.where(valid[:, None, :, None], scores, 0.0)
-        weights = F.softmax(scores, dim=-1).to(v.dtype)
-        attended = (weights @ v).transpose(1, 2).reshape(b, t, -1)
-        return cast(Tensor, self.output(attended) * valid[..., None])
+        allowed = causal[None, None] & (
+            documents[:, None, :, None] == key_documents[:, None, None, :]
+        )
+        allowed = allowed & valid[:, None, :, None] & key_valid[:, None, None, :]
+        if self.backend == "sdpa":
+            # Give padded queries a safe diagonal row; mask their outputs below.
+            diagonal = (
+                torch.arange(keys, device=q.device)[None, :]
+                == (offset + torch.arange(queries, device=q.device))[:, None]
+            )
+            allowed = allowed | (~valid[:, None, :, None] & diagonal[None, None])
+            attended = F.scaled_dot_product_attention(
+                q, k, v, attn_mask=allowed, dropout_p=0.0, enable_gqa=True
+            )
+        else:
+            k = k.repeat_interleave(self.heads // self.kv_heads, dim=1)
+            v = v.repeat_interleave(self.heads // self.kv_heads, dim=1)
+            # Explicit float() alone does not prevent autocast lowering matmul.
+            with torch.autocast(device_type=q.device.type, enabled=False):
+                scores = (q.float() @ k.float().transpose(-1, -2)) / math.sqrt(
+                    self.head_dim
+                )
+                scores = scores.masked_fill(~allowed, -torch.inf)
+                scores = torch.where(valid[:, None, :, None], scores, 0.0)
+                weights = F.softmax(scores, dim=-1, dtype=torch.float32).to(v.dtype)
+            attended = weights @ v
+        combined = attended.transpose(1, 2).reshape(batch, queries, -1)
+        return cast(Tensor, self.output(combined) * valid[..., None])
+
+    def forward(
+        self, x: Tensor, positions: Tensor, documents: Tensor, valid: Tensor
+    ) -> Tensor:
+        q, k, v = self._project(x, positions)
+        return self._attend(q, k, v, documents, valid, documents, valid, 0)
+
+    def forward_cached(
+        self,
+        x: Tensor,
+        positions: Tensor,
+        documents: Tensor,
+        valid: Tensor,
+        key_documents: Tensor,
+        key_valid: Tensor,
+        past: LayerKV | None,
+    ) -> tuple[Tensor, LayerKV]:
+        q, k, v = self._project(x, positions)
+        offset = 0
+        if past is not None:
+            if past.key.dtype != k.dtype or past.value.dtype != v.dtype:
+                raise ValueError(
+                    "Cache compute dtype changed; keep autocast policy fixed"
+                )
+            offset = past.key.shape[2]
+            k, v = torch.cat((past.key, k), dim=2), torch.cat((past.value, v), dim=2)
+        state = LayerKV(k, v)
+        return self._attend(
+            q, k, v, documents, valid, key_documents, key_valid, offset
+        ), state
 
 
 class SwiGLU(nn.Module):

@@ -66,7 +66,9 @@ def train_synthetic(
                 )
         else:
             initialize_training_run(job, directory, repository, context)
-        model: nn.Module = Decoder(job.experiment.model).to(context.device)
+        model: nn.Module = Decoder(job.experiment.model, execution=config.execution).to(
+            context.device
+        )
         if config.strategy == "ddp":
             model = DistributedDataParallel(
                 model,

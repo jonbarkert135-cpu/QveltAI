@@ -22,6 +22,7 @@ from qvelt.config import (
     parse_config,
     parse_yaml_mapping,
 )
+from qvelt.config.execution import ModelExecution
 
 
 @dataclass(frozen=True)
@@ -41,8 +42,11 @@ class TrainingConfig:
     strategy: str = "single"
     metrics_backend: str = "json"
     peak_tflops_per_gpu: float | None = None
+    execution: ModelExecution = field(default_factory=ModelExecution, kw_only=True)
 
     def __post_init__(self) -> None:
+        if not isinstance(self.execution, ModelExecution):
+            raise ConfigError("training.execution requires ModelExecution")
         for name in [
             "steps",
             "batch_size",
@@ -108,9 +112,19 @@ def parse_training_job(text: str) -> TrainingJob:
     )
     d = asdict(TrainingConfig())
     d.update(m)
+    e = _mapping(
+        d["execution"],
+        "training.execution",
+        {"attention_backend", "activation_checkpointing"},
+    )
+    execution = ModelExecution(
+        attention_backend=cast(str, e.get("attention_backend", "reference")),
+        activation_checkpointing=cast(bool, e.get("activation_checkpointing", False)),
+    )
     return TrainingJob(
         experiment,
         TrainingConfig(
+            execution=execution,
             steps=cast(int, d["steps"]),
             batch_size=cast(int, d["batch_size"]),
             sequence_length=cast(int, d["sequence_length"]),

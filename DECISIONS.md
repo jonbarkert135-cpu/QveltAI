@@ -810,3 +810,47 @@ No classifier placeholder or claimed learned quality result is shipped.
   autograd and clip_grad_norm_(error_if_nonfinite=True) installed interfaces.
 - **Revisit:** precision/backend changes, stochastic layers, new distributed trainer
   or a deliberately different empty-window policy. GPU behavior remains unverified.
+
+## ADR-0034 — Explicit model execution and request-owned KV state
+
+- **Date/status:**2026-11-01; implementation and CPU targeted tests; full gate pending.
+- **Choice:** frozen ModelExecution separate from learned ModelConfig; reference/
+  PyTorch SDPA backend and non-reentrant block recomputation recorded in the resolved
+  training job/resume identity. Preserve default reference behavior and parameter
+  names. Reference QK/softmax runs outside autocast to enforce RFC FP32 semantics.
+- **Cache:** original functional forward_cached API returns new compact KV heads
+  and shared packed metadata; no global/model-owned request state. Offset-aware
+  causal mask supports multi-token suffixes/reset positions/padding. Weak owner
+  reference plus parameter identity/data_ptr/_version/config/execution validation
+  rejects stale/cross-model state; bounded context, fixed compute policy. Caller
+  must not mutate .data/cache tensors or model concurrently. Concatenation is a
+  correctness baseline; paged allocation belongs to Phase8, not a speed claim.
+- **Alternatives/rationale:** storing expanded query-head K/V wastes memory;
+  is_causal=true alone misaligns rectangular suffix attention and cannot isolate
+  packed documents. Mutable implicit caches hide lifetime/error semantics. Cache
+  returns suffix logits rather than introducing an ambiguous model.decode wrapper
+  for the RFC's earlier conceptual decode interface.
+- **Sources:**[verified] installed PyTorch2.9.1 scaled_dot_product_attention docstring
+  (boolean allow mask,dropout0,enable_gqa,math fallback), CPU GQA probe/value/gradient
+  tests; checkpoint docs/source recommend explicit use_reentrant=false and warn
+  about state changes. [verified] Tensor.data_ptr/_version mutation probes,
+  load_state_dict signature and actual stale-cache regressions; _version is a
+  pinned internal dependency, not a cross-version guarantee. Original public RoPE/
+  GQA architecture citations remain in RFC-001/survey (2021/2023 component papers).
+- **Revisit:** torch upgrades, model mutation/concurrency API, measured cache copy
+  cost or availability of real GPU kernel/dtype/VRAM evidence. CPU agreement is not
+  GPU validation; do not import skill speed claims as measured results.
+
+## ADR-0035 — Bounded CPU graph-storage and execution profiling
+
+- **Date/status:**2026-11-01; profiler implemented and storage/recompute tests pass.
+- **Choice:** a small resolved CPU FP32 job, warmup/repeated timing, saved_tensors_hooks
+  unique underlying nonparameter storage and actual cache-storage bytes. Report
+  exactly those quantities, not allocator/process peak memory. Cached and uncached
+  timings include prefill and compare logits before measuring. No optimizer update.
+- **Sources:**[verified] installed PyTorch2.9.1 saved_tensors_hooks documentation,
+  untyped_storage data_ptr/nbytes APIs and exact12-float/48-byte duplicate-view oracle;
+  checkpoint graph-storage reduction and RNG/thread restoration tests.
+- **Revisit:** actual GPU profiler/allocator metrics, longer repeated measurements,
+  resource isolation or dynamic/stochastic training graphs. No hardware speedup
+  follows from a tiny single-host comparison.

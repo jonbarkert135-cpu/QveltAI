@@ -9,6 +9,7 @@ training**, not a general-purpose pretrained model. The CI smoke uses an explici
 117,056-parameter dimension override, 100 updates and 6,400 next-token targets.
 The 19.34M/125.85M/493.55M/1.510B family parameter counts are checked on actual
 meta-device models; only the tiny reference has a CPU forward/backward check.
+Runtime execution/cache guide:[runbook02](runbooks/02_model_execution.md).
 No reasoning benchmark, real-corpus pretraining or GPU performance is claimed.
 
 ## Quickstart
@@ -53,6 +54,7 @@ uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/
 | Multi-worker data resume | Yes | Consumer-committed cursor, 0/2-worker crash replay and uint16/uint32 pair references |
 | Math fixtures and bounded exact rewards | Yes | Original bilingual templates, SymPy/stdlib cross-checks; no reasoning quality result |
 | RMSNorm/RoPE/GQA/SwiGLU tied decoder | Yes | Independent value/gradient/causality/document-mask oracles; all four meta counts |
+| SDPA/activation checkpointing/request KV-cache | Yes | CPU FP32/BF16 value/gradient/cache references; CUDA cases supplied, unrun |
 | Synthetic training/AdamW/token LR | Yes | 100 CPU updates; source/config/software/topology-compatible replay |
 | DDP | Yes | Two CPU ranks, uneven-mask global-gradient oracle and runner replay |
 | Atomic checkpoints/safetensors export | Yes | Corruption/incomplete outputs/RNG/Adam/weight replay on Linux local storage |

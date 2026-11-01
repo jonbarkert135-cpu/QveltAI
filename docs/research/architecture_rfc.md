@@ -94,12 +94,15 @@ numeral/LaTeX/Cyrillic round trips before freezing the tokenizer hash. No token
 IDs beyond the size/reservation contract are frozen by this RFC. A tokenizer
 change invalidates model/data compatibility, not merely a CLI default.
 
-Future interfaces: `ModelConfig` validates sizes, epsilon, RoPE base/context,
+Portable interfaces: `ModelConfig` validates sizes, epsilon, RoPE base/context,
 and tied embeddings; `forward(token_ids, positions, document_ids, valid_mask)`
 returns logits; loss is separate for streaming/chunked vocabulary handling.
-`decode` maintains per-layer KV and per-request positions, with a hard context
-bound. These are specifications, not existing functions or selected library APIs.
-Runtime configs will be YAML plus validated dataclasses in M2.1.
+`Decoder.forward_cached` maintains explicit per-layer KV and request metadata
+with a hard context bound (ADR-0034); it returns suffix logits and a new cache.
+`ModelExecution` selects reference/SDPA and block recomputation separately from
+learned dimensions. YAML/dataclass training execution settings are saved with
+checkpoints. See runbooks/02_model_execution.md for the implemented CPU contract;
+GPU speed/VRAM and paged serving allocation remain unverified.
 
 ## Exact size table
 

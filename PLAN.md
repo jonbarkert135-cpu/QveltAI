@@ -216,9 +216,9 @@ counts and actual two-rank uneven-mask/global-loss references; see R012.
 
 Owner: Lead agent. Status: in progress. Dependencies: M4.1.
 
-- [ ] Integrate supported optimized attention and mixed precision behind runtime
+- [x] Integrate supported optimized attention and mixed precision behind runtime
   capability checks; retain a usable portable path.
-- [ ] Implement KV-cache prefill/incremental decode and activation checkpointing;
+- [x] Implement KV-cache prefill/incremental decode and activation checkpointing;
   test cached versus uncached results and recomputation gradients.
 - [ ] Profile memory and throughput on available devices with warmup,
   synchronization, shapes, dtypes, and tool versions recorded.
