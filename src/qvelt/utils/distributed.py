@@ -7,7 +7,7 @@ from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import TypeVar
+from typing import TypeVar, cast
 
 import torch
 import torch.distributed as dist
@@ -31,6 +31,19 @@ class DistributedContext:
         if self.world_size > 1:
             dist.all_reduce(result, op=dist.ReduceOp.SUM)
         return result
+
+    def collective(self, action: Callable[[], T], message: str) -> T:
+        """Fail all ranks together after rank-local IO/validation, before more work."""
+        value = None
+        failure = None
+        try:
+            value = action()
+        except Exception as error:
+            failure = error
+        failures = self.sum(torch.tensor(int(failure is not None), device=self.device))
+        if int(failures.item()):
+            raise RuntimeError(message) from failure
+        return cast(T, value)
 
     def rank_zero(self, action: Callable[[], T]) -> T | None:
         """Propagate rank-zero IO errors before another collective is entered."""

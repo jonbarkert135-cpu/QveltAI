@@ -318,3 +318,21 @@ for available CPU paths; provided accelerator tests await actual hardware.
 R013 remote acceptance:actual GitHub run41287953291,code efa6f30,all6 jobs success
 (CPU3.11/3.12/3.13,100-update numeric smoke,offline data smoke,optional metrics).
 This closes available-CPU M4.2 acceptance, with CUDA tests still explicitly unrun.
+
+## R014 — Actual BPE optimizer/consumer replay and masked accumulation
+
+Date:2026-11-01. Hypothesis:real original-tokenizer/sharded batches can drive
+normalized optimization and retain exact weights/Adam/consumer/RNG state after
+checkpoint restart, including partial windows, worker changes and uneven ranks.
+An early executed four-update demo heldout LM probe decreased6.126704->6.020058;
+continuous/resumed weights, Adam and cursor matched exactly. These are original
+fixture LM losses, not public math accuracy. Root manifests bind actual data/BPE
+hashes, not numeric descriptors. Separate global-batch references cover uneven
+masks,0-target local microbatches and a short final window; world2 Gloo gradients
+and coordinated one-rank IO failure pass. The actual-data two-rank SDPA+checkpoint
+continuous/resume test also passes (33.20s).
+Initial `make lint typecheck test`:521 passed/2 optional SDK skips/4 GPU deselections
+in133.66s; subsequent actual-data focused33 passed/1 newly supplied GPU case
+deselected,97 files typed. A final FP32 initialization factory regression follows
+an executed ambient-float64 observation. Final clean-code20-step receipts and
+remote7-job CI will be recorded after execution; no final/GPU run is implied.

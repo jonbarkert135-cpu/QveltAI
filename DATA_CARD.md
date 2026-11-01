@@ -150,3 +150,14 @@ planned-benchmark coverage nor semantic/translated exclusion. Additional license
 solution/derivative exclusion snapshots need explicit registration before promotion.
 Original demo receipts, actual transformations/removals and tokenizer/loader
 measurements are in EXPERIMENTS R007–R010 and the Phase3 evidence JSON files.
+
+## Phase5 actual BPE training usage
+
+The approved original Phase3 EN/RU math/code fixture now also drives a tiny
+packed-data optimization/replay smoke (`scripts/pretraining_smoke.py`). It uses
+actual BPE/shard identities and family-heldout LM loss, with explicit allow_demo
+and scope=demo in outputs. No external training source/teacher or public benchmark
+is consumed. Full/resumed runs share one immutable dataset; generated corpus,
+tokenizer/provenance and per-run identities are retained next to checkpoints.
+This is development training under the existing Apache-2.0 original-data approval,
+not production data clearance, a model release or mathematical reasoning accuracy.

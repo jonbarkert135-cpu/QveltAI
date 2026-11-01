@@ -47,8 +47,22 @@ from qvelt.utils.artifacts import (
     hash_file,
 )
 from qvelt.utils.distributed import DistributedContext
-from qvelt.utils.manifest_types import ArtifactFile, CheckpointInfo, Manifest, RunInfo
-from qvelt.utils.manifests import manifest_bytes, manifest_digest, parse_manifest
+from qvelt.utils.manifest_types import (
+    ArtifactFile,
+    CheckpointInfo,
+    DataInfo,
+    Manifest,
+    RunInfo,
+    TokenizerInfo,
+    uint,
+)
+from qvelt.utils.manifests import (
+    _reject_constant,
+    _unique_mapping,
+    manifest_bytes,
+    manifest_digest,
+    parse_manifest,
+)
 from qvelt.utils.provenance import capture_code, capture_environment
 
 
@@ -94,8 +108,29 @@ def compatibility(job: TrainingJob, context: DistributedContext) -> dict[str, ob
 
 
 def initialize_training_run(
-    job: TrainingJob, directory: Path, repository: Path, context: DistributedContext
+    job: TrainingJob,
+    directory: Path,
+    repository: Path,
+    context: DistributedContext,
+    *,
+    data: Manifest | None = None,
+    tokenizer: Manifest | None = None,
+    application_recipe: bytes | None = None,
 ) -> None:
+    if any(v is not None for v in (data, tokenizer, application_recipe)):
+        if (
+            data is None
+            or tokenizer is None
+            or application_recipe is None
+            or not isinstance(data.metadata, DataInfo)
+            or data.metadata.representation != "token_ids"
+            or not isinstance(tokenizer.metadata, TokenizerInfo)
+            or data.metadata.tokenizer_sha256 != manifest_digest(tokenizer)
+        ):
+            raise ValueError(
+                "Actual data/tokenizer lineage and application recipe must agree"
+            )
+
     def initialize() -> None:
         root, code = capture_code(repository)
         environment = capture_environment()
@@ -120,35 +155,62 @@ def initialize_training_run(
                 role="package_pins",
             ),
             store.add_bytes(
-                "data-spec.json",
-                _json(
-                    {
-                        "algorithm": "qvelt-cyclic-token-fixture-v1",
-                        "world_size": context.world_size,
-                        "batch_size": job.training.batch_size,
-                        "sequence_length": job.training.sequence_length,
-                        "vocab": job.experiment.model.vocab,
-                    }
-                ),
-                role="data_spec",
-            ),
-            store.add_bytes(
-                "tokenizer-spec.json",
-                _json(
-                    {
-                        "mapping": "numeric-symbols-only-no-text-tokenizer",
-                        "vocab": job.experiment.model.vocab,
-                        "reserved": 32,
-                    }
-                ),
-                role="tokenizer_spec",
-            ),
-            store.add_bytes(
                 "compatibility.json",
                 _json(compatibility(job, context)),
                 role="compatibility",
             ),
         ]
+        if (
+            data is not None
+            and tokenizer is not None
+            and application_recipe is not None
+        ):
+            files.extend(
+                (
+                    store.add_bytes(
+                        "data.manifest.json", manifest_bytes(data), role="data_manifest"
+                    ),
+                    store.add_bytes(
+                        "tokenizer.manifest.json",
+                        manifest_bytes(tokenizer),
+                        role="tokenizer_manifest",
+                    ),
+                    store.add_bytes(
+                        "application.yaml",
+                        application_recipe,
+                        role="application_recipe",
+                    ),
+                )
+            )
+        else:
+            files.extend(
+                [
+                    store.add_bytes(
+                        "data-spec.json",
+                        _json(
+                            {
+                                "algorithm": "qvelt-cyclic-token-fixture-v1",
+                                "world_size": context.world_size,
+                                "batch_size": job.training.batch_size,
+                                "sequence_length": job.training.sequence_length,
+                                "vocab": job.experiment.model.vocab,
+                            }
+                        ),
+                        role="data_spec",
+                    ),
+                    store.add_bytes(
+                        "tokenizer-spec.json",
+                        _json(
+                            {
+                                "mapping": "numeric-symbols-only-no-text-tokenizer",
+                                "vocab": job.experiment.model.vocab,
+                                "reserved": 32,
+                            }
+                        ),
+                        role="tokenizer_spec",
+                    ),
+                ]
+            )
         info = RunInfo(
             run_id,
             config_digest(job.experiment),
@@ -171,6 +233,35 @@ def _read(store: ArtifactStore, name: str, limit: int = 128 * 1024 * 1024) -> by
     if len(data) > limit:
         raise ArtifactIntegrityError("Checkpoint metadata/state exceeds its load limit")
     return data
+
+
+def _run_lineage(store: ArtifactStore, run: Manifest) -> tuple[str, str]:
+    roles = {f.role: f for f in run.files}
+    for role in ("data_manifest", "tokenizer_manifest", "data_spec", "tokenizer_spec"):
+        if sum(f.role == role for f in run.files) > 1:
+            raise ArtifactIntegrityError("Duplicate data/tokenizer lineage role")
+    actual = {"data_manifest", "tokenizer_manifest"} & set(roles)
+    if actual:
+        if actual != {"data_manifest", "tokenizer_manifest"} or {
+            "data_spec",
+            "tokenizer_spec",
+        } & set(roles):
+            raise ArtifactIntegrityError("Ambiguous data/tokenizer lineage")
+        data = parse_manifest(_read(store, roles["data_manifest"].path, 1024 * 1024))
+        tokenizer = parse_manifest(
+            _read(store, roles["tokenizer_manifest"].path, 1024 * 1024)
+        )
+        if (
+            not isinstance(data.metadata, DataInfo)
+            or data.metadata.representation != "token_ids"
+            or not isinstance(tokenizer.metadata, TokenizerInfo)
+            or data.metadata.tokenizer_sha256 != manifest_digest(tokenizer)
+        ):
+            raise ArtifactIntegrityError("Actual data/tokenizer lineage mismatch")
+        return manifest_digest(data), manifest_digest(tokenizer)
+    if not {"data_spec", "tokenizer_spec"} <= set(roles):
+        raise ArtifactIntegrityError("Missing data/tokenizer lineage")
+    return roles["data_spec"].sha256, roles["tokenizer_spec"].sha256
 
 
 def _torch_bytes(value: object) -> bytes:
@@ -245,11 +336,19 @@ def save_checkpoint(
     context: DistributedContext,
     *,
     sharded: bool = False,
+    processed_tokens: int | None = None,
+    application_state: dict[str, Any] | None = None,
 ) -> Path:
     """Save at an optimizer boundary; only manifest.json commits the directory."""
     run_store = ArtifactStore(directory)
     run = run_store.read_manifest()
-    run_files = {record.role: record for record in run.files}
+    data_sha, tokenizer_sha = _run_lineage(run_store, run)
+    if (processed_tokens is None) != (application_state is None):
+        raise ValueError(
+            "Application cursor and processed-token count must be saved together"
+        )
+    if processed_tokens is not None:
+        uint(processed_tokens, "checkpoint.processed_tokens")
     checkpoint = directory / "checkpoints" / f"step-{step:08d}"
     context.rank_zero(lambda: create_directory(checkpoint))
     store = ArtifactStore(checkpoint)
@@ -271,19 +370,34 @@ def save_checkpoint(
                 "optimizer.pt", _torch_bytes(optimizer.state_dict()), role="optimizer"
             )
         )
-    store.add_bytes(
-        f"rng-rank-{context.rank:05d}.pt",
-        _torch_bytes(_rng_state(context.device)),
-        role="rng",
-    )
+
+    def save_rank() -> None:
+        store.add_bytes(
+            f"rng-rank-{context.rank:05d}.pt",
+            _torch_bytes(_rng_state(context.device)),
+            role="rng",
+        )
+        if application_state is not None:
+            body = _json(application_state)
+            if len(body) > 1024 * 1024:
+                raise ValueError("Application state exceeds1MiB")
+            store.add_bytes(
+                f"application-rank-{context.rank:05d}.json", body, role="application"
+            )
+
+    context.collective(save_rank, "A rank could not save its checkpoint state")
     context.barrier()
 
     def publish() -> None:
         count = (
-            step
-            * job.training.batch_size
-            * job.training.sequence_length
-            * context.world_size
+            processed_tokens
+            if processed_tokens is not None
+            else (
+                step
+                * job.training.batch_size
+                * job.training.sequence_length
+                * context.world_size
+            )
         )
         store.add_bytes(
             "config.yaml", dump_config(job.experiment).encode(), role="config"
@@ -303,6 +417,7 @@ def save_checkpoint(
                     "next_step": step,
                     "compatibility": compatibility(job, context),
                     "sharded": sharded,
+                    **({"application": True} if application_state is not None else {}),
                 }
             ),
             role="sampler",
@@ -327,6 +442,8 @@ def save_checkpoint(
                 role = "optimizer"
             elif relative.startswith("rng-rank-"):
                 role = "rng"
+            elif relative.startswith("application-rank-"):
+                role = "application"
             else:
                 role = {
                     "config.yaml": "config",
@@ -345,8 +462,8 @@ def save_checkpoint(
         metadata = CheckpointInfo(
             manifest_digest(run),
             config_digest(job.experiment),
-            run_files["data_spec"].sha256,
-            run_files["tokenizer_spec"].sha256,
+            data_sha,
+            tokenizer_sha,
             step,
             count,
             context.world_size,
@@ -388,6 +505,8 @@ def load_checkpoint(
     job: TrainingJob,
     directory: Path,
     context: DistributedContext,
+    *,
+    application_validator: Callable[[dict[str, Any], int, int], None] | None = None,
 ) -> int:
     checkpoint = latest_checkpoint(directory)
     store = ArtifactStore(checkpoint)
@@ -404,20 +523,55 @@ def load_checkpoint(
         raise ArtifactIntegrityError(
             "Stored training recipe disagrees with requested job"
         )
-    lineage = {record.role: record.sha256 for record in run.files}
+    data_sha, tokenizer_sha = _run_lineage(ArtifactStore(directory), run)
     if (
-        metadata.data_sha256 != lineage["data_spec"]
-        or metadata.tokenizer_sha256 != lineage["tokenizer_spec"]
+        metadata.data_sha256 != data_sha
+        or metadata.tokenizer_sha256 != tokenizer_sha
         or manifest.owner != run.owner
     ):
         raise ArtifactIntegrityError("Checkpoint data/tokenizer/owner lineage mismatch")
-    sampler = json.loads(_read(store, "sampler.json"))
-    schedule = json.loads(_read(store, "scheduler.json"))
+    sampler = json.loads(
+        _read(store, "sampler.json", 1024 * 1024),
+        object_pairs_hook=_unique_mapping,
+        parse_constant=_reject_constant,
+    )
+    schedule = json.loads(
+        _read(store, "scheduler.json", 1024 * 1024),
+        object_pairs_hook=_unique_mapping,
+        parse_constant=_reject_constant,
+    )
+    has_application = sampler.get("application", False)
+    if type(has_application) is not bool or has_application != (
+        application_validator is not None
+    ):
+        raise ArtifactIntegrityError(
+            "Checkpoint requires its matching application-state loader"
+        )
+    if has_application:
+
+        def validate_application() -> None:
+            state = json.loads(
+                _read(store, f"application-rank-{context.rank:05d}.json", 1024 * 1024),
+                object_pairs_hook=_unique_mapping,
+                parse_constant=_reject_constant,
+            )
+            if not isinstance(state, dict):
+                raise ArtifactIntegrityError("Invalid checkpoint application state")
+            assert application_validator is not None
+            application_validator(
+                state, metadata.optimizer_step, metadata.processed_tokens
+            )
+
+        context.collective(validate_application, "Invalid checkpoint application state")
     expected = (
-        metadata.optimizer_step
-        * job.training.batch_size
-        * job.training.sequence_length
-        * context.world_size
+        metadata.processed_tokens
+        if has_application
+        else (
+            metadata.optimizer_step
+            * job.training.batch_size
+            * job.training.sequence_length
+            * context.world_size
+        )
     )
     if (
         metadata.run_sha256 != manifest_digest(run)
@@ -428,6 +582,7 @@ def load_checkpoint(
         != {"optimizer_step": metadata.optimizer_step, "processed_tokens": expected}
         or metadata.processed_tokens != expected
         or metadata.world_size != context.world_size
+        or metadata.precision != job.experiment.runtime.precision
         or metadata.optimizer_step > job.training.steps
     ):
         raise ArtifactIntegrityError(

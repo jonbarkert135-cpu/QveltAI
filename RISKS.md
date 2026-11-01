@@ -135,3 +135,12 @@ kernel choice/VRAM or serving efficiency. Request cache trusts non-mutated tenso
 unsafe .data/concurrent mutation bypasses its contract, and Tensor._version is a
 pinned internal dependency. Functional cache concatenation can incur transient
 copy cost. Saved graph storage bytes are not process/allocator peak memory.
+
+Packed pretraining now has actual-data/cursor/optimizer CPU tests, including two
+ranks; this does not validate CUDA/NCCL, packed FSDP, shared filesystem or multi-node
+recovery. The heldout loss is a fixed weighted probe with possible intentional
+source reuse, not exhaustive benchmark coverage. Token LR boundaries are explicit;
+an optimizer-step cap need not land exactly at decay end. Full artifact checksum
+preflight costs a complete input read. Resume permits worker/prefetch/mount changes
+only after identity checks, while source/software/topology/model changes reject.
+CUDA replay tests are supplied but require real hardware and deterministic setup.

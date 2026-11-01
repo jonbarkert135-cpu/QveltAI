@@ -95,6 +95,13 @@ def _parser() -> argparse.ArgumentParser:
     from qvelt.data.cli import add_parser
 
     add_parser(commands)
+    pretrain = commands.add_parser("pretrain", help="Train on pinned packed BPE data")
+    pretrain.add_argument("path", type=Path)
+    pretrain.add_argument("--directory", type=Path, required=True)
+    pretrain.add_argument("--repository", type=Path, default=Path("."))
+    pretrain.add_argument("--resume", choices=("latest",))
+    pretrain.add_argument("--stop-after", type=int)
+    pretrain.add_argument("--set", dest="overrides", action="append", default=[])
     collective = commands.add_parser(
         "distributed-check", help="Run an exact integer all-reduce"
     )
@@ -209,6 +216,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             from qvelt.data.cli import run as run_data
 
             print(json.dumps(run_data(args), sort_keys=True))
+        elif args.command == "pretrain":
+            from qvelt.config.pretraining import load_pretraining_job
+            from qvelt.train.pretraining import train_pretraining
+
+            result = train_pretraining(
+                load_pretraining_job(args.path, args.overrides),
+                args.directory,
+                args.repository,
+                base=args.path.parent,
+                resume=args.resume == "latest",
+                stop_after=args.stop_after,
+            )
+            if result["rank"] == 0:
+                print(json.dumps(result, sort_keys=True))
         elif args.command == "train":
             from qvelt.config.training import load_training_job
             from qvelt.train.runner import train_synthetic

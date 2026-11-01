@@ -70,7 +70,7 @@ class Decoder(nn.Module):
         if not isinstance(execution, ModelExecution):
             raise ValueError("Expected validated ModelExecution")
         self.config, self.execution = config, execution
-        self.embedding = nn.Embedding(config.vocab, config.hidden)
+        self.embedding = nn.Embedding(config.vocab, config.hidden, dtype=torch.float32)
         self.blocks = nn.ModuleList(
             Block(config, execution) for _ in range(config.layers)
         )

@@ -324,3 +324,22 @@ def test_nonfinite_padding_logits_still_surface_at_training_boundary() -> None:
     logits[:, 1] = float("nan")
     loss, count = causal_loss(logits, torch.tensor([[32, 0]]))
     assert count.item() == 1 and not bool(torch.isfinite(loss))
+
+
+def test_fp32_seeded_parameters_do_not_follow_ambient_float64() -> None:
+    previous = torch.get_default_dtype()
+    try:
+        with torch.random.fork_rng(devices=[]):
+            torch.set_default_dtype(torch.float32)
+            torch.manual_seed(59)
+            reference = Decoder(SMALL)
+            torch.set_default_dtype(torch.float64)
+            torch.manual_seed(59)
+            actual = Decoder(SMALL)
+        assert all(
+            parameter.dtype == torch.float32 for parameter in actual.parameters()
+        )
+        for name, value in reference.state_dict().items():
+            torch.testing.assert_close(actual.state_dict()[name], value, rtol=0, atol=0)
+    finally:
+        torch.set_default_dtype(previous)

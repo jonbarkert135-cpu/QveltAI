@@ -854,3 +854,56 @@ No classifier placeholder or claimed learned quality result is shipped.
 - **Revisit:** actual GPU profiler/allocator metrics, longer repeated measurements,
   resource isolation or dynamic/stochastic training graphs. No hardware speedup
   follows from a tiny single-host comparison.
+
+## ADR-0036 — Packed loss sums and explicit valid-token scheduling
+
+- **Date/status:**2026-11-01; actual-data implementation/tests in progress.
+- **Choice:**reuse TrainingJob/model/AdamW/metrics with strict PretrainingJob. Require
+  matching actual tokenizer/data vocabulary/context and explicit demo admission.
+  An explicit TokenSchedule owns warmup/stable/linear decay at completed valid-token
+  window end; embedded legacy step schedule fields must be0. Step horizon remains
+  an independent stop cap. No hidden padding-capacity or microbatch-mean LR axis.
+- **Accumulation:**sum loss gradients across the actual window, normalize once by
+  global valid targets; compensate DDP world-average, no_sync intermediate batches.
+  A shorter final window uses its own actual count. Validation is a separately
+  seeded weighted heldout probe with isolated Torch RNG, never train-cursor state.
+- **Sources:**[verified] installed PyTorch2.9.1 DDP.no_sync/reduction behavior,
+  autograd/clip APIs; actual independent single-global-batch gradient comparisons
+  with uneven masks and a two-rank Gloo oracle (including a0-target rank/microbatch).
+  WSD context/paper evidence remains in the Phase1 survey; this exact piecewise
+  token recipe is a project choice, not an asserted optimum or quality result.
+- **Revisit:**measured optimization studies, a different token-stop policy,
+  packed FSDP/AMP variants or exhaustive evaluation requirements. Current CUDA
+  production performance and shared-store behavior remain unverified.
+
+## ADR-0037 — Atomic application checkpoints and split-bound loader cursors
+
+- **Date/status:**2026-11-01; original checkpoint engine extended and locally tested.
+- **Choice:**actual data/tokenizer canonical manifests replace numeric descriptor
+  lineage only for packed runs. Store each rank's committed consumer state, resolved
+  recipe and actual token counters with model/Adam/RNG in one manifest-last commit.
+  Application validators run on all ranks before model state is loaded; numeric
+  trainer rejects application checkpoints. Normal metadata/hash/version/topology
+  checks still apply. Coordinate rank-local validation/IO errors before collectives.
+- **Identity:**include split in loader fingerprint (an omission found during this
+  integration); bind schedule/accumulation/source/precision/attention/batch/world.
+  Exclude only worker count,prefetch,data mount path after actual data hash checks;
+  keep those resource observations in attempt/checkpoint recipes. Unsafe state
+  rewriting/cross-topology migration is not claimed. Full source digests reject
+  older executable versions rather than silently treating them as exact replay.
+- **Sources:**[verified] existing ArtifactStore/manifest/RNG/safetensors engine,
+  actual partial-window/worker-change/corruption tests and two-rank packed optimizer
+  replay; PyTorch2.9.1 installed state-dict/collective interfaces. No new serializer
+  or copied third-party trainer implementation. Backend durability remains the
+  tested local POSIX filesystem contract, not arbitrary shared storage.
+- **Revisit:**storage backend/hardware evidence, explicit migration, authoritative
+  dataset revision changes or stochastic-worker transformations requiring more state.
+
+FP32 factory refinement (2026-11-01):an executed ambient-float64 probe showed the
+old layer constructors inherited float64 parameters despite the RFC FP32 seeded
+initialization contract. Embedding/Linear/norm factories now explicitly request
+FP32 (the installed PyTorch2.9.1 dtype keyword was inspected), preserving ordinary
+CLI values and making identical seeded weights independent of ambient default
+dtype. Explicit later .to(dtype=...) remains available. A regression compares both
+ambient settings tensor-exactly; this corrects the initialization contract rather
+than changing architecture or claiming new mixed-precision hardware evidence.

@@ -10,7 +10,7 @@ training**, not a general-purpose pretrained model. The CI smoke uses an explici
 The 19.34M/125.85M/493.55M/1.510B family parameter counts are checked on actual
 meta-device models; only the tiny reference has a CPU forward/backward check.
 Runtime execution/cache guide:[runbook02](runbooks/02_model_execution.md).
-No reasoning benchmark, real-corpus pretraining or GPU performance is claimed.
+No public reasoning score, external-corpus/final-scale pretraining or GPU performance is claimed.
 
 ## Quickstart
 
@@ -55,6 +55,7 @@ uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/
 | Math fixtures and bounded exact rewards | Yes | Original bilingual templates, SymPy/stdlib cross-checks; no reasoning quality result |
 | RMSNorm/RoPE/GQA/SwiGLU tied decoder | Yes | Independent value/gradient/causality/document-mask oracles; all four meta counts |
 | SDPA/activation checkpointing/request KV-cache | Yes | CPU FP32/BF16 value/gradient/cache references; CUDA cases supplied, unrun |
+| Packed BPE pretraining | Yes (debug scope) | Valid-token accumulation, fixed heldout probe, actual artifact IDs and atomic model/Adam/loader replay; CPU/DDP tests |
 | Synthetic training/AdamW/token LR | Yes | 100 CPU updates; source/config/software/topology-compatible replay |
 | DDP | Yes | Two CPU ranks, uneven-mask global-gradient oracle and runner replay |
 | Atomic checkpoints/safetensors export | Yes | Corruption/incomplete outputs/RNG/Adam/weight replay on Linux local storage |
@@ -85,9 +86,9 @@ run/config/data-descriptor identities, model/Adam/schedule/sampler/RNG, code and
 package observations. `pip-freeze.txt` is a normalized installed-version snapshot
 without editable paths/direct URLs; uv.lock is the installation authority.
 
-The synthetic data/tokenizer identity slots explicitly hash numeric-fixture
-**descriptors**, not the trained byte-BPE/data manifests from M3.1. The next real-data
-trainer must consume the actual Phase3 artifacts; no dataset approval is implied.
+The `train` command records numeric-fixture descriptor identities. The `pretrain`
+command records actual BPE/data canonical manifests and committed per-rank cursors. `qvelt pretrain` consumes actual Phase3 manifests and stores consumer state with
+optimizer/model checkpoints. Source approval remains an explicit separate gate.
 Optimizer/DCP state is trusted project state, not an arbitrary uploaded checkpoint.
 Generic `manifest verify` checks bytes; semantic training/tokenizer loaders add
 compatibility checks. Metrics include valid targets/s, unclipped gradient norm,
@@ -105,8 +106,8 @@ The [data runbook](runbooks/01_data_preparation.md) documents source/license gat
 cleaning limits, exact/near dedup, complete planned-benchmark exclusion, binary
 layout, deterministic mixing/cursor replay and laptop resource assumptions.
 GSM8K test has a working evaluation-only downloader; MATH/AIME/MMLU rights/snapshots
-remain blocked. The offline demo is explicitly non-production. The existing
-training command uses numeric fixtures until the real-data trainer milestone.
+remain blocked. The offline demo is explicitly non-production. The `train` command retains its numeric fixture; `pretrain` accepts pinned BPE
+artifacts and a strict packed training recipe. See [runbook03](runbooks/03_packed_pretraining.md).
 
 Tokenizer workflow: [runbook](docs/development/tokenizer_workflow.md),
 [earlier validation](docs/development/validation_m3_1.md),

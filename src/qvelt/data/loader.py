@@ -35,6 +35,9 @@ class PackedDataset(Dataset[dict[str, Tensor]]):
     def __init__(
         self, path: Path, split: str = "train", expected_sha256: str | None = None
     ) -> None:
+        if split not in ("train", "validation", "test"):
+            raise ValueError("Unknown packed-data split")
+        self.split = split
         self.root = path.parent
         store = ArtifactStore(self.root)
         manifest = store.read_manifest(
@@ -348,6 +351,7 @@ class ResumableLoader:
                 raise ValueError("No positive stage mass for this split")
         identity = {
             "data": dataset.identity,
+            "split": dataset.split,
             "batch_size": config.batch_size,
             "seed": config.seed,
             "rank": config.rank,

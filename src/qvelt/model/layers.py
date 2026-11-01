@@ -19,7 +19,7 @@ class RMSNorm(nn.Module):
 
     def __init__(self, hidden: int, eps: float) -> None:
         super().__init__()
-        self.weight = nn.Parameter(torch.ones(hidden))
+        self.weight = nn.Parameter(torch.ones(hidden, dtype=torch.float32))
         self.eps = eps
 
     def forward(self, x: Tensor) -> Tensor:
@@ -64,10 +64,14 @@ class Attention(nn.Module):
         self.heads, self.kv_heads = config.heads, config.kv_heads
         self.head_dim = config.hidden // config.heads
         kv = self.kv_heads * self.head_dim
-        self.query = nn.Linear(config.hidden, config.hidden, bias=False)
-        self.key = nn.Linear(config.hidden, kv, bias=False)
-        self.value = nn.Linear(config.hidden, kv, bias=False)
-        self.output = nn.Linear(config.hidden, config.hidden, bias=False)
+        self.query = nn.Linear(
+            config.hidden, config.hidden, bias=False, dtype=torch.float32
+        )
+        self.key = nn.Linear(config.hidden, kv, bias=False, dtype=torch.float32)
+        self.value = nn.Linear(config.hidden, kv, bias=False, dtype=torch.float32)
+        self.output = nn.Linear(
+            config.hidden, config.hidden, bias=False, dtype=torch.float32
+        )
         self.rope = RotaryEmbedding(self.head_dim, config.rope_theta)
 
     def _project(self, x: Tensor, positions: Tensor) -> tuple[Tensor, Tensor, Tensor]:
@@ -159,9 +163,13 @@ class SwiGLU(nn.Module):
 
     def __init__(self, config: ModelConfig) -> None:
         super().__init__()
-        self.gate = nn.Linear(config.hidden, config.ffn, bias=False)
-        self.up = nn.Linear(config.hidden, config.ffn, bias=False)
-        self.down = nn.Linear(config.ffn, config.hidden, bias=False)
+        self.gate = nn.Linear(
+            config.hidden, config.ffn, bias=False, dtype=torch.float32
+        )
+        self.up = nn.Linear(config.hidden, config.ffn, bias=False, dtype=torch.float32)
+        self.down = nn.Linear(
+            config.ffn, config.hidden, bias=False, dtype=torch.float32
+        )
 
     def forward(self, x: Tensor) -> Tensor:
         return cast(Tensor, self.down(F.silu(self.gate(x)) * self.up(x)))

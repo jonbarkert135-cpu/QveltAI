@@ -267,3 +267,14 @@ def test_loader_does_not_consume_model_rng(prepared_demo: Path) -> None:
     with ResumableLoader(dataset, LoaderConfig(max_batches=1), stages) as loader:
         next(loader)
     assert torch.equal(torch.get_rng_state(), before)
+
+
+def test_cursor_cannot_cross_training_validation_split(prepared_demo: Path) -> None:
+    path = prepared_demo / "prepared/manifest.json"
+    stages = load_data_recipe(prepared_demo / "recipe.yaml").mixing
+    config = LoaderConfig(max_batches=3)
+    with ResumableLoader(PackedDataset(path, "train"), config, stages) as train:
+        next(train)
+        state = train.state_dict()
+    with pytest.raises(ValueError, match="Incompatible"):
+        ResumableLoader(PackedDataset(path, "validation"), config, stages, state)

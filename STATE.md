@@ -4,13 +4,15 @@ Updated:2026-11-01. Owner:Lead agent.
 
 ## Current task
 
-M4.1 and available-CPU M4.2 acceptance are complete. Code efa6f30; actual GitHub
-run41287953291 has all6 jobs successful. Local487 passed/2 optional SDK skips/
-4 GPU deselections in81.70s; Ruff/mypy89 files pass. Compact KV cache, native SDPA,
-non-reentrant recomputation and clean-code CPU graph/storage profiles are verified.
-GPU tests are supplied, not run. M5.1 packed-data integration is next/in progress;
-design:docs/development/pretraining_design.md. Production data approvals remain
-blocked in M3.3. No paid/final-scale training was launched. Publication to main active.
+M5.1 packed-data trainer and CPU-DDP extensions are implemented locally. Real BPE
+inputs use valid-token gradient accumulation/schedule, heldout probe and atomic
+actual-manifest/model/Adam/RNG/per-rank-consumer checkpoints. Local full suite521
+passed/2 optional SDK skips/4 GPU deselections in133.66s before the last added
+FP32-factory regression and supplied GPU test. Latest targeted33 passed/1 GPU
+deselected; two-rank SDPA+checkpoint replay/oracle passed. Ruff/mypy97 files pass.
+Next:publish code, run clean20-step actual-BPE smoke/fresh clone and observe7-job CI.
+M4.1/available-CPU M4.2 are complete; CUDA/FSDP/shared-store and production input
+approvals remain blocked/unvalidated. No paid/final training. Publication active.
 
 ## Implemented and verified
 
