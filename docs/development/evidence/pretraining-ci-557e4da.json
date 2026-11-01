@@ -1,0 +1,128 @@
+{
+  "actual_bpe_smoke_direct_job_log": {
+    "consumer_state_exact": true,
+    "continuous": {
+      "consumed_microbatches": 40,
+      "data_sha256": "0f7d9486b0cd6e5f00c4f8375135ea0cc8e9bbc62192ac9e6d1dbbe2e9479bae",
+      "final_validation": {
+        "validation_probe_loss": 5.756516695022583,
+        "validation_probe_targets": 256.0
+      },
+      "initial_validation": {
+        "validation_probe_loss": 6.12670373916626,
+        "validation_probe_targets": 256.0
+      },
+      "optimizer_step": 20,
+      "processed_tokens": 4959,
+      "rank": 0,
+      "scope": "demo",
+      "tokenizer_sha256": "d88482f89e820197652de0fd73e9bb134fb574c0fdab61db1e7f14b09bc243e4",
+      "world_size": 1
+    },
+    "optimizer_bit_exact": true,
+    "parameters": 127104,
+    "replayed": {
+      "consumed_microbatches": 40,
+      "data_sha256": "0f7d9486b0cd6e5f00c4f8375135ea0cc8e9bbc62192ac9e6d1dbbe2e9479bae",
+      "final_validation": {
+        "validation_probe_loss": 5.756516695022583,
+        "validation_probe_targets": 256.0
+      },
+      "initial_validation": {
+        "validation_probe_loss": 5.908223390579224,
+        "validation_probe_targets": 256.0
+      },
+      "optimizer_step": 20,
+      "processed_tokens": 4959,
+      "rank": 0,
+      "scope": "demo",
+      "tokenizer_sha256": "d88482f89e820197652de0fd73e9bb134fb574c0fdab61db1e7f14b09bc243e4",
+      "world_size": 1
+    },
+    "scope": "original offline BPE-data engineering smoke, not reasoning quality",
+    "steps": 20,
+    "stop_after": 6,
+    "weights_bit_exact": true
+  },
+  "cpu_tests": {
+    "311": {
+      "gpu_deselected": 5,
+      "passed": 522,
+      "seconds": 85.51,
+      "skipped": 2
+    },
+    "312": {
+      "gpu_deselected": 5,
+      "passed": 522,
+      "seconds": 96.48,
+      "skipped": 2
+    },
+    "313": {
+      "gpu_deselected": 5,
+      "passed": 522,
+      "seconds": 103.55,
+      "skipped": 2
+    }
+  },
+  "head_sha": "557e4da5a4a9ba3d800afc374af1ac5be44ce471",
+  "jobs": [
+    {
+      "completed_at": "2026-11-01T09:57:42Z",
+      "conclusion": "success",
+      "id": 124801997695,
+      "name": "packed-pretraining",
+      "started_at": "2026-11-01T09:57:17Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-11-01T09:59:47Z",
+      "conclusion": "success",
+      "id": 124801997799,
+      "name": "cpu (3.12)",
+      "started_at": "2026-11-01T09:57:17Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-11-01T09:59:30Z",
+      "conclusion": "success",
+      "id": 124801997806,
+      "name": "cpu (3.11)",
+      "started_at": "2026-11-01T09:57:17Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-11-01T09:57:42Z",
+      "conclusion": "success",
+      "id": 124801997832,
+      "name": "data-smoke",
+      "started_at": "2026-11-01T09:57:17Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-11-01T09:57:40Z",
+      "conclusion": "success",
+      "id": 124801997906,
+      "name": "smoke",
+      "started_at": "2026-11-01T09:57:18Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-11-01T09:00:02Z",
+      "conclusion": "success",
+      "id": 124801997910,
+      "name": "cpu (3.13)",
+      "started_at": "2026-11-01T09:57:17Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-11-01T09:57:39Z",
+      "conclusion": "success",
+      "id": 124801997911,
+      "name": "optional-metrics",
+      "started_at": "2026-11-01T09:57:18Z",
+      "status": "completed"
+    }
+  ],
+  "run_id": 41290979913,
+  "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/41290979913"
+}

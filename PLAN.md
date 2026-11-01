@@ -235,28 +235,34 @@ graph storage/CPU timing with clear metric limits. Four GPU cases remain unrun.
 
 ### M5.1 — Make single-process pretraining correct and resumable
 
-Owner: Lead agent. Status: in progress. Dependencies: M4.1; M4.2 for GPU fast paths.
+Owner: Lead agent. Status: complete for available CPU. Dependencies: M4.1; M4.2 for GPU fast paths.
 
-- [ ] Implement optimizer parameter groups, token-based schedule, accumulation,
+- [x] Implement optimizer parameter groups, token-based schedule, accumulation,
   precision controls, gradient clipping, validation, and finite-value handling.
-- [ ] Save/restore model, optimizer, schedule, precision-scaler state when used,
+- [x] Save/restore model, optimizer, schedule, precision-scaler state when used,
   every relevant RNG stream, per-rank data cursor, resolved config, and counters.
-- [ ] Test uneven loss masks and partial accumulation windows against a
+- [x] Test uneven loss masks and partial accumulation windows against a
   reference global batch; test interruption, invalid resume, and corruption.
-- [ ] Run tiny CPU training on a deterministic learnable fixture; record loss
+- [x] Run tiny CPU training on a deterministic learnable fixture; record loss
   behavior and compare uninterrupted versus resumed steps under fixed conditions.
 
 Acceptance: real optimizer updates and fixture learning are logged; resume
 reproduces the next samples and updates within the declared contract. Unit tests,
 Ruff, and mypy pass. This is a smoke test, not evidence of general math ability.
 
+Evidence:code557e4da,actual7-job CI41290979913;clean clone522 passed/2 optional
+skips/5 GPU deselections,97 typed files. Actual127104-parameter BPE training,
+20 updates/4959 targets,heldout LM probe6.1267->5.7565 and exact model/Adam/RNG/
+consumer replay. See validation_pretraining.md,R014 and runbooks/03_packed_pretraining.md.
+
 ### M5.2 — Validate distributed correctness and add sharding
 
-Owner: Lead agent. Status: planned. Dependencies: M5.1, M4.2.
+Owner: Lead agent. Status: in progress; CPU/DDP complete,hardware tiers blocked. Dependencies: M5.1, M4.2.
 
-- [ ] Establish two-process CPU/Gloo correctness tests, then one-node CUDA/DDP;
-  use explicit rank, device, world-size, and valid-token normalization contracts.
-- [ ] Compare distributed updates with a single-process reference, including
+- [x] Establish two-process CPU/Gloo correctness tests with explicit rank/world
+  and valid-token accumulation,coordinated IO failure and packed optimization replay.
+- [ ] Validate one-node actual CUDA/DDP with the same mathematical contracts.
+- [x] Compare CPU distributed updates with a single-process reference, including
   unequal valid-token counts, accumulation, rank-aware RNG, and shard boundaries.
 - [ ] Select a version-supported sharding interface after API verification;
   test checkpoint save/load and document topology-change limitations.
@@ -484,13 +490,13 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 
 ## Immediate next session
 
-M3.2 expanded offline acceptance is complete; M3.3 production approvals remain
-blocked. Proceed with the user's next Phase4 scope. The portable RFC decoder was
-implemented/tested early in M2.3; review/integrate it rather than duplicate it.
-M4.2 cache/checkpointing and M5 actual packed-data trainer are still planned.
-Preserve all rights/benchmark gates and distinguish loader replay from atomic
-model/optimizer/loader training replay. Publish verified work and reports to main;
-no paid/final-scale runs or old environment configuration changes.
+M4.1/available-CPU M4.2 and M5.1 are complete. Packed CPU/DDP references/replay
+are verified; actual CUDA/FSDP/shared-store/multi-node tiers and production-source
+clearance remain blocked. Next portable milestone:M6.1 original-data chat/SFT
+formatting,assistant loss masks and tiny SFT optimization/replay. Keep final heldout
+families separate; do not promote demo loss to a reasoning benchmark score.
+Publish verified work and reports to main; no paid/final-scale runs or old
+cloud-environment changes. See STATE.md for current evidence and next actions.
 
 ## Supporting task — Pinned agent skills
 

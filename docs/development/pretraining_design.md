@@ -34,3 +34,13 @@ Validation uses the heldout data split and summed loss/count without touching th
 training consumer cursor or model RNG. Save validation metrics with step provenance.
 A tiny original BPE corpus learning/replay smoke is permitted, not final training
 or a public benchmark. No paid/GPU/final-model run is authorized by this design.
+
+## Verified implementation
+
+Code557e4da passes actual BPE optimization/replay,partial-window/split/worker
+identity tests and two-rank SDPA+checkpoint Gloo references. The shared engine
+keeps legacy numeric descriptors separate from actual data/tokenizer canonical
+identities and validates application state before loading model/optimizer. Explicit
+FP32 factories fix the observed ambient-float64 parameter initialization issue.
+Final acceptance/receipts are in validation_pretraining.md (522 CPU tests,7 green
+CI jobs,20 actual-BPE updates). GPU and production-source gates remain unvalidated.

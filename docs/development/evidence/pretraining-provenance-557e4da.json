@@ -1,0 +1,249 @@
+{
+  "checkpoint_metadata": {
+    "config_sha256": "b608fafe492d7c4143920a5bcd2cf23985460992757debc027e558005f182a4d",
+    "data_sha256": "47c240756969f8601a83e356efaa45c208a2f1857ef8e9a6e2079a1541e3e0fe",
+    "optimizer_step": 20,
+    "precision": "fp32",
+    "processed_tokens": 4959,
+    "run_sha256": "346a18e70734dc532126cd668ff6c7df56a234dc0157361a951f4b20678ab08a",
+    "tokenizer_sha256": "1df21693cd5216cb93c9ad5a910897672312a74fd75052332193890bbf454041",
+    "world_size": 1
+  },
+  "code": {
+    "commit": "557e4da5a4a9ba3d800afc374af1ac5be44ce471",
+    "dirty": false,
+    "lock_sha256": "0da2d2e3aa43780f7a4d01cdf5f125704a1e329ece8287882a5ccd3150e75314"
+  },
+  "compatibility": {
+    "cuda_build": null,
+    "cudnn": null,
+    "device": "cpu",
+    "device_name": "x86_64",
+    "environment_sha256": "c52ceef538787db664da5e48e705ffce19b9bb0a0fbe86679d733162e0a6df0e",
+    "job_sha256": "7fe29317262b5c03f9b6cc077fb8c25ceda94806647216fa77573735e46d0705",
+    "numpy": "2.2.6",
+    "python": "3.12.14",
+    "source_sha256": "4f93c2447e86b311b3b314cb4035021bea1183fffb7a79c2ca3fac142a5a2d42",
+    "threads": 1,
+    "torch": "2.9.1+cpu",
+    "world_size": 1
+  },
+  "environment": {
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "packages": [
+      {
+        "name": "anyio",
+        "version": "4.15.1"
+      },
+      {
+        "name": "build",
+        "version": "1.6.1"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.10.23"
+      },
+      {
+        "name": "cfgv",
+        "version": "3.5.0"
+      },
+      {
+        "name": "click",
+        "version": "8.5.0"
+      },
+      {
+        "name": "datasketch",
+        "version": "1.6.5"
+      },
+      {
+        "name": "distlib",
+        "version": "0.4.4"
+      },
+      {
+        "name": "filelock",
+        "version": "4.2.6"
+      },
+      {
+        "name": "fsspec",
+        "version": "2026.9.0"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "hatchling",
+        "version": "1.27.0"
+      },
+      {
+        "name": "hf-xet",
+        "version": "1.8.0"
+      },
+      {
+        "name": "httpcore",
+        "version": "1.0.9"
+      },
+      {
+        "name": "httpx",
+        "version": "0.28.1"
+      },
+      {
+        "name": "huggingface-hub",
+        "version": "1.33.0"
+      },
+      {
+        "name": "identify",
+        "version": "2.6.20"
+      },
+      {
+        "name": "idna",
+        "version": "3.20"
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.1"
+      },
+      {
+        "name": "jinja2",
+        "version": "3.1.6"
+      },
+      {
+        "name": "langdetect",
+        "version": "1.0.9"
+      },
+      {
+        "name": "markupsafe",
+        "version": "3.0.4"
+      },
+      {
+        "name": "mpmath",
+        "version": "1.3.0"
+      },
+      {
+        "name": "mypy",
+        "version": "1.15.0"
+      },
+      {
+        "name": "mypy-extensions",
+        "version": "1.1.0"
+      },
+      {
+        "name": "networkx",
+        "version": "3.7"
+      },
+      {
+        "name": "nodeenv",
+        "version": "1.12.0"
+      },
+      {
+        "name": "numpy",
+        "version": "2.2.6"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pathspec",
+        "version": "1.1.1"
+      },
+      {
+        "name": "platformdirs",
+        "version": "4.14.2"
+      },
+      {
+        "name": "pluggy",
+        "version": "1.7.0"
+      },
+      {
+        "name": "pre-commit",
+        "version": "4.2.0"
+      },
+      {
+        "name": "pyproject-hooks",
+        "version": "1.3.3"
+      },
+      {
+        "name": "pytest",
+        "version": "8.3.5"
+      },
+      {
+        "name": "python-discovery",
+        "version": "1.9.0"
+      },
+      {
+        "name": "pyyaml",
+        "version": "6.0.3"
+      },
+      {
+        "name": "qvelt",
+        "version": "0.1.0.dev0"
+      },
+      {
+        "name": "ruff",
+        "version": "0.11.13"
+      },
+      {
+        "name": "safetensors",
+        "version": "0.6.2"
+      },
+      {
+        "name": "scipy",
+        "version": "1.18.1"
+      },
+      {
+        "name": "setuptools",
+        "version": "84.2.1"
+      },
+      {
+        "name": "six",
+        "version": "1.17.0"
+      },
+      {
+        "name": "sympy",
+        "version": "1.14.0"
+      },
+      {
+        "name": "tokenizers",
+        "version": "0.22.2"
+      },
+      {
+        "name": "torch",
+        "version": "2.9.1+cpu"
+      },
+      {
+        "name": "tqdm",
+        "version": "4.70.1"
+      },
+      {
+        "name": "trove-classifiers",
+        "version": "2026.9.21.13"
+      },
+      {
+        "name": "types-pyyaml",
+        "version": "6.0.12.20261030"
+      },
+      {
+        "name": "typing-extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "virtualenv",
+        "version": "21.15.2"
+      }
+    ],
+    "python": "3.12.14",
+    "system": "Linux"
+  },
+  "final_loader_state": {
+    "counts": {
+      "math-en": 24,
+      "math-ru": 56
+    },
+    "fingerprint": "95de622b032f81246aa4da8af379e2b410bcb504832efb7918acf4a484c903d6",
+    "step": 40
+  },
+  "rank0_rng_exact": true,
+  "scope": "Original BPE-data CPU smoke, no public benchmark/final model"
+}

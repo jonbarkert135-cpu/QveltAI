@@ -111,7 +111,8 @@ artifacts and a strict packed training recipe. See [runbook03](runbooks/03_packe
 
 Tokenizer workflow: [runbook](docs/development/tokenizer_workflow.md),
 [earlier validation](docs/development/validation_m3_1.md),
-[data validation and measured receipts](docs/development/validation_data.md).
+[data validation](docs/development/validation_data.md),
+[actual packed training acceptance](docs/development/validation_pretraining.md).
 Contributions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Instructions for every AI agent

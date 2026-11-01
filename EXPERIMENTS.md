@@ -336,3 +336,23 @@ in133.66s; subsequent actual-data focused33 passed/1 newly supplied GPU case
 deselected,97 files typed. A final FP32 initialization factory regression follows
 an executed ambient-float64 observation. Final clean-code20-step receipts and
 remote7-job CI will be recorded after execution; no final/GPU run is implied.
+
+R014 final clean-code acceptance:557e4da5a4a9ba3d800afc374af1ac5be44ce471,
+dirty=false,Python3.12.14/PyTorch2.9.1+cpu. Command:
+`uv run --frozen --extra cpu python scripts/pretraining_smoke.py --directory /tmp/qvelt-pretraining-clean-557e4da --repository . --steps 20`.
+Actual127104 parameters (saved-weight enumeration agrees with config),20 optimizer
+updates,40 microbatches,4959 actual targets versus5120 nominal padded capacity.
+Fixed256-target heldout LM probe6.126703500747681->5.756516456604004. Full versus
+stop6/resume20 weights/Adam/consumer state exactly equal; direct saved Python/
+NumPy/Torch RNG comparisons are also equal. No external/public scoring input.
+Receipts:pretraining-smoke-557e4da.json and pretraining-provenance-557e4da.json.
+
+Fresh clone `make setup lint typecheck test`,lock/dependency checks and build pass:
+522 passed/2 optional SDK skips/5 GPU deselections in122.79s;97 typed files.
+Actual GitHub run41290979913 at557e4da:7 jobs successful,all3 CPU versions522 pass
+(3.11 85.51s,3.12 96.48s,3.13 103.55s). Direct packed-job log confirms20 updates/
+4959 targets/exact replay;probe6.12670373916626->5.756516695022583 differs slightly
+across hosts without contradicting within-run replay. Added explicit partial/DDP
+RNG regressions complement the model/cursor checks;see final targeted log/CI.
+M5.1 closes for available CPU;CPU-DDP M5.2 is verified while hardware tiers remain
+unvalidated. SFT/preferences/RL and production data clearance are separate gates.

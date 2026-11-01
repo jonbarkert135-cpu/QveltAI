@@ -29,6 +29,17 @@ from qvelt.utils.manifests import manifest_bytes
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def assert_rng_equal(left: Path, right: Path) -> None:
+    a = torch.load(left, weights_only=True)
+    b = torch.load(right, weights_only=True)
+    assert a.keys() == b.keys()
+    for key, value in a.items():
+        if isinstance(value, torch.Tensor):
+            torch.testing.assert_close(value, b[key], rtol=0, atol=0)
+        else:
+            assert value == b[key]
+
+
 @pytest.mark.parametrize("backend", ["reference", "sdpa"])
 def test_partial_accumulation_exact_checkpoint_replay(
     prepared_demo: Path, tmp_path: Path, backend: str
@@ -69,6 +80,10 @@ def test_partial_accumulation_exact_checkpoint_replay(
             else torch.load(b, weights_only=True)
         )
         torch.testing.assert_close(left, right, rtol=0, atol=0)
+    assert_rng_equal(
+        latest_checkpoint(tmp_path / "full") / "rng-rank-00000.pt",
+        latest_checkpoint(tmp_path / "replayed") / "rng-rank-00000.pt",
+    )
     manifest = ArtifactStore(latest_checkpoint(tmp_path / "replayed")).read_manifest()
     assert isinstance(manifest.metadata, CheckpointInfo)
     assert manifest.metadata.data_sha256 == recipe.data_sha256
@@ -275,6 +290,7 @@ def test_two_rank_packed_training_replay_and_uneven_window_oracle(
     )
     for rank in (0, 1):
         name = f"application-rank-{rank:05d}.json"
+        assert_rng_equal(a / f"rng-rank-{rank:05d}.pt", b / f"rng-rank-{rank:05d}.pt")
         left, right = (
             json.loads((a / name).read_bytes()),
             json.loads((b / name).read_bytes()),

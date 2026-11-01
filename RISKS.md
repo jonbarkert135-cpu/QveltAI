@@ -144,3 +144,8 @@ an optimizer-step cap need not land exactly at decay end. Full artifact checksum
 preflight costs a complete input read. Resume permits worker/prefetch/mount changes
 only after identity checks, while source/software/topology/model changes reject.
 CUDA replay tests are supplied but require real hardware and deterministic setup.
+
+Exact packed RNG/optimizer replay is demonstrated with the default JSON sink.
+Optional TensorBoard/W&B validation covers offline outputs; full stochastic
+trainer/SDK restart parity is not established and must be checked before relying
+on extra SDK state in a stochastic rollout/training workflow.

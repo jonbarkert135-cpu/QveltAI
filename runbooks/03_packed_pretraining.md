@@ -141,3 +141,9 @@ CUBLAS_WORKSPACE_CONFIG=:4096:8 uv run --frozen --extra cuda pytest tests/integr
 
 It uses small FP32 shapes and explicit numerical tolerances. This test has not run
 on this CPU host; skipping for missing GPU/workspace setup is not GPU validation.
+
+Relative data_manifest paths resolve against the recipe file's directory. Resolved
+absolute mount paths are preserved in attempt/checkpoint recipes, while semantic
+replay uses the verified canonical artifact hash. Exact restart demonstrations use
+the default JSON logger; optional SDK offline-output tests do not establish SDK/
+stochastic-training restart parity.

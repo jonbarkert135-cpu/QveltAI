@@ -857,7 +857,7 @@ No classifier placeholder or claimed learned quality result is shipped.
 
 ## ADR-0036 — Packed loss sums and explicit valid-token scheduling
 
-- **Date/status:**2026-11-01; actual-data implementation/tests in progress.
+- **Date/status:**2026-11-01; CPU actual-data acceptance verified:code557e4da,522-test/7-job CI evidence.
 - **Choice:**reuse TrainingJob/model/AdamW/metrics with strict PretrainingJob. Require
   matching actual tokenizer/data vocabulary/context and explicit demo admission.
   An explicit TokenSchedule owns warmup/stable/linear decay at completed valid-token

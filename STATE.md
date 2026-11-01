@@ -4,65 +4,66 @@ Updated:2026-11-01. Owner:Lead agent.
 
 ## Current task
 
-M5.1 packed-data trainer and CPU-DDP extensions are implemented locally. Real BPE
-inputs use valid-token gradient accumulation/schedule, heldout probe and atomic
-actual-manifest/model/Adam/RNG/per-rank-consumer checkpoints. Local full suite521
-passed/2 optional SDK skips/4 GPU deselections in133.66s before the last added
-FP32-factory regression and supplied GPU test. Latest targeted33 passed/1 GPU
-deselected; two-rank SDPA+checkpoint replay/oracle passed. Ruff/mypy97 files pass.
-Next:publish code, run clean20-step actual-BPE smoke/fresh clone and observe7-job CI.
-M4.1/available-CPU M4.2 are complete; CUDA/FSDP/shared-store and production input
-approvals remain blocked/unvalidated. No paid/final training. Publication active.
+M4.1/available-CPU M4.2 and M5.1 are complete. Implementation557e4da; actual
+GitHub run41290979913 has all7 jobs successful, including CPU3.11/3.12/3.13 and
+real packed BPE optimization/replay. M5.2 CPU/DDP portion is verified; CUDA/FSDP/
+shared-store/multi-node tiers remain blocked by hardware validation. Production
+sources/benchmarks remain blocked in M3.3. Publication to main is active. No final
+model/paid training or old cloud-environment configuration change was performed.
 
-## Implemented and verified
+## Last completed work and evidence
 
-- Byte-BPE default vocab ceiling32768; V2 reasoning/tool controls, old V1 loading,
-  exact Unicode/code/LaTeX/RU round trips. Original exact EN/RU math with bounded
-  rational rewards and independent SymPy/stdlib checks; no teacher/public training data.
-- Strict source recipes, license/usage gates and actual pinned GSM8K eval-only
-  downloader. Seeded LID/heuristics/PII patterns/phrase policy, disk exact+math-aware
-  MinHash-LSH, family splits, train-only BPE and all-registry n-gram exclusion.
-- Compact uint16/uint32 shards, document-pair packing/masks and optional cross-doc
-  attention, weighted pretrain/anneal batch schedules, readonly memmaps and exact
-  consumer cursor replay across0/2 workers. Pending prefetch is actually abandoned;
-  SQLite closes on success/error; worker NumPy IPC avoids the reproduced shutdown issue.
-- Fresh clone:Make setup/lint/types/test/build, lock/dependency checks pass;
-  426 passed/2 optional SDK skips/2 GPU deselections in64.72s; mypy82 files.
-  All3 remote CPU versions also pass426; optional metrics job passes3 tests.
-- Offline smoke:212 inputs/194 retained,153 blocks verified, cursor3->10 with7
-  tensor-exact replay batches. New-seed digit study:12700 individual/9454 grouped
-  tokens (-25.559055%),0 round-trip failures. No trained-math result.
-- Cloud host delivery B8/T64:51315/64540 valid targets/s with0/2 workers;
-  startup0.015/3.819s, small cached/reused fixture. Laptop/GPU not measured.
-- Earlier engineering foundation remains:actual RFC decoder/counts/references,
- 100-update numeric-fixture trainer with exact Adam/weight replay, two-rank CPU
-  DDP and DCP/DTensor tests, atomic checkpoints/provenance and optional metrics.
+- Portable RFC decoder:all four actual meta counts,tiny CPU backward,independent
+  value/gradient/causality/mask oracles,seeded residual initialization and combined
+  tied-embedding gradients. Constructors explicitly initialize FP32 parameters
+  even under ambient float64. Non-finite losses stop before optimizer/checkpoint.
+- Reference/SDPA runtime and non-reentrant block recomputation; compact explicit
+  request-local KV-cache with packed/multi-token/full parity,stale-state checks,
+  weak ownership and CPU BF16 coverage. CPU graph/storage profile recorded.
+- Actual packed-data trainer with token-sum accumulation/partial windows,valid-token
+  LR schedule,heldout probe,clipping/throughput and actual data/BPE canonical IDs.
+  Atomic checkpoint stores model,Adam,RNG and each rank's committed loader state.
+  Split-bound fingerprints and worker/prefetch/mount-safe replay are tested.
+- Actual two-rank Gloo uneven-count gradient/global-batch reference,coordinated
+  rank-local failure and SDPA+checkpoint optimizer/cursor/RNG replay. Numeric
+  engineering trainer and CPU DCP/DTensor checks remain intact.
+- Fresh clone:522 tests passed,2 optional SDK skips,5 GPU deselections in122.79s;
+  Ruff/format and mypy97 files pass;frozen dependency check and wheel/sdist build
+  succeed. Remote3.11/3.12/3.13 each522 passed;optional SDK job independently green.
+- Clean actual-BPE smoke:127104 parameters,20 updates,40 microbatches,4959 valid
+  targets,heldout256-target LM probe6.1267035->5.7565165. Stop6/resume20 has exact
+  weights/Adam/consumer/RNG state. This is original demo language modeling,not a
+  public benchmark or mathematical-answer-quality result.
+- Existing tokenizer/curation/shards/weighted loading/exact math generators remain
+  verified. No external training corpus/teacher;GSM8K is exclusion/evaluation only.
 
-Evidence:docs/development/validation_data.md, committed evidence JSON, EXPERIMENTS
-R007–R010, runbooks/01_data_preparation.md. Foundation evidence remains separate.
+Evidence:docs/development/validation_pretraining.md and its committed receipts;
+EXPERIMENTS R012–R014,runbooks/01_data_preparation.md,02_model_execution.md and
+03_packed_pretraining.md. Earlier foundation/data evidence remains separate.
 
 ## Open limits
 
-No approved external training corpus. GSM8K questions were acquired/indexed only;
-MATH/AIME/MMLU and the frozen project-final evaluation snapshots/rights are missing.
-Production preparation rejects incomplete coverage. Gold GSM8K solutions are not
-indexed by its question adapter. Lexical exclusion/LSH/PII/toxicity/LID are incomplete
-and need corpus-specific audits; no trained quality classifier is provided.
+Five supplied GPU tests did not run. No CUDA/NCCL,packed FSDP,real laptop/shared-
+store/multi-node validation or final-scale memory/throughput measurement. The
+functional cache copies appended state;graph-storage bytes are not allocator peak.
+Exact replay is limited to the documented source/software/topology/hardware scope;
+unsafe .data/cache mutation and arbitrary uploaded optimizer files are unsupported.
 
-HF BPE pair-statistics RAM can grow with corpus diversity. Affine epoch shuffles
-are bijections, not uniform N! permutations. Loader replay is tested separately;
-the existing trainer still uses numeric fixtures and does not yet atomically
-checkpoint the real-data loader. GPU/NCCL/FSDP2/Slurm/multi-node/shared-store/native
-Windows, actual i5/16GB laptop performance, SFT/RL and serving remain unvalidated.
+Full checksum preflight requires input I/O budget. HF BPE pair statistics can grow
+with corpus diversity. LID/PII/toxicity/LSH/lexical exclusion need real-source audits;
+no trained quality classifier. MATH/AIME/MMLU and frozen project-final exclusions
+are incomplete,so production preparation remains blocked. The heldout LM probe is
+weighted/limited and may reuse source blocks. SFT,DPO/RL,public evaluation and
+serving/export beyond safetensors are still future milestones.
 
 ## Next three tasks
 
-1. M5.1:connect real BPE packed batches, valid-token accumulation/schedule and
-   per-rank consumer/RNG/model/optimizer state in one atomic checkpoint.
-2. M3.3:clear production sources/benchmarks, freeze the distinct project final set,
-   add rights-approved format adapters and corpus-scale labeled filtering audits.
-3. Verify short-window/uneven-mask normalization, heldout validation and exact
-   optimization replay, then extend actual-data DDP with independent rank oracles.
+1. M6.1:versioned original-data chat/SFT formatting,assistant-only loss masks,
+   truncation/packing tests and a tiny SFT optimization/resume demonstration.
+2. M5.2–M5.3:actual CUDA/DDP/FSDP/shared-store/multi-node and resource validation
+   when hardware is supplied;no costly/final-scale run without authorization.
+3. M3.3:clear exact training/benchmark rights,freeze the distinct project final
+   heldout and calibrate corpus-scale quality/dedup/PII/semantic-leakage audits.
 
 ## Reproduce
 
@@ -71,9 +72,9 @@ make setup
 make lint
 make typecheck
 make test
-uv run --frozen --extra cpu python scripts/data_smoke.py --directory /tmp/qvelt-data-check-01 --repository .
-uv run --frozen --extra cpu qvelt data benchmark /tmp/qvelt-data-check-01/prepared/manifest.json --workers 0 2
+mkdir -p runs
+uv run --frozen --extra cpu python scripts/pretraining_smoke.py --directory runs/bpe-smoke-new --repository . --steps 20
 ```
 
-Choose a new output path. uv0.12.23; Linux/Python3.11–3.13, CPU default. The exact
-preparation commands/disk and explicitly assumed laptop times are in runbook01.
+Use a new output path,uv0.12.23,Linux/Python3.11–3.13. CPU is default. Operator
+commands/actual-data identities/schedule/replay limitations are in runbook03.
