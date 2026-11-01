@@ -304,3 +304,17 @@ and actual four-step checkpointed training/replay passes for both backends.
 deselected in81.70s; Ruff and strict mypy89 files pass. The additional GPU FP32/
 BF16 tests are supplied, not executed. CPU timing/storage profile receipt follows
 from clean committed code; none of the tests establishes GPU/quality performance.
+
+R013 clean-code profile:efa6f30,dirty=false,default117056-parameter job,B2/T32,
+2 warmup/8 measured repetitions,one Torch CPU thread. Reference saved graph storage
+932236 bytes versus157836 with block recomputation; SDPA881036 versus157836.
+Forward/backward targets/s9571.36/4494.59 reference without/with recomputation,
+9459.94/4975.82 SDPA. Cache25392 bytes in all policies; full/cached logits close.
+Cached/uncached timings include16-token prefill+8 appends; exact values and resolved
+jobs are in docs/development/evidence/phase4-profile-efa6f30.json. No optimizer update,
+peak allocator memory, GPU speedup or model-quality result is implied. M4.2 closes
+for available CPU paths; provided accelerator tests await actual hardware.
+
+R013 remote acceptance:actual GitHub run41287953291,code efa6f30,all6 jobs success
+(CPU3.11/3.12/3.13,100-update numeric smoke,offline data smoke,optional metrics).
+This closes available-CPU M4.2 acceptance, with CUDA tests still explicitly unrun.

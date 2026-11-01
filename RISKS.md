@@ -129,3 +129,9 @@ but dedicated initialization/residual-scale, non-finite-input policy and combine
 tied-embedding gradient regressions remain M4.1 acceptance gaps. Do not infer
 full Phase4 completion from the18-test review; preserve these checks before cache/
 accelerator extensions. The mapping and scope are in decoder_rfc_review.md.
+
+M4.1 review gaps are closed by R012. M4.2 CPU tests/profile do not establish GPU
+kernel choice/VRAM or serving efficiency. Request cache trusts non-mutated tensors;
+unsafe .data/concurrent mutation bypasses its contract, and Tensor._version is a
+pinned internal dependency. Functional cache concatenation can incur transient
+copy cost. Saved graph storage bytes are not process/allocator peak memory.

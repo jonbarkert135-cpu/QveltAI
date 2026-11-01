@@ -49,3 +49,24 @@ measure transient copying and memory before scaling inference. Block checkpointi
 uses torch.utils.checkpoint(...,use_reentrant=False,preserve_rng_state=True), only
 in train+grad mode. Evaluation caching and training recomputation are separate.
 Keep optional GPU tests behind hardware markers and record them as unrun here.
+
+## Executed CPU profile
+
+Clean code efa6f304d3c9a6348c6a85f4640d944de66ab25b, Python/PyTorch2.9.1+cpu,
+117056 parameters,B2,T32,one Torch thread,two warmup/eight repetitions.
+`uv run --frozen --extra cpu python scripts/profile_decoder.py --job configs/train/smoke.yaml --repeats 8`.
+Receipt:evidence/phase4-profile-efa6f30.json.
+
+| Backend | Recompute | Saved nonparameter storage bytes | Forward/backward targets/s | Cached/uncached seconds (8 repetitions) |
+| --- | --- | ---: | ---: | --- |
+| reference | false |932236 |9571.36 |.135808/.163432 |
+| reference | true |157836 |4494.59 |.137194/.179225 |
+| sdpa | false |881036 |9459.94 |.127555/.155027 |
+| sdpa | true |157836 |4975.82 |.134671/.299306 |
+
+All cache variants store25392 bytes and pass logit comparison; prefill16 plus8
+one-token appends. Inference timings include prefill. Saved graph storage is not
+peak allocator/process RAM. These short untrained CPU measurements show a compute/
+retention tradeoff, not a universal speedup, deployment benchmark or GPU result.
+Full acceptance:487 passed/2 optional SDK skips/4 GPU deselections in81.70s,
+Ruff/format and mypy89 files clean. Actual CUDA cases remain unrun.

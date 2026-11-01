@@ -1,0 +1,265 @@
+{
+  "code": {
+    "commit": "efa6f304d3c9a6348c6a85f4640d944de66ab25b",
+    "dirty": false,
+    "lock_sha256": "0da2d2e3aa43780f7a4d01cdf5f125704a1e329ece8287882a5ccd3150e75314"
+  },
+  "profiles": [
+    {
+      "cache_storage_bytes": 25392,
+      "cached_logits_close": true,
+      "decode_tokens_per_sequence": 8,
+      "inference_seconds": {
+        "cached": 0.1358075220050523,
+        "uncached": 0.16343219300324563
+      },
+      "job": {
+        "experiment": {
+          "model": {
+            "context": 32,
+            "ffn": 192,
+            "heads": 4,
+            "hidden": 64,
+            "kv_heads": 2,
+            "layers": 2,
+            "norm_eps": 1e-06,
+            "rope_theta": 10000.0,
+            "vocab": 288
+          },
+          "name": "ci-synthetic-smoke",
+          "runtime": {
+            "deterministic": true,
+            "device": "cpu",
+            "log_level": "INFO",
+            "precision": "fp32",
+            "seed": 20261031
+          },
+          "schema_version": 1
+        },
+        "schema_version": 1,
+        "training": {
+          "batch_size": 2,
+          "checkpoint_every": 50,
+          "decay_steps": 10,
+          "execution": {
+            "activation_checkpointing": false,
+            "attention_backend": "reference"
+          },
+          "grad_clip": 1.0,
+          "learning_rate": 0.001,
+          "metrics_backend": "json",
+          "num_threads": 1,
+          "peak_tflops_per_gpu": null,
+          "sequence_length": 32,
+          "steps": 100,
+          "strategy": "single",
+          "warmup_steps": 5,
+          "weight_decay": 0.1
+        }
+      },
+      "memory_scope": "Unique graph-saved underlying storages; excludes weights and is not total/peak allocator memory",
+      "parameters": 117056,
+      "prefill_tokens_per_sequence": 16,
+      "repeats": 8,
+      "scope": "CPU FP32 numeric-fixture graph/timing profile, no optimizer updates or GPU measurement",
+      "torch": "2.9.1+cpu",
+      "torch_threads": 1,
+      "train_forward_backward_seconds": 0.05349290099547943,
+      "train_targets_per_second": 9571.363498182087,
+      "unique_saved_nonparameter_storage_bytes": 932236,
+      "warmup": 2
+    },
+    {
+      "cache_storage_bytes": 25392,
+      "cached_logits_close": true,
+      "decode_tokens_per_sequence": 8,
+      "inference_seconds": {
+        "cached": 0.13719409100303892,
+        "uncached": 0.1792254949978087
+      },
+      "job": {
+        "experiment": {
+          "model": {
+            "context": 32,
+            "ffn": 192,
+            "heads": 4,
+            "hidden": 64,
+            "kv_heads": 2,
+            "layers": 2,
+            "norm_eps": 1e-06,
+            "rope_theta": 10000.0,
+            "vocab": 288
+          },
+          "name": "ci-synthetic-smoke",
+          "runtime": {
+            "deterministic": true,
+            "device": "cpu",
+            "log_level": "INFO",
+            "precision": "fp32",
+            "seed": 20261031
+          },
+          "schema_version": 1
+        },
+        "schema_version": 1,
+        "training": {
+          "batch_size": 2,
+          "checkpoint_every": 50,
+          "decay_steps": 10,
+          "execution": {
+            "activation_checkpointing": true,
+            "attention_backend": "reference"
+          },
+          "grad_clip": 1.0,
+          "learning_rate": 0.001,
+          "metrics_backend": "json",
+          "num_threads": 1,
+          "peak_tflops_per_gpu": null,
+          "sequence_length": 32,
+          "steps": 100,
+          "strategy": "single",
+          "warmup_steps": 5,
+          "weight_decay": 0.1
+        }
+      },
+      "memory_scope": "Unique graph-saved underlying storages; excludes weights and is not total/peak allocator memory",
+      "parameters": 117056,
+      "prefill_tokens_per_sequence": 16,
+      "repeats": 8,
+      "scope": "CPU FP32 numeric-fixture graph/timing profile, no optimizer updates or GPU measurement",
+      "torch": "2.9.1+cpu",
+      "torch_threads": 1,
+      "train_forward_backward_seconds": 0.11391481700411532,
+      "train_targets_per_second": 4494.586511792433,
+      "unique_saved_nonparameter_storage_bytes": 157836,
+      "warmup": 2
+    },
+    {
+      "cache_storage_bytes": 25392,
+      "cached_logits_close": true,
+      "decode_tokens_per_sequence": 8,
+      "inference_seconds": {
+        "cached": 0.12755531500442885,
+        "uncached": 0.15502713499881793
+      },
+      "job": {
+        "experiment": {
+          "model": {
+            "context": 32,
+            "ffn": 192,
+            "heads": 4,
+            "hidden": 64,
+            "kv_heads": 2,
+            "layers": 2,
+            "norm_eps": 1e-06,
+            "rope_theta": 10000.0,
+            "vocab": 288
+          },
+          "name": "ci-synthetic-smoke",
+          "runtime": {
+            "deterministic": true,
+            "device": "cpu",
+            "log_level": "INFO",
+            "precision": "fp32",
+            "seed": 20261031
+          },
+          "schema_version": 1
+        },
+        "schema_version": 1,
+        "training": {
+          "batch_size": 2,
+          "checkpoint_every": 50,
+          "decay_steps": 10,
+          "execution": {
+            "activation_checkpointing": false,
+            "attention_backend": "sdpa"
+          },
+          "grad_clip": 1.0,
+          "learning_rate": 0.001,
+          "metrics_backend": "json",
+          "num_threads": 1,
+          "peak_tflops_per_gpu": null,
+          "sequence_length": 32,
+          "steps": 100,
+          "strategy": "single",
+          "warmup_steps": 5,
+          "weight_decay": 0.1
+        }
+      },
+      "memory_scope": "Unique graph-saved underlying storages; excludes weights and is not total/peak allocator memory",
+      "parameters": 117056,
+      "prefill_tokens_per_sequence": 16,
+      "repeats": 8,
+      "scope": "CPU FP32 numeric-fixture graph/timing profile, no optimizer updates or GPU measurement",
+      "torch": "2.9.1+cpu",
+      "torch_threads": 1,
+      "train_forward_backward_seconds": 0.05412298600276699,
+      "train_targets_per_second": 9459.936300887472,
+      "unique_saved_nonparameter_storage_bytes": 881036,
+      "warmup": 2
+    },
+    {
+      "cache_storage_bytes": 25392,
+      "cached_logits_close": true,
+      "decode_tokens_per_sequence": 8,
+      "inference_seconds": {
+        "cached": 0.13467127899639308,
+        "uncached": 0.299305999003991
+      },
+      "job": {
+        "experiment": {
+          "model": {
+            "context": 32,
+            "ffn": 192,
+            "heads": 4,
+            "hidden": 64,
+            "kv_heads": 2,
+            "layers": 2,
+            "norm_eps": 1e-06,
+            "rope_theta": 10000.0,
+            "vocab": 288
+          },
+          "name": "ci-synthetic-smoke",
+          "runtime": {
+            "deterministic": true,
+            "device": "cpu",
+            "log_level": "INFO",
+            "precision": "fp32",
+            "seed": 20261031
+          },
+          "schema_version": 1
+        },
+        "schema_version": 1,
+        "training": {
+          "batch_size": 2,
+          "checkpoint_every": 50,
+          "decay_steps": 10,
+          "execution": {
+            "activation_checkpointing": true,
+            "attention_backend": "sdpa"
+          },
+          "grad_clip": 1.0,
+          "learning_rate": 0.001,
+          "metrics_backend": "json",
+          "num_threads": 1,
+          "peak_tflops_per_gpu": null,
+          "sequence_length": 32,
+          "steps": 100,
+          "strategy": "single",
+          "warmup_steps": 5,
+          "weight_decay": 0.1
+        }
+      },
+      "memory_scope": "Unique graph-saved underlying storages; excludes weights and is not total/peak allocator memory",
+      "parameters": 117056,
+      "prefill_tokens_per_sequence": 16,
+      "repeats": 8,
+      "scope": "CPU FP32 numeric-fixture graph/timing profile, no optimizer updates or GPU measurement",
+      "torch": "2.9.1+cpu",
+      "torch_threads": 1,
+      "train_forward_backward_seconds": 0.10289770999952452,
+      "train_targets_per_second": 4975.8153024237945,
+      "unique_saved_nonparameter_storage_bytes": 157836,
+      "warmup": 2
+    }
+  ]
+}

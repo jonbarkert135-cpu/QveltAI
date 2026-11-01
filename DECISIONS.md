@@ -813,7 +813,7 @@ No classifier placeholder or claimed learned quality result is shipped.
 
 ## ADR-0034 — Explicit model execution and request-owned KV state
 
-- **Date/status:**2026-11-01; implementation and CPU targeted tests; full gate pending.
+- **Date/status:**2026-11-01; CPU acceptance and clean-code profile verified; green6-job CI41287953291.
 - **Choice:** frozen ModelExecution separate from learned ModelConfig; reference/
   PyTorch SDPA backend and non-reentrant block recomputation recorded in the resolved
   training job/resume identity. Preserve default reference behavior and parameter

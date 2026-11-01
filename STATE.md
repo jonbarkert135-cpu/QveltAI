@@ -4,14 +4,13 @@ Updated:2026-11-01. Owner:Lead agent.
 
 ## Current task
 
-M4.1 portable numerical acceptance is complete:433 passed/2 optional SDK skips/
-2 GPU deselections in69.69s; lint/format and mypy82 files pass. Seven new tests
-close fixed-seed/residual variance, combined tied-embedding gradients and non-finite
-fail-stop before optimizer/checkpoint. M4.2 reference/SDPA execution, non-reentrant recomputation and compact request-local
-KV caching are implemented. Full suite487 passed/2 optional SDK skips/4 GPU
-deselections in81.70s; Ruff/mypy89 files pass. Clean-code CPU profile and remote CI
-are next. Design:docs/development/phase4_design.md. Publication to main is active;
-production input approvals remain blocked in M3.3. No paid/final-scale run.
+M4.1 and available-CPU M4.2 acceptance are complete. Code efa6f30; actual GitHub
+run41287953291 has all6 jobs successful. Local487 passed/2 optional SDK skips/
+4 GPU deselections in81.70s; Ruff/mypy89 files pass. Compact KV cache, native SDPA,
+non-reentrant recomputation and clean-code CPU graph/storage profiles are verified.
+GPU tests are supplied, not run. M5.1 packed-data integration is next/in progress;
+design:docs/development/pretraining_design.md. Production data approvals remain
+blocked in M3.3. No paid/final-scale training was launched. Publication to main active.
 
 ## Implemented and verified
 
@@ -56,12 +55,12 @@ Windows, actual i5/16GB laptop performance, SFT/RL and serving remain unvalidate
 
 ## Next three tasks
 
-1. M4.2:implement explicit bounded KV-cache, tested SDPA execution and non-reentrant
-   activation checkpointing; compare values/gradients and exact replay.
+1. M5.1:connect real BPE packed batches, valid-token accumulation/schedule and
+   per-rank consumer/RNG/model/optimizer state in one atomic checkpoint.
 2. M3.3:clear production sources/benchmarks, freeze the distinct project final set,
    add rights-approved format adapters and corpus-scale labeled filtering audits.
-3. After M4.1,implement/test M4.2 KV-cache and activation checkpointing; then
-   connect actual packed-data identities/cursor to atomic trainer checkpoints (M5).
+3. Verify short-window/uneven-mask normalization, heldout validation and exact
+   optimization replay, then extend actual-data DDP with independent rank oracles.
 
 ## Reproduce
 

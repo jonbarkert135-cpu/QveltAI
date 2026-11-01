@@ -214,24 +214,28 @@ counts and actual two-rank uneven-mask/global-loss references; see R012.
 
 ### M4.2 — Add measured accelerator and decoding paths
 
-Owner: Lead agent. Status: in progress. Dependencies: M4.1.
+Owner: Lead agent. Status: complete for available CPU; GPU validation unverified. Dependencies: M4.1.
 
 - [x] Integrate supported optimized attention and mixed precision behind runtime
   capability checks; retain a usable portable path.
 - [x] Implement KV-cache prefill/incremental decode and activation checkpointing;
   test cached versus uncached results and recomputation gradients.
-- [ ] Profile memory and throughput on available devices with warmup,
+- [x] Profile memory and throughput on available devices with warmup,
   synchronization, shapes, dtypes, and tool versions recorded.
 
 Acceptance: portable tests pass; available accelerator paths pass numerical and
 gradient checks. Unsupported hardware paths remain explicitly unverified and
 cannot be advertised as tested. Optional compilation requires separate evidence.
 
+Evidence:M4.2 code efa6f30; actual6-job GitHub run41287953291 green.
+487 CPU tests pass; profile receipt phase4-profile-efa6f30.json records retained
+graph storage/CPU timing with clear metric limits. Four GPU cases remain unrun.
+
 ## Phase 5 — Training framework
 
 ### M5.1 — Make single-process pretraining correct and resumable
 
-Owner: Lead agent. Status: planned. Dependencies: M4.1; M4.2 for GPU fast paths.
+Owner: Lead agent. Status: in progress. Dependencies: M4.1; M4.2 for GPU fast paths.
 
 - [ ] Implement optimizer parameter groups, token-based schedule, accumulation,
   precision controls, gradient clipping, validation, and finite-value handling.
