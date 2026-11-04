@@ -925,3 +925,35 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   local distributed sockets; cache configuration does not grant network access.
 - **Revisit:** cache storage limits, changes to the execution sandbox or tool
   versions. CPU readiness does not establish CUDA or final-scale readiness.
+
+## ADR-0039 — Whole-dialog assistant supervision and weights-only SFT initialization
+
+- **Date/status:**2026-11-04; implemented; bounded CPU acceptance verified in validation_sft.md.
+- **Choice:** reuse the original packed training/checkpoint engine. Layout1 retains
+  all-token pretraining; layout2 derives assistant-only target masks from explicit
+  role IDs. Whole-dialog segments avoid needing a role-state sidecar for split
+  documents. Prompt tokens remain valid attention context. Only assistant content
+  and end-turn supply loss; outer EOS, headers and padding are excluded.
+- **Truncation:**right-prefix retention reserves masked outer EOS, never synthesizes
+  a learned end-turn, and rejects a cut without a nonempty final assistant turn.
+  This loses long response tails but never pretends they were completed. Reports
+  retain truncation counts. Complete-turn truncation and fragment-sidecar schemes
+  were alternatives; they would drop useful response prefixes or add storage state.
+- **Initialization:**pin the canonical Qvelt checkpoint manifest, verify registered
+  files, exact architecture and tokenizer, load finite safetensors weights only;
+  create new Adam/schedule/RNG counters. Ordinary resume retains the entire SFT
+  application state. Bind the objective and base digest, exclude relocatable base
+  path from recipe identity. Distinct SFT application kind prevents objective drift.
+- **Evidence/sources:**[verified] Qvelt controls for tokenizer versions1/2, original
+  loader/loss/checkpoint implementations; executed explicit shifted-token loss and
+  logsumexp gradient oracles. Read the pinned Orchestra TRL SFT guide for chat/
+  prompt-completion/packing context; its APIs, speed and hardware claims were not
+  imported or treated as verified installed behavior. No TRL dependency was added.
+- **Scope:**original Apache-2.0 exact-answer EN/RU supervision, reused base tokenizer,
+  family splits and fixed train/heldout probes. Family isolation is within SFT;
+  base demo task families overlap and no benchmark-contamination claim follows.
+  Existing source-digest/software checks still reject historical exact resume when
+  executable code changes; adding recipe defaults does not waive this contract.
+- **Revisit:**tool/reasoning roles, production data rights/audits, demonstrated long
+  conversation needs or measured packing waste. CUDA/distributed SFT needs separate
+  runtime tests before being advertised as validated.

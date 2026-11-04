@@ -95,13 +95,17 @@ def _parser() -> argparse.ArgumentParser:
     from qvelt.data.cli import add_parser
 
     add_parser(commands)
-    pretrain = commands.add_parser("pretrain", help="Train on pinned packed BPE data")
-    pretrain.add_argument("path", type=Path)
-    pretrain.add_argument("--directory", type=Path, required=True)
-    pretrain.add_argument("--repository", type=Path, default=Path("."))
-    pretrain.add_argument("--resume", choices=("latest",))
-    pretrain.add_argument("--stop-after", type=int)
-    pretrain.add_argument("--set", dest="overrides", action="append", default=[])
+    for command, help_text in (
+        ("pretrain", "Train on pinned packed BPE data"),
+        ("sft", "Fine-tune pinned Qvelt weights on assistant targets"),
+    ):
+        pretrain = commands.add_parser(command, help=help_text)
+        pretrain.add_argument("path", type=Path)
+        pretrain.add_argument("--directory", type=Path, required=True)
+        pretrain.add_argument("--repository", type=Path, default=Path("."))
+        pretrain.add_argument("--resume", choices=("latest",))
+        pretrain.add_argument("--stop-after", type=int)
+        pretrain.add_argument("--set", dest="overrides", action="append", default=[])
     collective = commands.add_parser(
         "distributed-check", help="Run an exact integer all-reduce"
     )
@@ -216,12 +220,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             from qvelt.data.cli import run as run_data
 
             print(json.dumps(run_data(args), sort_keys=True))
-        elif args.command == "pretrain":
+        elif args.command in ("pretrain", "sft"):
             from qvelt.config.pretraining import load_pretraining_job
             from qvelt.train.pretraining import train_pretraining
 
+            recipe = load_pretraining_job(args.path, args.overrides)
+            if recipe.objective != ("sft" if args.command == "sft" else "pretraining"):
+                raise ValueError("CLI command and recipe objective disagree")
             result = train_pretraining(
-                load_pretraining_job(args.path, args.overrides),
+                recipe,
                 args.directory,
                 args.repository,
                 base=args.path.parent,

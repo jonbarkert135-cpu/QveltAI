@@ -13,9 +13,23 @@ wheel/sdist build pass. Numeric100-step and packed BPE20-step exact replay smoke
 pass. See docs/development/validation_environment.md and its receipts. Direct uv/
 Git-hook invocations need the README cache exports in read-only-home environments;
 network operations/local distributed sockets need execution network permission.
-M6.1 remains next; no GPU or paid/final-scale run was performed.
+M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was performed.
 
 ## Current task
+
+M6.1 is complete for original demo data/single-process CPU: strict chat formatting,
+assistant-only masks,whole-dialog packing/truncation,licensed family-heldout data,
+pinned base weights and atomic SFT replay. Full CPU/optional-SDK suite:543 passed,
+5 GPU deselected,no skips in97.32s;Ruff/format,mypy103 files,build/lock/dependency
+and hook checks pass. Fixed69-target train probe5.89794546->0.14195556;
+16-target heldout probe5.81094980->4.76135039;80 updates/2520 assistant targets.
+Stop26/resume80 weights/Adam/RNG/consumer match exactly. Final test execution uses
+GLOO_SOCKET_IFNAME=lo,OMP_NUM_THREADS=1,MKL_NUM_THREADS=1 after earlier distributed
+process-exit stalls;root cause of those stalls is not established. See R016,
+docs/development/validation_sft.md and runbooks/04_supervised_finetuning.md.
+Next portable milestone:M6.2 preference optimization. No reasoning-accuracy claim,
+production corpus,external teacher,paid run or GPU/distributed-SFT validation.
+
 
 M4.1/available-CPU M4.2 and M5.1 are complete. Implementation557e4da; actual
 GitHub run41290979913 has all7 jobs successful, including CPU3.11/3.12/3.13 and
@@ -66,13 +80,13 @@ Full checksum preflight requires input I/O budget. HF BPE pair statistics can gr
 with corpus diversity. LID/PII/toxicity/LSH/lexical exclusion need real-source audits;
 no trained quality classifier. MATH/AIME/MMLU and frozen project-final exclusions
 are incomplete,so production preparation remains blocked. The heldout LM probe is
-weighted/limited and may reuse source blocks. SFT,DPO/RL,public evaluation and
+weighted/limited and may reuse source blocks. DPO/RL,public evaluation and
 serving/export beyond safetensors are still future milestones.
 
 ## Next three tasks
 
-1. M6.1:versioned original-data chat/SFT formatting,assistant-only loss masks,
-   truncation/packing tests and a tiny SFT optimization/resume demonstration.
+1. M6.2:select and verify a preference objective,register original licensed
+   preference pairs,and implement objective/gradient and optimization/replay checks.
 2. M5.2–M5.3:actual CUDA/DDP/FSDP/shared-store/multi-node and resource validation
    when hardware is supplied;no costly/final-scale run without authorization.
 3. M3.3:clear exact training/benchmark rights,freeze the distinct project final

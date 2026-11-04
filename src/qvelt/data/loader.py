@@ -78,12 +78,13 @@ class PackedDataset(Dataset[dict[str, Tensor]]):
                 "mixing",
             }
             or type(layout["schema_version"]) is not int
-            or layout["schema_version"] != 1
+            or layout["schema_version"] not in (1, 2)
             or type(layout["control_version"]) is not int
             or layout["control_version"] not in (1, 2)
             or layout["tokenizer_sha256"] != manifest.metadata.tokenizer_sha256
         ):
             raise ValueError("Unsupported/mismatched dataset layout")
+        self.assistant_only = layout["schema_version"] == 2
         self.context = uint(layout["context"], "packing.context", 1, 2**31 - 1)
         self.vocab = uint(layout["vocab"], "packing.vocab", 288, 2**32)
         if (
@@ -211,6 +212,7 @@ class PackedDataset(Dataset[dict[str, Tensor]]):
         positions = inputs.copy()
         documents = np.full(self.context, -1, dtype=np.int64)
         valid = np.zeros(self.context, dtype=np.bool_)
+        loss_mask = valid.copy()
         cursor = 0
         for item in segments[first : first + count]:
             shard_index, start, pairs, document = map(
@@ -235,6 +237,12 @@ class PackedDataset(Dataset[dict[str, Tensor]]):
             positions[part] = np.arange(pairs)
             documents[part] = document
             valid[part] = True
+            if self.assistant_only:
+                from qvelt.posttrain.chat import assistant_mask
+
+                loss_mask[part] = assistant_mask(frame.tolist())
+            else:
+                loss_mask[part] = True
             cursor += pairs
         if cursor != int(block["valid"]):
             raise ArtifactIntegrityError("Block target count mismatch")
@@ -248,7 +256,7 @@ class PackedDataset(Dataset[dict[str, Tensor]]):
             "positions": torch.from_numpy(positions),
             "document_ids": torch.from_numpy(documents),
             "valid_mask": torch.from_numpy(valid),
-            "loss_mask": torch.from_numpy(valid.copy()),
+            "loss_mask": torch.from_numpy(loss_mask),
             "sample_index": torch.tensor(index),
             "source_index": torch.tensor(source_index),
         }

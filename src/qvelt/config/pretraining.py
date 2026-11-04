@@ -59,8 +59,30 @@ class PretrainingJob:
     validation_every: int = 10
     allow_demo: bool = False
     schema_version: int = 1
+    objective: str = "pretraining"
+    initial_checkpoint: str | None = None
+    initial_sha256: str | None = None
 
     def __post_init__(self) -> None:
+        if self.objective not in ("pretraining", "sft"):
+            raise ConfigError("Unknown packed training objective")
+        if (self.initial_checkpoint is None) != (self.initial_sha256 is None):
+            raise ConfigError(
+                "Initial checkpoint path and digest must be supplied together"
+            )
+        if self.initial_checkpoint is not None:
+            if (
+                not isinstance(self.initial_checkpoint, str)
+                or not self.initial_checkpoint
+                or len(self.initial_checkpoint) > 2048
+                or any(ord(c) < 32 for c in self.initial_checkpoint)
+            ):
+                raise ConfigError("Invalid initial checkpoint path")
+            digest(self.initial_sha256, "initial_sha256")
+        if self.objective == "sft" and (
+            self.initial_checkpoint is None or self.attention_mode != "document"
+        ):
+            raise ConfigError("SFT requires pinned base weights and document attention")
         if type(self.schema_version) is not int or self.schema_version != 1:
             raise ConfigError("Unsupported pretraining schema")
         if not isinstance(self.job, TrainingJob) or not isinstance(
@@ -161,7 +183,7 @@ def dump_pretraining_job(recipe: PretrainingJob) -> str:
 
 def pretraining_digest(recipe: PretrainingJob) -> str:
     values = asdict(recipe)
-    for key in ("data_manifest", "workers", "prefetch"):
+    for key in ("data_manifest", "workers", "prefetch", "initial_checkpoint"):
         values.pop(key)
     return hashlib.sha256(
         json.dumps(

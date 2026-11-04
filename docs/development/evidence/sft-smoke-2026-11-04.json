@@ -1,0 +1,195 @@
+{
+  "code_base_revision": "7eed79c",
+  "consumer_state_exact": true,
+  "continuous": {
+    "consumed_microbatches": 80,
+    "data_sha256": "b647abbd3e2518b08ef3c3bc05527c52e9ddbbd81b78d52de525541d76e96fd5",
+    "final_training": {
+      "validation_probe_loss": 0.14195556225983993,
+      "validation_probe_targets": 69.0
+    },
+    "final_validation": {
+      "validation_probe_loss": 4.761350393295288,
+      "validation_probe_targets": 16.0
+    },
+    "initial_training": {
+      "validation_probe_loss": 5.897945459338202,
+      "validation_probe_targets": 69.0
+    },
+    "initial_validation": {
+      "validation_probe_loss": 5.810949802398682,
+      "validation_probe_targets": 16.0
+    },
+    "optimizer_step": 80,
+    "processed_tokens": 2520,
+    "rank": 0,
+    "scope": "demo",
+    "tokenizer_sha256": "1c61858daf4a3fbc3c5ccdb0b635954b577945261427bd969813a7575e284413",
+    "world_size": 1
+  },
+  "data_sha256": "b647abbd3e2518b08ef3c3bc05527c52e9ddbbd81b78d52de525541d76e96fd5",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "python": "3.12.14",
+    "torch": "2.9.1+cpu",
+    "uv": "0.12.23"
+  },
+  "first_training_loss": 5.889200846354167,
+  "full_suite": {
+    "GLOO_SOCKET_IFNAME": "lo",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "gpu_deselected": 5,
+    "passed": 543,
+    "seconds": 97.32,
+    "skipped": 0
+  },
+  "initial_checkpoint_sha256": "34d5c2e5fdeb854b9d66fa8af9bcdf7f8aaad2a83defca8e7e91c636eab89339",
+  "last_training_loss": 0.1138413429260254,
+  "optimizer_bit_exact": true,
+  "parameters": 127104,
+  "paths_normalized_relative_to_run_root": true,
+  "preparation": {
+    "chat_schema_version": 1,
+    "counts": {
+      "test": {
+        "assistant_targets": 214,
+        "documents": 24,
+        "families": [
+          "arithmetic-fraction",
+          "linear-integer",
+          "number-lcm"
+        ],
+        "truncated": 0
+      },
+      "train": {
+        "assistant_targets": 126,
+        "documents": 24,
+        "families": [
+          "arithmetic-sum",
+          "linear-rational",
+          "number-gcd"
+        ],
+        "truncated": 0
+      },
+      "validation": {
+        "assistant_targets": 102,
+        "documents": 16,
+        "families": [
+          "combinations",
+          "permutations"
+        ],
+        "truncated": 0
+      }
+    },
+    "limitations": [
+      "Family isolation is not a public benchmark contamination audit",
+      "Right truncation may shorten an assistant response; outer EOS is masked"
+    ],
+    "objective": "assistant-v1",
+    "production_ready": false,
+    "scope": "demo",
+    "source_sha256": "e542b9c28f1c12a6207470d57a0df41b186808f2b8464b8158099929201c5cc5",
+    "tokenizer_sha256": "1c61858daf4a3fbc3c5ccdb0b635954b577945261427bd969813a7575e284413"
+  },
+  "recipe": {
+    "accumulation_steps": 1,
+    "allow_demo": true,
+    "attention_mode": "document",
+    "data_manifest": "data/manifest.json",
+    "data_sha256": "b647abbd3e2518b08ef3c3bc05527c52e9ddbbd81b78d52de525541d76e96fd5",
+    "initial_checkpoint": "base/checkpoints/step-00000003/manifest.json",
+    "initial_sha256": "34d5c2e5fdeb854b9d66fa8af9bcdf7f8aaad2a83defca8e7e91c636eab89339",
+    "job": {
+      "experiment": {
+        "model": {
+          "context": 128,
+          "ffn": 192,
+          "heads": 4,
+          "hidden": 64,
+          "kv_heads": 2,
+          "layers": 2,
+          "norm_eps": 1e-06,
+          "rope_theta": 10000.0,
+          "vocab": 445
+        },
+        "name": "ci-synthetic-smoke",
+        "runtime": {
+          "deterministic": true,
+          "device": "cpu",
+          "log_level": "INFO",
+          "precision": "fp32",
+          "seed": 20261031
+        },
+        "schema_version": 1
+      },
+      "schema_version": 1,
+      "training": {
+        "batch_size": 2,
+        "checkpoint_every": 40,
+        "decay_steps": 0,
+        "execution": {
+          "activation_checkpointing": false,
+          "attention_backend": "reference"
+        },
+        "grad_clip": 1.0,
+        "learning_rate": 0.003,
+        "metrics_backend": "json",
+        "num_threads": 1,
+        "peak_tflops_per_gpu": null,
+        "sequence_length": 128,
+        "steps": 80,
+        "strategy": "single",
+        "warmup_steps": 0,
+        "weight_decay": 0.1
+      }
+    },
+    "objective": "sft",
+    "prefetch": 2,
+    "schedule": {
+      "decay_start_tokens": 1000000000,
+      "decay_tokens": 1,
+      "warmup_tokens": 0
+    },
+    "schema_version": 1,
+    "total_batches": null,
+    "validation_batches": 2,
+    "validation_every": 40,
+    "workers": 0
+  },
+  "replayed": {
+    "consumed_microbatches": 80,
+    "data_sha256": "b647abbd3e2518b08ef3c3bc05527c52e9ddbbd81b78d52de525541d76e96fd5",
+    "final_training": {
+      "validation_probe_loss": 0.14195556225983993,
+      "validation_probe_targets": 69.0
+    },
+    "final_validation": {
+      "validation_probe_loss": 4.761350393295288,
+      "validation_probe_targets": 16.0
+    },
+    "initial_training": {
+      "validation_probe_loss": 2.053618389627208,
+      "validation_probe_targets": 69.0
+    },
+    "initial_validation": {
+      "validation_probe_loss": 3.311841368675232,
+      "validation_probe_targets": 16.0
+    },
+    "optimizer_step": 80,
+    "processed_tokens": 2520,
+    "rank": 0,
+    "scope": "demo",
+    "tokenizer_sha256": "1c61858daf4a3fbc3c5ccdb0b635954b577945261427bd969813a7575e284413",
+    "world_size": 1
+  },
+  "rng_bit_exact": true,
+  "scope": "original exact-answer demo SFT, not reasoning accuracy",
+  "seed": 20261031,
+  "source_sha256": "9567c0db969a8299302b728a506aa9eaaf539e2932ace8813b784ce19e8c1535",
+  "steps": 80,
+  "stop_after": 26,
+  "weights_bit_exact": true,
+  "working_tree_dirty": true
+}

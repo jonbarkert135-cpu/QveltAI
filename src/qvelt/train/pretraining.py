@@ -13,6 +13,7 @@ from typing import Any, cast
 
 import torch
 import torch.distributed as dist
+from safetensors.torch import load_file
 from torch import nn
 from torch.nn.parallel import DistributedDataParallel
 
@@ -22,6 +23,7 @@ from qvelt.config.pretraining import (
     parse_pretraining_job,
     pretraining_digest,
 )
+from qvelt.config.training import parse_training_job
 from qvelt.data.config import MixStage, load_data_recipe
 from qvelt.data.loader import LoaderConfig, PackedDataset, ResumableLoader
 from qvelt.model.decoder import Decoder
@@ -41,7 +43,7 @@ from qvelt.utils.checkpoints import (
     save_checkpoint,
 )
 from qvelt.utils.distributed import DistributedContext, distributed_context
-from qvelt.utils.manifest_types import DataInfo, Manifest
+from qvelt.utils.manifest_types import CheckpointInfo, DataInfo, Manifest
 from qvelt.utils.manifests import _reject_constant, _unique_mapping, manifest_digest
 from qvelt.utils.metrics import JsonMetricSink, MetricSink, optional_sink
 from qvelt.utils.reproducibility import seed_everything
@@ -98,6 +100,10 @@ def prepare_inputs(recipe: PretrainingJob) -> PreparedInputs:
         )
     training = PackedDataset(path, "train", recipe.data_sha256)
     validation = PackedDataset(path, "validation", recipe.data_sha256)
+    if training.assistant_only != (recipe.objective == "sft") or (
+        recipe.objective == "sft" and report.get("objective") != "assistant-v1"
+    ):
+        raise ValueError("Packed dataset and requested objective disagree")
     if (
         training.vocab != recipe.job.experiment.model.vocab
         or training.vocab != text_tokenizer.vocab_size
@@ -112,6 +118,41 @@ def prepare_inputs(recipe: PretrainingJob) -> PreparedInputs:
     return PreparedInputs(
         training, validation, data_recipe.mixing, manifest, tokenizer, cast(str, scope)
     )
+
+
+def initialize_weights(
+    model: nn.Module, recipe: PretrainingJob, tokenizer_sha: str
+) -> None:
+    """Load only verified model tensors; SFT starts fresh optimizer/RNG/counters."""
+    if recipe.initial_checkpoint is None:
+        return
+    path = Path(recipe.initial_checkpoint)
+    store = ArtifactStore(path.parent)
+    manifest = store.read_manifest(path.name, expected_sha256=recipe.initial_sha256)
+    if (
+        not isinstance(manifest.metadata, CheckpointInfo)
+        or manifest.metadata.tokenizer_sha256 != tokenizer_sha
+    ):
+        raise ValueError("Initial checkpoint tokenizer identity mismatch")
+    records = {file.path: file for file in manifest.files}
+    if (
+        "model.safetensors" not in records
+        or records["model.safetensors"].role != "model"
+        or "job.yaml" not in records
+    ):
+        raise ValueError("Initialization requires a full Qvelt model checkpoint")
+    with store.open_file("job.yaml") as stream:
+        data = stream.read(128 * 1024 + 1)
+    if (
+        len(data) > 128 * 1024
+        or parse_training_job(data.decode()).experiment.model
+        != recipe.job.experiment.model
+    ):
+        raise ValueError("Initial checkpoint architecture mismatch")
+    state = load_file(str(path.parent / "model.safetensors"), device="cpu")
+    if any(not bool(torch.isfinite(value).all()) for value in state.values()):
+        raise ValueError("Nonfinite initial model weights")
+    model.load_state_dict(state, strict=True)
 
 
 def _loader_settings(
@@ -199,7 +240,13 @@ def train_pretraining(
 ) -> dict[str, Any]:
     """Complete only optimizer windows; checkpoints commit every rank's consumer state."""
     path = (base / recipe.data_manifest).resolve()
-    recipe = replace(recipe, data_manifest=str(path))
+    recipe = replace(
+        recipe,
+        data_manifest=str(path),
+        initial_checkpoint=str((base / recipe.initial_checkpoint).resolve())
+        if recipe.initial_checkpoint
+        else None,
+    )
     job = recipe.job
     final = job.training.steps if stop_after is None else stop_after
     if type(final) is not int or not 1 <= final <= job.training.steps:
@@ -270,6 +317,13 @@ def train_pretraining(
             model: nn.Module = Decoder(job.experiment.model, job.training.execution).to(
                 context.device
             )
+            if not resume:
+                context.collective(
+                    lambda: initialize_weights(
+                        model, recipe, manifest_digest(inputs.tokenizer)
+                    ),
+                    "Initial model failure",
+                )
             if context.world_size > 1:
                 model = DistributedDataParallel(
                     model,
@@ -298,7 +352,12 @@ def train_pretraining(
                         "Unknown application checkpoint fields"
                     )
                 if (
-                    state["kind"] != "packed-pretraining-v1"
+                    state["kind"]
+                    != (
+                        "packed-sft-v1"
+                        if recipe.objective == "sft"
+                        else "packed-pretraining-v1"
+                    )
                     or state["recipe_sha256"] != identity
                     or pretraining_digest(parse_pretraining_job(state["recipe_yaml"]))
                     != identity
@@ -365,7 +424,32 @@ def train_pretraining(
                 context.rank_zero(write_log)
 
             initial = validation_probe(model, recipe, inputs, context)
-            log(start, initial)
+            initial_training = (
+                validation_probe(
+                    model, recipe, replace(inputs, validation=inputs.training), context
+                )
+                if recipe.objective == "sft"
+                else None
+            )
+            final_training = initial_training
+            log(
+                start,
+                {
+                    **initial,
+                    **(
+                        {
+                            "training_probe_loss": initial_training[
+                                "validation_probe_loss"
+                            ],
+                            "training_probe_targets": initial_training[
+                                "validation_probe_targets"
+                            ],
+                        }
+                        if initial_training
+                        else {}
+                    ),
+                },
+            )
             tokens = cast(int, progress["processed_tokens"])
             step = saved = start
             last_validation = initial
@@ -428,10 +512,29 @@ def train_pretraining(
                 if step % recipe.validation_every == 0 or step == final:
                     last_validation = validation_probe(model, recipe, inputs, context)
                     values.update(last_validation)
+                if recipe.objective == "sft" and step == final:
+                    final_training = validation_probe(
+                        model,
+                        recipe,
+                        replace(inputs, validation=inputs.training),
+                        context,
+                    )
+                    values.update(
+                        {
+                            "training_probe_loss": final_training[
+                                "validation_probe_loss"
+                            ],
+                            "training_probe_targets": final_training[
+                                "validation_probe_targets"
+                            ],
+                        }
+                    )
                 log(step, values)
                 if step % job.training.checkpoint_every == 0 or step == final:
                     state = {
-                        "kind": "packed-pretraining-v1",
+                        "kind": "packed-sft-v1"
+                        if recipe.objective == "sft"
+                        else "packed-pretraining-v1",
                         "recipe_yaml": dump_pretraining_job(recipe),
                         "recipe_sha256": identity,
                         "loader": loader.state_dict(),
@@ -462,6 +565,14 @@ def train_pretraining(
                 "consumed_microbatches": loader.state_dict()["step"],
                 "initial_validation": initial,
                 "final_validation": last_validation,
+                **(
+                    {
+                        "initial_training": initial_training,
+                        "final_training": final_training,
+                    }
+                    if initial_training
+                    else {}
+                ),
             }
         finally:
             try:

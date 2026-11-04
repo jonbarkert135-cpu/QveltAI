@@ -149,3 +149,21 @@ Exact packed RNG/optimizer replay is demonstrated with the default JSON sink.
 Optional TensorBoard/W&B validation covers offline outputs; full stochastic
 trainer/SDK restart parity is not established and must be checked before relying
 on extra SDK state in a stochastic rollout/training workflow.
+
+## M6.1 bounded assistant supervision
+
+Whole-dialog packing leaves unused capacity. Right truncation can discard solution
+tails and rejects prefixes that cut in a prompt/header or have no assistant target;
+no truncation-policy quality optimum is claimed. The generic formatter preserves
+licensed mathematical solutions but verifies only structure, not imported proofs.
+Original demo exact answers are independently checked by Fraction/math and SymPy;
+no teacher model is used. SFT train/validation families are separate across languages,
+but the base engineering demo may see other instances of those task families.
+Fixed train/heldout probes can reuse blocks, and low training loss does not establish
+answer accuracy, instruction-following quality or production decontamination.
+
+Weights-only initialization needs a trusted pinned full Qvelt checkpoint with the
+same tokenizer and architecture; it starts a new optimizer and is not exact base-run
+resume. Checksums are integrity/identity checks, not external authorship guarantees.
+CPU single-process SFT is the acceptance target; CUDA/distributed SFT, stochastic
+SDK restart, third-party checkpoints and production datasets remain unverified.

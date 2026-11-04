@@ -75,7 +75,8 @@ uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/
 | DCP/DTensor shards | Yes | Two actual CPU ranks and DTensor shard round trip |
 | GPU FSDP2/NCCL | API path and tests | Hardware tests provided; not run here |
 | JSON/TensorBoard/W&B metrics | Yes | JSON/event files and actual W&B offline run; no online upload |
-| SFT/preferences/reasoning RL | No | Phase6; directory documents scope only |
+| Conversational SFT | Yes (CPU demo) | Assistant-only masks, whole-dialog packing, pinned base weights and exact replay; [runbook04](runbooks/04_supervised_finetuning.md) |
+| Preferences/reasoning RL | No | Remaining Phase6 milestones |
 | Reasoning evaluation/serving/export formats beyond safetensors | No | Phases7–8; no fake commands |
 
 See [current state](STATE.md), [roadmap](PLAN.md), [engineering design](docs/development/foundation_design.md),

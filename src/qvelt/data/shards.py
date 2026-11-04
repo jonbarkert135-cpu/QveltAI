@@ -34,6 +34,8 @@ class ShardWriter:
         vocab: int,
         context: int,
         shard_tokens: int,
+        *,
+        whole_documents: bool = False,
     ) -> None:
         identifier(prefix.replace("/", "-"), "shard.prefix")
         if any(
@@ -47,6 +49,9 @@ class ShardWriter:
             context,
             shard_tokens,
         )
+        if type(whole_documents) is not bool:
+            raise ValueError("whole_documents must be bool")
+        self.whole_documents = whole_documents
         self.dtype = token_dtype(vocab)
         self.tokens = tempfile.TemporaryFile(dir=store.root)
         self.segments = tempfile.TemporaryFile(dir=store.root)
@@ -98,6 +103,11 @@ class ShardWriter:
             )
         if {"document", "shard", "start", "tokens"} & set(metadata):
             raise ValueError("Document metadata cannot replace storage coordinates")
+        if self.whole_documents:
+            if len(tokens) - 1 > self.context:
+                raise ValueError("Whole document exceeds packing context")
+            if self.used + len(tokens) - 1 > self.context:
+                self._flush_block()
         self.last_document = document
         if self.token_count and self.token_count + len(tokens) > self.target:
             self._flush_tokens()

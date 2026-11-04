@@ -1,6 +1,6 @@
 # Qvelt master roadmap
 
-Last updated: 2026-11-01. Owner of every milestone: **Lead agent**.
+Last updated: 2026-11-04. Owner of every milestone: **Lead agent**.
 
 ## Mission and boundaries
 
@@ -292,18 +292,25 @@ marked complete without its actual configuration and logs.
 
 ### M6.1 — Implement SFT and mathematical supervision
 
-Owner: Lead agent. Status: planned. Dependencies: M5.1; trainable checkpoint;
+Owner: Lead agent. Status: complete for single-process CPU/demo data. Dependencies: M5.1; trainable checkpoint;
 approved supervision data. Distributed SFT additionally depends on M5.2.
 
-- [ ] Implement versioned chat formatting, assistant-only loss, packing/truncation,
+- [x] Implement versioned chat formatting, assistant-only loss, packing/truncation,
   and prompt/response boundary tests; preserve held-out problem families.
-- [ ] Support licensed mathematical solutions and verified synthetic examples
+- [x] Support licensed mathematical solutions and verified synthetic examples
   with teacher/model provenance and permitted-use records.
-- [ ] Run a tiny SFT overfit and resume test; record token counts and masked loss.
+- [x] Run a tiny SFT overfit and resume test; record token counts and masked loss.
 
 Acceptance: formatting/mask reference tests pass, a real tiny SFT run learns its
 fixture, and its held-out evaluation is reported without contamination claims
 based solely on an empty exact-match search.
+
+Evidence:docs/development/validation_sft.md and its source-bound receipt;543 tests
+pass with explicit loopback/one-thread CPU settings,103 typed files,80 SFT updates/
+2520 assistant targets and exact weights/Adam/RNG/consumer replay. Verified original
+exact-answer supervision is not public mathematical reasoning accuracy; arbitrary
+licensed solution text receives structural,not proof verification. Distributed/GPU
+SFT and production dataset clearance remain outside this completed CPU scope.
 
 ### M6.2 — Implement and verify preference optimization
 
@@ -492,8 +499,8 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 
 M4.1/available-CPU M4.2 and M5.1 are complete. Packed CPU/DDP references/replay
 are verified; actual CUDA/FSDP/shared-store/multi-node tiers and production-source
-clearance remain blocked. Next portable milestone:M6.1 original-data chat/SFT
-formatting,assistant loss masks and tiny SFT optimization/replay. Keep final heldout
+clearance remain blocked. M6.1 original-data chat/SFT,assistant masks and tiny optimization/replay now pass
+CPU acceptance. Next portable milestone:M6.2 verified preference optimization. Keep final heldout
 families separate; do not promote demo loss to a reasoning benchmark score.
 Publish verified work and reports to main; no paid/final-scale runs or old
 cloud-environment changes. See STATE.md for current evidence and next actions.
@@ -576,4 +583,4 @@ Owner: Lead agent. Date: 2026-11-04. Status: complete.
 
 Acceptance: ordinary Make setup works with read-only home; actual CPU/distributed
 and offline-metrics tests pass, evidence distinguishes unrun GPU paths, and the
-verified environment fix is published. M6.1 remains the next product milestone.
+verified environment fix is published. The following M6.1 acceptance is recorded in validation_sft.md.
