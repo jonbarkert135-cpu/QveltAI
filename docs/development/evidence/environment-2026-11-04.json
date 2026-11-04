@@ -1,0 +1,63 @@
+{
+  "base_revision": "260b43184e776a00919f87313482b39e076a90ce",
+  "date": "2026-11-04",
+  "dirty_tree": true,
+  "numeric": {
+    "first_loss": 5.6883039474487305,
+    "last_loss": 5.023181438446045,
+    "parameters": 117056,
+    "processed_tokens": 6400.0,
+    "replay_optimizer_equal": true,
+    "replay_weights_equal": true,
+    "steps": 100
+  },
+  "packed": {
+    "consumer_state_exact": true,
+    "continuous": {
+      "consumed_microbatches": 40,
+      "data_sha256": "76005129f948c9c98a313136b87072fbfc064b3c4630668c8dc838a5f3d2ee64",
+      "final_validation": {
+        "validation_probe_loss": 5.756516695022583,
+        "validation_probe_targets": 256.0
+      },
+      "initial_validation": {
+        "validation_probe_loss": 6.126703500747681,
+        "validation_probe_targets": 256.0
+      },
+      "optimizer_step": 20,
+      "processed_tokens": 4959,
+      "rank": 0,
+      "scope": "demo",
+      "tokenizer_sha256": "185806484e1e6dfb7e2a4218d2a8911cbd821fb44fc51cb53ea1993a61c1e91f",
+      "world_size": 1
+    },
+    "optimizer_bit_exact": true,
+    "parameters": 127104,
+    "replayed": {
+      "consumed_microbatches": 40,
+      "data_sha256": "76005129f948c9c98a313136b87072fbfc064b3c4630668c8dc838a5f3d2ee64",
+      "final_validation": {
+        "validation_probe_loss": 5.756516695022583,
+        "validation_probe_targets": 256.0
+      },
+      "initial_validation": {
+        "validation_probe_loss": 5.908223390579224,
+        "validation_probe_targets": 256.0
+      },
+      "optimizer_step": 20,
+      "processed_tokens": 4959,
+      "rank": 0,
+      "scope": "demo",
+      "tokenizer_sha256": "185806484e1e6dfb7e2a4218d2a8911cbd821fb44fc51cb53ea1993a61c1e91f",
+      "world_size": 1
+    },
+    "scope": "original offline BPE-data engineering smoke, not reasoning quality",
+    "steps": 20,
+    "stop_after": 6,
+    "weights_bit_exact": true
+  },
+  "python": "3.12.14",
+  "scope": "managed CPU development environment validation",
+  "torch": "2.9.1+cpu",
+  "uv": "0.12.23"
+}

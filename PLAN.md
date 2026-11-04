@@ -559,3 +559,21 @@ Owner: Lead agent. Status: in progress. Dependencies: M3.1 and M2.3.
 Acceptance: genuine raw-to-batch pipeline and exact committed cursor replay,
 including worker prefetch; real benchmark/data availability is a mandatory
 production gate, never faked with toy fixtures. Observe current-head CI.
+
+## Supporting task — Managed development environment recovery
+
+Owner: Lead agent. Date: 2026-11-04. Status: complete.
+
+- [x] Restore authenticated GitHub access with explicit execution network permission;
+  fetch main, verify the starting revision and configure local main tracking.
+- [x] Install locked CPU dependencies and optional offline metrics SDKs; provide
+  writable, overridable project-local caches without changing the lockfile.
+- [x] Verify lint, types, dependency consistency, packaging and installed Git hooks.
+- [x] Execute numeric 100-update and packed BPE 20-update exact replay smokes.
+- [x] Complete CPU/optional-SDK suite: 524 passed, 5 GPU deselected in 94.75s.
+- [x] Record local acceptance in docs/development/validation_environment.md.
+- [x] Publish the verified environment fix on main.
+
+Acceptance: ordinary Make setup works with read-only home; actual CPU/distributed
+and offline-metrics tests pass, evidence distinguishes unrun GPU paths, and the
+verified environment fix is published. M6.1 remains the next product milestone.

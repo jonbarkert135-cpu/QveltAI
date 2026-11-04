@@ -356,3 +356,20 @@ across hosts without contradicting within-run replay. Added explicit partial/DDP
 RNG regressions complement the model/cursor checks;see final targeted log/CI.
 M5.1 closes for available CPU;CPU-DDP M5.2 is verified while hardware tiers remain
 unvalidated. SFT/preferences/RL and production data clearance are separate gates.
+
+
+## R015 — Managed CPU environment replay revalidation
+
+Date:2026-11-04. Base260b431 with cache/README changes in the working tree;
+model/training code and lock unchanged. Frozen Python3.12.14/uv0.12.23/
+Torch2.9.1+cpu, optional SDKs installed. Numeric100 updates/6400 targets:
+loss5.6883039474487305->5.023181438446045;stop37/resume100 weights/Adam bit-exact.
+Actual BPE20 updates/40 microbatches/4959 valid targets:heldout256-target probe
+6.126703500747681->5.756516695022583;stop6/resume20 weights/Adam/consumer exact.
+These are existing original demo workflows, not a reasoning benchmark or a new
+training capability. Full CPU/optional-SDK suite524 passed,5 GPU deselected,
+no skips in94.75s with explicit execution network permission. An earlier default-
+sandbox attempt was interrupted at16 passed while local distributed sockets waited;
+it is not counted as a full pass. No GPU/paid/online-metrics/final-scale run.
+Commands, environment and machine-readable receipts:validation_environment.md and
+docs/development/evidence/environment-2026-11-04.json.

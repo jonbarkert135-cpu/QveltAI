@@ -1,6 +1,9 @@
 UV ?= uv
 PROFILE ?= cpu
 EXTRA_ARGS ?=
+# Keep tool caches writable in managed environments with a read-only home.
+export UV_CACHE_DIR ?= $(CURDIR)/.cache/uv
+export PRE_COMMIT_HOME ?= $(CURDIR)/.cache/pre-commit
 RUN = $(UV) run --frozen --extra $(PROFILE) $(EXTRA_ARGS)
 
 .PHONY: setup lint format typecheck test smoke hooks build

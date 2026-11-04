@@ -1,6 +1,19 @@
 # Qvelt current state
 
-Updated:2026-11-01. Owner:Lead agent.
+Updated:2026-11-04. Owner:Lead agent.
+
+## Environment readiness (2026-11-04)
+
+Managed CPU development is restored: Python3.12.14/uv0.12.23/Torch2.9.1+cpu,
+frozen optional metrics SDKs, writable Make caches and installed Git hooks.
+Authenticated GitHub fetch/push dry-run works with explicit network permission;
+local main tracks origin/main. CPU/optional-SDK suite:524 passed,5 GPU deselected,
+no skips in94.75s. Lint/format,mypy97 files,lock/dependency checks,hook checks and
+wheel/sdist build pass. Numeric100-step and packed BPE20-step exact replay smokes
+pass. See docs/development/validation_environment.md and its receipts. Direct uv/
+Git-hook invocations need the README cache exports in read-only-home environments;
+network operations/local distributed sockets need execution network permission.
+M6.1 remains next; no GPU or paid/final-scale run was performed.
 
 ## Current task
 

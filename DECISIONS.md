@@ -907,3 +907,21 @@ CLI values and making identical seeded weights independent of ambient default
 dtype. Explicit later .to(dtype=...) remains available. A regression compares both
 ambient settings tensor-exactly; this corrects the initialization contract rather
 than changing architecture or claiming new mixed-precision hardware evidence.
+
+## ADR-0038 — Writable project-local development caches
+
+- **Date/status:** 2026-11-04; implemented for the managed CPU development environment.
+- **Context/options:** the inherited uv cache is under a read-only home directory,
+  so ordinary `make setup` fails before dependency installation. Requiring a home
+  permission change or repeating absolute machine-specific paths is unnecessary.
+- **Choice/rationale:** Make exports overridable `UV_CACHE_DIR` and
+  `PRE_COMMIT_HOME` defaults under the ignored repository `.cache/` directory.
+  Keep the pinned lock, CPU/CUDA profiles and dependency versions unchanged.
+  Document shell exports for direct uv/Git-hook invocations; Make exports affect
+  its child commands, not the caller's shell. No proxy or TLS policy changes.
+- **Sources:** [verified] actual uv 0.12.23 read-only-cache error, successful frozen
+  installation, Make-exported cache paths, hook installation and execution in this
+  checkout. Explicit network permission enables the inherited managed proxy and
+  local distributed sockets; cache configuration does not grant network access.
+- **Revisit:** cache storage limits, changes to the execution sandbox or tool
+  versions. CPU readiness does not establish CUDA or final-scale readiness.

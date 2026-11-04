@@ -26,6 +26,19 @@ make test
 make smoke
 ```
 
+Make stores uv and pre-commit caches in the ignored `.cache/` directory so a
+read-only home directory works. Existing `UV_CACHE_DIR` and `PRE_COMMIT_HOME`
+settings take precedence. For direct `uv` and Git-hook commands in such environments,
+set these variables in the current shell:
+
+```bash
+export UV_CACHE_DIR="$PWD/.cache/uv"
+export PRE_COMMIT_HOME="$PWD/.cache/pre-commit"
+```
+
+Network operations also require the
+execution environment's network permission; local cache settings do not grant it.
+
 `make test` includes numerical references, actual tiny-model forward/backward,
 checkpoint/RNG replay and two CPU ranks. GPU tests are deselected; optional
 TensorBoard/W&B tests skip if their extras are absent. `make smoke` executes
