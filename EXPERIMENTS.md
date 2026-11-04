@@ -373,3 +373,26 @@ sandbox attempt was interrupted at16 passed while local distributed sockets wait
 it is not counted as a full pass. No GPU/paid/online-metrics/final-scale run.
 Commands, environment and machine-readable receipts:validation_environment.md and
 docs/development/evidence/environment-2026-11-04.json.
+
+
+## R016 — Assistant-only exact-math SFT and atomic replay
+
+Date:2026-11-04. Source:7eed79c with M6.1 working-tree changes; exact source digest,
+recipe,initial checkpoint and data/tokenizer manifests retained in
+`docs/development/evidence/sft-smoke-2026-11-04.json`. Python3.12.14,uv0.12.23,
+Torch2.9.1+cpu,FP32,training seed20261031,source seed20261104,one CPU thread.
+64 original EN/RU exact-answer dialogs;24 train/16 validation/24 test with disjoint
+SFT families. No external teacher/corpus; licenses and permitted use in DATA_CARD.
+Three-step engineering base initializes only weights for the new127104-parameter
+SFT run. Actual80 updates/80 microbatches/2520 assistant targets,B2/T128,LR0.003.
+Fixed69-target training probe5.897945459338202->0.14195556225983993;distinct16-target
+heldout probe5.810949802398682->4.761350393295288. Stop26/resume80 matches weights,
+Adam,RNG and committed application/consumer state bit-exactly. This is fixture
+memorization/restart evidence,not mathematical answer accuracy or decontamination.
+
+Final full CPU/optional-SDK run543 passed,5 GPU deselected,no skips in97.32s;
+Ruff/format,mypy103 files,package/lock/dependency/hook checks pass. Full suite uses
+explicit network permission,GLOO_SOCKET_IFNAME=lo,OMP_NUM_THREADS=1,MKL_NUM_THREADS=1
+following earlier process-exit timeouts (not counted as passes). Full commands,
+failed/interrupted-run boundaries,scope and limitations are in validation_sft.md.
+No CUDA/distributed-SFT/final-scale/paid/online-metrics run was performed.
