@@ -7,14 +7,14 @@ resolution-markers = [
     "python_full_version >= '3.12' and sys_platform == 'linux' and extra == 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
     "python_full_version >= '3.12' and sys_platform != 'darwin' and sys_platform != 'linux' and extra == 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
     "python_full_version >= '3.12' and sys_platform == 'darwin' and extra == 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
+    "python_full_version >= '3.12' and sys_platform == 'linux' and extra != 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
+    "python_full_version >= '3.12' and sys_platform != 'linux' and extra != 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
     "python_full_version < '3.12' and sys_platform == 'linux' and extra != 'extra-5-qvelt-cpu' and extra == 'extra-5-qvelt-cuda'",
     "python_full_version < '3.12' and sys_platform != 'linux' and extra != 'extra-5-qvelt-cpu' and extra == 'extra-5-qvelt-cuda'",
     "python_full_version < '3.12' and sys_platform == 'linux' and extra == 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
     "python_full_version < '3.12' and sys_platform != 'darwin' and sys_platform != 'linux' and extra == 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
     "python_full_version < '3.12' and sys_platform == 'darwin' and extra == 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
-    "python_full_version >= '3.12' and sys_platform == 'linux' and extra != 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
     "python_full_version < '3.12' and sys_platform == 'linux' and extra != 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
-    "python_full_version >= '3.12' and sys_platform != 'linux' and extra != 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
     "python_full_version < '3.12' and sys_platform != 'linux' and extra != 'extra-5-qvelt-cpu' and extra != 'extra-5-qvelt-cuda'",
 ]
 conflicts = [[
@@ -1091,6 +1091,7 @@ dev = [
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "ruff" },
+    { name = "setuptools" },
     { name = "types-pyyaml" },
 ]
 
@@ -1119,6 +1120,7 @@ dev = [
     { name = "pre-commit", specifier = "==4.2.0" },
     { name = "pytest", specifier = "==8.3.5" },
     { name = "ruff", specifier = "==0.11.13" },
+    { name = "setuptools", specifier = "==84.2.1" },
     { name = "types-pyyaml", specifier = "==6.0.12.20261030" },
 ]
 

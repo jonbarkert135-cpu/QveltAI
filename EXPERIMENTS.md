@@ -425,3 +425,11 @@ by its added assertion;the field was fixed and profiler subset3 passed in3.36s.
 No tests were relaxed or disabled. Full current-source remote CI remains pending.
 See validation_phase4_closure.md for commands,scope and RFC deviations. No GPU,
 paid/final-scale training or long-context quality claim.
+
+R017 remote first pass:actual GitHub41908101017 at886ce61 has7 successful jobs,
+including CPU3.12/3.13 and dedicated numeric/data/packed/SFT/optional-metrics jobs.
+CPU3.11:560 passed,1 Inductor failure,2 optional SDK skips,5 GPU deselected in110.45s.
+The failure is a missing setuptools developer dependency,not a numerical mismatch.
+Pin existing locked84.2.1 explicitly in dev;all locked package versions/hashes stay
+unchanged. Frozen setup,lint/format and mypy105 files pass after the dependency fix;
+repeat current-source/current-lock CI before declaring matrix acceptance.

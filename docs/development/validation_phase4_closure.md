@@ -87,3 +87,15 @@ one packed-DDP timeout plus a missing profiler metadata field caught by its new
 test. The field was fixed; the profiler subset then passed3 tests in3.36s. An
 instrumented standalone DDP attempt also aborted after completing training; it is
 diagnostic evidence only. No failing test was removed,relaxed or marked xfail.
+
+
+## Remote compiler-tooling correction
+
+Run41908101017 at886ce61 passed7/8 jobs,including both complete CPU3.12/3.13
+jobs and all data/pretraining/SFT smokes. CPU3.11 failed only the Inductor test
+with ModuleNotFoundError:setuptools (560 passed,2 optional SDK skips,5 GPU
+deselected in110.45s). Torch's locked dependency marker supplies setuptools only
+on Python>=3.12;optional SDK installation masked this locally. Explicitly pin
+already-locked setuptools84.2.1 in dev(MIT,Python>=3.10);the lock changes dependency
+edges,not package versions/hashes. Compile tests remain enabled. Matrix acceptance
+for the corrected dependency is pending.

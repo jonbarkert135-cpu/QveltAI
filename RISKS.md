@@ -187,3 +187,9 @@ optimization/checkpoints,including before this import. Loopback/one-thread and
 USE_LIBUV=0 settings do not establish a general fix. Final local562 passed/1 DDP
 failure is not all-green acceptance;observe current-source CI and preserve this
 runtime limitation. Do not mask it with os._exit,relaxed tests or fabricated success.
+
+
+Inductor development on Python3.11 requires the explicitly pinned dev setuptools;
+Torch's transitive marker supplied it only on Python>=3.12. Optional SDKs must not
+be relied on to supply compiler tooling. Plain eager package use and validated
+`make setup` development have distinct dependency scopes.

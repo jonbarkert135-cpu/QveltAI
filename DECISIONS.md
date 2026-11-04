@@ -987,3 +987,22 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   default values remain compatible,which is distinct from exact run resume.
 - **Revisit:**real long-context data/evaluation,CUDA dispatch/VRAM evidence,
   compiler/version upgrades or a requirement for fully captured host validation.
+
+## ADR-0041 — Explicit developer dependency for CPU Inductor
+
+- **Date/status:**2026-11-04; pinned,lock updated; matrix revalidation pending.
+- **Context:**actual CI41908101017 at886ce61 passed7/8 jobs,including full CPU3.12/
+  3.13 and all data/training/SFT jobs. CPU3.11 had560 passed/2 optional SDK skips/
+  5 GPU deselected but its real Inductor test failed:torch.utils.cpp_extension
+  imports setuptools,which the locked Torch dependency declares only on Python>=3.12.
+  Optional SDKs had masked this missing developer dependency locally.
+- **Choice:**declare setuptools==84.2.1 in the dev group,already present at exactly
+  that version in uv.lock. Update only project dependency edges/resolution ordering;
+  no package versions or distribution hashes are upgraded. Keep the compile test,
+  do not skip it on Python3.11 or substitute eager for Inductor.
+- **Sources:**[verified] actual CI stack and installed Torch2.9.1 import behavior;
+  existing lock markers; installed setuptools84.2.1 metadata (MIT,Python>=3.10),
+  frozen synchronization and local Inductor execution. This is compiler tooling,
+  not a new model architecture/runtime numerical dependency.
+- **Revisit:**PyTorch/compiler upgrades,developer packaging policy or removal of
+  runtime kernel compilation. Compiler/hardware requirements remain separate.

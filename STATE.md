@@ -25,8 +25,10 @@ Default FP32/BF16 logits/gradients/weights match pre-import seeded values exactl
 Final local regression:562 passed,1 existing numeric-DDP exit SIGABRT,5 GPU
 deselected in104.85s. Packed replay/model/SFT tests pass;root cause of the local
 DDP process-exit fault remains unresolved,also observed before this import.
-Remote acceptance of the current Phase4 revision is pending;do not call the local
-full suite green. See validation_phase4_closure.md,phase4_import_review.md and
+Remote41908101017 at886ce61 passed7/8 jobs,including full CPU3.12/3.13;
+CPU3.11 exposed missing compiler-tooling dependency setuptools. Existing84.2.1 is
+now pinned explicitly in dev with lock edges updated;matrix revalidation pending.
+Do not call the local full suite green. See validation_phase4_closure.md,phase4_import_review.md and
 new docs/model.md. Supplied old state/profile claims were not imported.
 
 
