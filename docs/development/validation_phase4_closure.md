@@ -34,7 +34,7 @@ SIGABRT after reporting completed optimization. The packed two-rank replay and a
 model/SFT/profiler tests pass in that run. USE_LIBUV=0 was tried via its verified
 installed PyTorch rendezvous setting; it did not eliminate the exit fault. Earlier
 pre-import sessions had distributed exit stalls too. Root cause is unresolved;
-this is not an all-green local full-suite claim. Remote acceptance is pending.
+this is not an all-green local full-suite claim. Remote corrected-source acceptance:GitHub41909315717 atfee1e3d,all8 jobs successful.
 
 Before applying source changes, saved seeded weights/logits/gradients for both
 backends in FP32 and CPU BF16 on a packed,padded B2/T10 case with hidden32/two
@@ -97,5 +97,11 @@ with ModuleNotFoundError:setuptools (560 passed,2 optional SDK skips,5 GPU
 deselected in110.45s). Torch's locked dependency marker supplies setuptools only
 on Python>=3.12;optional SDK installation masked this locally. Explicitly pin
 already-locked setuptools84.2.1 in dev(MIT,Python>=3.10);the lock changes dependency
-edges,not package versions/hashes. Compile tests remain enabled. Matrix acceptance
-for the corrected dependency is pending.
+edges,not package versions/hashes. Compile tests remain enabled. Matrix acceptance for the corrected dependency:GitHub41909315717 atfee1e3d,
+all8 jobs successful. Each CPU3.11/3.12/3.13 job has561 passed,2 optional SDK skips,
+5 GPU deselections (117.80s/125.46s/126.23s). Optional metrics independently has
+3 passed in4.70s,covering both skipped SDK cases. Numeric/data/packed/SFT jobs are
+all green. Bare local Python3.11.17 with no optional SDKs also ran the actual
+Inductor test successfully in44.92s after frozen setup. The final lock/build/lint/
+type checks pass;only the explicit setuptools dev edge was added,no package
+versions/hashes upgraded. Local intermittent DDP exit faults remain recorded.

@@ -960,7 +960,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0040 — Selective Phase4 closure on top of current SFT
 
-- **Date/status:**2026-11-04; selected user patch integrated; CPU model checks pass,remote full acceptance pending.
+- **Date/status:**2026-11-04; selected user patch integrated; corrected-source CPU matrix/8-job CI41909315717 verified.
 - **Context:**the supplied83910ae patch targets260b431 and reuses ADR0038/R015,
   which now identify environment recovery. Applying its state files would discard
   current M6.1 work. Select source/tests/docs hunks and retain current memory.
@@ -990,7 +990,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0041 — Explicit developer dependency for CPU Inductor
 
-- **Date/status:**2026-11-04; pinned,lock updated; matrix revalidation pending.
+- **Date/status:**2026-11-04; pinned,lock updated; CPU3.11/3.12/3.13 and all8 CI41909315717 jobs verified.
 - **Context:**actual CI41908101017 at886ce61 passed7/8 jobs,including full CPU3.12/
   3.13 and all data/training/SFT jobs. CPU3.11 had560 passed/2 optional SDK skips/
   5 GPU deselected but its real Inductor test failed:torch.utils.cpp_extension

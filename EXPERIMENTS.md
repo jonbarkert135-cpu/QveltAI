@@ -433,3 +433,14 @@ The failure is a missing setuptools developer dependency,not a numerical mismatc
 Pin existing locked84.2.1 explicitly in dev;all locked package versions/hashes stay
 unchanged. Frozen setup,lint/format and mypy105 files pass after the dependency fix;
 repeat current-source/current-lock CI before declaring matrix acceptance.
+
+
+R017 final corrected-source acceptance:fee1e3db497b7ce899216827f71ba721ada1ba3e,
+actual GitHub41909315717,all8 jobs successful. CPU3.11/3.12/3.13 each561 passed,
+2 optional SDK skips,5 GPU deselected in117.80s/125.46s/126.23s. Optional metrics
+independently3 passed in4.70s;numeric/data/packed/SFT jobs all green. A separately
+created bare Python3.11.17 CPU developer environment,without TensorBoard/W&B,
+installs setuptools84.2.1 and passes actual Inductor execution in44.92s. Final
+frozen dependency/lock,lint,mypy105 files and wheel/sdist build pass. Original
+local562-pass/1-DDP-exit-failure observation remains valid and unresolved;remote
+success is not presented as a local runtime fix. CPU M4.3 closes;GPU remains open.

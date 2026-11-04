@@ -47,3 +47,12 @@ Selected patch files:config/__init__.py,model/layers.py,model Phase4/profiler te
 scripts/profile_model.py,docs/model.md and the two-line RFC hook clarification.
 The selection applied cleanly; adaptations are described above. User-supplied
 runtime claims were treated as hypotheses until execution on this environment.
+
+
+## Final acceptance
+
+Corrected-source commitfee1e3d:actual GitHub41909315717 has all8 jobs successful,
+including full CPU3.11/3.12/3.13,actual80-step SFT and all existing data/training
+smokes. Bare local3.11.17 Inductor passed with the explicit setuptools dev pin.
+Local distributed exit instability and GPU limitations remain in the validation
+report. No uploaded old state/receipt was substituted for these observed results.

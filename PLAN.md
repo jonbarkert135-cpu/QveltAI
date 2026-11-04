@@ -233,14 +233,16 @@ graph storage/CPU timing with clear metric limits. Four GPU cases remain unrun.
 
 ### M4.3 — Review and close the supplied expanded Phase4 acceptance
 
-Owner:Lead agent. Status:in progress. Dependencies:M4.1,M4.2; user-supplied patch.
+Owner:Lead agent. Status:complete for verified CPU scope,GPU unverified. Dependencies:M4.1,M4.2; user-supplied patch.
 
 - [x] Select compatible source/tests/docs; preserve M6.1 and current state records.
 - [x] Add explicit RoPE interpolation and preserve FP64 for whole-model gradcheck.
 - [x] Run focused compile/cache/overfit/depth/count references:22 passed in63.36s.
 - [x] Compare default FP32/BF16 logits/gradients/weights against pre-import values.
 - [x] Execute full regression and fresh operator profiling;record exact results.
-- [ ] Observe full current-revision remote CI acceptance and publish final report.
+- [x] Observe full current-revision remote CI acceptance and publish final report.
+  GitHub41909315717 atfee1e3d:all8 jobs successful;CPU3.11/3.12/3.13 each561
+  passed/2 optional SDK skips/5 GPU deselections;optional SDKs separately3 pass.
 
 Acceptance: all CPU tests and required checks pass; record new measured evidence,
 kept/skipped patch contents,RFC deviations and GPU limitations. Source/config

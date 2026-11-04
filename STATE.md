@@ -25,9 +25,12 @@ Default FP32/BF16 logits/gradients/weights match pre-import seeded values exactl
 Final local regression:562 passed,1 existing numeric-DDP exit SIGABRT,5 GPU
 deselected in104.85s. Packed replay/model/SFT tests pass;root cause of the local
 DDP process-exit fault remains unresolved,also observed before this import.
-Remote41908101017 at886ce61 passed7/8 jobs,including full CPU3.12/3.13;
-CPU3.11 exposed missing compiler-tooling dependency setuptools. Existing84.2.1 is
-now pinned explicitly in dev with lock edges updated;matrix revalidation pending.
+Corrected-source GitHub41909315717 atfee1e3d has all8 jobs successful:
+CPU3.11/3.12/3.13 each561 passed,2 optional SDK skips,5 GPU deselections;optional
+metrics separately3 passed. Numeric/data/packed/SFT smokes are green. CPU3.11's
+initial missing setuptools was fixed by pinning already-locked84.2.1 in dev;bare
+local3.11.17 Inductor without SDKs passes in44.92s. No dependency versions/hashes
+upgraded. M4.3 closes for verified CPU scope;GPU remains unverified.
 Do not call the local full suite green. See validation_phase4_closure.md,phase4_import_review.md and
 new docs/model.md. Supplied old state/profile claims were not imported.
 
@@ -43,7 +46,7 @@ GLOO_SOCKET_IFNAME=lo,OMP_NUM_THREADS=1,MKL_NUM_THREADS=1 after earlier distribu
 process-exit stalls;root cause of those stalls is not established. See R016,
 docs/development/validation_sft.md and runbooks/04_supervised_finetuning.md.
 M6.1 remote GitHub41905361820 at0abfcd3 has all8 jobs successful.
-After current Phase4 regression acceptance,next portable milestone:M6.2 preference optimization. No reasoning-accuracy claim,
+Next portable milestone:M6.2 preference optimization. No reasoning-accuracy claim,
 production corpus,external teacher,paid run or GPU/distributed-SFT validation.
 
 
