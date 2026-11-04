@@ -97,6 +97,8 @@ change invalidates model/data compatibility, not merely a CLI default.
 Portable interfaces: `ModelConfig` validates sizes, epsilon, RoPE base/context,
 and tied embeddings; `forward(token_ids, positions, document_ids, valid_mask)`
 returns logits; loss is separate for streaming/chunked vocabulary handling.
+`rope_scale` (default 1, exact baseline) is a linear position-interpolation hook
+for later context extension; non-default values are not part of this RFC baseline.
 `Decoder.forward_cached` maintains explicit per-layer KV and request metadata
 with a hard context bound (ADR-0034); it returns suffix logits and a new cache.
 `ModelExecution` selects reference/SDPA and block recomputation separately from

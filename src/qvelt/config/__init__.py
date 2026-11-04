@@ -92,6 +92,7 @@ class ModelConfig:
     context: int = 512
     norm_eps: float = 1e-6
     rope_theta: float = 10000.0
+    rope_scale: float = 1.0
 
     def __post_init__(self) -> None:
         for name in (
@@ -117,6 +118,11 @@ class ModelConfig:
         if theta <= 1:
             raise ConfigError("model.rope_theta: must exceed one")
         object.__setattr__(self, "rope_theta", theta)
+        # Linear position interpolation hook; 1.0 is the exact RFC-001 baseline.
+        scale = _number(self.rope_scale, "model.rope_scale")
+        if scale < 1:
+            raise ConfigError("model.rope_scale: must be at least one")
+        object.__setattr__(self, "rope_scale", scale)
 
     @property
     def parameter_count(self) -> int:
@@ -295,6 +301,7 @@ def parse_config(text: str) -> ExperimentConfig:
         context=_integer(m.get("context", default.context), "model.context"),
         norm_eps=_number(m.get("norm_eps", default.norm_eps), "model.norm_eps"),
         rope_theta=_number(m.get("rope_theta", default.rope_theta), "model.rope_theta"),
+        rope_scale=_number(m.get("rope_scale", default.rope_scale), "model.rope_scale"),
     )
     runtime = RuntimeConfig(
         seed=_seed(r.get("seed", rt.seed)),

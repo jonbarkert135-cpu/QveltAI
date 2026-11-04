@@ -957,3 +957,33 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 - **Revisit:**tool/reasoning roles, production data rights/audits, demonstrated long
   conversation needs or measured packing waste. CUDA/distributed SFT needs separate
   runtime tests before being advertised as validated.
+
+## ADR-0040 — Selective Phase4 closure on top of current SFT
+
+- **Date/status:**2026-11-04; selected user patch integrated; CPU model checks pass,remote full acceptance pending.
+- **Context:**the supplied83910ae patch targets260b431 and reuses ADR0038/R015,
+  which now identify environment recovery. Applying its state files would discard
+  current M6.1 work. Select source/tests/docs hunks and retain current memory.
+- **Choice:**linear position interpolation via ModelConfig.rope_scale(default1,
+  finite>=1), preserving baseline architecture and parameter shapes. At-least-FP32
+  norm/RoPE/reference-softmax retains FP64 for numerical parameter-Jacobian tests.
+  Loss intentionally stays FP32. Existing Decoder/cache/execution/factory remain.
+  Keep trust-boundary input validation while permitting compile graph breaks.
+- **Alternatives:**omit the supplied improvements; import all files/old receipts;
+  replace the chosen RFC with optional QK-norm/MoE/MLA/sliding-window variants.
+  The selected small changes close actual validation gaps without those changes.
+- **Evidence/sources:**[verified] installed PyTorch2.9.1 promote_types,gradcheck fast
+  mode,functional_call and compile AOT/Inductor behavior through executed tests.
+  Default packed/padded logits,gradients and seeded weights match pre-import
+  FP32/BF16 reference/SDPA values tensor-exactly on recorded seeded inputs.
+  [unverified] Chen et al.2023,"Extending Context Window of Large Language Models
+  via Positional Interpolation" was not reread; only the explicit linear rule and
+  its identity oracle are claimed,not long-context quality. The project-local
+  nanoGPT architecture guide informed review only; no vendor model code or speed
+  claim was imported. Current primary component sources remain in RFC/survey.
+- **Identity:**new ModelConfig field changes config hashes even at default1, and
+  executable-source identity changes. Existing source/config resume rejection
+  remains mandatory; historical runs are not silently migrated. Shapes/seeded
+  default values remain compatible,which is distinct from exact run resume.
+- **Revisit:**real long-context data/evaluation,CUDA dispatch/VRAM evidence,
+  compiler/version upgrades or a requirement for fully captured host validation.

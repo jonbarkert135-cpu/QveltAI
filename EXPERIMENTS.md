@@ -396,3 +396,32 @@ explicit network permission,GLOO_SOCKET_IFNAME=lo,OMP_NUM_THREADS=1,MKL_NUM_THRE
 following earlier process-exit timeouts (not counted as passes). Full commands,
 failed/interrupted-run boundaries,scope and limitations are in validation_sft.md.
 No CUDA/distributed-SFT/final-scale/paid/online-metrics run was performed.
+
+
+## R017 — Selective supplied Phase4 closure and new CPU operator profile
+
+Date:2026-11-04. Base8f16a9c plus selected/adapted user patch;receipt in
+`docs/development/evidence/phase4-current-profile.json` records source/script hashes.
+22 focused model/compile/profile tests passed in63.36s (AOT and CPU Inductor ran;
+GCC14.2.0),105 typed files,lint/format/build pass. Seed517 pre-import versus current
+reference/SDPA FP32/BF16 packed+padded logits/gradients/weights are tensor-exact.
+Actual full tiny overfit(<0.05 on32 random targets within100 updates),whole-model
+FP64 gradcheck,depth-scale checks and30 random cache-length trials per backend/
+scale1 or3 pass. Source is the user's project patch;no vendor model code copied.
+
+Fresh CPU profiler:tiny19338560 parameters,B2/T128,one thread,2 warmups/3 repeats.
+SDPA488.39,reference468.05,SDPA+recompute404.89 targets/s;these short shared-host
+forward/backward measurements omit optimizer updates and are not a speed ranking.
+SDPA operator trace:aten::mm377.5ms self time,fill_16.8ms,add15.0ms. No CUDA device,
+peak GPU memory or supplied peak TFLOP rate;MFU remains null. The uploaded old
+profile JSON and old ADR0038/R015/state files were not imported as new evidence.
+
+Final local regression562 passed,1 numeric-DDP exit SIGABRT,5 GPU deselected
+in104.85s;all model/SFT/profiler and packed two-rank replay cases pass. USE_LIBUV=0
+was an executed diagnostic alternative,not a proven fix. Similar distributed
+stalls occurred before this import;root cause remains unresolved. Earlier full
+run561 passed/2 failed in237.07s included a profiler metadata field omission caught
+by its added assertion;the field was fixed and profiler subset3 passed in3.36s.
+No tests were relaxed or disabled. Full current-source remote CI remains pending.
+See validation_phase4_closure.md for commands,scope and RFC deviations. No GPU,
+paid/final-scale training or long-context quality claim.

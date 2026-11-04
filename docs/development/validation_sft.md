@@ -32,7 +32,8 @@ uses existing atomic application checkpoints for ordinary exact SFT resume.
 - Wheel/sdist build:pass; all three new posttrain modules present in the wheel.
 - Frozen lock/dependency consistency:pass; uv.lock unchanged,72 packages compatible.
 - CI YAML parsed and a dedicated80-step SFT smoke job added, preserving pinned
-  existing actions and CPU3.11/3.12/3.13 coverage. Remote run:not yet observed at local publication.
+  existing actions and CPU3.11/3.12/3.13 coverage. Remote run:GitHub41905361820 at0abfcd3,all8 jobs successful (including the
+  three CPU Python versions and the dedicated80-step SFT smoke).
 
 The first full diagnostic run had a numeric-DDP process-exit timeout and two new
 packing-test oracle mistakes (shifted length and corrupting the wrong split's

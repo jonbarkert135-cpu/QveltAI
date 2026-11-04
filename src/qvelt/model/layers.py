@@ -14,6 +14,11 @@ from qvelt.config.execution import ModelExecution
 from qvelt.model.cache import LayerKV
 
 
+def _wide(x: Tensor) -> Tensor:
+    """Upcast BF16/FP16 to FP32; keep FP64 so numerical gradient checks stay exact."""
+    return x.to(torch.promote_types(x.dtype, torch.float32))
+
+
 class RMSNorm(nn.Module):
     """g*x/sqrt(mean(x²)+eps), with FP32 statistics and a learned gain."""
 
@@ -23,21 +28,25 @@ class RMSNorm(nn.Module):
         self.eps = eps
 
     def forward(self, x: Tensor) -> Tensor:
-        values = x.float()
+        values = _wide(x)
         return (
             values
             * torch.rsqrt(values.square().mean(-1, keepdim=True) + self.eps)
-            * self.weight.float()
+            * _wide(self.weight)
         ).to(x.dtype)
 
 
 class RotaryEmbedding(nn.Module):
     inverse: Tensor
 
-    """Rotate adjacent even/odd Q/K coordinates at explicit document positions."""
+    """Rotate adjacent even/odd Q/K pairs by angle (position/scale)*theta^(-2j/dh).
 
-    def __init__(self, head_dim: int, theta: float) -> None:
+    scale>1 is linear position interpolation for context extension; 1 is RFC-001.
+    """
+
+    def __init__(self, head_dim: int, theta: float, scale: float = 1.0) -> None:
         super().__init__()
+        self.scale = scale
         self.register_buffer(
             "inverse",
             theta ** (-torch.arange(0, head_dim, 2, dtype=torch.float32) / head_dim),
@@ -45,8 +54,11 @@ class RotaryEmbedding(nn.Module):
         )
 
     def forward(self, x: Tensor, positions: Tensor) -> Tensor:
-        angles = positions.float()[:, None, :, None] * self.inverse[None, None, None, :]
-        a, b = x.float()[..., 0::2], x.float()[..., 1::2]
+        wide = _wide(x)
+        angles = (positions.to(wide.dtype) / self.scale)[:, None, :, None] * (
+            self.inverse.to(wide.dtype)[None, None, None, :]
+        )
+        a, b = wide[..., 0::2], wide[..., 1::2]
         cos, sin = angles.cos(), angles.sin()
         return (
             torch.stack((a * cos - b * sin, a * sin + b * cos), dim=-1)
@@ -72,7 +84,7 @@ class Attention(nn.Module):
         self.output = nn.Linear(
             config.hidden, config.hidden, bias=False, dtype=torch.float32
         )
-        self.rope = RotaryEmbedding(self.head_dim, config.rope_theta)
+        self.rope = RotaryEmbedding(self.head_dim, config.rope_theta, config.rope_scale)
 
     def _project(self, x: Tensor, positions: Tensor) -> tuple[Tensor, Tensor, Tensor]:
         b, t, _ = x.shape
@@ -117,12 +129,12 @@ class Attention(nn.Module):
             v = v.repeat_interleave(self.heads // self.kv_heads, dim=1)
             # Explicit float() alone does not prevent autocast lowering matmul.
             with torch.autocast(device_type=q.device.type, enabled=False):
-                scores = (q.float() @ k.float().transpose(-1, -2)) / math.sqrt(
+                scores = (_wide(q) @ _wide(k).transpose(-1, -2)) / math.sqrt(
                     self.head_dim
                 )
                 scores = scores.masked_fill(~allowed, -torch.inf)
                 scores = torch.where(valid[:, None, :, None], scores, 0.0)
-                weights = F.softmax(scores, dim=-1, dtype=torch.float32).to(v.dtype)
+                weights = F.softmax(scores, dim=-1).to(v.dtype)
             attended = weights @ v
         combined = attended.transpose(1, 2).reshape(batch, queries, -1)
         return cast(Tensor, self.output(combined) * valid[..., None])

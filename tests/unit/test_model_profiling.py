@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 from dataclasses import replace
 from pathlib import Path
 
@@ -55,3 +56,32 @@ def test_checkpoint_reduces_saved_graph_storage_and_profiles_restore_rng() -> No
     )
     with pytest.raises(ValueError):
         profile_cpu(job, repeats=0)
+
+
+def test_operator_profile_script_runs_on_cpu_and_refuses_missing_cuda(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    spec = importlib.util.spec_from_file_location(
+        "profile_model", ROOT / "scripts/profile_model.py"
+    )
+    assert spec is not None and spec.loader is not None
+    script = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(script)
+    model = str(ROOT / "configs/model/tiny.yaml")
+    report = script.main(
+        ["--model", model, "--device", "cpu", "--length", "8", "--steps", "1"]
+    )
+    capsys.readouterr()
+    assert report["verified_scope"] == "cpu harness"
+    assert report["parameters"] == 19_338_560
+    assert report["top_operators"]
+    assert report["estimated_mfu"] is None
+    assert "no optimizer updates" in report["profile_scope"]
+    for value in ("0", "-1", "nan", "inf"):
+        with pytest.raises(SystemExit, match="peak-tflops"):
+            script.main(["--device", "cpu", "--peak-tflops", value])
+    with pytest.raises(SystemExit, match="context"):
+        script.main(["--device", "cpu", "--length", "513"])
+    if not torch.cuda.is_available():
+        with pytest.raises(SystemExit, match="CUDA"):
+            script.main(["--model", model])

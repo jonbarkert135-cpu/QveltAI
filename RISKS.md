@@ -167,3 +167,23 @@ same tokenizer and architecture; it starts a new optimizer and is not exact base
 resume. Checksums are integrity/identity checks, not external authorship guarantees.
 CPU single-process SFT is the acceptance target; CUDA/distributed SFT, stochastic
 SDK restart, third-party checkpoints and production datasets remain unverified.
+
+
+## Supplied Phase4 closure review
+
+RoPE interpolation(scale>1) is an explicit non-baseline extension,not validated
+long-context quality. Adding ModelConfig.rope_scale changes config identity;old
+exact run resume remains rejected by source/config checks. Default weights and
+values are preserved on tested inputs,which is distinct from full run compatibility.
+Deliberate weights-only initialization still requires matching validated model/
+tokenizer identities. FP64 gradcheck covers logits;loss retains its FP32 contract.
+CPU AOT/Inductor and packed-mask correctness do not establish CUDA compilation,
+FlashAttention selection or fused-varlen performance. The fresh operator profile
+is short,shared-host,forward/backward only;it excludes Adam/communication and CPU
+allocator peak. Imported historical profile claims were not promoted to new runs.
+
+Local Gloo/DDP processes intermittently hang or abort on exit after completed
+optimization/checkpoints,including before this import. Loopback/one-thread and
+USE_LIBUV=0 settings do not establish a general fix. Final local562 passed/1 DDP
+failure is not all-green acceptance;observe current-source CI and preserve this
+runtime limitation. Do not mask it with os._exit,relaxed tests or fabricated success.

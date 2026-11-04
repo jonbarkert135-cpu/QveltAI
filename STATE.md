@@ -17,7 +17,20 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-M6.1 is complete for original demo data/single-process CPU: strict chat formatting,
+Selective Phase4 closure is implemented on top of M6.1:RoPE scale(default1),FP64
+reference numerics,whole-model gradcheck,random-length scaled cache,compile/depth/
+overfit/RFC-count tests and operator profiling.22 focused tests passed in63.36s;
+final profiler subset3 passed in3.36s;Ruff/format,mypy105 files and build pass.
+Default FP32/BF16 logits/gradients/weights match pre-import seeded values exactly.
+Final local regression:562 passed,1 existing numeric-DDP exit SIGABRT,5 GPU
+deselected in104.85s. Packed replay/model/SFT tests pass;root cause of the local
+DDP process-exit fault remains unresolved,also observed before this import.
+Remote acceptance of the current Phase4 revision is pending;do not call the local
+full suite green. See validation_phase4_closure.md,phase4_import_review.md and
+new docs/model.md. Supplied old state/profile claims were not imported.
+
+
+M6.1 at0abfcd3 is complete for original demo data/single-process CPU: strict chat formatting,
 assistant-only masks,whole-dialog packing/truncation,licensed family-heldout data,
 pinned base weights and atomic SFT replay. Full CPU/optional-SDK suite:543 passed,
 5 GPU deselected,no skips in97.32s;Ruff/format,mypy103 files,build/lock/dependency
@@ -27,7 +40,8 @@ Stop26/resume80 weights/Adam/RNG/consumer match exactly. Final test execution us
 GLOO_SOCKET_IFNAME=lo,OMP_NUM_THREADS=1,MKL_NUM_THREADS=1 after earlier distributed
 process-exit stalls;root cause of those stalls is not established. See R016,
 docs/development/validation_sft.md and runbooks/04_supervised_finetuning.md.
-Next portable milestone:M6.2 preference optimization. No reasoning-accuracy claim,
+M6.1 remote GitHub41905361820 at0abfcd3 has all8 jobs successful.
+After current Phase4 regression acceptance,next portable milestone:M6.2 preference optimization. No reasoning-accuracy claim,
 production corpus,external teacher,paid run or GPU/distributed-SFT validation.
 
 

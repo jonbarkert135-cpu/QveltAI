@@ -10,6 +10,7 @@ training**, not a general-purpose pretrained model. The CI smoke uses an explici
 The 19.34M/125.85M/493.55M/1.510B family parameter counts are checked on actual
 meta-device models; only the tiny reference has a CPU forward/backward check.
 Runtime execution/cache guide:[runbook02](runbooks/02_model_execution.md).
+Block equations,RoPE interpolation,compile and profiling:[model guide](docs/model.md).
 No public reasoning score, external-corpus/final-scale pretraining or GPU performance is claimed.
 
 ## Quickstart

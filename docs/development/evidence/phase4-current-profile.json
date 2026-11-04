@@ -1,0 +1,274 @@
+{
+  "GLOO_SOCKET_IFNAME": "lo",
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "base_revision": "8f16a9c",
+  "date": "2026-11-04",
+  "default_parity": {
+    "backends": [
+      "reference",
+      "sdpa"
+    ],
+    "batch": 2,
+    "gradients_tensor_exact": true,
+    "hidden": 32,
+    "layers": 2,
+    "length": 10,
+    "logits_tensor_exact": true,
+    "precisions": [
+      "fp32",
+      "bf16-autocast"
+    ],
+    "seed": 517,
+    "seeded_weights_tensor_exact": true
+  },
+  "local_full_suite": {
+    "USE_LIBUV": "0",
+    "failed": 1,
+    "failure": "Existing numeric DDP worker SIGABRT at process exit after completed training",
+    "gpu_deselected": 5,
+    "passed": 562,
+    "root_cause": "unresolved; similar stalls observed before Phase4 import",
+    "seconds": 104.85
+  },
+  "machine": "x86_64",
+  "measurement_scope": "CPU forward/backward/operator trace; no optimizer updates or isolated-machine performance claim; a separate stalled diagnostic process existed during timing",
+  "platform": "Linux",
+  "profile_script_sha256": "f1b3720d144f57b19a15e3a451245ff4057f0a51cb2e881bed3d6e1aa2a048da",
+  "profiles": {
+    "recompute": {
+      "achieved_tflops_estimate": 0.04855869413453341,
+      "args": {
+        "backend": "sdpa",
+        "batch": "2",
+        "bf16": "False",
+        "compile": "False",
+        "device": "cpu",
+        "length": "128",
+        "model": "configs/model/tiny.yaml",
+        "peak_tflops": "None",
+        "recompute": "True",
+        "steps": "3"
+      },
+      "cuda_kernel_dispatch_verified": false,
+      "estimated_mfu": null,
+      "parameters": 19338560,
+      "peak_memory_bytes": null,
+      "profile_scope": "forward/backward only; no optimizer updates; analytical FLOPs exclude recomputation",
+      "threads": 1,
+      "tokens_per_second": 404.88900051874384,
+      "top_operators": [
+        {
+          "calls": 227,
+          "name": "aten::mm",
+          "self_us": 406917.51800000004
+        },
+        {
+          "calls": 100,
+          "name": "aten::fill_",
+          "self_us": 18018.043999999536
+        },
+        {
+          "calls": 1,
+          "name": "aten::_log_softmax_backward_data",
+          "self_us": 15123.97099999999
+        },
+        {
+          "calls": 138,
+          "name": "aten::add",
+          "self_us": 14750.705999999907
+        },
+        {
+          "calls": 8,
+          "name": "aten::_scaled_dot_product_flash_attention_for_cpu_backward",
+          "self_us": 12422.05799999967
+        },
+        {
+          "calls": 484,
+          "name": "aten::mul",
+          "self_us": 12139.290000000357
+        },
+        {
+          "calls": 16,
+          "name": "aten::_scaled_dot_product_flash_attention_for_cpu",
+          "self_us": 11961.536999999968
+        },
+        {
+          "calls": 1,
+          "name": "aten::_log_softmax",
+          "self_us": 11876.767000000022
+        },
+        {
+          "calls": 57,
+          "name": "MmBackward0",
+          "self_us": 7515.506999999285
+        },
+        {
+          "calls": 16,
+          "name": "aten::silu",
+          "self_us": 2319.976999999948
+        }
+      ],
+      "torch": "2.9.1+cpu",
+      "verified_scope": "cpu harness",
+      "vocabulary_head_flop_share": 0.5245901639344263
+    },
+    "reference": {
+      "achieved_tflops_estimate": 0.056133674298241426,
+      "args": {
+        "backend": "reference",
+        "batch": "2",
+        "bf16": "False",
+        "compile": "False",
+        "device": "cpu",
+        "length": "128",
+        "model": "configs/model/tiny.yaml",
+        "peak_tflops": "None",
+        "recompute": "False",
+        "steps": "3"
+      },
+      "cuda_kernel_dispatch_verified": false,
+      "estimated_mfu": null,
+      "parameters": 19338560,
+      "peak_memory_bytes": null,
+      "profile_scope": "forward/backward only; no optimizer updates; analytical FLOPs exclude recomputation",
+      "threads": 1,
+      "tokens_per_second": 468.05021607647194,
+      "top_operators": [
+        {
+          "calls": 171,
+          "name": "aten::mm",
+          "self_us": 409999.37800000055
+        },
+        {
+          "calls": 92,
+          "name": "aten::fill_",
+          "self_us": 20172.968000000383
+        },
+        {
+          "calls": 48,
+          "name": "aten::bmm",
+          "self_us": 15158.468000000037
+        },
+        {
+          "calls": 1,
+          "name": "aten::_log_softmax_backward_data",
+          "self_us": 14996.92299999998
+        },
+        {
+          "calls": 74,
+          "name": "aten::add",
+          "self_us": 14309.476999999972
+        },
+        {
+          "calls": 1,
+          "name": "aten::_log_softmax",
+          "self_us": 14155.402000000002
+        },
+        {
+          "calls": 356,
+          "name": "aten::mul",
+          "self_us": 9417.283999999578
+        },
+        {
+          "calls": 17,
+          "name": "aten::masked_fill_",
+          "self_us": 2575.177000000006
+        },
+        {
+          "calls": 32,
+          "name": "aten::where",
+          "self_us": 2027.0509999999485
+        },
+        {
+          "calls": 262,
+          "name": "aten::copy_",
+          "self_us": 1972.5770000005919
+        }
+      ],
+      "torch": "2.9.1+cpu",
+      "verified_scope": "cpu harness",
+      "vocabulary_head_flop_share": 0.5245901639344263
+    },
+    "sdpa": {
+      "achieved_tflops_estimate": 0.058572761922431237,
+      "args": {
+        "backend": "sdpa",
+        "batch": "2",
+        "bf16": "False",
+        "compile": "False",
+        "device": "cpu",
+        "length": "128",
+        "model": "configs/model/tiny.yaml",
+        "peak_tflops": "None",
+        "recompute": "False",
+        "steps": "3"
+      },
+      "cuda_kernel_dispatch_verified": false,
+      "estimated_mfu": null,
+      "parameters": 19338560,
+      "peak_memory_bytes": null,
+      "profile_scope": "forward/backward only; no optimizer updates; analytical FLOPs exclude recomputation",
+      "threads": 1,
+      "tokens_per_second": 488.3876606461258,
+      "top_operators": [
+        {
+          "calls": 171,
+          "name": "aten::mm",
+          "self_us": 377508.7830000004
+        },
+        {
+          "calls": 84,
+          "name": "aten::fill_",
+          "self_us": 16835.584999999737
+        },
+        {
+          "calls": 82,
+          "name": "aten::add",
+          "self_us": 15003.648000000267
+        },
+        {
+          "calls": 1,
+          "name": "aten::_log_softmax_backward_data",
+          "self_us": 14210.144
+        },
+        {
+          "calls": 1,
+          "name": "aten::_log_softmax",
+          "self_us": 12726.701000000001
+        },
+        {
+          "calls": 8,
+          "name": "aten::_scaled_dot_product_flash_attention_for_cpu_backward",
+          "self_us": 12225.418000000063
+        },
+        {
+          "calls": 356,
+          "name": "aten::mul",
+          "self_us": 8610.717999999672
+        },
+        {
+          "calls": 8,
+          "name": "aten::_scaled_dot_product_flash_attention_for_cpu",
+          "self_us": 6007.721000000013
+        },
+        {
+          "calls": 1,
+          "name": "autograd::engine::evaluate_function: EmbeddingBackward0",
+          "self_us": 1798.100999999966
+        },
+        {
+          "calls": 8,
+          "name": "aten::silu_backward",
+          "self_us": 1464.7469999999157
+        }
+      ],
+      "torch": "2.9.1+cpu",
+      "verified_scope": "cpu harness",
+      "vocabulary_head_flop_share": 0.5245901639344263
+    }
+  },
+  "python": "3.12.14",
+  "source_sha256": "b6ec34dbdce1f075816e5ac6596f347451aa00b86c80de5e5d1a7353299ba18b",
+  "working_tree_dirty": true
+}

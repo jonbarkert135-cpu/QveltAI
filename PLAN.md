@@ -231,6 +231,22 @@ Evidence:M4.2 code efa6f30; actual6-job GitHub run41287953291 green.
 487 CPU tests pass; profile receipt phase4-profile-efa6f30.json records retained
 graph storage/CPU timing with clear metric limits. Four GPU cases remain unrun.
 
+### M4.3 — Review and close the supplied expanded Phase4 acceptance
+
+Owner:Lead agent. Status:in progress. Dependencies:M4.1,M4.2; user-supplied patch.
+
+- [x] Select compatible source/tests/docs; preserve M6.1 and current state records.
+- [x] Add explicit RoPE interpolation and preserve FP64 for whole-model gradcheck.
+- [x] Run focused compile/cache/overfit/depth/count references:22 passed in63.36s.
+- [x] Compare default FP32/BF16 logits/gradients/weights against pre-import values.
+- [x] Execute full regression and fresh operator profiling;record exact results.
+- [ ] Observe full current-revision remote CI acceptance and publish final report.
+
+Acceptance: all CPU tests and required checks pass; record new measured evidence,
+kept/skipped patch contents,RFC deviations and GPU limitations. Source/config
+exact-resume compatibility remains strict; no imported historical receipt counts
+as a current run. See docs/development/phase4_import_review.md.
+
 ## Phase 5 — Training framework
 
 ### M5.1 — Make single-process pretraining correct and resumable
