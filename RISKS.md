@@ -211,3 +211,16 @@ be relied on to supply compiler tooling. Plain eager package use and validated
   Retention removes old committed snapshots only when explicitly selected; quarantine
   remains on disk. Log archives can contain prompts,paths and generations; review
   before manually attaching. No external messaging/upload is automatic.
+
+
+## M6.2 preference limits (2026-11-05)
+
+DPO intentionally SUMs response logp:response length affects the objective. An extra
+resident frozen SFT model and reference forward cost memory/compute;no logp cache or
+GPU/distributed path is validated. The reference artifact remains necessary on resume.
+Only single-turn complete demo frames are supported;oversized decisions fail rather
+than truncate. Fixed gold+1 negatives are simplistic verifier labels,not human
+preferences. Family isolation is within DPO;cross-stage base/SFT exposure persists.
+The actual40-step heldout DPO loss worsened despite train learning;no generation/
+reasoning improvement,model promotion or reasoning-RL readiness follows. Three/four
+families and16 validation pairs cannot establish population-level preference gains.

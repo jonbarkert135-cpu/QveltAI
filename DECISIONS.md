@@ -1041,3 +1041,39 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   executed. DCP/DTensor CPU coverage does not verify CUDA/NCCL/FSDP runtime.
 - **Revisit:**hardware/runtime validation,production source clearance,measured compile
   benefit,and a separately versioned token-boundary mixture/schedule implementation.
+
+## ADR-0043 — Original sigmoid DPO with explicit frozen SFT lineage
+
+- **Date/status:**2026-11-05;portable implementation/focused tests pass;final CI pending.
+- **Context/choice:**M6.2 follows accepted SFT and Phase5. Choose sigmoid DPO over
+  continuing positive-only SFT or adding reward-model/PPO rollout machinery. IPO/
+  hinge variants appear in the local guide but their primary sources were not
+  verified;no alternative objective or vendor runtime code is imported.
+- **Math:**minimize softplus(-beta*((logp_chosen-logp_rejected)policy-
+  (logp_chosen-logp_rejected)reference)),beta>0. Sequence logp SUMs cover response
+  content/end-turn only,prompt/roles/PAD/outerEOS excluded. Preserve FP64 references,
+  at-least-FP32 low-precision accumulation. Reject invalid/empty/nonfinite inputs.
+  Length averaging would change the chosen objective and is not applied.
+- **Reference/replay:**policy and frozen eval/no_grad reference start from the
+  same byte-verified SFT weights. Check SFT application kind and objective;an ordinary
+  pretraining checkpoint cannot masquerade as SFT. No logp cache;the reference must
+  remain available on resume. Reuse AdamW,step schedules and atomic checkpoint/RNG
+  engine;bind pair/reference hashes,beta,job,software/source and cyclic pair cursor.
+  Exclude relocatable paths from recipe identity. CPU FP32/single/JSON only;unsupported
+  modes fail explicitly. No zero-training or fake distributed preference path.
+- **Data/scope:**register D-PREF-01 original Apache-2.0 verifier-correct versus
+  exact gold+1 labels before generation;check both with the existing bounded verifier.
+  Split32 pairs by whole family:12 train,16 validation,4 unused test. Strict complete
+  single-turn frames;do not truncate away decisions or silently accept duplicates.
+  Prepared data retains source/permission/tokenizer identities and is demo-only.
+- **Sources/evidence:**[verified] Rafailov et al.,2023,Direct Preference Optimization,
+  arXiv2305.18290v2 section4 Eq7/gradient and appendixB read at
+  https://arxiv.org/html/2305.18290v2 . Executed SymPy derivative identity and independent
+  NumPy value/analytic-gradient checks;masked sequence and unpadded model references.
+  Local pinned Orchestra TRL/DPO guide informed review;TRL was not installed and
+  guide performance/hardware recommendations are not verified Qvelt results.
+- **Limits/revisit:**reference memory/additional forward,length effects,simplistic
+  negatives and cross-stage family overlap. Training fixture learning with worse
+  heldout DPO loss does not establish reasoning improvement or justify promotion.
+  Revisit with independent licensed data,hardware and fixed-budget generation tests;
+  reference caching,multiturn/GPU/distributed modes need separate acceptance.

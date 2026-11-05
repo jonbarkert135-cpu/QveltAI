@@ -1,0 +1,1 @@
+{"assumptions": "finite real margin; beta>0 enforced by validated config", "identity": "d/dm log(1+exp(-beta*m)) = -beta/(1+exp(beta*m))", "simplified_difference": 0, "sympy": "1.14.0"}

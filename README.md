@@ -149,3 +149,8 @@ nonfinite rollback/skip and bounded LR/batch sweeps. See
 [small/server runbook](runbooks/02_pretraining.md) and
 [200-step hard-kill evidence](docs/development/validation_phase5.md).
 CUDA/FSDP2 and full small-server feasibility require actual hardware validation.
+
+M6.2 adds original CPU sigmoid DPO with verifier-labeled demo pairs,a frozen
+manifest-pinned SFT reference and exact optimizer/RNG/pair-cursor replay. See
+[preference runbook](runbooks/05_preferences.md). A lower training preference loss
+with worse heldout loss is recorded as a negative result,not a model promotion.

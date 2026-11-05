@@ -204,3 +204,18 @@ source/benchmark clearance remains blocked. The full RFC tiny model retains
 V32768,L8,d320,Hq5,Hkv1,f896,context512;CPU acceptance uses shortened T16/B2 and
 200 optimizer updates,not the RFC's full pretraining budget. Scaling/compile
 controls may use smaller explicitly named model dimensions on the same fixture.
+
+## D-PREF-01 — Original verifier-labeled preference fixtures
+
+Registered2026-11-05 before ingestion for M6.2. Author:Qvelt project;Apache-2.0
+with explicit training/evaluation permission. Generate32 seeded EN exact-answer
+math problems using the existing independently checked stdlib/SymPy generator,
+seed20261105;each preferred answer is verified gold and rejected answer is gold+1
+as an exact Fraction,independently rejected by the bounded answer verifier. Label
+meaning is verifier correctness,not human judgment or teacher-model preference.
+Reuse the pinned SFT tokenizer;do not retrain on heldout answers. Split entire
+problem families deterministically before optimization;test families remain unused.
+Record source/generator revision,manifest hashes,tokenizer/masks and SFT reference
+checkpoint identity. No external model/API/corpus or public benchmark is ingested.
+These are demo-only pairs with simplistic negatives,not production or reasoning
+quality evidence;length effects and cross-stage family overlap remain limitations.

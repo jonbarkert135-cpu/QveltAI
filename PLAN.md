@@ -1,6 +1,6 @@
 # Qvelt master roadmap
 
-Last updated: 2026-11-04. Owner of every milestone: **Lead agent**.
+Last updated: 2026-11-05. Owner of every milestone: **Lead agent**.
 
 ## Mission and boundaries
 
@@ -352,18 +352,24 @@ SFT and production dataset clearance remain outside this completed CPU scope.
 
 ### M6.2 — Implement and verify preference optimization
 
-Owner: Lead agent. Status: in progress. Dependencies: M6.1; approved preference data.
+Owner: Lead agent. Status: in progress; portable CPU acceptance passes,current CI pending. Dependencies: M6.1; approved preference data.
 
-- [ ] Compare supported preference objectives and select one with verified
+- [x] Compare supported preference objectives and select one with verified
   primary-source equations; DPO is a candidate, not an implementation promise.
-- [ ] Implement pair validation, response log-probability accounting, reference
+- [x] Implement pair validation, response log-probability accounting, reference
   policy semantics, and any reference-cache identity checks.
-- [ ] Test the objective and gradients against hand-computed/reference cases;
+- [x] Test the objective and gradients against hand-computed/reference cases;
   run a tiny training and resume test with fixed pairs.
 
 Acceptance: objective tests and actual optimizer updates pass; length effects,
 reference model cost, and data limitations are recorded. No preference-win claim
 is made without a measured, held-out evaluation.
+
+Evidence:validation_preferences.md and preferences-40.json;614 CPU/optional-SDK
+checks pass,7 GPU deselected,128 typed files. Actual40-update reduced decoder:
+train DPO0.693147->0.352214,heldout0.693147->0.843191 (negative finding),
+stop13/resume40 exactly matches all losses/weights/Adam/RNG/pair cursor. Current
+clean CI pending. No sampled-generation improvement or model promotion claimed.
 
 ### M6.3 — Implement verifiable-reward reasoning RL
 
@@ -538,7 +544,7 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 M4.1/available-CPU M4.2 and M5.1 are complete. Packed CPU/DDP references/replay
 are verified; actual CUDA/FSDP/shared-store/multi-node tiers and production-source
 clearance remain blocked. M6.1 original-data chat/SFT,assistant masks and tiny optimization/replay now pass
-CPU acceptance. Next portable milestone:M6.2 verified preference optimization. Keep final heldout
+CPU acceptance. M6.2 portable DPO passes local acceptance;next:M6.3 generation/verifier readiness. Keep final heldout
 families separate; do not promote demo loss to a reasoning benchmark score.
 Publish verified work and reports to main; no paid/final-scale runs or old
 cloud-environment changes. See STATE.md for current evidence and next actions.

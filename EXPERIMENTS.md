@@ -482,3 +482,37 @@ CPU3.11/3.12/3.13 each589 passed,2 optional SDK skips,7 GPU deselected;SDKs
 separately green. Dedicated CI200-step recovery also bit-exact;hardware-dependent
 probe final9.65952873 versus local9.00020885 is not cross-host equality. Portable
 Phase5 accepted;CUDA/NCCL/FSDP/server and production inputs remain unverified.
+
+## R019 — Original verifier-pair DPO and exact optimization replay
+
+Date:2026-11-05. Baseae3dee7 plus original M6.2 source. Registered D-PREF-01
+before generation. SymPy verifies d/dm log(1+exp(-beta*m))=-beta/(1+exp(beta*m))
+for finite real margin and positive beta. Independent NumPy loss/analytic gradients,
+response-sum/padding/mask and naive unpadded decoder references are executed.
+Pre-final focused23 tests passed in9.11s;strict mypy128 files and Ruff pass.
+
+First successful40-step CPU run:reduced127104-parameter decoder,V445,T128,B2,
+seed20261031,beta0.1,LR0.001. Fresh30-step SFT weights initialize both policy and
+frozen reference;32 new original exact-answer pairs split12/16/4 by DPO family.
+80 consumed pairs/1582 response targets;stop13/resume40 has exact all40 losses,
+weights,Adam,RNG and consumer/application state. Train DPO0.69314718->0.35221379,
+validation0.69314718->0.84319099;reference-relative positive-margin fraction
+train0.916667,validation0.375,initial all ties. These are offline fixture scores,
+not sampled win rates or mathematical accuracy. Negative heldout finding retained;
+no checkpoint promoted. No external teacher/production/GPU/paid/final-scale run.
+
+The first preparation attempt correctly failed because the new preference payload
+lacked the manifest's required data role;the payload role/loader were corrected.
+Three adversarial test helpers initially attempted to replace an exclusive commit
+marker;helpers now unlink only their copied fixture marker before republishing.
+No runtime trust check or failing test was weakened. Final source-bound40-step
+repeat,regression/CI and packaging checks pending;see validation_preferences.md.
+
+
+R019 final local repeat:source digestc3c18aa16e68110c5cb7e4b9750773a942d822984d537307e87f9b5f666dda08;
+preferences-40.json binds actual pair/reference hashes. All40 losses/weights/Adam/
+RNG/cursor match exactly;train/heldout values match the pre-final experiment.
+Full local614 passed,no skips,7 GPU deselected in158.37s;focused23 passed in9.11s,
+Ruff/format,strict mypy128 files,wheel/sdist pass. Clean CI pending. This green
+local run does not resolve earlier intermittent Gloo faults;historical failures
+remain reported. No paid/GPU/final-scale training or quality promotion.

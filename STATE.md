@@ -1,6 +1,6 @@
 # Qvelt current state
 
-Updated:2026-11-04. Owner:Lead agent.
+Updated:2026-11-05. Owner:Lead agent.
 
 ## Environment readiness (2026-11-04)
 
@@ -16,6 +16,20 @@ network operations/local distributed sockets need execution network permission.
 M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was performed.
 
 ## Current task
+
+M6.2 original CPU DPO is implemented after accepted Phase5. Full CPU/optional-SDK
+614 passed,no skips,7 GPU deselected in158.37s;focused23 passed;Ruff/format,mypy128
+files and build pass. Actual40 updates/80 pairs/1582 targets,127104 parameters,
+V445/T128,beta0.1,LR0.001;stop13/resume40 all losses/weights/Adam/RNG/cursor exact.
+Train DPO0.693147->0.352214,validation0.693147->0.843191:negative heldout result,
+not a quality promotion. Frozen reference is byte-verified SFT and checked unchanged.
+Source c3c18aa16e68110c5cb7e4b9750773a942d822984d537307e87f9b5f666dda08;
+current clean CI pending. See validation_preferences.md and runbooks/05_preferences.md.
+Next:M6.3 readiness via bounded generation/verifier controls;no reasoning-RL model
+promotion based on fixture preference loss. Hardware/source gates remain separate.
+
+Historical Phase5 acceptance follows.
+
 
 Expanded Phase5 is implemented selectively on top of SFT. Actual full RFC tiny
 19,338,560 parameters,V32768,T16/B2:200 optimizer updates/6386 valid targets.
@@ -63,7 +77,7 @@ GLOO_SOCKET_IFNAME=lo,OMP_NUM_THREADS=1,MKL_NUM_THREADS=1 after earlier distribu
 process-exit stalls;root cause of those stalls is not established. See R016,
 docs/development/validation_sft.md and runbooks/04_supervised_finetuning.md.
 M6.1 remote GitHub41905361820 at0abfcd3 has all8 jobs successful.
-Next portable milestone:M6.2 preference optimization. No reasoning-accuracy claim,
+M6.2 portable implementation is recorded above. No reasoning-accuracy claim,
 production corpus,external teacher,paid run or GPU/distributed-SFT validation.
 
 
@@ -121,8 +135,8 @@ serving/export beyond safetensors are still future milestones.
 
 ## Next three tasks
 
-1. M6.2:select and verify a preference objective,register original licensed
-   preference pairs,and implement objective/gradient and optimization/replay checks.
+1. M6.3:verify generation/verifier readiness on bounded original validation controls;
+   preserve negative preference findings and do not promote an unvalidated model.
 2. M5.2–M5.3:actual CUDA/DDP/FSDP/shared-store/multi-node and resource validation
    when hardware is supplied;no costly/final-scale run without authorization.
 3. M3.3:clear exact training/benchmark rights,freeze the distinct project final
