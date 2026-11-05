@@ -17,6 +17,21 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
+M6.3 bounded CPU outcome-GRPO is implemented from the SFT branch. Actual8 real
+policy-gradient/Adam updates,745 generated actions,11/32 constant groups;stop4/
+resume8 all losses,rollouts,weights,Adam,RNG and prompt cursor exact. Reduced
+127104-parameter model,V445/T128,P4/G4,max16 actions,temperature1,LR1e-6,KL0.01.
+Validation1/8 before/after:engineering acceptance,not reasoning improvement.
+Final-source combined DPO/GRPO33 tests pass in22.23s;Ruff/format,mypy135 files pass.
+Pre-final full622 passed,1 numeric-DDP timeout,7 GPU deselected in258.63s;root cause
+of the intermittent local Gloo problem remains unresolved. Current-source clean CI
+is pending. Source4775afbb264baa8c842cf40b67e0372162ee4e690f1c3738e227db42e7136b1b.
+See validation_grpo.md and runbooks/06_reasoning_rl.md. Next:M7.1 evaluation harness,
+with original fixture scope first;production/public benchmark rights still blocked.
+
+Historical M6.2 acceptance follows.
+
+
 M6.2 original CPU DPO is implemented after accepted Phase5. Full CPU/optional-SDK
 614 passed,no skips,7 GPU deselected in158.37s;focused23 passed;Ruff/format,mypy128
 files and build pass. Actual40 updates/80 pairs/1582 targets,127104 parameters,
@@ -33,7 +48,7 @@ answers at identical16-token greedy budget on original validation-only problems.
 Use SFT for a future bounded engineering RL check;DPO is rejected for promotion.
 The control is a necessary tiny check,not proof of general reasoning.
 Reproduction:reasoning_rl_readiness.md and scripts/preference_generation_control.py.
-Hardware/source gates remain separate;GRPO rollout/optimizer is still future work.
+Hardware/source gates remain separate;the subsequent GRPO prototype is recorded above.
 
 Historical Phase5 acceptance follows.
 

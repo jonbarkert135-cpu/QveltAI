@@ -374,24 +374,30 @@ improvement or model promotion claimed.
 
 ### M6.3 — Implement verifiable-reward reasoning RL
 
-Owner: Lead agent. Status: in progress (bounded generation readiness only). Dependencies: M6.1, M6.2, M1.2 evaluation
+Owner: Lead agent. Status: in progress;original CPU prototype/replay passes,current CI pending. Dependencies: M6.1, M6.2, M1.2 evaluation
 contract, tested generation, and a reviewed verifier.
 
 - [x] Compare base/SFT/DPO on fixed original16-problem/16-token generation controls;
   record0/3/0 correct and retain SFT for a future bounded engineering check.
-- [ ] Select a reasoning-RL objective from verified sources; evaluate on-policy
+- [x] Select a reasoning-RL objective from verified sources; evaluate on-policy
   rollout, grouping, KL/regularization, reward normalization, and memory costs.
-- [ ] Build a bounded mathematical answer verifier with rational/numeric cases,
-  explicit tolerances, timeouts, and adversarial tests. Never evaluate arbitrary
+- [x] Build the exact-integer/rational verifier with bounded input,zero tolerance,
+  post-call wall budget and adversarial tests. Never evaluate arbitrary
   generated Python in the trainer process.
-- [ ] Implement rollout/policy identity, token masks, truncation handling,
+- [x] Implement rollout/policy identity, token masks, truncation handling,
   reward diagnostics, deterministic fixtures, and resumable optimization.
-- [ ] Run a tiny end-to-end RL update; test degenerate/zero-variance groups,
+- [x] Run a tiny end-to-end RL update; test degenerate/zero-variance groups,
   malformed answers, non-finite rewards, and reward-hacking examples.
 
 Acceptance: verifier and objective reference tests pass; a logged tiny rollout
 and update completes. Improvement requires fixed-budget held-out comparisons;
 longer reasoning traces alone are not evidence of better reasoning.
+
+Evidence:validation_grpo.md and grpo-8.json. Exact original CPU scope:8 real
+updates/745 actions,stop4/resume8 all losses/rollouts/model/Adam/RNG/cursor exact.
+Validation remains1/8;no improvement claim. Source-focused33 checks pass;local
+pre-final full622 pass/1 numeric-DDP timeout/7 GPU deselected,clean CI pending.
+GPU/distributed/arbitrary tool/proof/approximate-answer environments are unverified.
 
 ## Phase 7 — Evaluation
 

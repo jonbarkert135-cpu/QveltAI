@@ -541,3 +541,38 @@ cursor replay and full RFC tiny200-step SIGKILL replay both pass. Remote DPO
 train0.35152350/heldout0.84594192 retains the negative heldout finding;hardware
 float differences are not cross-host replay failures. Portable M6.2 closes.
 Source-unchanged R020 repro script passes Ruff/format and strict mypy129 files.
+
+## R021 — Original outcome-GRPO on-policy signal and exact8-window replay
+
+Date:2026-11-05. Base716539d plus original GRPO prototype. D-RL-01 registered
+before sampling. Primary DeepSeekMath v3 Eq3/4/outcome normalization read;SymPy
+KL derivative/curvature/minimum identities and NumPy value/analytic-gradient
+references executed. A historical pre-RoPE SFT manifest correctly failed config
+integrity;no bypass. Fresh current-schema SFT80 reproduces train probe0.14195556,
+heldout4.76135039 and exact SFT state replay. Seeded4x4 training-only signal probe
+has3 nonconstant groups;real generated wrong/invalid answers are retained.
+
+Final-source8-window prototype:127104-parameter V445/T128 CPU FP32,seed20261105,
+P4/G4,max16 actions,temperature1,LR1e-6,clip0.2,KL0.01,WD0,gradient clip1.
+8 actual policy-gradient/Adam updates,745 generated actions,11/32 zero-variance
+groups. Stop4/resume8 matches all losses and complete rollout digests plus weights,
+Adam,RNG and consumer state. Near-zero surrogate values at fresh ratio1 are expected;
+nonzero gradient updates and actual weight changes are independently asserted.
+Validation families only:1/8 correct,8/8 complete both before and after. Test
+families unused. No improvement/promotion/public benchmark claim. Source-bound
+receipt in evidence/grpo-8.json. Full local regression/clean CI pending.
+
+Pre-final combined DPO/GRPO focused31 passed in17.50s;verifier deadline/nonfinite
+coverage then gives32 passed in18.57s. Added whole-window all-zero reward test
+checks untouched Adam/weights and resume rather than faking a step. Mypy135 files
+and Ruff pass. Repro commands and policy/length/reward limits in06_reasoning_rl.md.
+No paid/GPU/full-scale run or model-generated Python execution.
+
+
+R021 final local source4775afbb264baa8c842cf40b67e0372162ee4e690f1c3738e227db42e7136b1b:
+self-contained8-window repeat exact for all losses/rollouts/model/Adam/RNG/cursor,
+8 actual policy updates/745 actions/11 constant groups. Fixed validation1/8 remains
+unchanged. Explicit FP32 reward/behavior tensors and post-call bounded verifier are
+included. Source-focused33 passed in22.23s;mypy135 files,Ruff/format pass. Pre-final
+full622 passed,1 numeric-DDP subprocess timeout,7 GPU deselected in258.63s;no green
+local-full claim or assertion of a Gloo fix. Clean current-source CI pending.

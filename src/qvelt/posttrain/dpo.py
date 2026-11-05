@@ -186,6 +186,34 @@ def dpo_digest(recipe: DPOJob) -> str:
     ).hexdigest()
 
 
+def initialize_sft_reference(
+    model: Decoder, initialization: PretrainingJob, tokenizer_sha: str
+) -> None:
+    """Verify SFT application provenance and load finite weights without optimizer state."""
+    if initialization.initial_checkpoint is None:
+        raise ValueError("SFT reference checkpoint is required")
+    reference_path = Path(initialization.initial_checkpoint)
+    reference_store = ArtifactStore(reference_path.parent)
+    reference_store.read_manifest(
+        reference_path.name, expected_sha256=initialization.initial_sha256
+    )
+    with reference_store.open_file("application-rank-00000.json") as stream:
+        body = stream.read(1024 * 1024 + 1)
+    if len(body) > 1024 * 1024:
+        raise ValueError("SFT reference application state exceeds its limit")
+    application = json.loads(
+        body, object_pairs_hook=_unique_mapping, parse_constant=_reject_constant
+    )
+    if (
+        not isinstance(application, dict)
+        or application.get("kind") not in ("packed-sft-v1", "packed-sft-v2")
+        or not isinstance(application.get("recipe_yaml"), str)
+        or parse_pretraining_job(application["recipe_yaml"]).objective != "sft"
+    ):
+        raise ValueError("Reference must be a manifested SFT checkpoint")
+    initialize_weights(model, initialization, tokenizer_sha)
+
+
 def pair_logps(model: Decoder, pairs: list[EncodedPair]) -> tuple[Tensor, int]:
     if not pairs:
         raise ValueError("Empty preference batch")
@@ -276,25 +304,6 @@ def train_dpo(
     identity = dpo_digest(recipe)
     with distributed_context("cpu") as context:
         model = Decoder(job.experiment.model, job.training.execution)
-        reference_path = Path(recipe.reference_manifest)
-        reference_store = ArtifactStore(reference_path.parent)
-        reference_store.read_manifest(
-            reference_path.name, expected_sha256=recipe.reference_sha256
-        )
-        with reference_store.open_file("application-rank-00000.json") as stream:
-            body = stream.read(1024 * 1024 + 1)
-        if len(body) > 1024 * 1024:
-            raise ValueError("SFT reference application state exceeds its limit")
-        application = json.loads(
-            body, object_pairs_hook=_unique_mapping, parse_constant=_reject_constant
-        )
-        if (
-            not isinstance(application, dict)
-            or application.get("kind") not in ("packed-sft-v1", "packed-sft-v2")
-            or not isinstance(application.get("recipe_yaml"), str)
-            or parse_pretraining_job(application["recipe_yaml"]).objective != "sft"
-        ):
-            raise ValueError("DPO reference must be a manifested SFT checkpoint")
         initialization = PretrainingJob(
             replace(job, training=replace(job.training, warmup_steps=0, decay_steps=0)),
             recipe.data_manifest,
@@ -303,7 +312,7 @@ def train_dpo(
             initial_checkpoint=recipe.reference_manifest,
             initial_sha256=recipe.reference_sha256,
         )
-        initialize_weights(model, initialization, manifest_digest(tokenizer))
+        initialize_sft_reference(model, initialization, manifest_digest(tokenizer))
         reference = Decoder(job.experiment.model, job.training.execution)
         reference.load_state_dict(model.state_dict())
         reference.requires_grad_(False).eval()

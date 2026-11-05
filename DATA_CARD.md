@@ -219,3 +219,15 @@ Record source/generator revision,manifest hashes,tokenizer/masks and SFT referen
 checkpoint identity. No external model/API/corpus or public benchmark is ingested.
 These are demo-only pairs with simplistic negatives,not production or reasoning
 quality evidence;length effects and cross-stage family overlap remain limitations.
+
+## D-RL-01 — Original outcome-RL prompt fixtures
+
+Registered2026-11-05 before RL sampling. Reuse D-SFT-01's original Apache-2.0
+seed20261104 EN exact-answer generator and its independently checked gold values.
+Only fixed prompts from the existing SFT-training family split enter RL rollouts;
+validation/test families never select reward-positive training samples. Labels are
+bounded exact-fraction correctness plus complete end-turn,not human preference or
+proof checking. Sampling is on-policy with no gold forcing,rejection filtering or
+external teacher/tool execution. Freeze prompt selection,tokenizer,SFT reference,
+sampling distribution,seed and budgets in each run. This is demo-only engineering;
+no production/public benchmark or expensive RL run is approved by this record.

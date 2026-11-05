@@ -224,3 +224,18 @@ preferences. Family isolation is within DPO;cross-stage base/SFT exposure persis
 The actual40-step heldout DPO loss worsened despite train learning;no generation/
 reasoning improvement,model promotion or reasoning-RL readiness follows. Three/four
 families and16 validation pairs cannot establish population-level preference gains.
+
+## Outcome-GRPO prototype limits (2026-11-05)
+
+CPU-only,<1M parameters,fixed original EN generator,temperature1 and one update
+per fresh batch. No distributed/GPU/arbitrary-environment or stale multi-epoch path.
+The sampled KL penalty is not an exact measured KL on stale samples. Population-std
+normalization and completion-length averaging define this objective;alternate
+estimators require new identity/reference tests. Near-zero scalar surrogate can
+have nonzero gradients;do not use falling loss as the promotion criterion.
+The trusted exact-Fraction verifier has bounded input/one-second post-call budget;
+this does not preempt arbitrary custom code. Generated text never executes. Prose,
+proofs,decimals,truncations and premature EOS do not gain reward. Constant groups
+can carry no policy-reward signal;all-zero gradients leave Adam untouched.
+Validation remains1/8 after8 updates. This is engineering evidence,not useful
+reasoning,public evaluation or authorization for expensive model promotion.

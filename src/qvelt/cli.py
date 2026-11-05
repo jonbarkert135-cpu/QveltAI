@@ -106,14 +106,16 @@ def _parser() -> argparse.ArgumentParser:
         pretrain.add_argument("--resume", choices=("latest", "auto"))
         pretrain.add_argument("--stop-after", type=int)
         pretrain.add_argument("--set", dest="overrides", action="append", default=[])
-    preference = commands.add_parser(
-        "dpo", help="Optimize pinned demo pairs with a frozen SFT reference"
-    )
-    preference.add_argument("path", type=Path)
-    preference.add_argument("--directory", type=Path, required=True)
-    preference.add_argument("--repository", type=Path, default=Path("."))
-    preference.add_argument("--resume", choices=("latest",))
-    preference.add_argument("--stop-after", type=int)
+    for command, help_text in (
+        ("dpo", "Optimize pinned demo pairs with a frozen SFT reference"),
+        ("grpo", "Bounded original-demo CPU outcome-GRPO"),
+    ):
+        preference = commands.add_parser(command, help=help_text)
+        preference.add_argument("path", type=Path)
+        preference.add_argument("--directory", type=Path, required=True)
+        preference.add_argument("--repository", type=Path, default=Path("."))
+        preference.add_argument("--resume", choices=("latest",))
+        preference.add_argument("--stop-after", type=int)
     collective = commands.add_parser(
         "distributed-check", help="Run an exact integer all-reduce"
     )
@@ -252,6 +254,17 @@ def main(argv: Sequence[str] | None = None) -> int:
 
             result = train_dpo(
                 load_dpo(args.path),
+                args.directory,
+                args.repository,
+                resume=args.resume == "latest",
+                stop_after=args.stop_after,
+            )
+            print(json.dumps(result, sort_keys=True))
+        elif args.command == "grpo":
+            from qvelt.posttrain.grpo_training import load_grpo, train_grpo
+
+            result = train_grpo(
+                load_grpo(args.path),
                 args.directory,
                 args.repository,
                 resume=args.resume == "latest",

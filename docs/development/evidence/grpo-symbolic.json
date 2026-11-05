@@ -1,0 +1,1 @@
+{"assumption": "finite real log-ratio x", "first_derivative": "exp(x)-1", "kl": "exp(x)-x-1", "second_derivative": "exp(x)>0", "sympy": "1.14.0", "value_and_gradient_at_zero": 0}

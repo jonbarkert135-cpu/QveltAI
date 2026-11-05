@@ -1077,3 +1077,38 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   heldout DPO loss does not establish reasoning improvement or justify promotion.
   Revisit with independent licensed data,hardware and fixed-budget generation tests;
   reference caching,multiturn/GPU/distributed modes need separate acceptance.
+
+## ADR-0044 — Bounded original outcome-GRPO,not DPO model promotion
+
+- **Date/status:**2026-11-05;CPU prototype/reference/replay executed;clean CI pending.
+- **Context:**R020's identical generation control yields base0/SFT3/DPO0 correct
+  of16. Preserve the DPO negative finding and use a fresh SFT reference. Historical
+  pre-RoPE SFT manifests fail the current config-integrity contract;do not bypass
+  it. Rebuild the80-update original SFT fixture under current schema for RL.
+- **Choice:**outcome-GRPO with original exact-fraction correctness;no critic,
+  learned reward,external teacher,tool execution or forced gold sampling. PPO would
+  add a value model;DPO is an offline pair objective. Restrict to registered demo
+  generator,CPU FP32,<1M parameters,one update/fresh on-policy batch,temperature1.
+  Record policy/reference identities,all sampled actions/logps,stops,masks and RNG.
+- **Math/source:**[verified] Shao et al.2024,DeepSeekMath,arXiv2402.03300v3,
+  section4.1.1 Eq3/4 and4.1.2 read at https://arxiv.org/html/2402.03300v3 . Use
+  clipped likelihood-ratio advantages and direct sampled exp(delta)-delta-1 KL
+  penalty,per-completion normalization. SymPy derivative/curvature/minimum checks
+  and independent NumPy values/analytic gradients executed. The local TRL online-RL
+  guide informed review;vendor reward/speed/hardware examples are not imported.
+- **Explicit extensions:**population std,max(std,1e-6),zero advantage for constant
+  groups;one-second post-call budget for a trusted130-character exact parser.
+  No claim of a preemptible arbitrary-verifier sandbox. Nonfinite/overflow errors
+  stop;zero gradients skip Adam. Reference-only KL updates and policy-signal
+  updates are counted separately. No stale multi-epoch reuse or alternate sampler.
+- **Lineage/recovery:**reuse shared SFT provenance/weights checks and atomic
+  checkpoint engine. New GRPO job has its own optimizer settings and pins parent
+  SFT recipe bytes/reference hashes. Restore model/Adam/RNG,prompt cursor,counters
+  and rollout digest. Verify reference stays unchanged and policy does not mutate
+  during sampling. Keep SFT test families unused. CLI/smoke reject unknown options.
+- **Evidence/limits:**8 real nonzero policy updates,745 actions,11/32 constant
+  groups;stop4/resume8 exact losses/rollouts/weights/Adam/RNG/cursor. Validation
+  remains1/8 correct. Near-zero scalar objective at ratio1 is not zero gradient
+  or evidence of quality. No public benchmark,improvement,production/GPU/distributed
+  or full-scale promotion claim. Revisit with independent licensed data,heldout
+  fixed-budget gains,resource evidence and isolated tool/proof verifiers.

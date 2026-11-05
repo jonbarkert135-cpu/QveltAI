@@ -12,3 +12,8 @@ scripts/preference_smoke.py. No reference cache or GPU/distributed DPO is claime
 See runbooks/04_supervised_finetuning.md and runbooks/05_preferences.md. Fixture
 loss/implicit pair scores do not establish public instruction/math quality;the
 DPO heldout negative finding does not authorize model promotion or reasoning RL.
+
+M6.3 adds the bounded original exact-answer CPU outcome-GRPO prototype:temperature1
+rollouts,group-normalized/clipped objective,sampled KL,frozen SFT lineage and exact
+rollout/model/Adam/RNG/cursor replay. See runbooks/06_reasoning_rl.md. The verifier
+never executes model text;no tool/proof/GPU/distributed or reasoning gain is claimed.

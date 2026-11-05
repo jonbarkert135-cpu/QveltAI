@@ -154,3 +154,8 @@ M6.2 adds original CPU sigmoid DPO with verifier-labeled demo pairs,a frozen
 manifest-pinned SFT reference and exact optimizer/RNG/pair-cursor replay. See
 [preference runbook](runbooks/05_preferences.md). A lower training preference loss
 with worse heldout loss is recorded as a negative result,not a model promotion.
+
+A bounded original CPU outcome-GRPO prototype now follows SFT directly after the
+DPO generation regression. It logs on-policy rollout identities and exact resume;
+[runbook06](runbooks/06_reasoning_rl.md) states the fixed-environment/verifier limits.
+Eight optimizer windows leave heldout correctness unchanged;no reasoning gain claimed.
