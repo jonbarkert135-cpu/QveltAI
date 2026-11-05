@@ -454,7 +454,7 @@ parameters,V32768,T16/B2,FP32,seed20261031,one CPU thread:200 updates/6386 valid
 targets. Actual SIGKILL at observed89,restore75;all200 loss values match exactly,
 weights/Adam/RNG/application bit-exact. Probe10.47552204->9.00020885;authored
 code/math/web final PPL3163.41/2402.49/2653.38. No production-domain or reasoning
-quality claim. Final-source receipt will be refreshed after compiler-provenance fix.
+quality claim. Final-source f14b266 repeat passes bit-exactly,source digestba3bb6d89d5aa74dbea7a80d3a1f43e1fdfab309ac8a0f04d0c635859de45e50.
 
 Compile8 updates/962 targets:cached startup+checkpoint wall0.811s eager/6.386s
 compiled;median steady11,589.89/13,509.28 targets/s/device;max weight delta7.445e-6.
@@ -471,3 +471,14 @@ deselected in365.00s. Focused final38 passed,2 GPU deselected in36.42s(includes
 actual two-rank NaN rollback,SIGTERM,hard-kill,source-probe,sweep/provenance checks).
 No tests relaxed. Current-source clean CI,final type/build and refreshed200-step
 receipt pending;see validation_phase5.md. No paid or final-scale run.
+
+
+R018 final acceptance2026-11-05:source f14b266 and source digestba3bb6d89d5aa74dbea7a80d3a1f43e1fdfab309ac8a0f04d0c635859de45e50.
+Final local200-step repeat is bit-exact for all200 losses/weights/Adam/RNG/cursor.
+Ruff/format,strict mypy122 files,frozen lock/dependencies,wheel/sdist pass. Local
+restarted full590 passed,1 packed-DDP timeout,7 GPU deselected in318.63s;this is
+not a local green claim. GitHub42069685890 atf14b266 has all9 jobs successful:
+CPU3.11/3.12/3.13 each589 passed,2 optional SDK skips,7 GPU deselected;SDKs
+separately green. Dedicated CI200-step recovery also bit-exact;hardware-dependent
+probe final9.65952873 versus local9.00020885 is not cross-host equality. Portable
+Phase5 accepted;CUDA/NCCL/FSDP/server and production inputs remain unverified.

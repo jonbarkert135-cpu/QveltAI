@@ -45,9 +45,11 @@ final code/math/web PPL3163.41/2402.49/2653.38 are fixture harness outputs,not p
 benchmarks or mathematical-answer accuracy. See
 [evidence](evidence/phase5-kill-resume-200.json).
 
-After compiler/provenance correction,the identical protocol is rerunning against
-source4202244ee1e28ac839d934600bbb70b7c5c2f595c0202ebc86664777b2e2572a;
-final-source receipt will replace the earlier receipt before acceptance closes.
+Final-source repeat after compiler/provenance and typing corrections also passes
+all comparisons exactly. Published source f14b266 has digest
+ba3bb6d89d5aa74dbea7a80d3a1f43e1fdfab309ac8a0f04d0c635859de45e50.
+Receipt includes the entire200-point curve;the companion plot is
+[evidence/phase5-kill-resume.png](evidence/phase5-kill-resume.png).
 
 ```bash
 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 uv run --frozen --extra cpu python \
@@ -80,10 +82,17 @@ universal scaling law or hyperparameter transfer to the125.85M small model.
 Local pre-final regression586 passed,3 distributed-process failures/timeouts,
 7 GPU deselected in365.00s. This is not an all-green local suite. Such Gloo exits/
 stalls were also observed before this import;root cause remains unresolved.
-No test is disabled,xfail'ed or replaced by a forced process exit. Focused final
-recovery/reference/provenance tests and current-source GitHub CPU3.11/3.12/3.13,
-optional SDK and dedicated200-update recovery jobs are pending observation.
-Ruff/mypy/build results will be recorded with the final source revision.
+No test is disabled,xfail'ed or replaced by a forced process exit. Focused final recovery/reference/provenance38 tests passed,2 GPU deselected in36.42s.
+After environment restart:590 passed,1 packed-DDP timeout,7 GPU deselected in318.63s.
+The local Gloo process problem remains unresolved. Current-source clean GitHub
+42069685890 atf14b266 has all9 jobs successful:CPU3.11/3.12/3.13 each589 passed,
+2 optional SDK skips,7 GPU deselections in193.21s/199.80s/186.88s. Optional SDKs
+passed separately;numeric,data,packed,SFT and200-update recovery jobs are successful.
+Final Ruff/format and strict mypy122 files pass;frozen lock/dependency checks and
+wheel/sdist build succeed. The final200-update CI loss curve also matches exactly,as do weights/Adam/RNG/
+application state. CI probe10.47552204->9.65952873 differs from local9.00020885;
+CPU hardware differs and cross-host bitwise equality is not promised. The actual
+within-host recovery contract passes independently in both environments.
 
 RFC deviations are explicit in ADR0036/0042:LR is evaluated at completed-window
 end rather than splitting warmup/tail boundaries;final target horizon is exact;

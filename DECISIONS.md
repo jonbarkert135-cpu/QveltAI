@@ -1009,7 +1009,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0042 — Expanded pretraining recovery and measured portable controls
 
-- **Date/status:**2026-11-04; implemented and locally exercised; current CI pending.
+- **Date/status:**2026-11-04; implemented;all9 current-source CI42069685890 jobs pass.
 - **Context:**the supplied Phase5 WIP predates current SFT and omits the requested
   acceptance experiment. Select compatible code and preserve objective/base lineage.
 - **Choice:**reuse token-sum accumulation and atomic checkpointing; add validated

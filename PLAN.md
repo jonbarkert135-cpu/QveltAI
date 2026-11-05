@@ -308,7 +308,7 @@ marked complete without its actual configuration and logs.
 
 ### M5.4 — Expanded Phase5 portable framework and hard-kill acceptance
 
-Owner:Lead agent. Status:in progress; local CPU acceptance executed,current CI pending.
+Owner:Lead agent. Status:complete for portable CPU scope;GPU/server validation blocked.
 Dependencies:M5.1,current SFT preservation; CUDA/resource/production gates remain separate.
 
 - [x] Select WIP changes without replacing current SFT or project memory.
@@ -319,7 +319,8 @@ Dependencies:M5.1,current SFT preservation; CUDA/resource/production gates remai
 - [x] Execute full RFC tiny200 updates with actual SIGKILL and exact whole loss curve,
   weights,Adam,RNG and loader/application replay; retain JSON evidence.
 - [x] Supply exact conditional small commands and stability/recovery playbook in02_pretraining.md.
-- [ ] Record compile/four-size measurements and observe current-source clean CI.
+- [x] Record compile/four-size measurements and observe current-source clean CI.
+  GitHub42069685890 atf14b266:all9 jobs successful.
 - [ ] Validate actual CUDA/NCCL/FSDP2 and small/server resources on supplied hardware.
 
 Acceptance is scoped:portable framework/recovery may close with CPU evidence;
@@ -351,7 +352,7 @@ SFT and production dataset clearance remain outside this completed CPU scope.
 
 ### M6.2 — Implement and verify preference optimization
 
-Owner: Lead agent. Status: planned. Dependencies: M6.1; approved preference data.
+Owner: Lead agent. Status: in progress. Dependencies: M6.1; approved preference data.
 
 - [ ] Compare supported preference objectives and select one with verified
   primary-source equations; DPO is a candidate, not an implementation promise.

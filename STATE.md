@@ -20,10 +20,15 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 Expanded Phase5 is implemented selectively on top of SFT. Actual full RFC tiny
 19,338,560 parameters,V32768,T16/B2:200 optimizer updates/6386 valid targets.
 SIGKILL89,restore75;all200 losses differ by0.0;weights/Adam/RNG/application match
-bit-exactly. Source digest0c5afe9608d5c5df95cc0a308a80649ac936d8b4910050725e8f481cc3ddb114.
+bit-exactly. Final source f14b266,digest
+ba3bb6d89d5aa74dbea7a80d3a1f43e1fdfab309ac8a0f04d0c635859de45e50.
 Local full run586 passed,3 distributed-process failures/timeouts,7 GPU deselected
-in365.00s;do not call it green. Current clean GitHub CI and compile/scaling results
-are pending. See validation_phase5.md and runbooks/02_pretraining.md. No GPU/full
+in365.00s;do not call it green. Final200-step repeat,compile and four-size measurements pass. Ruff/format,
+mypy122 files,frozen lock/dependencies and build pass. GitHub42069685890 atf14b266:all9 jobs successful,CPU3.11/3.12/3.13 each
+589 passed,2 optional SDK skips,7 GPU deselected;SDKs separately green. Dedicated
+200-update hard-kill replay independently bit-exact. Final local restart run590
+passed,1 packed-DDP timeout,7 GPU deselected in318.63s;Gloo root cause still open.
+Portable Phase5 closes;M6.2 preference optimization is now in progress. See validation_phase5.md and runbooks/02_pretraining.md. No GPU/full
 small/paid run. Next dependency-ready portable task remains M6.2.
 
 Historical Phase4 acceptance follows.
