@@ -1112,3 +1112,34 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   or evidence of quality. No public benchmark,improvement,production/GPU/distributed
   or full-scale promotion claim. Revisit with independent licensed data,heldout
   fixed-budget gains,resource evidence and isolated tool/proof verifiers.
+
+## ADR-0045 — Prospective frozen project holdout and original evaluation protocols
+
+- **Date/status:**2026-11-05;1000-case snapshot frozen before M7.1 model work;harness in progress.
+- **Context:**RFC002's planned200-validation/800-final project set did not exist.
+  Historical checkpoint learning already occurred;do not claim retrospective
+  preregistration or public benchmark status. Freeze prospective IDs and checksums now.
+- **Choice:**five original exact-answer templates,seed20261105,new family namespace
+  and small/large latent parameter bands. Two-equation latent rationals have distinct
+  integer parts across bands,avoiding reduced-ratio cross-partition collisions.
+  Verify stdlib/Fraction gold with SymPy;200/800 unique questions;explicit eval/
+  decontamination-only permission. Store metadata/IDs in Git,raw corpus outside.
+- **Harness contract:**own strict YAML/manifest protocols,whole/final-line bounded
+  answer parsing,choice likelihood and token-weighted rolling LM controls. Failed,
+  invalid and truncated attempts remain in generation denominators. Declare n/k,
+  isolated seeded sampling,exact combinatorial pass@k and uncertainty assumptions.
+  Audit declared sources without claiming complete semantic contamination clearance.
+- **Alternatives:**rename earlier tiny validation examples as final benchmark;
+  silently adopt vendor task prompts/scores or execute custom task Python. Existing
+  Qvelt models do not need a Transformers/lm-eval dependency for these contracts.
+- **Sources:**[verified] RFC002 section6;project-local pinned Orchestra evaluation
+  skill/custom-task reference read for task/version/logging patterns. Chen et al.2021,
+  Evaluating Large Language Models Trained on Code,v2 section2.1/appendixA Eq1,
+  https://arxiv.org/html/2107.03374 read for the combination estimator only;no dataset
+  was ingested. NIST e-Handbook PRC7.2.4.1 Wilson interval formula read at
+  https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm ;metric implementation
+  and independent mathematical checks remain separate acceptance gates.
+- **Limits/revisit:**templates are syntactically distinct,not proven semantically
+  novel. Historical training history is not certified clean. Final set stays unscored
+  in acceptance;public corpus rights,GPU/sharded evaluation and promotion need
+  additional contracts. Future training must register this snapshot's exclusions.

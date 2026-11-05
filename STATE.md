@@ -17,6 +17,16 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
+M7.1 evaluation harness is in progress. Prospective original1000-case set v1 is
+frozen now:200 validation/800 final,new template/band families,seed20261105;
+SymPy verifies all gold values and2 freeze/export tests pass. No model uses final
+cases;no retrospective heldout/public benchmark claim. See evaluation_design.md,
+ADR0045 and evaluation-frozen-v1.json. Next:versioned scoring/sampling/LM and
+contamination reporting,independent references and actual read-only CPU acceptance.
+
+Historical M6.3 acceptance follows.
+
+
 M6.3 bounded CPU outcome-GRPO is implemented from the SFT branch. Actual8 real
 policy-gradient/Adam updates,745 generated actions,11/32 constant groups;stop4/
 resume8 all losses,rollouts,weights,Adam,RNG and prompt cursor exact. Reduced

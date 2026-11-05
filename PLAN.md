@@ -405,7 +405,7 @@ GPU/distributed/arbitrary tool/proof/approximate-answer environments are unverif
 
 ### M7.1 — Deliver a reproducible, contamination-aware evaluation harness
 
-Owner: Lead agent. Status: planned. Dependencies: M6.3 for full post-training
+Owner: Lead agent. Status: in progress;prospective1000-case freeze committed before new learning. Dependencies: M6.3 for full post-training
 comparison; basic fixture evaluation is required earlier by M5.1 and M6.1.
 
 - [ ] Version benchmark datasets, licenses, prompts, answer extraction, context

@@ -231,3 +231,31 @@ proof checking. Sampling is on-policy with no gold forcing,rejection filtering o
 external teacher/tool execution. Freeze prompt selection,tokenizer,SFT reference,
 sampling distribution,seed and budgets in each run. This is demo-only engineering;
 no production/public benchmark or expensive RL run is approved by this record.
+
+## D-EVAL-01 — Frozen project-authored evaluation set v1
+
+Registered2026-11-05 before generation/M7.1 execution. Original Qvelt mathematical
+wording/code,Apache-2.0,explicit evaluation/decontamination permission only;training
+is forbidden. Fixed seed20261105;1000 exact-answer cases,200 validation/800 final.
+Five new template families:division remainder,arithmetic progression sum,two-equation
+sum/difference,product of rational numbers,quadratic evaluation. Validation uses
+small latent parameters2..25;final uses26..80. Namespace/family IDs distinguish
+both templates and bands. Stdlib integer/Fraction answers are independently checked
+with SymPy exact arithmetic before writing. No external source/teacher/benchmark.
+
+Freeze generator version,all IDs/families,raw payload/manifest/license checksums
+before new model learning. Raw corpus stays outside Git. Final800 are not scored
+in M7.1 acceptance or used for tuning;their future use needs a declared protocol.
+The set is created after historical checkpoints,so preregistration is prospective.
+Template/parameter-band isolation does not prove semantic novelty or contamination
+absence in unknown training histories. This is a project-specific set,not GSM8K,
+MATH,AIME or MMLU;their exact revision/license gates remain blocked.
+
+## D-EVAL-CONTROL-01 — Original evaluation/overlap calibration fixtures
+
+Registered2026-11-05 before ingestion. Original Apache-2.0 numeric/choice/LM examples
+and deliberate exact/near-overlap canaries;no external corpus or teacher. These are
+engineering controls,not independent general-capability evidence. Evaluation source
+permission is evaluation/decontamination only. Separate authored calibration source
+may explicitly permit tokenizer fitting;never fit on D-EVAL-01 or its answers.
+Known collisions must remain visible in reports rather than silently filtered.

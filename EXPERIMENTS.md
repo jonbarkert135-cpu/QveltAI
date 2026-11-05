@@ -586,3 +586,17 @@ Remote GRPO has8 policy updates/745 actions/11 constant groups,all losses/rollou
 weights/Adam/RNG/cursor exact;validation1/8 unchanged. M6.3 closes only for its
 bounded original CPU scope. Local pre-final numeric-DDP timeout remains reported;
 remote success is not evidence of a local Gloo fix. No GPU/paid/production run.
+
+## R022 — Prospective original holdout freeze
+
+Date:2026-11-05. Base6bcefbb. Registered D-EVAL-01 before generation. Exact original
+seed20261105 templates:remainder,progression,two equations,rational product,
+quadratic. All1000 targets independently checked against SymPy;200 validation/
+800 final,unique question IDs/text and disjoint template/band family labels.
+No model inference,tokenizer fitting or optimizer update used this corpus. Final
+questions remain unscored. Reviewed snapshot identities/IDs are in
+`docs/development/evidence/evaluation-frozen-v1.json`;raw files stay outside Git.
+Two unit tests cover deterministic counts/IDs,rights,checksummed export and exclusive
+publication. Initial draft typing/callback issues and reducible latent-ratio risk
+were corrected before the reviewed freeze;no prior checkpoint is relabeled as
+prospectively heldout. This is data/contract validation,not ML quality evidence.
