@@ -17,15 +17,21 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-M7.1 original CPU evaluation is implemented;full local/remote acceptance is in
-progress. Versioned exact/numeric/choice/LM protocols,seeded sampling/pass@k,
+M7.1 original CPU evaluation is accepted on source83a1adb;GitHub42092305795 has
+all12 jobs successful. CPU3.11/3.12/3.13 each664 passed,2 optional SDK skips,
+7 GPU deselected;SDKs separately verified. Versioned exact/numeric/choice/LM protocols,seeded sampling/pass@k,
 manifest-bound reports and declared-source lexical audits. Prospective1000-case
 freeze88db69e:200 validation/800 unscored final,seed20261105,SymPy gold verification.
 Focused42 tests pass;Ruff/format,mypy146 files and build pass. Full local665 passed,
 1 existing packed-DDP resume timeout,7 GPU deselected in281.85s. Historical SFT80
 scores5/200 with one constant answer,not a reasoning gain;repeat outputs/metrics/
 audits exact,weights unchanged. See validation_evaluation.md,runbook07 and ADR0045.
-Next:finish clean current-source CI and evidence,then M7.2 promotion/ablation gates.
+Paired evaluation outputs/metrics/audits exact on both local and CI hosts;weights
+unchanged,0 final cases scored. Dedicated200-step actual-SIGKILL and SFT/DPO/GRPO
+replays also pass. Source0f742e0d9c94a3165f9fc2205d894a9a58a0e2c0a659a5d149e2fa2ac09209fd.
+Local Gloo timeout remains unresolved;remote success is not a local fix.
+Next:M7.2 controlled comparisons/promotion and ablation gates;demo checkpoints
+cannot justify production promotion. Public rights/GPU/user-server gates remain open.
 
 Historical M6.3 acceptance follows.
 

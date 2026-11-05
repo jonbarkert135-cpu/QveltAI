@@ -405,7 +405,7 @@ GPU/distributed/arbitrary tool/proof/approximate-answer environments are unverif
 
 ### M7.1 — Deliver a reproducible, contamination-aware evaluation harness
 
-Owner: Lead agent. Status: implemented;current-source local/CI acceptance in progress. Prospective freeze88db69e precedes new learning. Dependencies: M6.3 for full post-training
+Owner: Lead agent. Status: complete for original single-process CPU reference scope;source83a1adb,all12 CI42092305795 jobs successful. Prospective freeze88db69e precedes new learning. Dependencies: M6.3 for full post-training
 comparison; basic fixture evaluation is required earlier by M5.1 and M6.1.
 
 - [x] Version benchmark datasets, licenses, prompts, answer extraction, context
@@ -420,6 +420,13 @@ comparison; basic fixture evaluation is required earlier by M5.1 and M6.1.
 Acceptance: fixture metrics match known answers, reruns are reproducible under
 declared conditions, and every score resolves to artifacts, prompts, and a
 specific checkpoint. No hidden-test or unsupported benchmark claim is published.
+
+Evidence:runbook07/validation_evaluation.md;42 independent/reference/integration
+tests,each CI CPU3.11/3.12/3.13 has664 passed/2 optional SDK skips/7 GPU deselected.
+SDKs separately pass. Paired greedy/sampled controls and200 validation outputs/
+metrics/audits exact,input weights unchanged. Historical SFT5/200 is a constant
+answer policy,no promotion. Final800 unscored,public/GPU/sharded quality gates open.
+Local665 passed/1 packed-DDP timeout remains an unresolved environment limitation.
 
 ### M7.2 — Establish evidence-based promotion and ablation gates
 
@@ -555,8 +562,10 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 M4.1/available-CPU M4.2 and M5.1 are complete. Packed CPU/DDP references/replay
 are verified; actual CUDA/FSDP/shared-store/multi-node tiers and production-source
 clearance remain blocked. M6.1 original-data chat/SFT,assistant masks and tiny optimization/replay now pass
-CPU acceptance. M6.2 DPO and bounded M6.3 outcome-GRPO pass CPU acceptance/clean CI;next:M7.1
-versioned evaluation on original fixtures before licensed public inputs. Keep final heldout
+CPU acceptance. M6.2 DPO,bounded M6.3 outcome-GRPO and M7.1 original evaluation
+pass portable CPU acceptance/clean CI. Next:M7.2 controlled comparisons/ablations
+and explicit promotion gates;production promotion needs actual user-run evidence.
+Keep final heldout
 families separate; do not promote demo loss to a reasoning benchmark score.
 Publish verified work and reports to main; no paid/final-scale runs or old
 cloud-environment changes. See STATE.md for current evidence and next actions.

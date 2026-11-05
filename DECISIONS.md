@@ -1115,7 +1115,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0045 — Prospective frozen project holdout and original evaluation protocols
 
-- **Date/status:**2026-11-05;freeze88db69e;original CPU harness implemented;clean CI pending.
+- **Date/status:**2026-11-05;freeze88db69e;CPU harness accepted on83a1adb,all12 CI42092305795 jobs successful.
 - **Context:**RFC002's planned200-validation/800-final project set did not exist.
   Historical checkpoint learning already occurred;do not claim retrospective
   preregistration or public benchmark status. Freeze prospective IDs and checksums now.
@@ -1151,3 +1151,9 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   promotion. Raw-source superset lexical alerts0 do not establish complete history.
   Context/generation CPU acceptance budgets differ explicitly from RFC002's512-token
   quality proposal. See validation_evaluation.md;full/CI receipts follow separately.
+- **Final acceptance:**CPU3.11/3.12/3.13 each664 passed,2 optional SDK skips,7 GPU
+  deselected;SDKs independently verified. Dedicated evaluation paired outputs/
+  metrics/audits exact on digest0f742e0d9c94a3165f9fc2205d894a9a58a0e2c0a659a5d149e2fa2ac09209fd,
+  weights unchanged,final800 unscored. Current-source200-step SIGKILL and SFT/
+  DPO/GRPO replay jobs pass. Local665 passed/1 packed-DDP timeout remains reported;
+  CI success does not diagnose that local issue. No production promotion.

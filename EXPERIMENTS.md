@@ -632,3 +632,22 @@ two-rank resume timeout,7 GPU deselected in281.85s. No skips or test weakening;
 known failed worker cleaned up after parent exit. Ruff/format,mypy146 files,
 wheel/sdist build,lock93 resolved and pip72 compatible pass. No local Gloo fix or
 green-full claim. Final-source self-contained receipts and clean CI still pending.
+
+R023 final acceptance:83a1adbff280108a3eea1bb8666a1a19d2fca48a,executable digest
+0f742e0d9c94a3165f9fc2205d894a9a58a0e2c0a659a5d149e2fa2ac09209fd. Clean local
+self-contained run and dedicated CI evaluation each reproduce paired predictions/
+metrics/audits exactly,weights unchanged,0 final cases scored. Original3-document
+LM control89 targets/NLL531.28185654/PPL391.29394781;short/tokenizer-specific,
+not production quality. Sampled controls6 attempts/24 actions,all6 invalid;
+5 token-limit/1 premature-control stops stay in denominators. Greedy choice sum2/2,
+length-normalized1/2 is a two-example length effect,not general capability.
+Historical SFT repeated on clean final source remains5/200 with one constant answer.
+Receipts:evaluation-smoke.json,evaluation-sft-diagnostic.json,evaluation-ci-smoke.json.
+
+GitHub42092305795 all12 jobs successful. CPU3.11/3.12/3.13 each664 passed,2 optional
+SDK skips,7 GPU deselected in216.17s/240.53s/167.01s;SDKs separately pass. Dedicated
+evaluation,SFT,DPO,GRPO and full RFC tiny200-step actual-SIGKILL replays all pass.
+The latter kills at89,restores75,maximum loss difference0 and exact weights/Adam/
+RNG/application state. See evaluation-ci.json. Local packed-DDP timeout is not
+fixed or erased by remote success. M7.1 closes only for original CPU scope;
+final/public/GPU quality and promotion remain separate gates. No paid/full-scale run.

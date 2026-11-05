@@ -66,3 +66,32 @@ was cleaned up after its parent failed. Lock93 resolved/pip72 compatible.
 Current-source acceptance receipts and clean GitHub matrix follow below.
 The previous intermittent managed Gloo issue remains an environment risk until
 separately diagnosed;do not skip/weaken distributed tests to hide it.
+
+Final executable source83a1adb,package digest
+0f742e0d9c94a3165f9fc2205d894a9a58a0e2c0a659a5d149e2fa2ac09209fd.
+Clean-checkout self-contained acceptance produces identical predictions/metrics/
+audits for each paired run,and untouched weights;see
+[local receipt](evidence/evaluation-smoke.json). Untrained math0/200 is expected
+and not hidden. The3 LM controls have89 actual targets,total NLL531.28185654,
+PPL391.29394781;this is tokenizer/model/short-corpus-specific,not general quality.
+Sampled controls have6 attempts,24 actions,5 token-limit stops/1 premature control;
+all6 invalid remain in pass@1/pass@2 denominators. Greedy choice sum score2/2,
+token-normalized1/2 illustrates length effects on these two tiny controls only.
+
+Historical SFT diagnostic was repeated on that clean source and matches its
+earlier results exactly;see[diagnostic receipt](evidence/evaluation-sft-diagnostic.json).
+GitHub42092305795's dedicated evaluation job also succeeds on this digest with
+all paired comparisons exact,weights unchanged and0 final cases scored;see
+[remote receipt](evidence/evaluation-ci-smoke.json). This is separate per-host
+repeatability,not a cross-hardware promise. Complete matrix acceptance follows.
+
+GitHub[42092305795](https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42092305795)
+has **all12 jobs successful** on83a1adb. CPU3.11/3.12/3.13 each664 passed,
+2 optional SDK skips,7 GPU deselected in216.17s/240.53s/167.01s. SDK event/offline
+tests pass in their separate job. Full RFC tiny200-step real-SIGKILL recovery
+matches the complete loss curve(max delta0),weights,Adam,RNG and application
+state after kill89/restore75. SFT,DPO and GRPO replay jobs also succeed. See
+[matrix/recovery receipt](evidence/evaluation-ci.json). No test is skipped or
+weakened to conceal the local packed-DDP timeout;that runtime issue remains open.
+M7.1 closes for its original CPU reference scope. Next:M7.2 controlled comparisons
+and promotion gates,retaining negative findings and requiring actual quality data.
