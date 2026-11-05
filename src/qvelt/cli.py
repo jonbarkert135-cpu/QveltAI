@@ -116,6 +116,10 @@ def _parser() -> argparse.ArgumentParser:
         preference.add_argument("--repository", type=Path, default=Path("."))
         preference.add_argument("--resume", choices=("latest",))
         preference.add_argument("--stop-after", type=int)
+    evaluation = commands.add_parser("evaluate", help="Read-only pinned CPU evaluation")
+    evaluation.add_argument("path", type=Path)
+    evaluation.add_argument("--directory", type=Path, required=True)
+    evaluation.add_argument("--repository", type=Path, default=Path("."))
     collective = commands.add_parser(
         "distributed-check", help="Run an exact integer all-reduce"
     )
@@ -128,7 +132,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     logger = configure_logging()
     try:
-        if args.command == "config":
+        if args.command == "evaluate":
+            from qvelt.eval.config import load_eval
+            from qvelt.eval.runner import run_evaluation
+
+            print(
+                json.dumps(
+                    run_evaluation(
+                        load_eval(args.path), args.directory, args.repository
+                    ),
+                    sort_keys=True,
+                )
+            )
+        elif args.command == "config":
             config = load_config(args.path, args.overrides)
             logger = configure_logging(config.runtime.log_level)
             if args.action == "resolve":

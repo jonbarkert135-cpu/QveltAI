@@ -1115,7 +1115,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0045 — Prospective frozen project holdout and original evaluation protocols
 
-- **Date/status:**2026-11-05;1000-case snapshot frozen before M7.1 model work;harness in progress.
+- **Date/status:**2026-11-05;freeze88db69e;original CPU harness implemented;clean CI pending.
 - **Context:**RFC002's planned200-validation/800-final project set did not exist.
   Historical checkpoint learning already occurred;do not claim retrospective
   preregistration or public benchmark status. Freeze prospective IDs and checksums now.
@@ -1143,3 +1143,11 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   novel. Historical training history is not certified clean. Final set stays unscored
   in acceptance;public corpus rights,GPU/sharded evaluation and promotion need
   additional contracts. Future training must register this snapshot's exclusions.
+- **Executed evidence:**exhaustive n1..7 pass@k subset references,high-precision
+  Wilson score-equation roots and scalar Python nonuniform teacher-forcing checks
+  pass. Focused42 tests;Ruff/format,mypy146 files and packaging pass. Repeated
+  untrained controls/validation give identical predictions/metrics/audits.
+  Historical SFT80 gets5/200 with one constant answer;all200 complete. No gain or
+  promotion. Raw-source superset lexical alerts0 do not establish complete history.
+  Context/generation CPU acceptance budgets differ explicitly from RFC002's512-token
+  quality proposal. See validation_evaluation.md;full/CI receipts follow separately.

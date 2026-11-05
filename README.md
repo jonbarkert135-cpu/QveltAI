@@ -77,8 +77,9 @@ uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/
 | GPU FSDP2/NCCL | API path and tests | Hardware tests provided; not run here |
 | JSON/TensorBoard/W&B metrics | Yes | JSON/event files and actual W&B offline run; no online upload |
 | Conversational SFT | Yes (CPU demo) | Assistant-only masks, whole-dialog packing, pinned base weights and exact replay; [runbook04](runbooks/04_supervised_finetuning.md) |
-| Preferences/reasoning RL | No | Remaining Phase6 milestones |
-| Reasoning evaluation/serving/export formats beyond safetensors | No | Phases7–8; no fake commands |
+| Preferences/reasoning RL | Yes (CPU demos) | DPO and bounded outcome-GRPO exact replay;negative/unchanged heldout results,no promotion |
+| Versioned evaluation | Yes (CPU original fixtures) | Exact/numeric/choice/LM references,immutable reports and lexical audit;public/final/GPU quality gates remain open |
+| Serving/export formats beyond safetensors | No | Phase8;no serving readiness claim |
 
 See [current state](STATE.md), [roadmap](PLAN.md), [engineering design](docs/development/foundation_design.md),
 [validation](docs/development/validation_foundation.md), [decisions](DECISIONS.md),
@@ -159,3 +160,10 @@ A bounded original CPU outcome-GRPO prototype now follows SFT directly after the
 DPO generation regression. It logs on-policy rollout identities and exact resume;
 [runbook06](runbooks/06_reasoning_rl.md) states the fixed-environment/verifier limits.
 Eight optimizer windows leave heldout correctness unchanged;no reasoning gain claimed.
+
+M7.1 adds a versioned read-only CPU evaluation harness,prospective original
+200-validation/800-final freeze,strict exact/numeric answers,choice likelihood,
+domain LM perplexity and declared-source lexical overlap audits. Run
+`qvelt evaluate evaluation.yaml --directory runs/evaluation-01 --repository .`;
+see [evaluation protocols and reproducible acceptance](runbooks/07_evaluation.md).
+Final800 remain unscored;original controls are not public benchmark results.

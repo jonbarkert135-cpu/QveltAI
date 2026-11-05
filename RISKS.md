@@ -239,3 +239,16 @@ proofs,decimals,truncations and premature EOS do not gain reward. Constant group
 can carry no policy-reward signal;all-zero gradients leave Adam untouched.
 Validation remains1/8 after8 updates. This is engineering evidence,not useful
 reasoning,public evaluation or authorization for expensive model promotion.
+
+## Evaluation prototype limits (2026-11-05)
+
+The1000-case project snapshot was frozen after historical models trained;it is
+prospective for subsequent work only. Template/band disjointness does not prove
+semantic independence. Final800 stay unscored. Zero lexical hits on declared
+raw bundles cannot establish complete training-history or semantic cleanliness;
+long-document prefix truncation and unknown sources are explicit audit limits.
+Wilson intervals assume iid problems;clustered templates invalidate population
+confidence. Choice/LM controls are original short sanity examples,not public
+benchmark or production-domain quality estimates. CPU FP32/full-prefix,<20M
+parameter reference evaluation does not validate GPU/sharded/large-model cost.
+Reports contain prompts/answers;keep raw final data and predictions private.

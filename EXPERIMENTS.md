@@ -600,3 +600,35 @@ Two unit tests cover deterministic counts/IDs,rights,checksummed export and excl
 publication. Initial draft typing/callback issues and reducible latent-ratio risk
 were corrected before the reviewed freeze;no prior checkpoint is relabeled as
 prospectively heldout. This is data/contract validation,not ML quality evidence.
+
+## R023 — Original versioned evaluation references and read-only CPU diagnostics
+
+Date:2026-11-05. Freeze88db69e precedes M7.1 tokenizer fitting/inference;no optimizer
+updates in evaluation acceptance. D-EVAL-CONTROL-01 registered first. Original
+CPU FP32 harness reuses manifests/tokenizer/decoder/response logps,adds strict
+protocols,seeded categorical sampling,exact/numeric scoring,choice likelihood,
+target-weighted rolling PPL and transparent exact/ngram/Jaccard/family audits.
+Chen2021 Eq1 and NIST Wilson read;independent exhaustive k-subsets,50-digit
+score-equation roots,scalar Python nonuniform teacher forcing and hostile format
+checks execute. Focused42 pass in4.51s;Ruff/format,mypy146 files and build pass.
+
+Untrained actual BPE checkpoint:greedy and n3/k1,2/T1 controls plus200-validation
+greedy each repeat twice;predictions/metrics/audits exact,input weights unchanged.
+The deliberate audit canary is calibration,never actual model training. All800
+final cases unscored. Current-source final receipts/full regression/CI pending.
+
+Historical SFT80:127104 parameters,V445/T128,CPU FP32,seed20261105,B1,chat-v1,
+whole-v1,greedy16-action budget,200 problems,five40-case validation families.
+5 correct,all200 complete,0 invalid/truncated/failed,400 generated actions;
+one distinct generated answer,all5 successes in remainder family. This is a
+degenerate constant-answer policy,not mathematical reasoning gain. Repeated
+predictions/metrics/audits exact,weights unchanged. Three declared raw supersets
+(42 EN/42 RU/64 SFT docs) have0 lexical/family alerts and no truncation;history/
+semantic clearance remains unknown. Frozen prospective corpus postdates this
+historical learning. See validation_evaluation.md and runbook07;no model promotion.
+
+R023 full local CPU/optional-SDK regression:665 passed,1 existing packed-training
+two-rank resume timeout,7 GPU deselected in281.85s. No skips or test weakening;
+known failed worker cleaned up after parent exit. Ruff/format,mypy146 files,
+wheel/sdist build,lock93 resolved and pip72 compatible pass. No local Gloo fix or
+green-full claim. Final-source self-contained receipts and clean CI still pending.

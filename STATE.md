@@ -17,12 +17,15 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-M7.1 evaluation harness is in progress. Prospective original1000-case set v1 is
-frozen now:200 validation/800 final,new template/band families,seed20261105;
-SymPy verifies all gold values and2 freeze/export tests pass. No model uses final
-cases;no retrospective heldout/public benchmark claim. See evaluation_design.md,
-ADR0045 and evaluation-frozen-v1.json. Next:versioned scoring/sampling/LM and
-contamination reporting,independent references and actual read-only CPU acceptance.
+M7.1 original CPU evaluation is implemented;full local/remote acceptance is in
+progress. Versioned exact/numeric/choice/LM protocols,seeded sampling/pass@k,
+manifest-bound reports and declared-source lexical audits. Prospective1000-case
+freeze88db69e:200 validation/800 unscored final,seed20261105,SymPy gold verification.
+Focused42 tests pass;Ruff/format,mypy146 files and build pass. Full local665 passed,
+1 existing packed-DDP resume timeout,7 GPU deselected in281.85s. Historical SFT80
+scores5/200 with one constant answer,not a reasoning gain;repeat outputs/metrics/
+audits exact,weights unchanged. See validation_evaluation.md,runbook07 and ADR0045.
+Next:finish clean current-source CI and evidence,then M7.2 promotion/ablation gates.
 
 Historical M6.3 acceptance follows.
 

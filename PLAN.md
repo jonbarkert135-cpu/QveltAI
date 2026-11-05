@@ -405,16 +405,16 @@ GPU/distributed/arbitrary tool/proof/approximate-answer environments are unverif
 
 ### M7.1 — Deliver a reproducible, contamination-aware evaluation harness
 
-Owner: Lead agent. Status: in progress;prospective1000-case freeze committed before new learning. Dependencies: M6.3 for full post-training
+Owner: Lead agent. Status: implemented;current-source local/CI acceptance in progress. Prospective freeze88db69e precedes new learning. Dependencies: M6.3 for full post-training
 comparison; basic fixture evaluation is required earlier by M5.1 and M6.1.
 
-- [ ] Version benchmark datasets, licenses, prompts, answer extraction, context
+- [x] Version benchmark datasets, licenses, prompts, answer extraction, context
   limits, seeds, generation budgets, and metric implementations.
-- [ ] Implement exact/numeric/verifier-backed math scoring with independent
+- [x] Implement exact/numeric/verifier-backed math scoring with independent
   fixtures; add language-model loss/perplexity and general capability controls.
-- [ ] Audit training/evaluation overlap with exact and approximate methods;
+- [x] Audit training/evaluation overlap with exact and approximate methods;
   record contamination uncertainty and split/problem-family limitations.
-- [ ] Report problem counts, failed/invalid generations, pass@1 and any sampled
+- [x] Report problem counts, failed/invalid generations, pass@1 and any sampled
   metrics with their precise estimator, sample budget, and uncertainty.
 
 Acceptance: fixture metrics match known answers, reruns are reproducible under
