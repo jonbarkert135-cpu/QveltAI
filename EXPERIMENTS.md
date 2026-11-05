@@ -678,3 +678,55 @@ after parent failed. Ruff/format,mypy153 files,wheel/sdist and lock93/pip72 chec
 pass. SymPy exact reference confirms unequal-family macro3/80 independently.
 Missing/invalid gate schema is rejected;positive checks without independent
 replication cannot promote. Final-source three-seed/clean CI acceptance pending.
+
+R024 final source6b0d4cc,package9ca8a8fd993965196dbaaaca1f1d8b4f22a13339644b3c73f784fa7ad5601195:
+15 actual model arms,shared tokenizer/data,three run seeds20261105/6/7. Runtime
+seed affects initialization and sampler ordering;within paired LR arms both agree.
+Base0/0/0,SFT5/1/0,DPO0/0/3,half-LR DPO5/0/0,GRPO5/1/0 out of200 each. DPO
+macro-family delta-0.025..0.015,half-LR-0.005..0,GRPO0..0;all candidates reject.
+A single positive DPO seed does not replicate and cannot justify promotion.
+Actual base targets706/706/698,SFT2520 each,DPO1582 each,GRPO actions701/695/673;
+GRPO has8 policy updates each and15/14/13 constant groups out of32. Stage budgets
+are explicitly unequal;target/action counts are not total FLOPs. All19 verifier
+controls pass. Full three-seed metadata in evidence/promotion-study-3.json.
+
+Read-only repeated analysis gives exact predictions/metrics/audits for all15
+checkpoints and identical comparisons/gates;all original input manifests still
+verify. See promotion-repeat.json. Fixed16-action medians14.20..20.18ms;all
+CPU resource limits pass. Whole-process RSS390721536 bytes in study-launched
+workers differs from287260672 on a same-checkpoint shell probe,so launcher/context
+effects prevent incremental per-model memory conclusions. No timing identity claim.
+Current source6b0d4cc GitHub42098209285 has all13 jobs successful;the final
+script-extended matrix is recorded separately. No paid/GPU/production model promotion.
+
+## R025 — Exploratory paired RoPE1/2 architecture ablation
+
+Date:2026-11-05. Design3d379fc committed before ablation learning,but after earlier
+validation was exposed;explicitly exploratory. Scripte2c628f/SHA
+49b1d30d2b74baed6e0da1495ff88928cc96013180c0a38bf2a2ae4bb54743d6;model/trainer/
+evaluator package stays9ca8a8fd993965196dbaaaca1f1d8b4f22a13339644b3c73f784fa7ad5601195.
+Reuses R024 data,tokenizer,seeds,ordering,optimizer,schedule and base3/SFT80
+budgets;initial parameters bit-exact and processed targets equal per paired stage.
+Only RoPE scale1->2 and derived SFT parent identity change. Same247 cases,
+greedy16/context128/LM64,resource/verifier/necessary gates;final800 unscored.
+
+SFT control5/1/0 versus scale2 variant1/0/0 correct of200. Macro-family deltas
+-0.02/-0.005/0;first two also fail domain PPL and robustness. Reject;no long-context
+quality or production improvement claim. Full receipt:rope-ablation-3.json.
+Two script recipe/initialization/RNG tests pass in1.80s;Ruff/mypy155 files pass.
+Existing full package regression is688 pass/1 old local-DDP timeout/7 GPU
+deselections;do not relabel it as a green final full suite. Current script CI
+independently executes matched2-seed and RoPE2-seed studies;matrix receipt follows.
+
+R024/R025 final remote acceptance:e2c628fdd8b91e666e39e0ad94dd92fdb0d9bae3,
+GitHub42100151962,all13 jobs successful. CPU3.11/3.12/3.13 each689 passed,
+2 optional SDK skips,7 GPU deselected in223.44s/220.64s/185.26s. SDK tests pass
+separately;mypy155 files and packaging pass. Dedicated matched2-seed and RoPE
+2-seed studies execute fully and reject candidates;no hardcoded positive score
+is required for job success. Full current-package200-step real-SIGKILL run has
+max loss delta0 and exact weights/Adam/RNG/application;SFT/DPO/GRPO/evaluation
+replay jobs pass. See promotion-ci.json,promotion-ci-final-study.json and
+rope-ablation-ci.json. Local packed-DDP timeout remains reported,not fixed.
+CPU necessary-gate/ablation tooling closes;actual user-run production acceptance,
+public/final/GPU evidence and model promotion stay open. Next independent code
+milestone:M8.1 inference/export. No paid/full-scale run or final800 scoring.

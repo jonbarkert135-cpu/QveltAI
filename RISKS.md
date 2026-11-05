@@ -264,3 +264,11 @@ compute or full FLOPs. Necessary thresholds are preregistered engineering policy
 not estimated significance or commercial parity. Whole-process Linux RSS includes
 imports/load;fixed-action CPU timing excludes startup and ignores stop controls.
 No GPU serving/resource conclusion or automatic production promotion follows.
+
+Runtime seeds couple model initialization with packed sampler ordering. The
+three-seed study is independent seeded replication,not a causal initialization-only
+variance study. Paired LR/RoPE arms preserve both;actual base target counts differ
+across seeds. Linux whole-process ru_maxrss depends on launch context:the observed
+390721536-byte study peak versus287260672-byte same-checkpoint shell probe must
+not be interpreted as tensor/GPU memory. RoPE scale2 short-context ablation is
+negative/exploratory;it does not validate long-context extension.

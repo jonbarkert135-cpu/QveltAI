@@ -430,17 +430,27 @@ Local665 passed/1 packed-DDP timeout remains an unresolved environment limitatio
 
 ### M7.2 — Establish evidence-based promotion and ablation gates
 
-Owner: Lead agent. Status: in progress for original CPU necessary gates;production acceptance requires actual user-run checkpoints. Preregistered89a0350. Dependencies: M7.1; actual user-run checkpoints.
+Owner: Lead agent. Status: original CPU comparison/gate/ablation tooling accepted on e2c628f,all13 CI42100151962 jobs successful;production promotion blocked on actual user-run checkpoints. Designs89a0350/3d379fc. Dependencies: M7.1; actual user-run checkpoints.
 
-- [ ] Compare base, SFT, preference, and reasoning-RL checkpoints with fixed
+- [x] Compare base, SFT, preference, and reasoning-RL checkpoints with fixed
   budgets and comparable prompts; include data/compute/seed controls.
-- [ ] Run affordable ablations for architecture/data/math choices; distinguish
+- [x] Run affordable ablations for architecture/data/math choices; distinguish
   exploratory observations from repeated improvements.
-- [ ] Require regression checks for reasoning, general text quality, robustness,
+- [x] Require regression checks for reasoning, general text quality, robustness,
   verifier exploitation, and inference resource use before promotion.
 
 Acceptance: model promotion is justified by reproducible measured results, with
 negative findings and uncertainty retained in `EXPERIMENTS.md`.
+
+CPU evidence:R024 matched base/SFT/DPO/GRPO/half-LR across3 actual run seeds;
+R025 controlled RoPE scale1/2 architecture ablation with identical initial weights
+and paired data/target budgets. All candidates reject;no production promotion.
+Exact15-model repeated analysis,19 verifier controls and fresh-process resource
+checks. Runtime seeds also affect sampler order;short controls/launch-dependent
+RSS are not general-quality/GPU evidence. See validation_promotion.md/runbook08.
+Final CPU3.11/3.12/3.13 each689 passed,2 optional SDK skips,7 GPU deselected;
+SDKs separately verified. Source package unchanged across RoPE arms;script SHA
+bound separately. All candidates reject;actual user-run production acceptance open.
 
 ## Phase 8 — Inference and export
 
@@ -563,8 +573,9 @@ M4.1/available-CPU M4.2 and M5.1 are complete. Packed CPU/DDP references/replay
 are verified; actual CUDA/FSDP/shared-store/multi-node tiers and production-source
 clearance remain blocked. M6.1 original-data chat/SFT,assistant masks and tiny optimization/replay now pass
 CPU acceptance. M6.2 DPO,bounded M6.3 outcome-GRPO and M7.1 original evaluation
-pass portable CPU acceptance/clean CI. Next:M7.2 controlled comparisons/ablations
-and explicit promotion gates;production promotion needs actual user-run evidence.
+pass portable CPU acceptance/clean CI. M7.2 CPU necessary comparisons/gates and
+LR/RoPE ablations are implemented with negative findings. Next:M8.1 inference/
+export;production promotion still needs actual user-run and licensed quality evidence.
 Keep final heldout
 families separate; do not promote demo loss to a reasoning benchmark score.
 Publish verified work and reports to main; no paid/final-scale runs or old

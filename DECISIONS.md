@@ -1160,7 +1160,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0046 — Matched-lineage CPU study and fail-closed promotion controls
 
-- **Date/status:**2026-11-05;design89a0350 preregistered before learning;CPU engine implemented,final multi-seed/CI pending.
+- **Date/status:**2026-11-05;design89a0350 preregistered before learning;CPU tooling accepted on e2c628f,all13 CI jobs successful. Production acceptance remains open.
 - **Context:**M7.1 exposes a constant-answer SFT policy;old DPO and GRPO use
   different SFT parents. Scores/training-loss reductions do not justify promotion.
 - **Choice:**shared corpus/tokenizer,three distinct initialization seeds,base3/
@@ -1193,3 +1193,14 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   this is not confirmatory. Runtime seeds also control sampler order across
   replications;within paired arms ordering agrees. Whole-process RSS has launch
   context effects and is not incremental model memory. No thresholds are changed.
+- **Actual outcomes:**R024 three seeds give SFT5/1/0,DPO0/0/3,half-LR5/0/0,
+  GRPO5/1/0 of200;all candidates reject. All15 repeated prediction/metric/audit
+  outputs and comparison gates match exactly;timings are separate measurements.
+  R025 RoPE2 gives1/0/0 versus5/1/0,also reject,with exact initial parameters
+  and paired target budgets. No long-context/general improvement claim. Package
+  digest9ca8a8fd993965196dbaaaca1f1d8b4f22a13339644b3c73f784fa7ad5601195 stays
+  unchanged for architecture controls;script SHA is separately recorded. Source
+  e2c628f GitHub42100151962 has all13 green CI jobs;CPU3.11/3.12/3.13 each689
+  passed,2 optional SDK skips,7 GPU deselected,SDKs separately verified. Matched
+  and RoPE two-seed studies and full200-step real-SIGKILL replay pass remotely.
+  Local packed-DDP timeout remains unresolved;production acceptance remains open.

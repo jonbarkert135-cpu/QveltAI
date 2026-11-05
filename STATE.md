@@ -17,7 +17,7 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-M7.2 matched-lineage CPU study and necessary promotion controls are in progress.
+M7.2 matched-lineage CPU study and necessary promotion controls are implemented.
 Preregistered89a0350:shared training/tokenizer/SFT/pairs,initialization seeds
 20261105/6/7,base3/SFT80/DPO40/GRPO8 and a DPO half-LR arm. New strict compare
 CLI verifies actual parents,seeds,data/config/source and one-factor ablation;
@@ -25,8 +25,20 @@ paired family/robustness/general/verifier/resource gates never auto-promote.
 Focused35 checks pass including actual one-seed training/analysis and fresh-process
 CPU measurements. First one-seed diagnostic rejects all candidates;DPO regresses
 5/200 to0/200. Full local688 passed,1 existing packed-DDP timeout,7 GPU deselected
-in311.24s;Ruff/format,mypy153 files and build pass. Three-seed/final-source/CI acceptance is pending. Production
+in311.24s;Ruff/format,mypy155 files and existing build pass. Three-seed actual
+results:base0/0/0,SFT5/1/0,DPO0/0/3,half-LR5/0/0,GRPO5/1/0 of200 each;all
+candidates reject. Repeated15-model analysis gives exact predictions/metrics/
+audits/decisions;inputs unchanged. Additional controlled RoPE1/2 ablation gives
+SFT5/1/0 versus1/0/0,also reject. Initial weights/data order/target budgets match
+within paired arms. Runtime seed couples initialization and sampler across runs.
+Package9ca8a8fd993965196dbaaaca1f1d8b4f22a13339644b3c73f784fa7ad5601195;
+sourcee2c628f GitHub42100151962 has all13 CI jobs successful. CPU3.11/3.12/3.13
+each689 passed,2 optional SDK skips,7 GPU deselected;SDKs independently verified.
+Matched2-seed/RoPE2-seed studies and200-step actual-SIGKILL/SFT/DPO/GRPO replays
+all pass. Local packed-DDP timeout is not fixed by remote success. Production
 acceptance still needs actual user-run small/GPU and independent licensed evidence.
+Next independent implementation:M8.1 inference/export. See validation_promotion.md
+and runbook08 for the necessary gates and observed seed/RSS limits.
 
 Historical M7.1 acceptance follows.
 
