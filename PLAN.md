@@ -352,10 +352,10 @@ SFT and production dataset clearance remain outside this completed CPU scope.
 
 ### M6.2 — Implement and verify preference optimization
 
-Owner: Lead agent. Status: in progress; portable CPU acceptance passes,current CI pending. Dependencies: M6.1; approved preference data.
+Owner: Lead agent. Status: complete for original-demo single-process CPU;other modes unverified. Dependencies: M6.1; approved preference data.
 
 - [x] Compare supported preference objectives and select one with verified
-  primary-source equations; DPO is a candidate, not an implementation promise.
+  primary-source equations;sigmoid DPO is selected with explicit frozen-reference semantics.
 - [x] Implement pair validation, response log-probability accounting, reference
   policy semantics, and any reference-cache identity checks.
 - [x] Test the objective and gradients against hand-computed/reference cases;
@@ -368,14 +368,17 @@ is made without a measured, held-out evaluation.
 Evidence:validation_preferences.md and preferences-40.json;614 CPU/optional-SDK
 checks pass,7 GPU deselected,128 typed files. Actual40-update reduced decoder:
 train DPO0.693147->0.352214,heldout0.693147->0.843191 (negative finding),
-stop13/resume40 exactly matches all losses/weights/Adam/RNG/pair cursor. Current
-clean CI pending. No sampled-generation improvement or model promotion claimed.
+stop13/resume40 exactly matches all losses/weights/Adam/RNG/pair cursor.
+GitHub42073726045 at3b3ef4a:all10 jobs successful. No preference-generation
+improvement or model promotion claimed.
 
 ### M6.3 — Implement verifiable-reward reasoning RL
 
-Owner: Lead agent. Status: planned. Dependencies: M6.1, M6.2, M1.2 evaluation
+Owner: Lead agent. Status: in progress (bounded generation readiness only). Dependencies: M6.1, M6.2, M1.2 evaluation
 contract, tested generation, and a reviewed verifier.
 
+- [x] Compare base/SFT/DPO on fixed original16-problem/16-token generation controls;
+  record0/3/0 correct and retain SFT for a future bounded engineering check.
 - [ ] Select a reasoning-RL objective from verified sources; evaluate on-policy
   rollout, grouping, KL/regularization, reward normalization, and memory costs.
 - [ ] Build a bounded mathematical answer verifier with rational/numeric cases,

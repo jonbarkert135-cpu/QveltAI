@@ -1044,7 +1044,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0043 — Original sigmoid DPO with explicit frozen SFT lineage
 
-- **Date/status:**2026-11-05;portable implementation/focused tests pass;final CI pending.
+- **Date/status:**2026-11-05;portable CPU accepted;all10 CI42073726045 jobs pass.
 - **Context/choice:**M6.2 follows accepted SFT and Phase5. Choose sigmoid DPO over
   continuing positive-only SFT or adding reward-model/PPO rollout machinery. IPO/
   hinge variants appear in the local guide but their primary sources were not

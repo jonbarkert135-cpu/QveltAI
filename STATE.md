@@ -24,9 +24,16 @@ V445/T128,beta0.1,LR0.001;stop13/resume40 all losses/weights/Adam/RNG/cursor exa
 Train DPO0.693147->0.352214,validation0.693147->0.843191:negative heldout result,
 not a quality promotion. Frozen reference is byte-verified SFT and checked unchanged.
 Source c3c18aa16e68110c5cb7e4b9750773a942d822984d537307e87f9b5f666dda08;
-current clean CI pending. See validation_preferences.md and runbooks/05_preferences.md.
-Next:M6.3 readiness via bounded generation/verifier controls;no reasoning-RL model
-promotion based on fixture preference loss. Hardware/source gates remain separate.
+Current-source3b3ef4a GitHub42073726045:all10 jobs successful. CPU3.11/3.12/3.13
+each612 passed,2 optional SDK skips,7 GPU deselections;SDKs separately green.
+Both40-step DPO and200-step SIGKILL replays are exact independently on CI.
+See validation_preferences.md and runbooks/05_preferences.md.
+M6.3 readiness control is executed:base0/16,SFT3/16,DPO0/16 complete correct
+answers at identical16-token greedy budget on original validation-only problems.
+Use SFT for a future bounded engineering RL check;DPO is rejected for promotion.
+The control is a necessary tiny check,not proof of general reasoning.
+Reproduction:reasoning_rl_readiness.md and scripts/preference_generation_control.py.
+Hardware/source gates remain separate;GRPO rollout/optimizer is still future work.
 
 Historical Phase5 acceptance follows.
 
@@ -42,8 +49,8 @@ mypy122 files,frozen lock/dependencies and build pass. GitHub42069685890 atf14b2
 589 passed,2 optional SDK skips,7 GPU deselected;SDKs separately green. Dedicated
 200-update hard-kill replay independently bit-exact. Final local restart run590
 passed,1 packed-DDP timeout,7 GPU deselected in318.63s;Gloo root cause still open.
-Portable Phase5 closes;M6.2 preference optimization is now in progress. See validation_phase5.md and runbooks/02_pretraining.md. No GPU/full
-small/paid run. Next dependency-ready portable task remains M6.2.
+Portable Phase5 closed;M6.2 was the next milestone and is now accepted above.
+See validation_phase5.md and runbooks/02_pretraining.md. No GPU/full small/paid run.
 
 Historical Phase4 acceptance follows.
 
@@ -130,7 +137,7 @@ Full checksum preflight requires input I/O budget. HF BPE pair statistics can gr
 with corpus diversity. LID/PII/toxicity/LSH/lexical exclusion need real-source audits;
 no trained quality classifier. MATH/AIME/MMLU and frozen project-final exclusions
 are incomplete,so production preparation remains blocked. The heldout LM probe is
-weighted/limited and may reuse source blocks. DPO/RL,public evaluation and
+weighted/limited and may reuse source blocks. Reasoning RL,public evaluation and
 serving/export beyond safetensors are still future milestones.
 
 ## Next three tasks

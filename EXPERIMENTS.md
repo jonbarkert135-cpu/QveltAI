@@ -516,3 +516,28 @@ Full local614 passed,no skips,7 GPU deselected in158.37s;focused23 passed in9.11
 Ruff/format,strict mypy128 files,wheel/sdist pass. Clean CI pending. This green
 local run does not resolve earlier intermittent Gloo faults;historical failures
 remain reported. No paid/GPU/final-scale training or quality promotion.
+
+## R020 — Bounded base/SFT/DPO generation-readiness control
+
+Date:2026-11-05. R019's16 original validation problems only,B1 CPU FP32,greedy
+full-prefix,same chat prefix,max16 generated tokens,required complete end-turn6.
+Registered protocol in reasoning_rl_readiness.md before execution. Source3b3ef4a,
+source digestc3c18aa16e68110c5cb7e4b9750773a942d822984d537307e87f9b5f666dda08.
+Base0 correct/0 complete/16 truncated;SFT3 correct/8 complete/8 truncated;
+DPO0 correct/0 complete/16 truncated. Original exact-fraction verifier rejects
+malformed/partial responses;no model code executes. Per-problem completions,
+checkpoint/weight/tokenizer hashes are in reasoning-readiness.json. Repro script
+verifies tokenizer/model/SFT identities,known-positive and hostile verifier cases,
+context bounds and exclusive output. This is not project-final/public evaluation.
+The tiny necessary control passes for SFT only;DPO remains rejected for promotion.
+A bounded engineering RL check may start from SFT;general reasoning improvement
+still needs independent fixed-budget evaluation. No paid/GPU/large rollout run.
+
+
+R019 remote acceptance:3b3ef4a087d53f6ed47db683cbadb05a7f6fddae,GitHub42073726045,
+all10 jobs successful. CPU3.11/3.12/3.13 each612 passed,2 optional SDK skips,7 GPU
+deselections;optional SDKs separately green. DPO40-step exact loss/weight/Adam/RNG/
+cursor replay and full RFC tiny200-step SIGKILL replay both pass. Remote DPO
+train0.35152350/heldout0.84594192 retains the negative heldout finding;hardware
+float differences are not cross-host replay failures. Portable M6.2 closes.
+Source-unchanged R020 repro script passes Ruff/format and strict mypy129 files.

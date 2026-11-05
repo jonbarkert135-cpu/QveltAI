@@ -58,8 +58,12 @@ Focused23 tests passed in9.11s. Full CPU+optional-SDK regression614 passed,no sk
 7 GPU deselected in158.37s;no tests disabled or weakened. Ruff/format,strict mypy128
 files and wheel/sdist build pass. The earlier local distributed faults recorded for
 Phase5 remain historical observations;this green run does not prove their root
-cause is fixed. Current-source clean GitHub matrix and dedicated40-update DPO and
-200-update hard-kill jobs are pending observation.
+cause is fixed. Current-source3b3ef4a GitHub42073726045 has all10 jobs successful.
+CPU3.11/3.12/3.13 each612 passed,2 optional SDK skips,7 GPU deselections;
+SDKs are independently verified. Dedicated40-update DPO and200-update hard-kill
+replay jobs both pass with exact within-host state/loss comparisons. CI DPO train
+0.35152350/heldout0.84594192 differ slightly from local0.35221379/0.84319099;
+no cross-host bitwise identity is promised.
 
 ```bash
 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 uv run --frozen --extra cpu python \
@@ -81,3 +85,11 @@ GPU/distributed preference training and production/human preference data require
 separate acceptance. Length sensitivity and simplistic verifier negatives remain.
 Reasoning-RL promotion needs generation/verifier validation,not just a lower train
 DPO loss. Paid/final-scale runs remain outside this engineering check.
+
+
+The subsequent source-unchanged generation control is reproducible through
+scripts/preference_generation_control.py;16 validation-only problems,B1,greedy,
+16 new tokens,complete end-turn required. Base0/SFT3/DPO0 correct. No DPO promotion;
+see reasoning_rl_readiness.md for all completions and input/weight identities.
+The diagnostic script has verifier/context/identity self-checks and strict output
+exclusivity;Ruff/format and mypy129 files pass after adding it.
