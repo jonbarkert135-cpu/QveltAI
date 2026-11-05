@@ -259,3 +259,14 @@ engineering controls,not independent general-capability evidence. Evaluation sou
 permission is evaluation/decontamination only. Separate authored calibration source
 may explicitly permit tokenizer fitting;never fit on D-EVAL-01 or its answers.
 Known collisions must remain visible in reports rather than silently filtered.
+
+## D-EVAL-ROBUST-01 — Original whitespace robustness controls
+
+Registered2026-11-05 before generation/M7.2 learning. Original Apache-2.0
+transformations of D-EVAL-01 validation prompts:leading spaces or trailing newline
+on four cases per each of five families(40 variants,total20 parent problems).
+Gold targets/families unchanged;parent identifiers preserved in variant IDs.
+Evaluation/decontamination only,no training/tokenizer fitting. These correlated
+variants test whitespace sensitivity,not independent reasoning/general capability.
+The combined study suite contains200 original validation cases,these40 variants
+and7 D-EVAL-CONTROL-01 sanity examples. No final case/public corpus/teacher added.

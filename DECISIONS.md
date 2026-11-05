@@ -1157,3 +1157,28 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   weights unchanged,final800 unscored. Current-source200-step SIGKILL and SFT/
   DPO/GRPO replay jobs pass. Local665 passed/1 packed-DDP timeout remains reported;
   CI success does not diagnose that local issue. No production promotion.
+
+## ADR-0046 — Matched-lineage CPU study and fail-closed promotion controls
+
+- **Date/status:**2026-11-05;design preregistered before M7.2 learning.
+- **Context:**M7.1 exposes a constant-answer SFT policy;old DPO and GRPO use
+  different SFT parents. Scores/training-loss reductions do not justify promotion.
+- **Choice:**shared corpus/tokenizer,three distinct initialization seeds,base3/
+  SFT80/DPO40/GRPO8 with matched parent for each seed. A paired DPO half-LR arm
+  changes exactly one factor. Freeze common validation/robustness/control budgets,
+  preserve final800 and record actual stage costs without claiming compute parity.
+- **Interfaces:**strict YAML study,checksum-bound inputs,verified full run lineage,
+  existing eval reports,per-case/family paired deltas and isolated CPU measurements.
+  Necessary regression checks cover math,short general controls,whitespace,
+  bounded verifier exploitation and inference RSS/time. No pickle analysis.
+- **Alternatives:**compare historical mismatched parents,select thresholds after
+  results,call optimizer-seed changes independent when deterministic updates do
+  not change,or promote demo wins directly. These confound evidence or overclaim.
+- **Sources:**[verified] project RFC002 evaluation/promotion section and local
+  pinned Orchestra evaluation workflow read;use fixed prompts/budgets/sample logs.
+  Thresholds in promotion_design.md are prospective engineering policy choices,
+  not statistical significance or literature-derived quality guarantees.
+- **Limits/revisit:**correlated templates/variants,short original LM/choice controls,
+  tiny CPU models and validation reuse. Pass means eligible for further validation;
+  production requires actual user-run model/hardware and licensed independent
+  evidence. No automatic promotion or paid/GPU/full-scale run is authorized here.
