@@ -306,6 +306,25 @@ Acceptance: tested smoke commands and explicit prerequisites accompany every
 recipe; estimates and user-run results are separated. No full training run is
 marked complete without its actual configuration and logs.
 
+### M5.4 — Expanded Phase5 portable framework and hard-kill acceptance
+
+Owner:Lead agent. Status:in progress; local CPU acceptance executed,current CI pending.
+Dependencies:M5.1,current SFT preservation; CUDA/resource/production gates remain separate.
+
+- [x] Select WIP changes without replacing current SFT or project memory.
+- [x] Add schedules,optimizer groups/fused opt-in,compile,recovery/stability controls,
+  source PPL,samples,logs-only report,small factory and bounded config sweeps.
+- [x] Implement FSDP2 mixed/sharded API path and actual two-GPU replay tests;
+  execution requires hardware and is not counted as validation.
+- [x] Execute full RFC tiny200 updates with actual SIGKILL and exact whole loss curve,
+  weights,Adam,RNG and loader/application replay; retain JSON evidence.
+- [x] Supply exact conditional small commands and stability/recovery playbook in02_pretraining.md.
+- [ ] Record compile/four-size measurements and observe current-source clean CI.
+- [ ] Validate actual CUDA/NCCL/FSDP2 and small/server resources on supplied hardware.
+
+Acceptance is scoped:portable framework/recovery may close with CPU evidence;
+full distributed/server readiness remains blocked. No production/final-scale run.
+
 ## Phase 6 — Post-training and mathematical reasoning
 
 ### M6.1 — Implement SFT and mathematical supervision

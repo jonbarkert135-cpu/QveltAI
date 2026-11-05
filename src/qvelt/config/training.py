@@ -42,6 +42,10 @@ class TrainingConfig:
     strategy: str = "single"
     metrics_backend: str = "json"
     peak_tflops_per_gpu: float | None = None
+    fused_optimizer: bool = False
+    compile: bool = False
+    tensor_parallel: int = 1
+    pipeline_parallel: int = 1
     execution: ModelExecution = field(default_factory=ModelExecution, kw_only=True)
 
     def __post_init__(self) -> None:
@@ -75,6 +79,15 @@ class TrainingConfig:
             "fsdp",
         ) or self.metrics_backend not in ("json", "tensorboard", "wandb"):
             raise ConfigError("Unsupported training strategy or metrics backend")
+        if type(self.fused_optimizer) is not bool or type(self.compile) is not bool:
+            raise ConfigError("training.fused_optimizer/compile must be bool")
+        for name in ("tensor_parallel", "pipeline_parallel"):
+            _integer(getattr(self, name), "training." + name)
+            if getattr(self, name) != 1:
+                raise ConfigError(
+                    f"training.{name} is a reserved hook: tensor/pipeline "
+                    "parallelism is not implemented (ADR-0042); use 1"
+                )
         if self.peak_tflops_per_gpu is not None:
             object.__setattr__(
                 self,
@@ -138,6 +151,10 @@ def parse_training_job(text: str) -> TrainingJob:
             strategy=cast(str, d["strategy"]),
             metrics_backend=cast(str, d["metrics_backend"]),
             peak_tflops_per_gpu=cast(float | None, d["peak_tflops_per_gpu"]),
+            fused_optimizer=cast(bool, d["fused_optimizer"]),
+            compile=cast(bool, d["compile"]),
+            tensor_parallel=cast(int, d["tensor_parallel"]),
+            pipeline_parallel=cast(int, d["pipeline_parallel"]),
         ),
         schema_version=cast(int, root.get("schema_version", 1)),
     )

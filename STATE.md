@@ -17,6 +17,18 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
+Expanded Phase5 is implemented selectively on top of SFT. Actual full RFC tiny
+19,338,560 parameters,V32768,T16/B2:200 optimizer updates/6386 valid targets.
+SIGKILL89,restore75;all200 losses differ by0.0;weights/Adam/RNG/application match
+bit-exactly. Source digest0c5afe9608d5c5df95cc0a308a80649ac936d8b4910050725e8f481cc3ddb114.
+Local full run586 passed,3 distributed-process failures/timeouts,7 GPU deselected
+in365.00s;do not call it green. Current clean GitHub CI and compile/scaling results
+are pending. See validation_phase5.md and runbooks/02_pretraining.md. No GPU/full
+small/paid run. Next dependency-ready portable task remains M6.2.
+
+Historical Phase4 acceptance follows.
+
+
 Selective Phase4 closure is implemented on top of M6.1:RoPE scale(default1),FP64
 reference numerics,whole-model gradcheck,random-length scaled cache,compile/depth/
 overfit/RFC-count tests and operator profiling.22 focused tests passed in63.36s;

@@ -1006,3 +1006,38 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   not a new model architecture/runtime numerical dependency.
 - **Revisit:**PyTorch/compiler upgrades,developer packaging policy or removal of
   runtime kernel compilation. Compiler/hardware requirements remain separate.
+
+## ADR-0042 — Expanded pretraining recovery and measured portable controls
+
+- **Date/status:**2026-11-04; implemented and locally exercised; current CI pending.
+- **Context:**the supplied Phase5 WIP predates current SFT and omits the requested
+  acceptance experiment. Select compatible code and preserve objective/base lineage.
+- **Choice:**reuse token-sum accumulation and atomic checkpointing; add validated
+  WSD/cosine schedules,fused AdamW opt-in,block compile,source probes,samples,z-loss,
+  spike/layer metrics,auto-resume/quarantine and explicit retention. Version both
+  pretraining/SFT application states. TP/PP>1 and compiled FSDP remain rejected.
+  FSDP2 uses bottom-up wrapping,FP32 master/reduction,BF16 gathered compute,DCP and
+  portable DTensor AdamW; actual GPU validation is still required.
+- **Recovery:**SIGTERM records a flag and checkpoints at a common window boundary.
+  Recoverable bad windows complete backward collectives before discarding gradients.
+  Check weights/Adam for nonfinite state after every update. Rollback restores finite
+  model/Adam/RNG but keeps the advanced data cursor; good updates since the checkpoint
+  are also discarded. Log consumed targets,scheduled windows,actual optimizer updates,
+  failure cursors and rollback separately. Save an initial finite step0 checkpoint;
+  reset DCP's lazily initialized Adam counter to0,with first-update parity test.
+  Corrupt bytes may be quarantined; semantic/source mismatch must still fail closed.
+- **Schedule deviation:**retain ADR0036 end-window LR evaluation rather than the
+  original RFC warmup/tail split. Mask the global rank-ordered final-window prefix to
+  finish at exactly D valid targets; consume its unused remainder without supervision.
+  Skipped exposure advances the schedule. Batch sweeps match nominal capacity only;
+  actual targets/order need measurement. Mixture phases remain loader-microbatch based.
+- **Alternatives:**blindly import old state/SFT files; silently emulate TP/PP; treat
+  failed windows as exact uninterrupted training; claim GPU results from CPU DCP.
+  These would violate compatibility,run identity or evidence requirements.
+- **Sources/evidence:**[verified] installed Torch2.9.1 fully_shard/MixedPrecisionPolicy,
+  DCP state-dict/Adam initialization behavior and Module.compile interfaces inspected;
+  local project FSDP2 skill/reference guidance reviewed. Numerical CE/z-loss gradients,
+  schedule references,finite-state recovery and actual full tiny200-step SIGKILL replay
+  executed. DCP/DTensor CPU coverage does not verify CUDA/NCCL/FSDP runtime.
+- **Revisit:**hardware/runtime validation,production source clearance,measured compile
+  benefit,and a separately versioned token-boundary mixture/schedule implementation.

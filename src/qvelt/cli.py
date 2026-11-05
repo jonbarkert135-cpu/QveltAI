@@ -103,7 +103,7 @@ def _parser() -> argparse.ArgumentParser:
         pretrain.add_argument("path", type=Path)
         pretrain.add_argument("--directory", type=Path, required=True)
         pretrain.add_argument("--repository", type=Path, default=Path("."))
-        pretrain.add_argument("--resume", choices=("latest",))
+        pretrain.add_argument("--resume", choices=("latest", "auto"))
         pretrain.add_argument("--stop-after", type=int)
         pretrain.add_argument("--set", dest="overrides", action="append", default=[])
     collective = commands.add_parser(
@@ -232,11 +232,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.directory,
                 args.repository,
                 base=args.path.parent,
-                resume=args.resume == "latest",
+                resume=args.resume or False,
                 stop_after=args.stop_after,
             )
             if result["rank"] == 0:
                 print(json.dumps(result, sort_keys=True))
+            if result["interrupted"]:
+                return 3
         elif args.command == "train":
             from qvelt.config.training import load_training_job
             from qvelt.train.runner import train_synthetic

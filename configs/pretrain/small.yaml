@@ -1,0 +1,74 @@
+# RFC-002 "small" first full run (ADR-0042). Not runnable alone: generate the
+# recipe with scripts/make_pretrain_recipe.py, which pins the actual prepared
+# dataset hash and derives accumulation for the GPU count (runbook 02).
+preset: small
+# 64 x 2048 = 131,072 token capacity per update (RFC table); valid targets are
+# slightly fewer because PAD/BOS positions are never supervised.
+global_batch_sequences: 64
+recipe:
+  job:
+    schema_version: 1
+    experiment:
+      schema_version: 1
+      name: small-pretrain
+      model:
+        layers: 16
+        hidden: 768
+        heads: 12
+        kv_heads: 4
+        ffn: 2048
+        vocab: 32768
+        context: 2048
+      runtime:
+        seed: 20261031
+        device: cuda
+        precision: bf16
+        deterministic: true
+    training:
+      # Step cap with ~7% margin; the run ends at the token horizon D=10B.
+      steps: 82000
+      batch_size: 8
+      sequence_length: 2048
+      learning_rate: 6.0e-4
+      weight_decay: 0.1
+      grad_clip: 1.0
+      warmup_steps: 0
+      decay_steps: 0
+      checkpoint_every: 1000
+      num_threads: 4
+      strategy: ddp
+      metrics_backend: json
+      peak_tflops_per_gpu: null
+      fused_optimizer: true
+      compile: false
+      tensor_parallel: 1
+      pipeline_parallel: 1
+      execution:
+        attention_backend: sdpa
+        activation_checkpointing: false
+  schedule:
+    shape: wsd
+    min_lr_ratio: 0.0
+    warmup_tokens: 100000000
+    decay_start_tokens: 9000000000
+    decay_tokens: 1000000000
+  workers: 4
+  prefetch: 4
+  attention_mode: document
+  validation_batches: 16
+  validation_every: 500
+  domain_validation_batches: 8
+  sample_every: 2000
+  sample_prompts:
+    - "Solve for x: 2x + 3 = 11."
+    - "Найдите производную функции f(x) = x^3."
+    - "def fibonacci(n):"
+  sample_tokens: 64
+  layer_stats_every: 200
+  nonfinite_policy: rollback
+  max_nonfinite_windows: 8
+  spike_threshold: 6.0
+  spike_warmup_windows: 100
+  z_loss: 0.0
+  keep_checkpoints: 0
+  allow_demo: false

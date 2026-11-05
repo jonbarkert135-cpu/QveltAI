@@ -1,0 +1,1 @@
+{"context": 2048, "grid_points": 12, "parameters": 125854464, "scope": "Validated command planning only; original demo input; no server or small optimizer run", "steps": [1000, 2000], "vocab": 32768, "world_size": 8}

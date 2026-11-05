@@ -263,3 +263,20 @@ First prove 2–10 CPU fixture updates and exact-order replay; then a measured
 laptop GPU pilot; then a fixed-data small-model learning study; then the ~20P
 decision gate; only then consider extended and larger user-operated runs. Real
 GPU/distributed smoke tests remain unrun; Phase 1 contains analytical checks only.
+
+## Implementation status: expanded Phase5 (2026-11-04)
+
+ADR0036/0042 define the implemented schedule convention: LR at completed-window
+end; warmup/tail are not split at each boundary. Final-window target masking now
+stops at exactly D globally valid targets. Skips advance exposure; rollback restores
+model/Adam/RNG while retaining the forward data cursor and can discard intervening
+good updates. This recovery policy is distinct from exact clean kill/resume replay.
+Mixture phases are committed-loader-microbatch based,not implicitly converted from
+token LR phases. Configured cosine floors must be reported when comparing WSD.
+
+Single/DDP portable paths,block compilation and sharded FSDP2 API integration are
+implemented. CUDA/NCCL/FSDP2,multi-node/shared-store and server feasibility remain
+unverified. TP/PP and compiled FSDP2 are explicitly unsupported. See
+[operator runbook](../../runbooks/02_pretraining.md) and
+[actual acceptance](../development/validation_phase5.md); no production-data or
+small-model training-quality claim follows from the original CPU fixtures.

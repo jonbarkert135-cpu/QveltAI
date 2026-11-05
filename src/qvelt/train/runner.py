@@ -9,9 +9,7 @@ from pathlib import Path
 import torch
 import torch.distributed as dist
 from torch import nn
-from torch.distributed.fsdp import fully_shard
 from torch.distributed.tensor import DTensor
-from torch.nn.parallel import DistributedDataParallel
 
 from qvelt.config.training import TrainingJob
 from qvelt.data.synthetic import synthetic_batch
@@ -69,19 +67,10 @@ def train_synthetic(
         model: nn.Module = Decoder(job.experiment.model, execution=config.execution).to(
             context.device
         )
-        if config.strategy == "ddp":
-            model = DistributedDataParallel(
-                model,
-                device_ids=[context.local_rank]
-                if context.device.type == "cuda"
-                else None,
-                broadcast_buffers=False,
-            )
-        elif config.strategy == "fsdp":
-            assert isinstance(model, Decoder)
-            for block in model.blocks:
-                fully_shard(block)
-            fully_shard(model)
+        from qvelt.train.parallel import parallelize
+
+        assert isinstance(model, Decoder)
+        model = parallelize(model, job, context)
         optimizer = make_optimizer(model, config)
         start = (
             load_checkpoint(model, optimizer, job, directory, context) if resume else 0

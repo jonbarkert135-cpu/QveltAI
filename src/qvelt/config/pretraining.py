@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
@@ -28,8 +29,19 @@ class TokenSchedule:
     warmup_tokens: int
     decay_start_tokens: int
     decay_tokens: int
+    shape: str = "wsd"
+    min_lr_ratio: float = 0.0
 
     def __post_init__(self) -> None:
+        if self.shape not in ("wsd", "cosine"):
+            raise ConfigError("schedule.shape must be wsd or cosine")
+        if (
+            type(self.min_lr_ratio) not in (int, float)
+            or not math.isfinite(self.min_lr_ratio)
+            or not 0 <= self.min_lr_ratio < 1
+        ):
+            raise ConfigError("schedule.min_lr_ratio must be finite in [0,1)")
+        object.__setattr__(self, "min_lr_ratio", float(self.min_lr_ratio))
         _integer(
             self.warmup_tokens, "schedule.warmup_tokens", minimum=0, maximum=2**63 - 1
         )
@@ -58,6 +70,17 @@ class PretrainingJob:
     validation_batches: int = 4
     validation_every: int = 10
     allow_demo: bool = False
+    nonfinite_policy: str = "abort"
+    max_nonfinite_windows: int = 8
+    spike_threshold: float = 6.0
+    spike_warmup_windows: int = 20
+    z_loss: float = 0.0
+    layer_stats_every: int = 0
+    domain_validation_batches: int = 0
+    sample_every: int = 0
+    sample_prompts: tuple[str, ...] = ()
+    sample_tokens: int = 32
+    keep_checkpoints: int = 0
     schema_version: int = 1
     objective: str = "pretraining"
     initial_checkpoint: str | None = None
@@ -113,6 +136,39 @@ class PretrainingJob:
             raise ConfigError("Invalid pretraining loader policy")
         if type(self.allow_demo) is not bool:
             raise ConfigError("allow_demo must be bool")
+        if self.nonfinite_policy not in ("abort", "skip", "rollback"):
+            raise ConfigError("nonfinite_policy must be abort, skip or rollback")
+        for name in (
+            "max_nonfinite_windows",
+            "spike_warmup_windows",
+            "layer_stats_every",
+            "domain_validation_batches",
+            "sample_every",
+            "keep_checkpoints",
+        ):
+            _integer(getattr(self, name), "pretrain." + name, minimum=0)
+        _integer(self.sample_tokens, "pretrain.sample_tokens", maximum=4096)
+        for name, upper in (("spike_threshold", 1e6), ("z_loss", 1.0)):
+            value = getattr(self, name)
+            if (
+                type(value) not in (int, float)
+                or not math.isfinite(value)
+                or not 0 <= value < upper
+            ):
+                raise ConfigError(f"pretrain.{name} must be finite in [0,{upper})")
+            object.__setattr__(self, name, float(value))
+        if (
+            not isinstance(self.sample_prompts, list | tuple)
+            or len(self.sample_prompts) > 16
+            or any(
+                not isinstance(prompt, str) or not 0 < len(prompt) <= 1024
+                for prompt in self.sample_prompts
+            )
+        ):
+            raise ConfigError("sample_prompts must be at most16 nonempty strings")
+        object.__setattr__(self, "sample_prompts", tuple(self.sample_prompts))
+        if self.sample_every and not self.sample_prompts:
+            raise ConfigError("sample_every requires sample_prompts")
         if self.total_batches is not None:
             _integer(self.total_batches, "pretrain.total_batches")
             if (
@@ -131,10 +187,6 @@ class PretrainingJob:
         if self.job.training.warmup_steps or self.job.training.decay_steps:
             raise ConfigError(
                 "Packed jobs require legacy warmup_steps=decay_steps=0; use TokenSchedule"
-            )
-        if self.job.training.strategy not in ("single", "ddp"):
-            raise ConfigError(
-                "Packed FSDP training awaits separate hardware/accumulation validation"
             )
 
     @property
@@ -159,7 +211,7 @@ def parse_pretraining_job(text: str) -> PretrainingJob:
     schedule = _mapping(
         raw.pop("schedule"), "TokenSchedule", {f.name for f in fields(TokenSchedule)}
     )
-    if set(schedule) != {f.name for f in fields(TokenSchedule)}:
+    if not {"warmup_tokens", "decay_start_tokens", "decay_tokens"} <= set(schedule):
         raise ConfigError("All token-schedule boundaries must be explicit")
     return PretrainingJob(
         job, schedule=TokenSchedule(**cast(Any, schedule)), **cast(Any, raw)

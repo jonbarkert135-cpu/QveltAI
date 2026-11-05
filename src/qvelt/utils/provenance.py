@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import platform
 import subprocess
+import sys
 import uuid
 from datetime import UTC, datetime
 from importlib import metadata
@@ -60,7 +61,17 @@ def capture_environment() -> EnvironmentInfo:
     guarantee that every installed dependency agrees with the lock.
     """
     packages: dict[str, PackageVersion] = {}
-    for distribution in metadata.distributions():
+    paths = list(sys.path)
+    try:
+        vendor = Path(
+            str(metadata.distribution("setuptools").locate_file("setuptools/_vendor"))
+        ).resolve()
+    except metadata.PackageNotFoundError:
+        pass
+    else:
+        # cpp_extension imports setuptools, which appends bundled metadata to sys.path.
+        paths = [entry for entry in paths if Path(entry).resolve() != vendor]
+    for distribution in metadata.distributions(path=paths):
         try:
             name = distribution.metadata["Name"]
             version = distribution.version

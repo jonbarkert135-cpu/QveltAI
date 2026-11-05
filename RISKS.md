@@ -193,3 +193,21 @@ Inductor development on Python3.11 requires the explicitly pinned dev setuptools
 Torch's transitive marker supplied it only on Python>=3.12. Optional SDKs must not
 be relied on to supply compiler tooling. Plain eager package use and validated
 `make setup` development have distinct dependency scopes.
+
+
+## Expanded Phase5 runtime limits (2026-11-04)
+
+- Rollback-and-skip intentionally changes learning: restoring an older finite
+  checkpoint discards good intervening updates while retaining the forward cursor.
+  Use failure receipts and optimizer_updates; a clean hard-kill replay is different.
+- Local managed Gloo processes can abort/stall; current-source clean CI is a separate
+  required gate. Never hide these failures with forced exit,xfail or skipped tests.
+- FSDP2/CUDA/NCCL,shared-store/multi-node and real server MFU/VRAM are unverified;
+  compiled FSDP and TP/PP are rejected. CPU DCP cannot close those hardware gates.
+- Domain fixtures contain authored nonces/math,not real production web/code/math.
+  Source-heldout probes can wrap tiny datasets. Short four-point fits cannot establish
+  universal scaling,LR transfer to small or mathematical reasoning quality.
+- Exact recovery binds executable source,software,topology,precision and data identity.
+  Retention removes old committed snapshots only when explicitly selected; quarantine
+  remains on disk. Log archives can contain prompts,paths and generations; review
+  before manually attaching. No external messaging/upload is automatic.

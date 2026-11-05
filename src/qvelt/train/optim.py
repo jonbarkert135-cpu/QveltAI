@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import logging
+
 import torch
 from torch import nn
+from torch.distributed.tensor import DTensor
 
 from qvelt.config import ModelConfig
 from qvelt.config.training import TrainingConfig
@@ -17,10 +20,17 @@ def make_optimizer(model: nn.Module, config: TrainingConfig) -> torch.optim.Adam
         if id(parameter) in seen:
             raise ValueError("Parameter appears in more than one optimizer group")
         seen.add(id(parameter))
-        if parameter.ndim == 1 or name.endswith("embedding.weight"):
+        if parameter.ndim == 1 or name.endswith(("embedding.weight", ".bias")):
             no_decay.append(parameter)
         else:
             decay.append(parameter)
+    fused = config.fused_optimizer and not any(
+        isinstance(p, DTensor) for p in model.parameters()
+    )
+    if config.fused_optimizer and not fused:
+        logging.getLogger("qvelt").warning(
+            "DTensor AdamW uses the portable per-parameter path; fused DTensor kernels are unverified"
+        )
     return torch.optim.AdamW(
         [
             {"params": decay, "weight_decay": config.weight_decay},
@@ -29,7 +39,10 @@ def make_optimizer(model: nn.Module, config: TrainingConfig) -> torch.optim.Adam
         lr=config.learning_rate,
         betas=(0.9, 0.95),
         eps=1e-8,
-        foreach=False,
+        # One fused kernel per group on CPU/CUDA; foreach=False is the explicit
+        # per-parameter reference path kept for A/B numerics checks.
+        fused=True if fused else None,
+        foreach=None if fused else False,
     )
 
 

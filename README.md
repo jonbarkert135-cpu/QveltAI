@@ -142,3 +142,10 @@ for tests. Verify mathematical claims with executable exact arithmetic or indepe
 NumPy/PyTorch references. All project agents share this rule through AGENTS and
 Claude/Gemini/Cursor entry files. Verified work/reports are published to main under
 the user's current authorization; never force-push or expose secrets/raw corpora.
+
+Expanded pretraining controls:WSD/cosine,fused AdamW opt-in,block compile,source PPL,
+greedy samples,spike/layer/z-loss diagnostics,SIGTERM checkpoints,verified auto-resume,
+nonfinite rollback/skip and bounded LR/batch sweeps. See
+[small/server runbook](runbooks/02_pretraining.md) and
+[200-step hard-kill evidence](docs/development/validation_phase5.md).
+CUDA/FSDP2 and full small-server feasibility require actual hardware validation.

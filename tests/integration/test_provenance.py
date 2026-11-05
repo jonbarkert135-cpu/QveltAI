@@ -105,6 +105,25 @@ def test_actual_environment_inventory_contains_versions_not_env_values(
     assert "QVELT_TEST_PRIVATE" not in repr(environment)
 
 
+def test_compiler_import_does_not_change_installed_inventory() -> None:
+    import subprocess
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "from qvelt.utils.provenance import capture_environment; "
+            "before=capture_environment(); "
+            "import torch.utils.cpp_extension; "
+            "assert capture_environment() == before",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_conflicting_and_missing_distribution_metadata_are_rejected() -> None:
     first = SimpleNamespace(metadata={"Name": "qvelt"}, version="1")
     second = SimpleNamespace(metadata={"Name": "Qvelt"}, version="2")

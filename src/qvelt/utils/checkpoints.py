@@ -5,9 +5,12 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import logging
 import os
 import platform
 import random
+import re
+import shutil
 import uuid
 from collections.abc import Callable
 from dataclasses import asdict
@@ -39,6 +42,7 @@ from qvelt.config.training import (
     training_job_digest,
 )
 from qvelt.utils.artifacts import (
+    ArtifactError,
     ArtifactIntegrityError,
     ArtifactStore,
     _sync_directory,
@@ -327,6 +331,21 @@ def export_safetensors(
     context.rank_zero(write)
 
 
+def _sharded_optimizer_state(
+    model: nn.Module, optimizer: torch.optim.Optimizer, step: int
+) -> dict[str, Any]:
+    """DCP materializes empty Adam state with an LR0 step; initial t must stay0."""
+    initial = step == 0 and not optimizer.state
+    result = get_optimizer_state_dict(model, optimizer)
+    if initial:
+        for state in optimizer.state.values():
+            counter = state.get("step")
+            if isinstance(counter, Tensor):
+                counter.zero_()
+        result = get_optimizer_state_dict(model, optimizer)
+    return result
+
+
 def save_checkpoint(
     model: nn.Module,
     optimizer: torch.optim.Optimizer,
@@ -350,7 +369,15 @@ def save_checkpoint(
     if processed_tokens is not None:
         uint(processed_tokens, "checkpoint.processed_tokens")
     checkpoint = directory / "checkpoints" / f"step-{step:08d}"
-    context.rank_zero(lambda: create_directory(checkpoint))
+
+    def create() -> None:
+        if checkpoint.exists() and not (checkpoint / "manifest.json").exists():
+            # A manifest-less directory is an uncommitted write (e.g. SIGKILL
+            # mid-save); move it aside instead of failing or overwriting.
+            quarantine(checkpoint, "incomplete checkpoint replaced by a new save")
+        create_directory(checkpoint)
+
+    context.rank_zero(create)
     store = ArtifactStore(checkpoint)
     if sharded:
         distributed_save(
@@ -359,7 +386,7 @@ def save_checkpoint(
             no_dist=context.world_size == 1,
         )
         distributed_save(
-            {"optimizer": get_optimizer_state_dict(model, optimizer)},
+            {"optimizer": _sharded_optimizer_state(model, optimizer, step)},
             checkpoint_id=checkpoint / "optimizer",
             no_dist=context.world_size == 1,
         )
@@ -483,6 +510,90 @@ def save_checkpoint(
     return checkpoint
 
 
+_STEP = re.compile(r"step-(\d{8,})")
+LOGGER = logging.getLogger("qvelt")
+
+
+def quarantine(path: Path, reason: str) -> Path:
+    """Move a checkpoint directory under checkpoints/quarantine; never delete it."""
+    if path.is_symlink() or path.parent.is_symlink():
+        raise ArtifactIntegrityError("Checkpoint symlinks are forbidden")
+    root = path.parent / "quarantine"
+    if root.is_symlink():
+        raise ArtifactIntegrityError("Quarantine symlinks are forbidden")
+    root.mkdir(mode=0o700, exist_ok=True)
+    target = root / f"{path.name}-{uuid.uuid4().hex[:8]}"
+    path.rename(target)
+    _sync_directory(path.parent)
+    _sync_directory(root)
+    LOGGER.error("CHECKPOINT QUARANTINED %s -> %s: %s", path.name, target, reason)
+    return target
+
+
+def committed_steps(directory: Path) -> list[tuple[int, Path]]:
+    """Committed step directories, newest first, from names (no hashing)."""
+    found = []
+    if (directory / "checkpoints").is_symlink():
+        raise ArtifactIntegrityError("Checkpoint root may not be a symlink")
+    for path in (directory / "checkpoints").glob("step-*"):
+        if path.is_symlink():
+            raise ArtifactIntegrityError("Checkpoint symlinks are forbidden")
+        match = _STEP.fullmatch(path.name)
+        if match and path.is_dir() and not path.is_symlink():
+            if (path / "manifest.json").exists():
+                found.append((int(match.group(1)), path))
+    return sorted(found, reverse=True)
+
+
+def select_valid_checkpoint(
+    directory: Path, *, before: int | None = None
+) -> Path | None:
+    """Newest checkpoint whose manifest and every file hash verify.
+
+    Incomplete (manifest-less) and corrupt newer checkpoints are quarantined with
+    a loud error log, then the next older one is tried. Returns None if none is
+    valid. Semantic (recipe/software) mismatches are *not* handled here: those
+    still fail closed in load_checkpoint.
+    """
+    committed_steps(directory)  # Reject symlinks before any quarantine mutation.
+    for path in (directory / "checkpoints").glob("step-*"):
+        if (
+            _STEP.fullmatch(path.name)
+            and path.is_dir()
+            and not (path / "manifest.json").exists()
+        ):
+            if before is None:
+                quarantine(path, "incomplete checkpoint (no manifest)")
+    for step, path in committed_steps(directory):
+        if before is not None and step >= before:
+            continue
+        try:
+            manifest = ArtifactStore(path).read_manifest()
+            if (
+                not isinstance(manifest.metadata, CheckpointInfo)
+                or manifest.metadata.optimizer_step != step
+            ):
+                raise ArtifactIntegrityError("Checkpoint step/metadata mismatch")
+        except (ArtifactError, OSError, ValueError) as error:
+            quarantine(path, f"{type(error).__name__}: {error}")
+            continue
+        return path
+    return None
+
+
+def prune_checkpoints(directory: Path, keep: int) -> list[Path]:
+    """Delete committed checkpoints beyond the newest ``keep`` (0 keeps all)."""
+    if keep <= 0:
+        return []
+    removed = []
+    for _, path in committed_steps(directory)[keep:]:
+        (path / "manifest.json").unlink()  # uncommit first, then remove payload
+        _sync_directory(path)
+        shutil.rmtree(path)
+        removed.append(path)
+    return removed
+
+
 def latest_checkpoint(directory: Path) -> Path:
     """Ignore incomplete directories; never silently fall back from corrupt latest."""
     candidates = []
@@ -507,8 +618,10 @@ def load_checkpoint(
     context: DistributedContext,
     *,
     application_validator: Callable[[dict[str, Any], int, int], None] | None = None,
+    checkpoint: Path | None = None,
 ) -> int:
-    checkpoint = latest_checkpoint(directory)
+    if checkpoint is None:
+        checkpoint = latest_checkpoint(directory)
     store = ArtifactStore(checkpoint)
     manifest = store.read_manifest()
     metadata = manifest.metadata

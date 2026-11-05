@@ -184,3 +184,23 @@ other instances of these broad mathematical families: SFT family isolation is no
 an assertion that the base checkpoint never saw that task type. Actual raw and
 packed manifest hashes are recorded with each run. No public benchmark or private
 teacher data is consumed; production source clearance remains blocked.
+
+## D-TRAIN-200 — Original Phase5 process-recovery fixture
+
+Approved2026-11-04 for development training/tokenizer fitting and heldout diagnostics
+only,Apache-2.0;retain LICENSE/NOTICE. Revision:phase5-domains-nonce-v1,seed20261104.
+Three authored domain labels:web-style prose,Python code and exact arithmetic.
+Each has32 original documents with deterministic lowercase nonce text to supply
+sufficient distinct byte-BPE merges for a genuine32768-token vocabulary. These
+are authored engineering domains,not sampled web/code corpora or production math.
+No external teacher,benchmark or private data. Arithmetic answers come from the
+existing independent stdlib/SymPy-verified generator. The nonce is not a quality
+signal and no language-model quality conclusion follows from this fixture.
+
+Retain per-document IDs/families,source manifests/permissions,family-isolated
+splits,train-only tokenizer and actual preparation checksums. Use an original
+exclusion canary solely to exercise the demo decontamination path. All production
+source/benchmark clearance remains blocked. The full RFC tiny model retains
+V32768,L8,d320,Hq5,Hkv1,f896,context512;CPU acceptance uses shortened T16/B2 and
+200 optimizer updates,not the RFC's full pretraining budget. Scaling/compile
+controls may use smaller explicitly named model dimensions on the same fixture.

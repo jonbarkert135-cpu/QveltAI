@@ -444,3 +444,30 @@ installs setuptools84.2.1 and passes actual Inductor execution in44.92s. Final
 frozen dependency/lock,lint,mypy105 files and wheel/sdist build pass. Original
 local562-pass/1-DDP-exit-failure observation remains valid and unresolved;remote
 success is not presented as a local runtime fix. CPU M4.3 closes;GPU remains open.
+
+
+## R018 — Expanded pretraining,actual200-update hard-kill and measured controls
+
+Date:2026-11-04. Start b82131c;selected/adapted supplied Phase5 WIP. Registered
+D-TRAIN-200 authored Apache-2.0 fixture before ingestion. Full RFC tiny19,338,560
+parameters,V32768,T16/B2,FP32,seed20261031,one CPU thread:200 updates/6386 valid
+targets. Actual SIGKILL at observed89,restore75;all200 loss values match exactly,
+weights/Adam/RNG/application bit-exact. Probe10.47552204->9.00020885;authored
+code/math/web final PPL3163.41/2402.49/2653.38. No production-domain or reasoning
+quality claim. Final-source receipt will be refreshed after compiler-provenance fix.
+
+Compile8 updates/962 targets:cached startup+checkpoint wall0.811s eager/6.386s
+compiled;median steady11,589.89/13,509.28 targets/s/device;max weight delta7.445e-6.
+No isolated speedup/cold-compile/GPU/MFU claim. First benchmark failed correctly on
+setuptools-added platformdirs metadata;exact bundled path exclusion and fresh-process
+inventory regression fix it. Four20-update models with same2296 targets and LR0.001:
+P13344/38976/76896/127104,heldout5.991178/5.803633/5.660614/5.567677;
+log-log slope-0.03270178,R²0.99782621. Descriptive fixture fit,not general scaling.
+Small125,854,464-param12-command sweep expanded against realV32768/T2048 demo
+shards;no small optimizer/GPU/server job launched. Receipts in evidence/phase5-*.
+
+Pre-final local full586 passed,3 distributed process failures/timeouts,7 GPU
+deselected in365.00s. Focused final38 passed,2 GPU deselected in36.42s(includes
+actual two-rank NaN rollback,SIGTERM,hard-kill,source-probe,sweep/provenance checks).
+No tests relaxed. Current-source clean CI,final type/build and refreshed200-step
+receipt pending;see validation_phase5.md. No paid or final-scale run.

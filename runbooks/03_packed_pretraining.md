@@ -2,7 +2,8 @@
 
 Scope:original approved math/code EN/RU fixture on the CPU first. This is an
 engineering smoke, not final-scale training or mathematical reasoning evaluation.
-Runtime execution/cache/recomputation is described in runbook02; data rights and
+Runtime execution/cache/recomputation is described in02_model_execution.md;
+expanded recovery/server controls are in02_pretraining.md; data rights and
 production benchmark gates remain in runbook01/DATA_CARD.
 
 ## 1. End-to-end offline smoke
@@ -50,7 +51,8 @@ TokenSchedule owns valid-token warmup/decay. The old `qvelt train` numerical fix
 continues to use its original schedule and descriptor identities. It cannot load
 a packed-data checkpoint and mistake it for a numeric stream.
 
-`job.training.steps` counts optimizer updates; stage mixing start_step counts
+`job.training.steps` counts scheduled optimizer windows (`optimizer_updates`
+separately counts applied steps after skips/rollback); stage mixing start_step counts
 committed loader microbatches. By default batches=steps*accumulation_steps. An
 explicit total_batches must satisfy ceil(total_batches/accumulation_steps)=steps;
 this permits a shorter last window. Never normalize by a mean of microbatch means.
@@ -62,8 +64,8 @@ Each microbatch contributes a loss sum. Gradients are accumulated then divided b
 all valid targets in the entire window; DDP's world averaging is compensated by
 world_size/global_targets. Intermediate DDP microbatches use no_sync; the last
 synchronizes. Local target counts may differ or be0; a wholly empty window is
-invalid. Non-finite losses stop all ranks before backward/update, and non-finite
-gradients fail clipping. Partial/uncommitted windows never produce checkpoints.
+invalid. The default abort policy stops on nonfinite loss/gradients. Optional skip/rollback
+completes synchronization hooks before discarding the window;see02_pretraining.md. Partial/uncommitted windows never produce checkpoints.
 
 TokenSchedule explicitly specifies warmup_tokens, decay_start_tokens, decay_tokens.
 LR is evaluated at the end of the new global valid-token window:linear warmup,
@@ -89,7 +91,8 @@ A checkpoint contains model.safetensors, Adam state, rank RNG, schedule/counters
 base config/job, run manifest and application-rank-N.json for every rank. Application
 state includes the resolved packed recipe, semantic digest, committed loader cursor,
 actual data/tokenizer canonical hashes and actual processed tokens. The top manifest
-is published last. Incomplete directories are ignored; corrupt latest is an error.
+is published last. With strict resume,incomplete directories are ignored and corrupt latest is an
+error. Auto-resume explicitly quarantines invalid writes and selects verified state.
 
 Run metadata copies data/tokenizer manifests and the application recipe; corpus
 payloads remain in the external immutable prepared directory. Keep that directory
@@ -115,9 +118,9 @@ next collective; hard process/node failures still need relaunch from a checkpoin
 Actual two-rank Gloo tests compare uneven-count accumulated gradients against one
 global reference batch, verify coordinated rank-local failure and compare packed
 continuous/resumed weights/Adam/per-rank cursors. Production CUDA/NCCL/shared-store/
-multi-node behavior is still unvalidated. Packed FSDP is rejected until its
-accumulation/state/hardware tests exist; the earlier numeric DCP checks remain
-separate. Do not equate CPU success with GPU throughput/durability.
+multi-node behavior is still unvalidated. Packed FSDP2 has a CUDA-only implementation with mixed precision and DCP;
+its hardware correctness remains unverified. Compiled FSDP2 is explicitly rejected.
+The earlier CPU numeric DCP checks remain separate. Do not equate CPU success with GPU throughput/durability.
 
 An actual distributed launch uses the same validated recipe on every rank, sets
 job.training.strategy=ddp and an appropriate global valid-token schedule:
