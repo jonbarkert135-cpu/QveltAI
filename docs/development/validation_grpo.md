@@ -62,8 +62,12 @@ Pre-final full CPU regression622 passed,1 existing numeric-DDP subprocess timeou
 managed Gloo failures predate GRPO. The newly added whole-window zero-signal test
 passes in focused checks. Final-source combined DPO/GRPO33 tests pass in22.23s;
 Ruff/format,strict mypy135 files,frozen dependency checks and packaging are checked.
-Current-source clean CI with three Python versions and a dedicated8-window GRPO
-job is pending observation. No test is removed,xfail'ed or forced to exit.
+Current-source38a74bf GitHub42081751910 has all11 jobs successful. CPU3.11/
+3.12/3.13 each622 passed,2 optional SDK skips,7 GPU deselections in223.02s/222.57s/
+191.18s. Optional SDKs are verified separately. Dedicated8-window GRPO,40-step DPO,
+SFT and200-step actual-SIGKILL replay jobs all pass. Remote GRPO also has8 policy
+updates/745 actions/11 constant groups and exact full state/rollout/loss replay;
+validation stays1/8. See evidence/grpo-ci.json. No test is removed,xfail'ed or forced to exit.
 
 ```bash
 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 uv run --frozen --extra cpu python \

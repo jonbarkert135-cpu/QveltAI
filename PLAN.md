@@ -374,7 +374,7 @@ improvement or model promotion claimed.
 
 ### M6.3 — Implement verifiable-reward reasoning RL
 
-Owner: Lead agent. Status: in progress;original CPU prototype/replay passes,current CI pending. Dependencies: M6.1, M6.2, M1.2 evaluation
+Owner: Lead agent. Status: complete for bounded original exact-answer CPU prototype;other tiers unverified. Dependencies: M6.1, M6.2, M1.2 evaluation
 contract, tested generation, and a reviewed verifier.
 
 - [x] Compare base/SFT/DPO on fixed original16-problem/16-token generation controls;
@@ -396,7 +396,9 @@ longer reasoning traces alone are not evidence of better reasoning.
 Evidence:validation_grpo.md and grpo-8.json. Exact original CPU scope:8 real
 updates/745 actions,stop4/resume8 all losses/rollouts/model/Adam/RNG/cursor exact.
 Validation remains1/8;no improvement claim. Source-focused33 checks pass;local
-pre-final full622 pass/1 numeric-DDP timeout/7 GPU deselected,clean CI pending.
+pre-final full622 pass/1 numeric-DDP timeout/7 GPU deselected. Current source
+38a74bf GitHub42081751910:all11 jobs successful;CPU3.11/3.12/3.13 each622 passed,
+2 optional SDK skips,7 GPU deselected;SDKs independently verified.
 GPU/distributed/arbitrary tool/proof/approximate-answer environments are unverified.
 
 ## Phase 7 — Evaluation
@@ -553,7 +555,8 @@ No corpus is approved; proposed budgets/LRs/data weights require later trials.
 M4.1/available-CPU M4.2 and M5.1 are complete. Packed CPU/DDP references/replay
 are verified; actual CUDA/FSDP/shared-store/multi-node tiers and production-source
 clearance remain blocked. M6.1 original-data chat/SFT,assistant masks and tiny optimization/replay now pass
-CPU acceptance. M6.2 portable DPO passes local acceptance;next:M6.3 generation/verifier readiness. Keep final heldout
+CPU acceptance. M6.2 DPO and bounded M6.3 outcome-GRPO pass CPU acceptance/clean CI;next:M7.1
+versioned evaluation on original fixtures before licensed public inputs. Keep final heldout
 families separate; do not promote demo loss to a reasoning benchmark score.
 Publish verified work and reports to main; no paid/final-scale runs or old
 cloud-environment changes. See STATE.md for current evidence and next actions.

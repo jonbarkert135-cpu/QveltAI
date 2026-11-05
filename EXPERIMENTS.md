@@ -576,3 +576,13 @@ unchanged. Explicit FP32 reward/behavior tensors and post-call bounded verifier 
 included. Source-focused33 passed in22.23s;mypy135 files,Ruff/format pass. Pre-final
 full622 passed,1 numeric-DDP subprocess timeout,7 GPU deselected in258.63s;no green
 local-full claim or assertion of a Gloo fix. Clean current-source CI pending.
+
+
+R021 final remote acceptance:38a74bfd3fe411ffe3bad40be04a75d4006164d1,
+GitHub42081751910,all11 jobs successful. CPU3.11/3.12/3.13 each622 passed,
+2 optional SDK skips,7 GPU deselected in223.02s/222.57s/191.18s;SDKs separately
+verified. Dedicated GRPO8-window/DPO40-step/SFT/200-step SIGKILL replays all pass.
+Remote GRPO has8 policy updates/745 actions/11 constant groups,all losses/rollouts/
+weights/Adam/RNG/cursor exact;validation1/8 unchanged. M6.3 closes only for its
+bounded original CPU scope. Local pre-final numeric-DDP timeout remains reported;
+remote success is not evidence of a local Gloo fix. No GPU/paid/production run.

@@ -24,8 +24,9 @@ resume8 all losses,rollouts,weights,Adam,RNG and prompt cursor exact. Reduced
 Validation1/8 before/after:engineering acceptance,not reasoning improvement.
 Final-source combined DPO/GRPO33 tests pass in22.23s;Ruff/format,mypy135 files pass.
 Pre-final full622 passed,1 numeric-DDP timeout,7 GPU deselected in258.63s;root cause
-of the intermittent local Gloo problem remains unresolved. Current-source clean CI
-is pending. Source4775afbb264baa8c842cf40b67e0372162ee4e690f1c3738e227db42e7136b1b.
+of the intermittent local Gloo problem remains unresolved. Current-source38a74bf GitHub42081751910:all11 jobs successful. CPU3.11/3.12/
+3.13 each622 passed,2 optional SDK skips,7 GPU deselected;SDKs verified separately.
+Dedicated GRPO,DPO,SFT and200-step SIGKILL replays pass. Source4775afbb264baa8c842cf40b67e0372162ee4e690f1c3738e227db42e7136b1b.
 See validation_grpo.md and runbooks/06_reasoning_rl.md. Next:M7.1 evaluation harness,
 with original fixture scope first;production/public benchmark rights still blocked.
 
@@ -157,8 +158,8 @@ serving/export beyond safetensors are still future milestones.
 
 ## Next three tasks
 
-1. M6.3:verify generation/verifier readiness on bounded original validation controls;
-   preserve negative preference findings and do not promote an unvalidated model.
+1. M7.1:build the versioned evaluation harness on original fixtures first;preserve
+   fixed budgets,invalid/truncated counts and benchmark/source clearance gates.
 2. M5.2–M5.3:actual CUDA/DDP/FSDP/shared-store/multi-node and resource validation
    when hardware is supplied;no costly/final-scale run without authorization.
 3. M3.3:clear exact training/benchmark rights,freeze the distinct project final

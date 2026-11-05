@@ -1080,7 +1080,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0044 — Bounded original outcome-GRPO,not DPO model promotion
 
-- **Date/status:**2026-11-05;CPU prototype/reference/replay executed;clean CI pending.
+- **Date/status:**2026-11-05;CPU prototype accepted;all11 current-source CI42081751910 jobs successful.
 - **Context:**R020's identical generation control yields base0/SFT3/DPO0 correct
   of16. Preserve the DPO negative finding and use a fresh SFT reference. Historical
   pre-RoPE SFT manifests fail the current config-integrity contract;do not bypass
