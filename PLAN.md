@@ -430,7 +430,7 @@ Local665 passed/1 packed-DDP timeout remains an unresolved environment limitatio
 
 ### M7.2 — Establish evidence-based promotion and ablation gates
 
-Owner: Lead agent. Status: planned. Dependencies: M7.1; actual user-run checkpoints.
+Owner: Lead agent. Status: in progress for original CPU necessary gates;production acceptance requires actual user-run checkpoints. Preregistered89a0350. Dependencies: M7.1; actual user-run checkpoints.
 
 - [ ] Compare base, SFT, preference, and reasoning-RL checkpoints with fixed
   budgets and comparable prompts; include data/compute/seed controls.

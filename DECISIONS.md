@@ -1160,7 +1160,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0046 — Matched-lineage CPU study and fail-closed promotion controls
 
-- **Date/status:**2026-11-05;design preregistered before M7.2 learning.
+- **Date/status:**2026-11-05;design89a0350 preregistered before learning;CPU engine implemented,final multi-seed/CI pending.
 - **Context:**M7.1 exposes a constant-answer SFT policy;old DPO and GRPO use
   different SFT parents. Scores/training-loss reductions do not justify promotion.
 - **Choice:**shared corpus/tokenizer,three distinct initialization seeds,base3/
@@ -1182,3 +1182,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   tiny CPU models and validation reuse. Pass means eligible for further validation;
   production requires actual user-run model/hardware and licensed independent
   evidence. No automatic promotion or paid/GPU/full-scale run is authorized here.
+- **Developmental checks:**focused35 pass;full local688 pass/1 old packed-DDP
+  timeout/7 GPU deselected in311.24s. Ruff/format,mypy153 files and build pass.
+  First one-seed control rejects DPO regression and unchanged half-LR/GRPO;
+  no thresholds were selected from those results. See validation_promotion.md.

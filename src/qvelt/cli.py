@@ -120,6 +120,12 @@ def _parser() -> argparse.ArgumentParser:
     evaluation.add_argument("path", type=Path)
     evaluation.add_argument("--directory", type=Path, required=True)
     evaluation.add_argument("--repository", type=Path, default=Path("."))
+    study = commands.add_parser(
+        "compare", help="Run matched-lineage CPU evaluation gates"
+    )
+    study.add_argument("path", type=Path)
+    study.add_argument("--directory", type=Path, required=True)
+    study.add_argument("--repository", type=Path, default=Path("."))
     collective = commands.add_parser(
         "distributed-check", help="Run an exact integer all-reduce"
     )
@@ -132,7 +138,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     logger = configure_logging()
     try:
-        if args.command == "evaluate":
+        if args.command == "compare":
+            from qvelt.eval.study import run_study
+            from qvelt.eval.study_config import load_study
+
+            result = run_study(load_study(args.path), args.directory, args.repository)
+            print(
+                json.dumps(
+                    {
+                        "study_sha256": result["study_sha256"],
+                        "comparisons": result["result"]["comparisons_to_sft"],
+                        "automatic_promotion": False,
+                    },
+                    sort_keys=True,
+                )
+            )
+        elif args.command == "evaluate":
             from qvelt.eval.config import load_eval
             from qvelt.eval.runner import run_evaluation
 

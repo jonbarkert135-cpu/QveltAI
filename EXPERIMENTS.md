@@ -651,3 +651,30 @@ The latter kills at89,restores75,maximum loss difference0 and exact weights/Adam
 RNG/application state. See evaluation-ci.json. Local packed-DDP timeout is not
 fixed or erased by remote success. M7.1 closes only for original CPU scope;
 final/public/GPU quality and promotion remain separate gates. No paid/full-scale run.
+
+## R024 — Preregistered matched-lineage CPU comparison and DPO LR ablation
+
+Date:2026-11-05. Base605ddee;design/data/thresholds89a0350 committed before M7.2
+learning. Fixed original200 validation/five families,40 correlated whitespace
+variants of20 parents and7 prior controls;final800 unscored. Same tokenizer/
+shape/greedy16/context128/LM64/scorer/inference seed for all stages. Each actual
+initialization seed has its own base3/SFT80 then matched DPO40/GRPO8/half-LR DPO40
+branches. Shared corpus/SFT/pairs/order and exact one-factor LR difference are
+checked from full run/checkpoint manifests. Stage costs are reported,not equalized.
+
+First developmental one-seed20261105 run:all five roles trained/evaluated with
+actual isolated CPU measurements. SFT5/200,ordinary DPO0/200,half-LR DPO5/200,
+GRPO5/200. Ordinary DPO loses5 paired remainder cases;half-LR changes that result
+but still lacks improvement and regresses formatting/invariance. GRPO unchanged.
+All necessary candidate decisions reject. This is exploratory implementation
+validation on original fixtures,not a model selection/promotion or three-seed claim.
+Independent known contingency/macro-family references,adversarial protocol/lineage/
+coverage gates and actual CLI/integrity/resource tests:focused35 pass in38.14s.
+Full local regression,final-source three-seed receipt and clean CI pending.
+
+R024 final implementation regression:688 passed,1 existing packed-training DDP
+timeout,7 GPU deselected in311.24s;no skips or test weakening. Worker cleaned up
+after parent failed. Ruff/format,mypy153 files,wheel/sdist and lock93/pip72 checks
+pass. SymPy exact reference confirms unequal-family macro3/80 independently.
+Missing/invalid gate schema is rejected;positive checks without independent
+replication cannot promote. Final-source three-seed/clean CI acceptance pending.

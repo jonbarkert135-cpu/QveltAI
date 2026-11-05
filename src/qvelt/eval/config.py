@@ -145,10 +145,16 @@ def load_eval(path: Path) -> EvalJob:
         data = stream.read(MAX_CONFIG_BYTES + 1)
     if len(data) > MAX_CONFIG_BYTES:
         raise ConfigError("Evaluation recipe exceeds its byte limit")
+    return parse_eval(data.decode("utf-8-sig"))
+
+
+def parse_eval(text: str) -> EvalJob:
+    if len(text.encode("utf-8")) > MAX_CONFIG_BYTES:
+        raise ConfigError("Evaluation recipe exceeds its byte limit")
     root = cast(
         dict[str, Any],
         _mapping(
-            parse_yaml_mapping(data.decode("utf-8-sig")),
+            parse_yaml_mapping(text),
             "evaluation",
             {f.name for f in fields(EvalJob)},
         ),

@@ -17,6 +17,19 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
+M7.2 matched-lineage CPU study and necessary promotion controls are in progress.
+Preregistered89a0350:shared training/tokenizer/SFT/pairs,initialization seeds
+20261105/6/7,base3/SFT80/DPO40/GRPO8 and a DPO half-LR arm. New strict compare
+CLI verifies actual parents,seeds,data/config/source and one-factor ablation;
+paired family/robustness/general/verifier/resource gates never auto-promote.
+Focused35 checks pass including actual one-seed training/analysis and fresh-process
+CPU measurements. First one-seed diagnostic rejects all candidates;DPO regresses
+5/200 to0/200. Full local688 passed,1 existing packed-DDP timeout,7 GPU deselected
+in311.24s;Ruff/format,mypy153 files and build pass. Three-seed/final-source/CI acceptance is pending. Production
+acceptance still needs actual user-run small/GPU and independent licensed evidence.
+
+Historical M7.1 acceptance follows.
+
 M7.1 original CPU evaluation is accepted on source83a1adb;GitHub42092305795 has
 all12 jobs successful. CPU3.11/3.12/3.13 each664 passed,2 optional SDK skips,
 7 GPU deselected;SDKs separately verified. Versioned exact/numeric/choice/LM protocols,seeded sampling/pass@k,

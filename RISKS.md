@@ -252,3 +252,15 @@ confidence. Choice/LM controls are original short sanity examples,not public
 benchmark or production-domain quality estimates. CPU FP32/full-prefix,<20M
 parameter reference evaluation does not validate GPU/sharded/large-model cost.
 Reports contain prompts/answers;keep raw final data and predictions private.
+
+## Matched study and promotion limits (2026-11-05)
+
+Three actual base-model initialization seeds and matched SFT parents control
+important confounders,but tiny repeated templates/short general controls do not
+establish production quality. Validation is already exposed;selection/ablation
+on it cannot make it untouched final evidence. Whitespace variants are correlated
+with20 parent problems. Across-stage target/action counts are not equal training
+compute or full FLOPs. Necessary thresholds are preregistered engineering policy,
+not estimated significance or commercial parity. Whole-process Linux RSS includes
+imports/load;fixed-action CPU timing excludes startup and ignores stop controls.
+No GPU serving/resource conclusion or automatic production promotion follows.

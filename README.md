@@ -167,3 +167,10 @@ domain LM perplexity and declared-source lexical overlap audits. Run
 `qvelt evaluate evaluation.yaml --directory runs/evaluation-01 --repository .`;
 see [evaluation protocols and reproducible acceptance](runbooks/07_evaluation.md).
 Final800 remain unscored;original controls are not public benchmark results.
+
+Matched-seed comparison now uses `qvelt compare study.yaml --directory runs/study-01`.
+It checks shared base/SFT lineage,DPO/GRPO regression gates and a one-factor DPO
+LR ablation,with isolated CPU inference measurements. See
+[comparison and promotion runbook](runbooks/08_model_promotion.md).
+Necessary controls can reject a candidate or request more validation;they do not
+automatically promote an original-fixture model to production.
