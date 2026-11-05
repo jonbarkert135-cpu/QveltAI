@@ -1186,3 +1186,10 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   timeout/7 GPU deselected in311.24s. Ruff/format,mypy153 files and build pass.
   First one-seed control rejects DPO regression and unchanged half-LR/GRPO;
   no thresholds were selected from those results. See validation_promotion.md.
+- **Additional architecture control:**3d379fc preregisters exploratory RoPE1/2
+  before its learning,with exact equal initial weights and paired base/SFT data/
+  ordering/budgets. Standalone script keeps the validated executable package
+  unchanged and binds script SHA separately. Earlier validation is exposed,so
+  this is not confirmatory. Runtime seeds also control sampler order across
+  replications;within paired arms ordering agrees. Whole-process RSS has launch
+  context effects and is not incremental model memory. No thresholds are changed.

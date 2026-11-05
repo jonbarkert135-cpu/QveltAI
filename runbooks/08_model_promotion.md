@@ -25,6 +25,10 @@ This is not the RFC19.34M model or a full small-model run.
 `--seeds 20261105 20261106` runs the explicit two-seed CI subset. At most three
 distinct integer seeds are accepted. An optimizer RNG seed on a fixed deterministic
 model is not counted as independent initialization:actual base weights must differ.
+Runtime seed also controls the packed-data sampler. These are independent seeded
+runs,not an isolated initialization-only variance study. Within each paired LR
+arm,initialization,parent and data order agree. Base target counts can differ
+across seeds;the measured ledger is authoritative.
 `prospective-plan.json` is written before tokenizer fitting/model updates,with
 suite identity,seeds and stage budgets. The committed design fixes thresholds;
 do not adjust them after seeing this validation result and claim preregistration.
@@ -116,6 +120,10 @@ Linux ru_maxrss includes imports,checkpoint loading and model;it is not incremen
 tensor memory. Child startup/load are excluded from the timed inner loop but
 included in whole-process RSS. Timing changes with load/hardware;do not expect
 bitwise timings or compare thresholds across machines. No CUDA/MFU/VRAM is measured.
+Whole-process ru_maxrss also depends on launch context:the actual three-seed
+study returned390721536 bytes,while an independent shell-launched probe of the
+same checkpoint returned287260672. Treat it as a conservative process-level
+budget,not a per-model memory allocation comparison.
 
 The top manifest commits child evaluation reports,resource JSON,recipe/lock/config
 and summarized results. Verification hashes all registered files;optimizer/RNG
@@ -125,3 +133,24 @@ after reviewing paths;keep raw final cases,predictions,weights and credentials
 private. Negative/unchanged findings must remain in EXPERIMENTS. General controls
 are too small for real language-quality assurance;zero lexical audit hits do not
 certify complete training-history or semantic cleanliness.
+
+## Exploratory architecture ablation
+
+An additional single-factor study was preregistered separately in3d379fc after
+earlier validation scores were already exposed. It compares RoPE scale1/2 at the
+existing short context,not long-context quality:
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 uv run --frozen --extra cpu python \
+  scripts/rope_ablation.py --study runs/promotion-01/training/study.yaml \
+  --directory runs/rope-ablation-01 --repository .
+uv run --frozen --extra cpu qvelt manifest verify runs/rope-ablation-01/manifest.json
+```
+
+The script reuses each original seed's data/ordering/optimizer/schedule,proves
+bit-exact initial weights,and trains a new base3->SFT80 chain changing only
+rope_scale plus the derived SFT parent identity. Actual processed targets must
+match each control stage. The frozen model/trainer/evaluator package remains
+unchanged;script SHA/Git identity are recorded separately. Reuse the existing
+247 cases,paired gates/resource protocol and untouched final800. This exploratory
+ablation cannot support a confirmatory or production promotion claim.

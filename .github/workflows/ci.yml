@@ -201,6 +201,8 @@ jobs:
       - run: make setup
       - name: Matched initialization seeds,base SFT DPO GRPO and one-factor LR ablation
         run: uv run --frozen --extra cpu python scripts/promotion_study.py --directory "$RUNNER_TEMP/qvelt-promotion" --repository . --seeds 20261105 20261106
+      - name: Exploratory paired RoPE scale architecture ablation
+        run: uv run --frozen --extra cpu python scripts/rope_ablation.py --study "$RUNNER_TEMP/qvelt-promotion/training/study.yaml" --directory "$RUNNER_TEMP/qvelt-rope-ablation" --repository .
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -211,6 +213,8 @@ jobs:
             ${{ runner.temp }}/qvelt-promotion/analysis/manifest.json
             ${{ runner.temp }}/qvelt-promotion/analysis/*-resources.json
             ${{ runner.temp }}/qvelt-promotion/training/prospective-plan.json
+            ${{ runner.temp }}/qvelt-rope-ablation/result.json
+            ${{ runner.temp }}/qvelt-rope-ablation/manifest.json
   evaluation:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
