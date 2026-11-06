@@ -17,16 +17,23 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-M8.1 native CPU generation/export is implemented;final-source acceptance is in
-progress. True left-padded batches,private KV/RNG,greedy/seeded sampling,stream
+M8.1 native CPU generation/export is accepted on699ff0b;GitHub42239279899 has
+all14 jobs successful. CPU3.11/3.12/3.13 each735 passed,2 optional SDK skips,
+7 GPU deselected;SDKs separately verified. True left-padded batches,private KV/RNG,greedy/seeded sampling,stream
 snapshots,stop/context/output/cache limits and cooperative cancellation/timeouts.
 Native safetensors/tokenizer/config/source snapshots reload without original
 directories;no optimizer/RNG pickle. Developmental123904-parameter V395 export
 has logit delta0 and matching cached/uncached/CLI/stream outputs. Pre-final full
 local733 passed,no skips,7 GPU deselected in236.44s;final guards focused53 pass
 in19.80s,Ruff/format,mypy163 and build pass. Existing Gloo issue is not declared
-fixed by this one green local run. Final-source/full-RFC-tiny/CI receipts pending.
+fixed by this one green local run. Clean source
+2adb1ec750a1e03d4f859597edd7e4d344d7a8b948fdd648e76cdaa143b77bba passes the full
+standalone workflow. Historical19338560-parameter RFC tiny export/reload delta0,
+cache/full max delta2.861e-6,unchanged weights and matching fresh CLI generation.
+Extracted-wheel import/generation matches on the same locked dependencies.
+Current-source200-step actual-SIGKILL and all training/evaluation replays pass CI.
 See validation_inference.md/runbook09. No model promotion/GPU/HTTP/quantization.
+Next:M8.2 measured serving interface;quantization/external runtime gates stay open.
 
 Historical M7.2 acceptance follows.
 

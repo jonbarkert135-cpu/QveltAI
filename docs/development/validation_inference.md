@@ -51,3 +51,44 @@ that historical intermittent Gloo failures were diagnosed or fixed.
 Final-source standalone receipts,full RFC-tiny read-only export diagnostic and
 current-source14-job CI are recorded below on completion. No CUDA/serving/model
 quality promotion or external-format compatibility is claimed.
+
+## Final source and full RFC tiny
+
+Source699ff0b,package
+2adb1ec750a1e03d4f859597edd7e4d344d7a8b948fdd648e76cdaa143b77bba.
+The clean-source standalone workflow repeats all CLI/API/cache/stream/source-hidden
+checks,with zero export/reload logit difference;see
+[portable receipt](evidence/inference-smoke.json). It remains an untrained
+123904-parameter engineering fixture,not a new training/quality result.
+
+Separate read-only diagnostic exports the historical200-update **19338560**-
+parameter RFC tiny checkpoint,V32768. Original weights stay unchanged. Export/
+reload logits match exactly on[2,17,32768];cached prefix3/suffix14 versus full
+forward maximum difference2.86102294921875e-6,within rtol3e-5/atol3e-6. Batched
+greedy cached/full tokens/text/stops and fresh-process CLI/API agree,8 sampled
+actions across2 requests. No new optimizer update or final case is scored. See
+[full tiny receipt](evidence/inference-rfc-tiny.json). This validates native
+correctness for that existing checkpoint,not useful generation or GPU performance.
+
+The built wheel contains all four inference modules. A subprocess outside the
+checkout imports them from an extracted wheel,observes the same package source
+digest and generates identical CLI results on the same locked dependencies;see
+[wheel receipt](evidence/inference-wheel.json). This is not a clean OS installation
+or cross-hardware guarantee. Wheel SHA
+0c5064f5065b0ab3008a1c4978809c68df2f3b332bf7579af81bf404f0f2ede9.
+
+## Final remote acceptance
+
+[GitHub42239279899](https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42239279899)
+has **all14 jobs successful** on699ff0b. CPU3.11/3.12/3.13 each735 passed,
+2 optional SDK skips,7 GPU deselected in175.50s/267.12s/298.76s. SDK event/offline
+tests pass separately;mypy163 and packaging pass. Dedicated native inference
+matches all cached/full/export/CLI/stream outputs and reloads with original paths
+hidden;see[CI inference receipt](evidence/inference-ci-smoke.json).
+Current-source200-step actual-SIGKILL recovery has maximum loss difference0 and
+exact weights/Adam/RNG/application. SFT,DPO,GRPO,evaluation and matched/architecture
+study jobs pass. See[matrix/recovery receipt](evidence/inference-ci.json).
+
+M8.1 native CPU core is accepted. Quantization/external runtimes remain explicitly
+deferred;M8.2 serving is the next independent implementation. No production/model
+promotion or fix for historical local Gloo instability is implied.

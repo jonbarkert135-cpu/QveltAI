@@ -456,7 +456,7 @@ bound separately. All candidates reject;actual user-run production acceptance op
 
 ### M8.1 — Build correct generation and stable artifact export
 
-Owner: Lead agent. Status: native CPU implementation complete;final-source acceptance in progress,optional runtime/quantization extensions deferred. Dependencies: M7.1, M4.2; early generation
+Owner: Lead agent. Status: native CPU core accepted on699ff0b,all14 CI42239279899 jobs successful;optional runtime/quantization extensions deferred. Dependencies: M7.1, M4.2; early generation
 used by M6.3 must already have reference tests.
 
 - [x] Provide greedy and seeded sampling, stopping rules, context checks,
@@ -468,6 +468,13 @@ used by M6.3 must already have reference tests.
 
 Acceptance: cached/uncached and export/reload reference comparisons pass;
 generation reproducibility has explicit device/precision/batch conditions.
+
+Evidence:runbook09/validation_inference.md. Source-independent native snapshot
+reload,private cache/seeded batch/stream/cancel/limit references,53 focused tests;
+pre-final full local733 passed/7 GPU deselected. Final CI CPU3.11/3.12/3.13 each735
+passed/2 optional SDK skips/7 GPU deselected;SDKs separately pass. Actual19.34M
+RFC tiny export/reload delta0,cached/full max delta2.861e-6 and fresh CLI parity.
+Extracted-wheel generation passes. No HTTP/GPU/quality/quantization claim.
 
 ### M8.2 — Deliver a measured serving interface
 
@@ -574,8 +581,9 @@ are verified; actual CUDA/FSDP/shared-store/multi-node tiers and production-sour
 clearance remain blocked. M6.1 original-data chat/SFT,assistant masks and tiny optimization/replay now pass
 CPU acceptance. M6.2 DPO,bounded M6.3 outcome-GRPO and M7.1 original evaluation
 pass portable CPU acceptance/clean CI. M7.2 CPU necessary comparisons/gates and
-LR/RoPE ablations are implemented with negative findings. Next:M8.1 inference/
-export;production promotion still needs actual user-run and licensed quality evidence.
+LR/RoPE ablations are implemented with negative findings. Native CPU M8.1 inference/
+export is accepted. Next:M8.2 measured serving;production promotion still needs
+actual user-run and licensed quality evidence.
 Keep final heldout
 families separate; do not promote demo loss to a reasoning benchmark score.
 Publish verified work and reports to main; no paid/final-scale runs or old

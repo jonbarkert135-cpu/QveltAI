@@ -1207,7 +1207,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0047 — Native bounded CPU generation and inference snapshot v1
 
-- **Date/status:**2026-11-06;CPU implementation complete;final-source/CI acceptance pending.
+- **Date/status:**2026-11-06;native CPU core accepted on699ff0b,all14 CI42239279899 jobs successful.
 - **Context:**M7.2 rejects candidate promotions,but generation/export correctness
   is an independent dependency-ready milestone. Decoder cache has CPU reference
   coverage;no GPU or external-runtime compatibility is established.
@@ -1232,3 +1232,11 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   guards. Pre-final full local733 pass/7 GPU deselected;final guards focused53
   pass,Ruff/mypy163/build pass. Developmental native export has zero reload logit
   delta and identical CLI/API/stream/cache outputs with original sources hidden.
+- **Final acceptance:**clean package
+  2adb1ec750a1e03d4f859597edd7e4d344d7a8b948fdd648e76cdaa143b77bba;actual
+  19.34M RFC tiny read-only export/reload delta0,cache/full max2.861e-6 and fresh
+  CLI parity,source weights unchanged. Extracted-wheel generation matches under
+  the same locked dependencies. CPU3.11/3.12/3.13 each735 passed,2 optional SDK
+  skips,7 GPU deselected;SDKs verified separately. Native inference and200-step
+  actual-SIGKILL/training/evaluation jobs pass. No quality/GPU/serving/model release
+  claim;old Gloo instability is not diagnosed by a successful regression run.

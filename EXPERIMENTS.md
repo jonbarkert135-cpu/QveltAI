@@ -751,3 +751,30 @@ formal final-source/historical19.34M diagnostic and current-source CI follow.
 Pre-final full local CPU/optional-SDK733 passed,no skips,7 GPU deselected in236.44s.
 Final batch guards focused53 pass in19.80s;Ruff/format,mypy163 files,build and
 lock93/pip72 checks pass. No claim of fixing historical local Gloo instability.
+
+R026 final source699ff0beb924d58a88112f38c75fcce210abfd8a,package
+2adb1ec750a1e03d4f859597edd7e4d344d7a8b948fdd648e76cdaa143b77bba. Clean standalone
+workflow repeats all source-hidden/CLI/API/cache/stream comparisons,logit delta0.
+Receipt inference-smoke.json. Untrained123904-param/V395 CPU fixture remains
+engineering-only;no final case,new optimizer update or model promotion.
+
+Historical200-update RFC tiny diagnostic:19338560 parameters,V32768,B2 FP32 CPU,
+shape[2,17,32768],prefix3/suffix14. Export/reload max delta0,cached/full max
+2.86102294921875e-6 within3e-5/3e-6 tolerances. Batched greedy4-actions/request,
+8 actual actions,tokens/text/stops and fresh CLI/API equal,original weights
+unchanged. Snapshot ab7a49067ad842db41b9ce99a74ff9824dc58c7a366ed9404a504aa5022abb6c;
+source checkpoint9f0b9e63282c7dedfe20b04b05c55d6680384d7e3b53b71bb228c65221efb702.
+Receipt inference-rfc-tiny.json. No model-quality or new training result.
+
+Extracted wheel smoke outside checkout:four inference modules imported from wheel,
+source digest matches and CLI generation equals editable package on same locked
+dependencies. Wheel0c5064f5065b0ab3008a1c4978809c68df2f3b332bf7579af81bf404f0f2ede9;
+receipt inference-wheel.json. Not a clean OS/GPU/server acceptance claim.
+
+GitHub42239279899 all14 jobs successful on699ff0b. CPU3.11/3.12/3.13 each735 passed,
+2 optional SDK skips,7 GPU deselected in175.50s/267.12s/298.76s;SDK tests separately
+pass,mypy163/build pass. Dedicated inference repeats all portable checks;full
+current-source200-step actual-SIGKILL loss delta0 and weights/Adam/RNG/application
+exact. SFT/DPO/GRPO/evaluation/studies also pass. See inference-ci.json and
+inference-ci-smoke.json. M8.1 CPU core closes;GPU/serving/quantization/external
+runtimes/model promotion remain open. Next:M8.2. Historical Gloo issue not fixed.
