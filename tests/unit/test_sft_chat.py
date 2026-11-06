@@ -103,6 +103,39 @@ def test_original_math_supervision_is_deterministic() -> None:
     assert {d.family for d in documents[:8]} == {d.family for d in documents[8:]}
 
 
+def test_reasoning_shifted_mask_and_explicit_fields() -> None:
+    tokens = [1, 4, 40, 6, 5, 8, 41, 42, 9, 43, 6, 4, 44, 6, 5, 45, 6, 2]
+    expected = [i in (4, 5, 6, 7, 8, 9, 14, 15) for i in range(17)]
+    assert assistant_mask(tokens) == expected
+    with pytest.raises(ValueError):
+        assistant_mask(tokens, control_version=1)
+    for frame in (
+        [1, 4, 8, 40, 9, 6, 5, 41, 6, 2],
+        [1, 4, 40, 6, 5, 9, 41, 6, 2],
+        [1, 4, 40, 6, 5, 8, 41, 6, 2],
+        [1, 4, 40, 6, 5, 8, 41, 9, 6, 2],
+    ):
+        with pytest.raises(ValueError):
+            assistant_mask(frame)
+    tokenizer = train_tokenizer(
+        ["Question worked solution answer"], TokenizerSettings(vocab_size=288)
+    )
+    messages = (
+        Message("user", "<think>ordinary text</think>"),
+        Message("assistant", "1", "Compute exactly."),
+    )
+    frame, _ = encode_chat(messages, tokenizer, 512)
+    assert frame.count(8) == frame.count(9) == 1
+    assert (
+        sum(assistant_mask(frame))
+        == len(tokenizer.encode("Compute exactly.")) + len(tokenizer.encode("1")) + 3
+    )
+    row = '{"schema_version":2,"messages":[{"role":"user","content":"Q"},{"role":"assistant","content":"1","reasoning":"R"}]}'
+    assert parse_messages(row)[-1].reasoning == "R"
+    with pytest.raises(ValueError):
+        parse_messages(row.replace('"schema_version":2', '"schema_version":1'))
+
+
 def test_sft_recipe_identity_and_validation() -> None:
     from dataclasses import replace
     from pathlib import Path

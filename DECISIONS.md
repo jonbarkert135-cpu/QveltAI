@@ -1240,3 +1240,61 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   skips,7 GPU deselected;SDKs verified separately. Native inference and200-step
   actual-SIGKILL/training/evaluation jobs pass. No quality/GPU/serving/model release
   claim;old Gloo instability is not diagnosed by a successful regression run.
+
+## ADR-0048 — Expanded math post-training with bounded native CPU interfaces
+
+- **Date/status:**2026-11-06;implementation and diagnostics verified;final-source
+  standalone/full-suite/CI acceptance pending.
+- **Context:**the user's expanded Phase6 follows accepted M8.1 and adds requirements
+  beyond original M6.1–M6.3. Reuse the existing packed SFT,DPO,GRPO and checkpoint
+  engine rather than introduce TRL/Transformers/PEFT dependencies or fork loops.
+- **Adapters/chat:**original LoRA on all seven attention/FFN block linears,
+  frozen W/embedding/norm,train A/B,scale alpha/r. Gaussian A variance1/input_width,
+  zero B;full SFT remains default. CPU FP32/single/no compile only;full base+adapter
+  checkpoints preserve replay,not adapter-only release. Dense merge is explicit.
+  No quantized/QLoRA substitute is faked. Chat schema2 separates optional assistant
+  reasoning and final content,using explicit v2 control IDs8/9;legacy controls stay
+  reserved. Shifted supervision includes reasoning/control/end-turn,not prompts,
+  role IDs,outerEOS or padding. Prefix truncation never fabricates termination.
+- **Verifiers/data:**exact Fraction and rational-tolerance comparisons;allowlisted
+  AST rational-polynomial construction (x/y,total degree8,nodes48,chars128) before
+  SymPy QQ identity. No eval/string sympify/parse_expr or arbitrary CAS expressions.
+  Domain-changing cancellation through variable denominators is unsupported.
+  Rejection uses actual pinned own checkpoints/native sampling with every candidate,
+  fixed budgets/seeds,answer-only verification,difficulty pass@k and within-problem
+  lexical dedup. Correct answers do not establish trace/process correctness.
+- **Rights:**reviewed immutable original human-written GSM8K train subset<=64,
+  pinned payload17f347dc.../MIT86bbb73e...,D-GSM8K-TRAIN-BOUNDED-01. No optimization
+  on it or production clearance. Test/socratic/model-solution files remain outside
+  training approval. External synthetic ingress is separately default-off and
+  requires exact local source/teacher/revision/license/terms permission;no API calls
+  or legal rights are inferred from a switch. Full notices/provenance are retained.
+- **RL:**native Phase8 engine replaces repeated-prefix sampler,with KV caching
+  and sampled-action logps recomputed by the frozen behavior policy. Private sampler
+  seeds derive from checkpointed Torch RNG. One fresh-window update,temperature1;
+  original clipped GRPO/KL math unchanged. Optional bounded format/length shaping,
+  separate correctness/format/cost/KL logs and question/gold/text audits. Fourteen
+  fixed verifier controls run outside optimization before training/checkpoints.
+  Initial policy may be a checked DPO descendant;frozen reference remains SFT.
+- **Offline:**checksum-bound bounded JSONL windows must match current model,
+  reference,step,prompts,seeds,actions,stops,text,rewards and recalculated logps.
+  Recompute canonical values so tolerated rounding cannot alter updates. Consume
+  identical sampler-seed cursor. This is on-policy replay,not generic stale-data RL.
+- **Evidence/sources:**[verified] Hu et al.(2021),*LoRA:Low-Rank Adaptation of Large
+  Language Models*,arXiv2106.09685v2 section4.1,read2026-11-06 at
+  https://arxiv.org/html/2106.09685v2 :frozen W0,BA,alpha/r,Gaussian A/zero B;
+  variance1/d is our explicit choice,not a claimed paper constant. Independent
+  dense values/gradients/frozen tensors/merge/replay are executed tests.
+  [verified] installed SymPy1.14.0 Poly.from_dict/QQ and bounded exact reference
+  identities;no user text is evaluated. [verified] immutable GSM8K README/LICENSE
+  revision3101c7d... human train release/MIT text,actual bytes/checksums acquired.
+  Prior ADR0043/0044 source equations and local pinned SFT/PEFT/SymPy guides inform
+  review;vendor speed/hardware/quality claims are not adopted. Lean remains design
+  only;toolchain/APIs/sandbox behavior unverified.
+- **Outcome/limits:**first fixed127104-parameter arithmetic control improves sampled
+  training reward .3125->.709375 (first/last10),validation15/64->26/64;DPO heldout
+  loss .693147->.711595 worsens. Online/offline model/Adam/RNG/losses match exactly.
+  Two-answer local fixture,known diagnostic outcomes before final clean rerun;
+  no independent preregistration,general reasoning gain or model promotion.
+  Final800 untouched. CPU GRPO remains below1M;larger/GPU/distributed/arbitrary
+  problem/QLoRA/Lean tiers require new evidence and rights/resource gates.

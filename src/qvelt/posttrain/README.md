@@ -1,5 +1,14 @@
 # posttrain
 
+Expanded Phase6 adds chat-v2 explicit reasoning,unquantized CPU LoRA in the packed
+SFT loop,bounded numeric/polynomial verifiers,own-checkpoint rejection selection,
+immutable original GSM8K train ingress and default-off external-trace terms gates.
+GRPO now uses Phase8 GenerationEngine with KV caching,format/length components,
+human-readable audits and checksum-bound current-policy offline replay. See
+runbooks/03_posttraining.md. QLoRA/Lean/GPU/arbitrary-problem RL are not implemented
+or validated by these extensions. The two-answer mechanism control is not a
+general math benchmark or production promotion.
+
 M6.1 implements strict version1 chat formatting,family-isolated licensed demo
 preparation,assistant-only masks and whole-dialog packing. The packed trainer
 supports pinned weights-only SFT initialization and atomic resume.

@@ -116,6 +116,32 @@ def _parser() -> argparse.ArgumentParser:
         preference.add_argument("--repository", type=Path, default=Path("."))
         preference.add_argument("--resume", choices=("latest",))
         preference.add_argument("--stop-after", type=int)
+    gsm8k = commands.add_parser(
+        "import-gsm8k", help="Import the pinned reviewed original train-question subset"
+    )
+    gsm8k.add_argument("path", type=Path)
+    gsm8k.add_argument("--sha256", required=True)
+    gsm8k.add_argument("--license-file", type=Path, required=True)
+    gsm8k.add_argument("--license-sha256", required=True)
+    gsm8k.add_argument("--directory", type=Path, required=True)
+    gsm8k.add_argument("--count", type=int, default=16)
+    reasoning = commands.add_parser(
+        "reasoning-data",
+        help="Reject-sample answer-verified traces from an own checkpoint",
+    )
+    reasoning.add_argument("path", type=Path)
+    reasoning.add_argument("--directory", type=Path, required=True)
+    external = commands.add_parser(
+        "ingest-traces",
+        help="Explicit reviewed external synthetic trace ingress; off by default",
+    )
+    external.add_argument("path", type=Path)
+    external.add_argument("--sha256", required=True)
+    external.add_argument("--directory", type=Path, required=True)
+    external.add_argument("--external-synthetic", action="store_true")
+    external.add_argument("--approved-for-training", action="store_true")
+    external.add_argument("--terms", type=Path, required=True)
+    external.add_argument("--terms-sha256", required=True)
     evaluation = commands.add_parser("evaluate", help="Read-only pinned CPU evaluation")
     evaluation.add_argument("path", type=Path)
     evaluation.add_argument("--directory", type=Path, required=True)
@@ -154,7 +180,37 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     logger = configure_logging()
     try:
-        if args.command == "export":
+        if args.command == "import-gsm8k":
+            from qvelt.eval.config import ArtifactRef
+            from qvelt.posttrain.gsm8k import import_gsm8k_training
+
+            math_manifest = import_gsm8k_training(
+                ArtifactRef(str(args.path), args.sha256),
+                ArtifactRef(str(args.license_file), args.license_sha256),
+                args.directory,
+                count=args.count,
+            )
+            print(json.dumps({"manifest_sha256": manifest_digest(math_manifest)}))
+        elif args.command == "reasoning-data":
+            from qvelt.posttrain.reasoning import build_reasoning_data, load_reasoning
+
+            reasoning_manifest = build_reasoning_data(
+                load_reasoning(args.path), args.directory
+            )
+            print(json.dumps({"manifest_sha256": manifest_digest(reasoning_manifest)}))
+        elif args.command == "ingest-traces":
+            from qvelt.eval.config import ArtifactRef
+            from qvelt.posttrain.reasoning import ingest_external_traces
+
+            trace_manifest = ingest_external_traces(
+                ArtifactRef(str(args.path), args.sha256),
+                args.directory,
+                approved_for_training=args.approved_for_training,
+                external_synthetic=args.external_synthetic,
+                terms=ArtifactRef(str(args.terms), args.terms_sha256),
+            )
+            print(json.dumps({"manifest_sha256": manifest_digest(trace_manifest)}))
+        elif args.command == "export":
             from qvelt.eval.config import ArtifactRef
             from qvelt.inference.artifacts import export_snapshot
 

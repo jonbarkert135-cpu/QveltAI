@@ -23,7 +23,9 @@ from qvelt.config import (
 )
 from qvelt.config.pretraining import load_pretraining_job
 from qvelt.data.math import generate_problems
+from qvelt.eval.config import ArtifactRef
 from qvelt.model.decoder import Decoder
+from qvelt.posttrain.control import arithmetic_control
 from qvelt.posttrain.dpo import initialize_sft_reference
 from qvelt.posttrain.grpo import (
     generate_rollout,
@@ -32,9 +34,12 @@ from qvelt.posttrain.grpo import (
     policy_digest,
     rollout_logps,
 )
+from qvelt.posttrain.offline import read_rollout_file, replay_window
+from qvelt.posttrain.verifier_audit import audit_verifiers
+from qvelt.posttrain.verifiers import RewardPolicy
 from qvelt.train.optim import make_optimizer
 from qvelt.train.parallel import persistent_state_finite
-from qvelt.train.pretraining import prepare_inputs
+from qvelt.train.pretraining import initialize_weights, prepare_inputs
 from qvelt.utils.artifacts import ArtifactStore, hash_file
 from qvelt.utils.checkpoints import (
     initialize_training_run,
@@ -64,8 +69,33 @@ class GRPOJob:
     checkpoint_every: int = 2
     seed: int = 20261105
     schema_version: int = 1
+    format_weight: float = 0.0
+    length_penalty: float = 0.0
+    framed: bool = False
+    mode: str = "online"
+    rollout_file: str | None = None
+    rollout_sha256: str | None = None
+    policy_manifest: str | None = None
+    policy_sha256: str | None = None
+    environment: str = "original"
 
     def __post_init__(self) -> None:
+        RewardPolicy(self.framed, self.format_weight, self.length_penalty)
+        if self.environment not in ("original", "arithmetic-control-v1"):
+            raise ConfigError("Unknown registered GRPO environment")
+        if self.mode not in ("online", "offline") or (self.mode == "offline") != (
+            self.rollout_file is not None
+        ):
+            raise ConfigError("Offline GRPO requires a pinned rollout file")
+        for key, sha_key in (
+            ("rollout_file", "rollout_sha256"),
+            ("policy_manifest", "policy_sha256"),
+        ):
+            value, sha = getattr(self, key), getattr(self, sha_key)
+            if (value is None) != (sha is None):
+                raise ConfigError("Optional GRPO input requires both path and digest")
+            if value is not None:
+                ArtifactRef(value, sha)
         if type(self.schema_version) is not int or self.schema_version != 1:
             raise ConfigError("Only GRPO demo schema1 is supported")
         for key in ("sft_recipe", "reference_manifest"):
@@ -127,7 +157,7 @@ def load_grpo(path: Path) -> GRPOJob:
 
 def grpo_digest(recipe: GRPOJob) -> str:
     values = asdict(recipe)
-    for key in ("sft_recipe", "reference_manifest"):
+    for key in ("sft_recipe", "reference_manifest", "rollout_file", "policy_manifest"):
         values.pop(key)
     return hashlib.sha256(
         json.dumps(
@@ -164,6 +194,22 @@ def train_grpo(
             "GRPO prototype requires original-demo CPU FP32 SFT below1M parameters"
         )
     inputs = prepare_inputs(parent)
+    if parent.lora_rank:
+        raise ValueError(
+            "GRPO requires a full SFT reference; merge adapters explicitly first"
+        )
+    offline = (
+        read_rollout_file(ArtifactRef(recipe.rollout_file, recipe.rollout_sha256))
+        if recipe.mode == "offline" and recipe.rollout_file and recipe.rollout_sha256
+        else None
+    )
+    if offline is not None and len(offline) < recipe.steps:
+        raise ValueError("Offline file lacks required rollout windows")
+    shaping = (
+        RewardPolicy(recipe.framed, recipe.format_weight, recipe.length_penalty)
+        if recipe.framed or recipe.format_weight or recipe.length_penalty
+        else None
+    )
     if inputs.scope != "demo" or inputs.text_tokenizer is None:
         raise ValueError(
             "Only the registered original demo RL environment is supported"
@@ -178,13 +224,14 @@ def train_grpo(
         body, object_pairs_hook=_unique_mapping, parse_constant=_reject_constant
     )
     families = report["counts"]["train"]["families"]
-    problems = [
-        p for p in generate_problems(32, 20261104, "en") if p.family in families
-    ]
+    environment = (
+        arithmetic_control()
+        if recipe.environment == "arithmetic-control-v1"
+        else generate_problems(32, 20261104, "en")
+    )
+    problems = [p for p in environment if p.family in families]
     validation = [
-        p
-        for p in generate_problems(32, 20261104, "en")
-        if p.family in report["counts"]["validation"]["families"]
+        p for p in environment if p.family in report["counts"]["validation"]["families"]
     ]
     if not problems or not validation:
         raise ValueError("RL needs distinct original training/validation families")
@@ -228,6 +275,42 @@ def train_grpo(
         reference.load_state_dict(model.state_dict())
         reference.requires_grad_(False).eval()
         reference_digest = policy_digest(reference)
+        if recipe.policy_manifest is not None:
+            policy_store = ArtifactStore(Path(recipe.policy_manifest).parent)
+            policy_store.read_manifest(
+                Path(recipe.policy_manifest).name, expected_sha256=recipe.policy_sha256
+            )
+            policy_run = ArtifactStore(Path(recipe.policy_manifest).parents[2])
+            policy_run.read_manifest()
+            with policy_run.open_file("application.yaml") as stream:
+                from qvelt.posttrain.dpo import dpo_digest, parse_dpo
+
+                policy_recipe = parse_dpo(stream.read(MAX_CONFIG_BYTES + 1).decode())
+            with policy_store.open_file("application-rank-00000.json") as stream:
+                policy_state = json.loads(
+                    stream.read(MAX_CONFIG_BYTES + 1),
+                    object_pairs_hook=_unique_mapping,
+                    parse_constant=_reject_constant,
+                )
+            if (
+                policy_recipe.reference_sha256 != recipe.reference_sha256
+                or policy_recipe.job.experiment.model != job.experiment.model
+                or not isinstance(policy_state, dict)
+                or policy_state.get("kind") != "qvelt-dpo-v1"
+                or policy_state.get("recipe_sha256") != dpo_digest(policy_recipe)
+            ):
+                raise ValueError(
+                    "GRPO initial DPO policy must descend from its pinned SFT reference"
+                )
+            initialize_weights(
+                model,
+                replace(
+                    initialization,
+                    initial_checkpoint=recipe.policy_manifest,
+                    initial_sha256=recipe.policy_sha256,
+                ),
+                manifest_digest(inputs.tokenizer),
+            )
         optimizer = make_optimizer(model, job.training)
         counters = {
             "tokens": 0,
@@ -302,16 +385,29 @@ def train_grpo(
 
         def evaluate() -> dict[str, float]:
             rows = [
-                generate_rollout(model, p, tokenizer, recipe.max_tokens, sample=False)
+                generate_rollout(
+                    model,
+                    p,
+                    tokenizer,
+                    recipe.max_tokens,
+                    sample=False,
+                    reward_policy=shaping,
+                )
                 for p in validation
             ]
             return {
-                "correct": float(sum(r.reward for r in rows)),
+                "correct": float(sum(r.correctness for r in rows)),
                 "problems": float(len(rows)),
                 "complete": float(sum(r.stop == "end_turn" for r in rows)),
             }
 
         initial = evaluate()
+        verifier_controls = audit_verifiers()
+        if not verifier_controls["passed"]:
+            raise RuntimeError("Held-out verifier controls failed")
+        (directory / "verifier-audit.json").write_text(
+            json.dumps(verifier_controls, sort_keys=True) + "\n"
+        )
         final = initial
         stop = recipe.steps if stop_after is None else stop_after
         if stop < start:
@@ -329,11 +425,31 @@ def train_grpo(
                         problems[(index * recipe.prompts + i) % len(problems)]
                         for i in range(recipe.prompts)
                     ]
-                    rows = [
-                        generate_rollout(model, p, tokenizer, recipe.max_tokens)
-                        for p in selected
-                        for _ in range(recipe.groups)
-                    ]
+                    rows = (
+                        replay_window(
+                            offline[index],
+                            index + 1,
+                            selected,
+                            recipe.groups,
+                            model,
+                            tokenizer,
+                            reference_digest,
+                            recipe.max_tokens,
+                            shaping,
+                        )
+                        if offline is not None
+                        else [
+                            generate_rollout(
+                                model,
+                                p,
+                                tokenizer,
+                                recipe.max_tokens,
+                                reward_policy=shaping,
+                            )
+                            for p in selected
+                            for _ in range(recipe.groups)
+                        ]
+                    )
                     if policy_digest(model) != fingerprint:
                         raise RuntimeError(
                             "Policy mutated while collecting on-policy rollouts"
@@ -393,6 +509,7 @@ def train_grpo(
                         "step": step,
                         "policy_sha256": fingerprint,
                         "reference_sha256": reference_digest,
+                        "problems": [asdict(p) for p in selected],
                         "rows": [asdict(r) for r in rows],
                     }
                     serialized = json.dumps(
@@ -403,11 +520,23 @@ def train_grpo(
                     log.write(serialized + "\n")
                     log.flush()
                     losses.append(float(loss.detach()))
+                    delta = ref.detach() - current.detach()
+                    sampled_kl = float(
+                        (
+                            torch.where(mask, delta.expm1() - delta, 0).sum(-1)
+                            / mask.sum(-1)
+                        ).mean()
+                    )
                     sink.log(
                         step,
                         {
                             "loss": losses[-1],
                             "reward": float(rewards.mean()),
+                            "sampled_kl": sampled_kl,
+                            "correctness": sum(r.correctness for r in rows) / len(rows),
+                            "format_reward": sum(r.format_reward for r in rows)
+                            / len(rows),
+                            "length_cost": sum(r.length_cost for r in rows) / len(rows),
                             "zero_variance_groups": float(zero),
                             "grad_norm": float(norm),
                             "optimizer_updates": float(counters["updates"]),
@@ -419,6 +548,10 @@ def train_grpo(
                         },
                     )
                     if step % recipe.checkpoint_every == 0 or step == stop:
+                        if not audit_verifiers()["passed"]:
+                            raise RuntimeError(
+                                "Held-out verifier controls failed during training"
+                            )
                         final = evaluate()
                         save_checkpoint(
                             model,
@@ -442,4 +575,7 @@ def train_grpo(
             "initial_validation": initial,
             "final_validation": final,
             "reference_frozen": True,
+            "verifier_audit": {
+                key: verifier_controls[key] for key in ("protocol", "cases", "passed")
+            },
         }

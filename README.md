@@ -13,6 +13,13 @@ Runtime execution/cache guide:[runbook02](runbooks/02_model_execution.md).
 Block equations,RoPE interpolation,compile and profiling:[model guide](docs/model.md).
 No public reasoning score, external-corpus/final-scale pretraining or GPU performance is claimed.
 
+Expanded math post-training entry point:[runbook03](runbooks/03_posttraining.md).
+Includes explicit reasoning masks,full/LoRA SFT,bounded answer verifiers,own-model
+rejection sampling,DPO and native-engine CPU GRPO/offline replay. A simple
+two-answer arithmetic control improves sampled reward;this is not general math
+capability. Pinned original GSM8K train ingress is development-only;external
+teacher data stays off by default,QLoRA/GPU/Lean execution remains unverified.
+
 ## Quickstart
 
 Prerequisites: Linux, Git, make and uv **0.12.23**; Python **3.11–3.13**.

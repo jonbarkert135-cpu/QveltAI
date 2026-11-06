@@ -85,6 +85,7 @@ class PackedDataset(Dataset[dict[str, Tensor]]):
         ):
             raise ValueError("Unsupported/mismatched dataset layout")
         self.assistant_only = layout["schema_version"] == 2
+        self.control_version = layout["control_version"]
         self.context = uint(layout["context"], "packing.context", 1, 2**31 - 1)
         self.vocab = uint(layout["vocab"], "packing.vocab", 288, 2**32)
         if (
@@ -240,7 +241,9 @@ class PackedDataset(Dataset[dict[str, Tensor]]):
             if self.assistant_only:
                 from qvelt.posttrain.chat import assistant_mask
 
-                loss_mask[part] = assistant_mask(frame.tolist())
+                loss_mask[part] = assistant_mask(
+                    frame.tolist(), control_version=self.control_version
+                )
             else:
                 loss_mask[part] = True
             cursor += pairs

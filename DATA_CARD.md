@@ -2,7 +2,63 @@
 
 Last updated: 2026-10-31. Owner: Lead agent.
 
-**No external training corpus is approved.** One GSM8K test snapshot is now
+## D-GSM8K-TRAIN-BOUNDED-01 — Original human-written training problems
+
+Approved 2026-11-06 before fetching the train payload, within the user's expanded
+Phase6 instruction to use permissively licensed math datasets. Immutable publisher
+revision `3101c7d5072418e28b9008a6636bde82a006892c`, file
+`grade_school_math/data/train.jsonl`. Re-read immutable README and full MIT LICENSE
+on this date: README explicitly releases the original human-written train/test
+data; repository MIT copyright2021 OpenAI states no separate data restriction.
+Preserve the full MIT text and immutable original URL. This is a documented
+publisher-license determination, not an exhaustive upstream-rights/legal audit.
+
+Scope: import at most64 (acceptance16) original train questions and numeric golds
+as local reasoning problems; no Socratic/model-solutions, tokenizer fitting,
+production decontamination approval or model optimization in this acceptance.
+Payload checksum and actual imported counts must be measured before conversion
+and retained in the source receipt. Golds are dataset labels, not independently
+verified human reasoning steps. No difficulty annotations are invented: unrated.
+All problems retain the source-family label gsm8k-original-train. Do not split
+one source into fake independent template families. The separately approved
+GSM8K test snapshot remains evaluation/decontamination-only. Apply the full
+benchmark registry and overlap audit before a future actual training experiment.
+
+Measured acquisition before conversion: train.jsonl4166206 bytes/7473 rows,
+SHA256 `17f347dc51477c50d4efb83959dbb7c56297aba886e5544ee2aaed3024813465`;
+MIT LICENSE1062 bytes,SHA256
+`86bbb73e855821d7c401912fd4bf82e34313e6e3b6fd6f909f2b6cc9e209a53b`.
+Only a bounded original-train subset is converted; raw payload stays outside Git.
+
+## D-POSTTRAIN-CONTROL-01 — Expanded Phase6 controls
+
+Registered 2026-11-06 before new sampling/training. Original Apache-2.0 EN/RU
+arithmetic a-a+b, b in {0,1}, a=2..33, 32 problems/language, eight operand
+strata; IDs hash full prompts. This deliberately easy two-answer mechanism
+fixture is not independent mathematical generalization evidence. Split whole
+strata using the existing SFT/preference split policies; report both separately.
+The frozen project final800 and GSM8K evaluation snapshot are never consumed.
+Predeclared local control: base3, SFT20 at0.003, DPO4 at0.001/beta0.1
+(base/SFT/DPO seed20261031), GRPO60 at0.001/KL0.01,4 prompts x8 completions,
+max4 actions,RL seed20261106. The local specification preceded execution but
+was not independently timestamped or committed before diagnostic outcomes.
+Fixed 64-sample validation before/after uses seed20261107 and identical budgets.
+Retain all outcomes even if reward does not rise; no forced gold rollouts.
+
+Rejection sampling may consume the already approved D-SFT/D-RL original
+generator, own checkpoints and tokenizer. Log every candidate, seeds, verifier,
+difficulty, lexical dedup and selected counts. Correct final answers do not
+verify steps. Unit-only synthetic external-teacher/terms fixtures are original
+test data, not authorization for any real external teacher. No externally
+generated synthetic source is newly approved. The bounded original GSM8K train
+adapter above is a separate human-authored-source approval. The ingress
+supports separately reviewed permissive raw bundles, explicit training permission
+and a default-off external-synthetic switch; exact revisions/terms require their
+own register entry before use. QLoRA/GPU/Lean datasets are not consumed here.
+
+**No production external training corpus is approved.** A bounded original GSM8K
+train-source adapter is approved above for Phase6 development; no optimization
+on it is claimed. One GSM8K test snapshot is now
 approved/acquired for evaluation and decontamination only (Phase3 entry below).
 Small project-authored software fixtures are approved only as described below.
 Phase 1 assessed 13 candidate dataset cards and proposed conditional stage

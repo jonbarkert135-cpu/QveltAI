@@ -14,6 +14,7 @@ from qvelt.config.pretraining import TokenSchedule, dump_pretraining_job
 from qvelt.data.demo import PERMISSION, authored_source, create_demo
 from qvelt.data.math import generate_problems
 from qvelt.data.records import RawDocument, write_raw_bundle
+from qvelt.posttrain.control import arithmetic_control
 from qvelt.posttrain.data import prepare_sft
 from qvelt.train.pretraining import train_pretraining
 from qvelt.train.pretraining_smoke import demo_recipe
@@ -23,11 +24,19 @@ from qvelt.utils.checkpoints import latest_checkpoint
 from qvelt.utils.manifests import manifest_digest
 
 
-def math_supervision(count: int = 32) -> list[RawDocument]:
+def math_supervision(
+    count: int = 32, *, environment: str = "original"
+) -> list[RawDocument]:
     """Gold values are independently checked by the original stdlib/SymPy generator."""
+    if environment not in ("original", "arithmetic-control-v1"):
+        raise ValueError("Unknown registered SFT environment")
     documents = []
     for language in ("en", "ru"):
-        for problem in generate_problems(count, 20261104, language):
+        for problem in (
+            arithmetic_control(language)
+            if environment == "arithmetic-control-v1"
+            else generate_problems(count, 20261104, language)
+        ):
             messages = [
                 {"role": "user", "content": problem.question},
                 {"role": "assistant", "content": problem.answer},
@@ -48,10 +57,12 @@ def math_supervision(count: int = 32) -> list[RawDocument]:
 
 
 def run_sft_smoke(
-    directory: Path, repository: Path, *, steps: int = 80
+    directory: Path, repository: Path, *, steps: int = 80, environment: str = "original"
 ) -> dict[str, Any]:
     if type(steps) is not int or steps < 3:
         raise ValueError("SFT replay requires at least three steps")
+    if environment not in ("original", "arithmetic-control-v1"):
+        raise ValueError("Unknown SFT smoke environment")
     root = create_directory(directory)
     create_demo(root / "base-data", repository, documents=32)
     base_recipe = demo_recipe(
@@ -73,7 +84,7 @@ def run_sft_smoke(
     tokenizer_path = root / "base-data/prepared/tokenizer/manifest.json"
     tokenizer_manifest = ArtifactStore(tokenizer_path.parent).read_manifest()
     raw = write_raw_bundle(
-        math_supervision(),
+        math_supervision(environment=environment),
         root / "supervision",
         authored_source("sft-exact-math"),
         PERMISSION,

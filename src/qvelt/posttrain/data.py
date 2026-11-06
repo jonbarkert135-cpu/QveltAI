@@ -137,7 +137,9 @@ def prepare_sft(
                 )
                 from qvelt.posttrain.chat import assistant_mask
 
-                targets += sum(assistant_mask(tokens))
+                targets += sum(
+                    assistant_mask(tokens, control_version=tokenizer.control_version)
+                )
                 truncated_count += truncated
                 writer.add(
                     tokens,

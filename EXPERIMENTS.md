@@ -778,3 +778,33 @@ current-source200-step actual-SIGKILL loss delta0 and weights/Adam/RNG/applicati
 exact. SFT/DPO/GRPO/evaluation/studies also pass. See inference-ci.json and
 inference-ci-smoke.json. M8.1 CPU core closes;GPU/serving/quantization/external
 runtimes/model promotion remain open. Next:M8.2. Historical Gloo issue not fixed.
+
+## R027 — Expanded Phase6 arithmetic/rejection/adapter controls
+
+Date2026-11-06. Protocol written locally before diagnostics,not independently
+registered or committed before observed outcomes. Fixed original D-POSTTRAIN-
+CONTROL-01:32 EN/RU a-a+b questions,b0/1,eight operand strata;127104 parameters,
+V445/T128. Base3/SFT20/DPO4 seed20261031;RL60 seed20261106,4x8 groups,max4 actions,
+LR0.001,clip0.2,KL0.01,WD0,temperature1. Frozen RL reference=SFT;initial policy=DPO.
+DPO pairs consume only SFT-training strata;fixed64-sample RL evaluation uses
+SFT-validation strata,seed20261107. Original final800/GSM8K test are unused.
+
+Diagnostic path phase6-control-diagnostic-v2 has source69100331345309286c2d5e4423a2375d09e7a011b4e707ceee34a759c3126e61.
+SFT fixed train probe6.133254->0.755217. DPO train .693147->.628261,heldout
+.693147->.711595 (negative). RL60 real updates,56 policy-signal windows,4639
+sampled actions,90 constant groups. Mean training reward first10=.3125,last10=
+.709375. Identical-budget validation15/64->26/64 (23.4375%->40.625%),completion
+59/64->62/64. Online/offline all losses,weights,Adam and RNG exact. This task has
+only two answers;learning answer/termination probability is not general reasoning.
+Retain the old broader negative studies and original GRPO1/8 unchanged result.
+
+No hidden forced gold,teacher API or final-scale training. Native engine is reused
+with KV but sequential completion collection/recomputed logps is not a throughput
+benchmark. Final clean-source receipts/tests and actual source-bound CI are pending.
+A missing DPO application.yaml lookup in the first diagnostic was corrected by
+verifying the parent run recipe and checkpoint application digest;no quality
+settings were changed. New source ingestion initially attempted duplicate manifest
+publication;corrected to a nested source plus one final root marker,and added an
+independent offline publication test. Real16-row original GSM8K train import now
+passes on pinned4,166,206-byte/7473-row source,MIT license1062 bytes;no ML optimization
+uses it. Raw corpus/checkpoints remain outside Git.

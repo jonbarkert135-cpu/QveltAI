@@ -17,6 +17,23 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
+Expanded Phase6 requested after M8.1. Implemented CPU extensions: explicit
+reasoning/chat-v2 masks, original LoRA in the packed SFT loop, bounded rational/
+numeric/SymPy-polynomial verifiers, own-checkpoint rejection/lexical diversity/
+difficulty pass@k, reviewed original GSM8K train-source ingress, default-off local
+teacher trace/terms ingestion, native-engine GRPO and verified offline replay.
+Lean remains design only. Preliminary fixed arithmetic control:127104params,
+SFT20/DPO4/RL60,training reward first10=.3125,last10=.709375;fixed-seed validation
+15/64->26/64,online/offline weights/Adam/RNG/losses exact. Two-answer mechanism
+fixture,not general math improvement;DPO heldout loss worsens. Original final800
+remain unscored. Focused79 checks passed before the last source-adapter additions;
+final full-source verification and publication are in progress. See runbook03,
+posttraining_phase6_design.md and ADR0048. CPU GRPO remains<1M parameters;
+GPU/QLoRA/arbitrary external-problem RL and production source/model gates stay open.
+Next after acceptance:resume M8.2;user-directed Phase6 extension takes precedence.
+
+Historical M8.1 acceptance follows.
+
 M8.1 native CPU generation/export is accepted on699ff0b;GitHub42239279899 has
 all14 jobs successful. CPU3.11/3.12/3.13 each735 passed,2 optional SDK skips,
 7 GPU deselected;SDKs separately verified. True left-padded batches,private KV/RNG,greedy/seeded sampling,stream

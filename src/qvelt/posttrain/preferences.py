@@ -302,7 +302,7 @@ def load_preferences(
                 or any(type(t) is not int or not 0 <= t < vocab for t in frame)
             ):
                 raise ValueError("Invalid preference token frame")
-            mask = assistant_mask(frame)
+            mask = assistant_mask(frame, control_version=tokenizer.control_version)
             if frame[-2] != 6:
                 raise ValueError(
                     "Preference responses must retain their complete end-turn"

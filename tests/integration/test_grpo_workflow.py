@@ -20,7 +20,7 @@ from qvelt.posttrain.grpo import generate_rollout, policy_digest, rollout_logps
 from qvelt.posttrain.grpo_smoke import run_grpo_smoke
 from qvelt.posttrain.grpo_training import dump_grpo, load_grpo, train_grpo
 from qvelt.tokenizer.workflow import load_tokenizer_bundle
-from qvelt.utils.artifacts import ArtifactStore
+from qvelt.utils.artifacts import ArtifactStore, hash_file
 from qvelt.utils.manifests import manifest_digest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -156,12 +156,18 @@ def test_complete_stop_required_and_no_reward_for_partial_correct_answer(
 
     # Forced logits are an isolated verifier oracle,never used by actual RL training.
     with patch.object(model, "forward", side_effect=force_ends(6)):
-        partial = generate_rollout(model, problem, tokenizer, 1, sample=False)
-        completed = generate_rollout(model, problem, tokenizer, 2, sample=False)
+        partial = generate_rollout(
+            model, problem, tokenizer, 1, sample=False, use_cache=False
+        )
+        completed = generate_rollout(
+            model, problem, tokenizer, 2, sample=False, use_cache=False
+        )
     assert partial.reward == 0 and partial.stop == "length"
     assert completed.reward == 1 and completed.stop == "end_turn"
     with patch.object(model, "forward", side_effect=force_ends(2)):
-        early = generate_rollout(model, problem, tokenizer, 2, sample=False)
+        early = generate_rollout(
+            model, problem, tokenizer, 2, sample=False, use_cache=False
+        )
     assert early.reward == 0 and early.stop == "outer_eos"
     for response in (
         '__import__("os").system("x")',
@@ -209,3 +215,67 @@ def test_cli_update_recipe_change_and_config_limits(
         replace(recipe, steps=101)
     path.write_text(dump_grpo(recipe) + "unknown: 1\n")
     assert main(["grpo", str(path), "--directory", str(tmp_path / "invalid")]) == 1
+
+
+def test_offline_native_rollouts_reproduce_updates(
+    grpo_run: Path, tmp_path: Path
+) -> None:
+    recipe = load_grpo(grpo_run / "grpo.yaml")
+    log = next((grpo_run / "continuous").glob("rollouts-*.jsonl"))
+    recipe = replace(
+        recipe,
+        mode="offline",
+        rollout_file=str(log),
+        rollout_sha256=hash_file(log).sha256,
+    )
+    offline = train_grpo(recipe, tmp_path / "offline", ROOT)
+    original = json.loads((grpo_run / "result.json").read_text())
+    assert offline["losses_this_attempt"] == original["loss_curve"]
+    from qvelt.train.smoke import _equal
+    from qvelt.utils.checkpoints import latest_checkpoint
+
+    left, right = (
+        latest_checkpoint(grpo_run / "continuous"),
+        latest_checkpoint(tmp_path / "offline"),
+    )
+    _equal(
+        load_file(str(left / "model.safetensors")),
+        load_file(str(right / "model.safetensors")),
+    )
+    for filename in ("optimizer.pt", "rng-rank-00000.pt"):
+        _equal(
+            torch.load(left / filename, weights_only=True),
+            torch.load(right / filename, weights_only=True),
+        )
+
+
+@pytest.mark.parametrize(
+    "field", ["policy_sha256", "old_logps", "reward", "seed", "text"]
+)
+def test_offline_rejects_stale_or_tampered_rollouts(
+    grpo_run: Path, tmp_path: Path, field: str
+) -> None:
+    log = next((grpo_run / "continuous").glob("rollouts-*.jsonl"))
+    records = [json.loads(line) for line in log.read_text().splitlines()]
+    if field == "policy_sha256":
+        records[0][field] = "0" * 64
+    else:
+        row = records[0]["rows"][0]
+        if field == "old_logps":
+            row[field][0] -= 0.5
+        elif field == "reward":
+            row[field] = 1 - row[field]
+        elif field == "seed":
+            row[field] += 1
+        else:
+            row[field] += "tampered"
+    path = tmp_path / "tampered.jsonl"
+    path.write_text("\n".join(json.dumps(row) for row in records) + "\n")
+    recipe = replace(
+        load_grpo(grpo_run / "grpo.yaml"),
+        mode="offline",
+        rollout_file=str(path),
+        rollout_sha256=hash_file(path).sha256,
+    )
+    with pytest.raises(ValueError, match="Offline|offline"):
+        train_grpo(recipe, tmp_path / "rejected", ROOT)

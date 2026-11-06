@@ -17,6 +17,8 @@ def make_optimizer(model: nn.Module, config: TrainingConfig) -> torch.optim.Adam
     no_decay = []
     seen: set[int] = set()
     for name, parameter in model.named_parameters():
+        if not parameter.requires_grad:
+            continue
         if id(parameter) in seen:
             raise ValueError("Parameter appears in more than one optimizer group")
         seen.add(id(parameter))

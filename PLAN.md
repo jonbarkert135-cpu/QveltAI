@@ -2,6 +2,33 @@
 
 Last updated: 2026-11-05. Owner of every milestone: **Lead agent**.
 
+## User-directed expanded Phase6 follow-up (2026-11-06)
+
+Status:implemented CPU extensions;final-source acceptance in progress. This
+request takes precedence over the next M8.2 serving milestone.
+
+- [x] Chat-v2 explicit reasoning fields with exact shifted assistant masks;
+  legacy control versions and multi-turn/packed document isolation preserved.
+- [x] Full packed SFT remains default;original frozen-base LoRA uses the same
+  optimizer/checkpoint loop and has dense/gradient/frozen-base/replay tests.
+- [x] Bounded exact/numeric/SymPy-polynomial verifiers,own-checkpoint rejection,
+  lexical diversity,difficulty pass@k and all-candidate provenance/audits.
+- [x] Original permissively licensed GSM8K train-problem ingress with immutable
+  payload/license pinning;external teacher data remains default-off/terms-gated.
+- [x] Original DPO reused;native Phase8 GRPO sampling,format/length diagnostics,
+  public fixed verifier controls and policy-checked offline replay implemented.
+- [x] Fixed real SFT20->DPO4->RL60 arithmetic mechanism control shows higher
+  sampled reward;online/offline losses/model/Adam/RNG exact in diagnostics.
+- [x] Consolidated runbooks/03_posttraining.md and design-only Lean track.
+- [ ] Observe final full-source local checks,standalone receipts and remote CI.
+- [ ] Separate future gates:QLoRA/GPU/distributed/large main run,arbitrary public
+  problem RL,production decontamination and independently demonstrated math gains.
+
+Initial control reward .3125->.709375 (first/last10 training windows),fixed-seed
+validation15/64->26/64. Easy two-answer fixture,not a general reasoning score;
+DPO heldout negative finding retained. The final800 remain unscored. Main-run
+quality/hardware acceptance is not satisfied by this engineering control.
+
 ## Mission and boundaries
 
 Build an original, reproducible LLM framework with particular emphasis on

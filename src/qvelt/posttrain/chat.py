@@ -13,6 +13,7 @@ from qvelt.utils.manifests import _reject_constant, _unique_mapping
 class Message:
     role: str
     content: str
+    reasoning: str | None = None
 
     def __post_init__(self) -> None:
         if self.role not in ("system", "user", "assistant"):
@@ -20,6 +21,10 @@ class Message:
         _validate_text(self.content)
         if not self.content.strip():
             raise ValueError("Empty chat message")
+        if self.reasoning is not None:
+            _validate_text(self.reasoning)
+            if self.role != "assistant" or not self.reasoning.strip():
+                raise ValueError("Only assistants may have nonempty reasoning")
 
 
 def parse_messages(text: str) -> tuple[Message, ...]:
@@ -29,27 +34,35 @@ def parse_messages(text: str) -> tuple[Message, ...]:
     )
     if not isinstance(raw, dict) or set(raw) != {"schema_version", "messages"}:
         raise ValueError("Expected versioned chat document")
-    if type(raw["schema_version"]) is not int or raw["schema_version"] != 1:
+    if type(raw["schema_version"]) is not int or raw["schema_version"] not in (1, 2):
         raise ValueError("Unsupported chat schema")
     rows = raw["messages"]
     if not isinstance(rows, list) or not 2 <= len(rows) <= 128:
         raise ValueError("Invalid chat message count")
     result = []
     for row in rows:
-        if not isinstance(row, dict) or set(row) != {"role", "content"}:
+        if (
+            not isinstance(row, dict)
+            or not {"role", "content"} <= set(row)
+            or set(row) - {"role", "content", "reasoning"}
+            or raw["schema_version"] == 1
+            and "reasoning" in row
+        ):
             raise ValueError("Invalid chat message fields")
         result.append(Message(**row))
     return tuple(result)
 
 
-def assistant_mask(tokens: list[int]) -> list[bool]:
+def assistant_mask(tokens: list[int], *, control_version: int = 2) -> list[bool]:
     """Return one flag per next-token pair; outer EOS never supplies supervision.
 
     Role IDs 3/4/5 and end-turn 6 are shared by tokenizer control versions 1/2.
     A frame may end in a partial assistant response followed by masked outer EOS.
     """
     if (
-        len(tokens) < 4
+        type(control_version) is not int
+        or control_version not in (1, 2)
+        or len(tokens) < 4
         or tokens[0] != 1
         or tokens[-1] != 2
         or any(type(t) is not int or t < 0 for t in tokens)
@@ -58,19 +71,34 @@ def assistant_mask(tokens: list[int]) -> list[bool]:
     role = 0
     next_role = 4
     content = 0
+    thinking = False
+    thought = False
     flags = [False]
     for index, token in enumerate(tokens[1:-1], 1):
         if token in (3, 4, 5):
             if role or not (token == next_role or index == 1 and token == 3):
                 raise ValueError("Invalid chat role order")
             role, content = token, 0
+            thinking = thought = False
             flags.append(False)
         elif token == 6:
-            if not role or not content:
+            if not role or not content or thinking:
                 raise ValueError("Empty or unframed chat turn")
             flags.append(role == 5)
             next_role = 5 if role == 4 else 4
             role = 0
+        elif token in (8, 9):
+            if role != 5 or control_version != 2:
+                raise ValueError("Reasoning controls require assistant role")
+            if token == 8:
+                if content or thinking or thought:
+                    raise ValueError("Reasoning must be a single initial block")
+                thinking = True
+            else:
+                if not thinking or not content:
+                    raise ValueError("Reasoning closing control has no content")
+                thinking, thought, content = False, True, 0
+            flags.append(True)
         elif token >= 32:
             if not role:
                 raise ValueError("Unframed chat content")
@@ -95,11 +123,16 @@ def encode_chat(
     roles = {"system": 3, "user": 4, "assistant": 5}
     tokens = [1]
     for message in messages:
-        tokens.extend([roles[message.role], *tokenizer.encode(message.content), 6])
+        tokens.append(roles[message.role])
+        if message.reasoning is not None:
+            if tokenizer.control_version != 2:
+                raise ValueError("Explicit reasoning requires tokenizer version2")
+            tokens.extend([8, *tokenizer.encode(message.reasoning), 9])
+        tokens.extend([*tokenizer.encode(message.content), 6])
     tokens.append(2)
-    assistant_mask(tokens)
+    assistant_mask(tokens, control_version=tokenizer.control_version)
     truncated = len(tokens) > max_tokens
     if truncated:
         tokens = tokens[: max_tokens - 1] + [2]
-    assistant_mask(tokens)
+    assistant_mask(tokens, control_version=tokenizer.control_version)
     return tokens, truncated

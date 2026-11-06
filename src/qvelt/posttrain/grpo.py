@@ -11,7 +11,10 @@ import torch
 from torch import Tensor
 
 from qvelt.data.math import MathProblem
+from qvelt.inference.config import GenerationOptions, TokenRequest
+from qvelt.inference.generation import GenerationEngine
 from qvelt.model.decoder import Decoder
+from qvelt.posttrain.verifiers import AnswerSpec, RewardPolicy, score_completion
 from qvelt.tokenizer.core import QveltTokenizer
 
 
@@ -113,6 +116,11 @@ class Rollout:
     old_logps: tuple[float, ...]
     reward: float
     stop: str
+    text: str = ""
+    correctness: float = 0.0
+    format_reward: float = 0.0
+    length_cost: float = 0.0
+    seed: int = 0
 
 
 def verified_reward(problem: MathProblem, text: str, stop: str) -> float:
@@ -146,8 +154,10 @@ def generate_rollout(
     max_tokens: int,
     *,
     sample: bool = True,
+    use_cache: bool = True,
+    reward_policy: RewardPolicy | None = None,
 ) -> Rollout:
-    """Temperature1 categorical sampling;stop actions are part of the sampled policy."""
+    """Native Phase8 engine, temperature1; recompute behavior logps under the same policy."""
     if (
         type(max_tokens) is not int
         or not 1 <= max_tokens <= 64
@@ -156,41 +166,91 @@ def generate_rollout(
         raise ValueError(
             "Bounded rollout needs max_tokens1..64 and explicit sample mode"
         )
+    if reward_policy is not None and not isinstance(reward_policy, RewardPolicy):
+        raise ValueError("Expected validated reward policy")
     prefix = (1, 4, *tokenizer.encode(problem.question), 6, 5)
     if len(prefix) + max_tokens > model.config.context:
         raise ValueError("Rollout context budget exceeds model context")
-    tokens = list(prefix)
-    actions = []
-    logps = []
-    stop = "length"
+    seed = int(torch.randint(0, 2**32, ()).item()) if sample else 0
     training = model.training
     model.eval()
     try:
-        for _ in range(max_tokens):
-            logits = model(torch.tensor(tokens, dtype=torch.int64).unsqueeze(0))[
-                0, -1
-            ].float()
-            if not bool(torch.isfinite(logits).all()):
-                raise FloatingPointError("Nonfinite rollout logits")
-            values = torch.log_softmax(logits, -1)
-            token = (
-                int(torch.multinomial(values.exp(), 1))
-                if sample
-                else int(values.argmax())
+        options = GenerationOptions(
+            max_new_tokens=max_tokens,
+            strategy="sample" if sample else "greedy",
+            temperature=1.0 if sample else 0.0,
+            seed=seed,
+            context_limit=min(2048, model.config.context),
+            max_seconds=300,
+        )
+        result = GenerationEngine(model, tokenizer).generate(
+            (TokenRequest("rollout", prefix, options),), use_cache=use_cache
+        )[0]
+        if result.reason not in ("max_tokens", "stop_token") or not result.token_ids:
+            raise RuntimeError("Rollout failed its native generation budget")
+        actions = result.token_ids
+        stop = (
+            "length"
+            if result.reason == "max_tokens"
+            else "end_turn"
+            if actions[-1] == 6
+            else "outer_eos"
+        )
+        text = tokenizer.decode(actions[:-1] if stop != "length" else actions)
+        if reward_policy is None:
+            reward = verified_reward(problem, text, stop)
+            syntax = score_completion(
+                text,
+                AnswerSpec(problem.answer),
+                stop == "end_turn",
+                len(actions),
+                max_tokens,
             )
-            tokens.append(token)
-            actions.append(token)
-            logps.append(float(values[token]))
-            if token in (6, 2):
-                stop = "end_turn" if token == 6 else "outer_eos"
-                break
+            correctness, formatted, cost = reward, syntax.format, 0.0
+        else:
+            score = score_completion(
+                text,
+                AnswerSpec(problem.answer),
+                stop == "end_turn",
+                len(actions),
+                max_tokens,
+                reward_policy,
+            )
+            reward, correctness, formatted, cost = (
+                score.total,
+                score.correctness,
+                score.format,
+                score.length_cost,
+            )
+        provisional = Rollout(
+            problem.identifier,
+            prefix,
+            actions,
+            (0.0,) * len(actions),
+            reward,
+            stop,
+            text,
+            correctness,
+            formatted,
+            cost,
+            seed,
+        )
+        values, _ = rollout_logps(model, [provisional])
+        return Rollout(
+            problem.identifier,
+            prefix,
+            actions,
+            tuple(values[0, : len(actions)].tolist()),
+            reward,
+            stop,
+            text,
+            correctness,
+            formatted,
+            cost,
+            seed,
+        )
     finally:
         model.train(training)
-    text = tokenizer.decode(actions[:-1] if stop != "length" else actions)
-    reward = verified_reward(problem, text, stop)
-    return Rollout(
-        problem.identifier, tuple(prefix), tuple(actions), tuple(logps), reward, stop
-    )
 
 
 def rollout_logps(model: Decoder, rollouts: list[Rollout]) -> tuple[Tensor, Tensor]:

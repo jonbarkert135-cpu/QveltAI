@@ -429,6 +429,10 @@ def train_pretraining(
                     ),
                     "Initial model failure",
                 )
+            if recipe.lora_rank:
+                from qvelt.posttrain.lora import attach_lora
+
+                attach_lora(decoder, recipe.lora_rank, recipe.lora_alpha)
             model = parallelize(decoder, job, context)
             sharded = is_sharded(model)
             optimizer = make_optimizer(model, job.training)

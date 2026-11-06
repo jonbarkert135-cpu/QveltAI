@@ -85,8 +85,27 @@ class PretrainingJob:
     objective: str = "pretraining"
     initial_checkpoint: str | None = None
     initial_sha256: str | None = None
+    lora_rank: int = 0
+    lora_alpha: float = 16.0
 
     def __post_init__(self) -> None:
+        _integer(self.lora_rank, "sft.lora_rank", minimum=0, maximum=64)
+        if (
+            type(self.lora_alpha) not in (int, float)
+            or not math.isfinite(self.lora_alpha)
+            or not 0 < self.lora_alpha <= 128
+        ):
+            raise ConfigError("LoRA alpha must be finite in (0,128]")
+        if self.lora_rank and (
+            self.objective != "sft"
+            or self.job.training.strategy != "single"
+            or self.job.experiment.runtime.device != "cpu"
+            or self.job.experiment.runtime.precision != "fp32"
+            or self.job.training.compile
+        ):
+            raise ConfigError(
+                "LoRA currently requires single-process CPU FP32 SFT without compile"
+            )
         if self.objective not in ("pretraining", "sft"):
             raise ConfigError("Unknown packed training objective")
         if (self.initial_checkpoint is None) != (self.initial_sha256 is None):

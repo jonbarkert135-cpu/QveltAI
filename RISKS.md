@@ -285,3 +285,31 @@ conditions are required;no universal bitwise,HTTP/GPU/TTFT/SLA claim follows.
 Non-stop special tokens are output data,never executable tools. Framework LICENSE
 does not clear model/data release rights. Old local Gloo instability remains a
 separate runtime issue until diagnosed,even when one full regression run passes.
+
+## Expanded Phase6 limits (2026-11-06)
+
+A reward gain on two-answer a-a+b arithmetic can reflect answer-frequency or
+termination learning. It is not multi-step generalization;DPO heldout loss worsens,
+old200-case studies reject promotion,and final800 remain untouched. The local
+control specification preceded diagnostics but was not an independent immutable
+preregistration. Fixed verifier controls are public and do not cover unknown
+exploits. Outcome correctness does not prove reasoning steps or semantic diversity.
+Polynomial checks are bounded QQ identities over x,y,not general algebra/proofs;
+variable denominators,transcendentals,branch/domain equivalence are unsupported.
+
+External-source declared license/usage flags are policy checks,not independent
+legal clearance. Original GSM8K train subset approval is bounded development only;
+production benchmark/decontamination rights and complete overlap audits remain
+mandatory before actual training. Keep the separately approved test snapshot out
+of training. Teacher outputs require reviewed terms and an explicit default-off
+switch;no teacher was invoked. Framework Apache license does not clear models/data.
+
+CPU LoRA saves trainable optimizer state but retains full base+adapter checkpoints
+and activation costs. Unmerged adapter export/DPO/GRPO is rejected. QLoRA,GPU and
+large/distributed main runs are unverified/unimplemented. Native GRPO currently
+supports original environments<1M parameters;offline replay refuses changed/stale
+policies and does not implement general off-policy RL. Static KL/format/length
+coefficients can still lead to format gaming or answer collapse;inspect correctness,
+KL,gradients,zero groups,truncation and readable audits separately. No throughput
+claim follows from sequential cached rollouts. Lean is a design,not a checked
+runtime. Historical intermittent local Gloo faults remain a separate open issue.
