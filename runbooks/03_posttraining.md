@@ -133,8 +133,10 @@ No generated string reaches `eval`, `sympify`, `parse_expr` or tool execution.
 These checks do not prove free-text reasoning, arbitrary algebra, variable-domain
 equivalence or excluded denominator points. Bad grammar, repeated final answers,
 incomplete turns and wrong results are rejected. Every candidate is retained in
-the audit. Deduplication is lexical case/whitespace/token-set Jaccard within each
-problem, not semantic diversity. Correct counts for pass@k include duplicates
+the audit. Deduplication is lexical case/whitespace/token-set Jaccard on reasoning
+bodies within each problem, not semantic diversity. Different equivalent final
+number spellings do not create different traces;bare answers yield at most one
+selected row/problem. Correct counts for pass@k include duplicates
 before selection; per-difficulty estimates use1-C(n-c,k)/C(n,k),with counts and
 sample budgets. Imported unrated problems stay unrated.
 

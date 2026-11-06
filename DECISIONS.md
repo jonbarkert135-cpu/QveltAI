@@ -1298,3 +1298,8 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   no independent preregistration,general reasoning gain or model promotion.
   Final800 untouched. CPU GRPO remains below1M;larger/GPU/distributed/arbitrary
   problem/QLoRA/Lean tiers require new evidence and rights/resource gates.
+
+ADR0048 review update: equivalent final-number spellings are not distinct traces.
+Selection now compares only reasoning bodies and retains at most one answer-only
+row/problem. Correct-candidate/pass@k counts are computed before dedup. This
+closes an observed lexical-diversity loophole without changing training/rewards.

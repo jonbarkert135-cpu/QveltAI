@@ -808,3 +808,16 @@ publication;corrected to a nested source plus one final root marker,and added an
 independent offline publication test. Real16-row original GSM8K train import now
 passes on pinned4,166,206-byte/7473-row source,MIT license1062 bytes;no ML optimization
 uses it. Raw corpus/checkpoints remain outside Git.
+
+Source49876b0 clean standalone repeats the reward/loss findings;all five stage
+run manifests record that commit with dirty=false. Independent rank4/alpha8
+LoRA20,stop6/resume20 equals continuous weights/Adam/RNG/application;9728
+trainable parameters,127104 base parameters unchanged,train probe6.133254->
+5.143521. Source7c27e8f9e51bfefb2d715c4fb73e77b5030c0dfbb25679cab2699a4dbd1a55bc.
+Local repeat798 passed,2 historical distributed failures,7 GPU deselected in
+352.91s;numeric-DDP SIGABRT and packed-DDP120s timeout. CLI57 pass after correction.
+GitHub42252195349:14/15 jobs pass;CPU3.13 has the existing numeric-DDP90s timeout
+(797 passed,2 optional SDK skips,7 GPU deselected). All posttraining/training/
+evaluation/export recovery jobs pass. Not a green full acceptance. Audit found
+23 lexical answer variants from12 solved problems;numeric spellings now dedup
+by reasoning body/answer-only singleton. Final source/CI receipt follows.

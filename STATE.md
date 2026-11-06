@@ -28,6 +28,11 @@ SFT20/DPO4/RL60,training reward first10=.3125,last10=.709375;fixed-seed validati
 fixture,not general math improvement;DPO heldout loss worsens. Original final800
 remain unscored. Focused79 checks passed before the last source-adapter additions;
 final full-source verification and publication are in progress. See runbook03,
+Source49876b0 clean control/LoRA20 replay pass;local full798 pass/2 old distributed
+failures/7 GPU deselected. CI42252195349:14 of15 jobs pass,CPU3.13 has the existing
+numeric-DDP90s timeout. Final selector fix excludes equivalent numeric spellings
+from trace diversity;focused4 plus final3 checks and lint/mypy179/build pass.
+Final corrected-source CI/receipt are pending. See
 posttraining_phase6_design.md and ADR0048. CPU GRPO remains<1M parameters;
 GPU/QLoRA/arbitrary external-problem RL and production source/model gates stay open.
 Next after acceptance:resume M8.2;user-directed Phase6 extension takes precedence.

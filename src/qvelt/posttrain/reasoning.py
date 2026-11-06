@@ -366,12 +366,19 @@ def build_reasoning_data(job: ReasoningJob, directory: Path) -> Manifest:
                 and verify_answer(answer, spec)
             )
             correct += verified
-            selected = verified and diverse(result.text, kept, job.diversity_jaccard)
+            # Equivalent numeric spellings are not different reasoning traces.
+            # Bare answers have one empty reasoning body, hence one kept row.
+            trace = (
+                result.text.strip()[7:].split("</think>", 1)[0]
+                if job.framed and result.text.strip().startswith("<think>")
+                else ""
+            )
+            selected = verified and diverse(trace, kept, job.diversity_jaccard)
             if selected:
                 documents.append(
                     _document(problem, result.text, answer or "", job.framed, sample)
                 )
-                kept.append(result.text)
+                kept.append(trace)
             audits.append(
                 {
                     "problem_id": problem.identifier,
@@ -416,6 +423,7 @@ def build_reasoning_data(job: ReasoningJob, directory: Path) -> Manifest:
         "candidates": len(audits),
         "difficulty": stats,
         "verification_scope": "final_answer_only_not_reasoning_steps",
+        "selection_unit": "reasoning_body_with_answer_only_singleton",
         "external_synthetic": False,
         "source_paths": [job.problems.path] if job.problems else [],
     }

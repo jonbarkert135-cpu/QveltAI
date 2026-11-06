@@ -88,7 +88,7 @@ def test_rejection_selection_and_diversity_isolated_oracle(tmp_path: Path) -> No
     )
     outputs = [
         ("<think>Add one and one.</think>Final answer: 2", (40, 6), "stop_token"),
-        ("<think>Add one and one.</think>Final answer: 2", (40, 6), "stop_token"),
+        ("<think>Add one and one.</think>Final answer: 4/2", (40, 6), "stop_token"),
         ("Final answer: 2", (40, 41), "max_tokens"),
         ("Final answer: 3", (40, 6), "stop_token"),
     ]

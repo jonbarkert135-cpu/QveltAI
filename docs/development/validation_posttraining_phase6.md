@@ -67,6 +67,22 @@ source bundle,and covered by a separate offline publication test.
 
 ## Material boundaries
 
+The first source49876b0 clean standalone reproduced the diagnostic gains,with
+all five stage manifests clean/pinned to that commit. A20-step rank4/alpha8 LoRA
+run stopped6/resumed20 exactly matches continuous weights/Adam/RNG/application;
+9728 trainable adapter parameters,all127104 base parameters unchanged. The fixed
+training probe6.133254->5.143521 is a mechanism result,not a gain versus full SFT.
+The corrected CLI subset57 passes in23.58s and lint/mypy179/build pass. Repeat
+full source49876b0:798 passed,2 historical distributed failures,7 GPU deselected
+in352.91s (numeric-DDP SIGABRT;packed-DDP stop1 timeout120s). CLI failures are gone;
+the local full run is not green. No distributed workaround or test suppression.
+
+Audit review exposed equivalent final-number spellings being counted as different
+lexical answers. Selection now compares reasoning bodies separately,retaining
+one answer-only row/problem;the oracle uses2 versus4/2 with identical reasoning.
+Pass@k still counts all raw sampled correct outcomes before dedup. This changes
+selection,not the training/reward protocol. Final-source receipts/CI follow.
+
 CPU FP32 LoRA/full-base checkpoints only;no QLoRA or adapter export compatibility.
 GRPO is an original-environment,<1M-parameter CPU prototype,sequential cached
 completion collection plus behavior-logp recomputation,not a rollout-performance
