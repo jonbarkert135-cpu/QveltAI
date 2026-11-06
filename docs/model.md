@@ -78,6 +78,12 @@ The caller divides by the global valid-target count (not a mean of rank means).
 
 ## KV cache (`Decoder.forward_cached`, `cache.py`)
 
+The bounded native CPU generation layer now composes this cache with padded
+batching,logical reset positions and per-request sampling/stop state. See
+[runbook09](../runbooks/09_inference_export.md). FP32 logical K/V payload plus
+position/document/valid metadata is `B*T*(8*L*kv_width+17)` bytes;this excludes
+allocator/intermediate/copy-on-append peaks. Cache is private to each stream.
+
 Each layer stores post-RoPE K and V of shape (B,Hkv,t,dh) plus position, document
 and validity metadata. A suffix of n tokens attends to the cached keys with query
 offset t. Returned cache containers are frozen; callers must not mutate their tensors. failed calls never advance

@@ -1,6 +1,6 @@
 # Qvelt current state
 
-Updated:2026-11-05. Owner:Lead agent.
+Updated:2026-11-06. Owner:Lead agent.
 
 ## Environment readiness (2026-11-04)
 
@@ -16,6 +16,19 @@ network operations/local distributed sockets need execution network permission.
 M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was performed.
 
 ## Current task
+
+M8.1 native CPU generation/export is implemented;final-source acceptance is in
+progress. True left-padded batches,private KV/RNG,greedy/seeded sampling,stream
+snapshots,stop/context/output/cache limits and cooperative cancellation/timeouts.
+Native safetensors/tokenizer/config/source snapshots reload without original
+directories;no optimizer/RNG pickle. Developmental123904-parameter V395 export
+has logit delta0 and matching cached/uncached/CLI/stream outputs. Pre-final full
+local733 passed,no skips,7 GPU deselected in236.44s;final guards focused53 pass
+in19.80s,Ruff/format,mypy163 and build pass. Existing Gloo issue is not declared
+fixed by this one green local run. Final-source/full-RFC-tiny/CI receipts pending.
+See validation_inference.md/runbook09. No model promotion/GPU/HTTP/quantization.
+
+Historical M7.2 acceptance follows.
 
 M7.2 matched-lineage CPU study and necessary promotion controls are implemented.
 Preregistered89a0350:shared training/tokenizer/SFT/pairs,initialization seeds

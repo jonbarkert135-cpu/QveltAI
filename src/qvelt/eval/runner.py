@@ -12,13 +12,12 @@ from pathlib import Path
 from typing import Any
 
 import torch
-from safetensors.torch import load as load_tensors
 
 from qvelt.config import ExperimentConfig, config_digest, dump_config
-from qvelt.config.training import parse_training_job
 from qvelt.eval.config import EvalJob, dump_eval, eval_digest
 from qvelt.eval.corpus import EvalCase, audit_overlap, load_cases
 from qvelt.eval.scoring import pass_at_k, perplexity, score_answer, wilson_interval
+from qvelt.inference.artifacts import checked_payload, load_checkpoint_model
 from qvelt.model.decoder import Decoder
 from qvelt.posttrain.dpo import response_logps
 from qvelt.tokenizer.core import QveltTokenizer
@@ -34,59 +33,11 @@ def _json(value: object) -> bytes:
     return (json.dumps(value, sort_keys=True, allow_nan=False) + "\n").encode()
 
 
-def _payload(store: ArtifactStore, manifest: Manifest, role: str, limit: int) -> bytes:
-    records = [f for f in manifest.files if f.role == role]
-    if len(records) != 1 or records[0].size_bytes > limit:
-        raise ValueError("Evaluation requires one bounded " + role + " payload")
-    record = records[0]
-    with store.open_file(record.path) as stream:
-        data = stream.read(limit + 1)
-    if (
-        len(data) != record.size_bytes
-        or hashlib.sha256(data).hexdigest() != record.sha256
-    ):
-        raise ValueError("Evaluation payload changed during read")
-    return data
+_payload = checked_payload
 
 
 def load_model(job: EvalJob) -> tuple[Decoder, ExperimentConfig, Manifest]:
-    path = Path(job.checkpoint.path)
-    store = ArtifactStore(path.parent)
-    checkpoint = store.read_manifest(
-        path.name, expected_sha256=job.checkpoint.sha256, verify=False
-    )
-    if (
-        not isinstance(checkpoint.metadata, CheckpointInfo)
-        or checkpoint.metadata.world_size != 1
-        or checkpoint.metadata.tokenizer_sha256 != job.tokenizer.sha256
-        or sum(f.size_bytes for f in checkpoint.files) > 512 * 1024**2
-    ):
-        raise ValueError(
-            "Evaluation needs a bounded single-rank checkpoint and matching tokenizer"
-        )
-    # Hash all bytes,but never deserialize optimizer/RNG pickle payloads.
-    store.verify(checkpoint)
-    training = parse_training_job(
-        _payload(store, checkpoint, "training_recipe", 128 * 1024).decode()
-    )
-    experiment = training.experiment
-    if (
-        config_digest(experiment) != checkpoint.metadata.config_sha256
-        or experiment.model.parameter_count > 20_000_000
-    ):
-        raise ValueError(
-            "Checkpoint recipe/config disagree or model exceeds CPU evaluation capacity"
-        )
-    weights = load_tensors(_payload(store, checkpoint, "model", 128 * 1024**2))
-    if any(
-        t.dtype != torch.float32 or not bool(torch.isfinite(t).all())
-        for t in weights.values()
-    ):
-        raise ValueError("CPU reference evaluation requires finite FP32 weights")
-    with torch.device("cpu"):
-        model = Decoder(experiment.model).float().eval()
-    model.load_state_dict(weights, strict=True)
-    return model, experiment, checkpoint
+    return load_checkpoint_model(job.checkpoint, job.tokenizer.sha256)
 
 
 def text_ids(tokenizer: QveltTokenizer, text: str) -> list[int]:

@@ -126,6 +126,22 @@ def _parser() -> argparse.ArgumentParser:
     study.add_argument("path", type=Path)
     study.add_argument("--directory", type=Path, required=True)
     study.add_argument("--repository", type=Path, default=Path("."))
+    export = commands.add_parser(
+        "export", help="Export a verified native CPU inference snapshot"
+    )
+    export.add_argument("path", type=Path, help="Checkpoint manifest")
+    export.add_argument("--checkpoint-sha256", required=True)
+    export.add_argument("--tokenizer-manifest", type=Path, required=True)
+    export.add_argument("--tokenizer-sha256", required=True)
+    export.add_argument("--directory", type=Path, required=True)
+    export.add_argument("--repository", type=Path, default=Path("."))
+    generate = commands.add_parser(
+        "generate", help="Generate from a native snapshot with bounded CPU requests"
+    )
+    generate.add_argument("path", type=Path, help="Generation recipe")
+    generate.add_argument(
+        "--stream", action="store_true", help="Emit cumulative-text JSONL events"
+    )
     collective = commands.add_parser(
         "distributed-check", help="Run an exact integer all-reduce"
     )
@@ -138,7 +154,68 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     logger = configure_logging()
     try:
-        if args.command == "compare":
+        if args.command == "export":
+            from qvelt.eval.config import ArtifactRef
+            from qvelt.inference.artifacts import export_snapshot
+
+            snapshot_manifest = export_snapshot(
+                ArtifactRef(str(args.path), args.checkpoint_sha256),
+                ArtifactRef(str(args.tokenizer_manifest), args.tokenizer_sha256),
+                args.directory,
+                args.repository,
+            )
+            print(
+                json.dumps(
+                    {
+                        "format": "qvelt-inference-v1",
+                        "sha256": manifest_digest(snapshot_manifest),
+                    },
+                    sort_keys=True,
+                )
+            )
+        elif args.command == "generate":
+            from contextlib import closing
+
+            from qvelt.inference.artifacts import load_snapshot
+            from qvelt.inference.config import load_generation
+            from qvelt.inference.generation import GenerationEngine
+
+            generation_recipe = load_generation(args.path)
+            snapshot = load_snapshot(generation_recipe.snapshot)
+            engine = GenerationEngine(
+                snapshot.model, snapshot.tokenizer, generation_recipe.limits
+            )
+            requests = engine.encode_requests(
+                generation_recipe.requests, generation_recipe.prompt_format
+            )
+            if args.stream:
+                try:
+                    with closing(
+                        engine.stream(requests, use_cache=generation_recipe.use_cache)
+                    ) as events:
+                        for event in events:
+                            print(
+                                json.dumps(
+                                    asdict(event), sort_keys=True, ensure_ascii=False
+                                ),
+                                flush=True,
+                            )
+                except KeyboardInterrupt:
+                    return 130
+            else:
+                print(
+                    json.dumps(
+                        [
+                            asdict(completion)
+                            for completion in engine.generate(
+                                requests, use_cache=generation_recipe.use_cache
+                            )
+                        ],
+                        sort_keys=True,
+                        ensure_ascii=False,
+                    )
+                )
+        elif args.command == "compare":
             from qvelt.eval.study import run_study
             from qvelt.eval.study_config import load_study
 

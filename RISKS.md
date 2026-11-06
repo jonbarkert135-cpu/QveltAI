@@ -272,3 +272,16 @@ across seeds. Linux whole-process ru_maxrss depends on launch context:the observ
 390721536-byte study peak versus287260672-byte same-checkpoint shell probe must
 not be interpreted as tensor/GPU memory. RoPE scale2 short-context ablation is
 negative/exploratory;it does not validate long-context extension.
+
+## Native inference limits (2026-11-06)
+
+CPU FP32 native reference only,<20M parameters and bounded static batches/context.
+KV limits are logical payload,not RSS or allocator/logit/attention/copy-on-append
+peaks. Cancellation/deadlines cannot preempt kernels. Text streams are cumulative
+snapshots and can revise partial UTF-8 decode;clients must not append them blindly.
+Private RNG/cache isolates request state,but floating-point batch/cache changes
+near ties can alter sampled/greedy tokens. Fixed-device/precision/version/batch
+conditions are required;no universal bitwise,HTTP/GPU/TTFT/SLA claim follows.
+Non-stop special tokens are output data,never executable tools. Framework LICENSE
+does not clear model/data release rights. Old local Gloo instability remains a
+separate runtime issue until diagnosed,even when one full regression run passes.

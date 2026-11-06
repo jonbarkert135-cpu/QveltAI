@@ -1204,3 +1204,31 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   passed,2 optional SDK skips,7 GPU deselected,SDKs separately verified. Matched
   and RoPE two-seed studies and full200-step real-SIGKILL replay pass remotely.
   Local packed-DDP timeout remains unresolved;production acceptance remains open.
+
+## ADR-0047 — Native bounded CPU generation and inference snapshot v1
+
+- **Date/status:**2026-11-06;CPU implementation complete;final-source/CI acceptance pending.
+- **Context:**M7.2 rejects candidate promotions,but generation/export correctness
+  is an independent dependency-ready milestone. Decoder cache has CPU reference
+  coverage;no GPU or external-runtime compatibility is established.
+- **Choice:**own greedy/seeded CPU engine with private per-request RNG/cache,
+  genuine left-padded batched execution,explicit logical positions/validity,
+  cooperative cancellation/time limits and immutable snapshot stream events.
+  UTF-8 partial decodes may revise snapshots;do not promise append-only deltas.
+  Reuse safetensors/strict manifests for self-contained native inference export.
+- **Alternatives:**serial requests labeled batching,shared/global cache/RNG,
+  copying training pickle into an inference runtime,or claiming untested HF/GGUF/
+  vLLM compatibility. These do not satisfy correctness/provenance boundaries.
+- **Sources:**[verified] local RFC001 cache contract,docs/model.md and pinned
+  Orchestra vLLM skill read for batching/cache/resource patterns. Vendor speed,
+  hardware and quantization examples are not Qvelt measurements or installed APIs.
+- **Limits/revisit:**CPU FP32,<20M parameters,8 batch/2048 context and bounded
+  logical KV payload;copy-on-append/transient/RSS differs. Timeouts do not preempt
+  kernels. Serving/continuous batching,GPU/quantization and model release rights
+  need separate acceptance. See inference_design.md for exact interfaces/tests.
+- **Executed references:**independent unpadded prefix logits/tokens and scalar
+  categorical probabilities,actual KV tensor bytes and symbolic byte identity,
+  close/weakref/mutation/Unicode/stopping/nonfinite/budget and snapshot corruption
+  guards. Pre-final full local733 pass/7 GPU deselected;final guards focused53
+  pass,Ruff/mypy163/build pass. Developmental native export has zero reload logit
+  delta and identical CLI/API/stream/cache outputs with original sources hidden.

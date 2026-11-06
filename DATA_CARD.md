@@ -270,3 +270,12 @@ Evaluation/decontamination only,no training/tokenizer fitting. These correlated
 variants test whitespace sensitivity,not independent reasoning/general capability.
 The combined study suite contains200 original validation cases,these40 variants
 and7 D-EVAL-CONTROL-01 sanity examples. No final case/public corpus/teacher added.
+
+## D-INFER-CONTROL-01 — Original generation/export controls
+
+Registered2026-11-06 before standalone M8.1 acceptance. Original short ASCII,
+Russian,emoji and accented-text prompts,token-level stopping/cancellation oracles
+and earlier approved original BPE fixture data;Apache-2.0,no external source or
+teacher. Test-only examples are software fixtures,not a benchmark. The standalone
+model remains untrained;tokenizer fitting uses only the preexisting approved demo
+corpus. No final800 questions are generated/scored by inference acceptance.

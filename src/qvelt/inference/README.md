@@ -1,4 +1,10 @@
-# inference
+# Native CPU inference
 
-Reserved scope in PLAN.md Phase 8. No executable implementation or readiness
-claim is provided by this directory. See the root status table and roadmap.
+Original bounded CPU FP32 greedy/seeded generation,true padded batching,
+request-local KV/RNG,cooperative cancellation/deadlines and cumulative snapshot
+streaming. Native qvelt-inference-v1 exports are self-contained safetensors/
+tokenizer/config/provenance bundles with strict source/payload checks.
+
+See [runbook09](../../../runbooks/09_inference_export.md) and
+[design](../../../docs/development/inference_design.md).
+No HTTP/GPU/quantization/external-runtime/model-release readiness claim.

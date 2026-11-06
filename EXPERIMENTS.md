@@ -730,3 +730,24 @@ rope-ablation-ci.json. Local packed-DDP timeout remains reported,not fixed.
 CPU necessary-gate/ablation tooling closes;actual user-run production acceptance,
 public/final/GPU evidence and model promotion stay open. Next independent code
 milestone:M8.1 inference/export. No paid/full-scale run or final800 scoring.
+
+## R026 — Native CPU export/reload and bounded batched generation
+
+Date:2026-11-06. Base0390b60;M8.1 design/ADR0047 precede implementation. Own native
+CPU FP32 engine reuses verified decoder/KV/tokenizer/manifest/safetensors;no new
+dependency or external runtime. Independent unpadded greedy/categorical/logit
+references,scalar exponential sampling and actual/symbolic KV byte identity
+execute. Unicode stop/cancel/time/nonfinite/resource/mutation/close guards,
+private RNG/grad/autocast state and newly hashed corrupt descriptor cases pass.
+
+Developmental standalone untrained model123904 parameters,V395/T256,three prompts,
+greedy/T0 and categorical/T0.8,max16,FP32 CPU. Each protocol48 sampled actions;
+cached/full-prefix/source/export tokens/text/stops and CLI/API/stream events agree.
+Original checkpoint/data directories hidden during fresh-process reload:success.
+Export/reload maximum logit delta0 for[2,T,395],T1/3/17/61. No new optimizer update,
+reasoning quality or final800 score. This is pre-final engineering evidence;
+formal final-source/historical19.34M diagnostic and current-source CI follow.
+
+Pre-final full local CPU/optional-SDK733 passed,no skips,7 GPU deselected in236.44s.
+Final batch guards focused53 pass in19.80s;Ruff/format,mypy163 files,build and
+lock93/pip72 checks pass. No claim of fixing historical local Gloo instability.

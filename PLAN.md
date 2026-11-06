@@ -456,14 +456,14 @@ bound separately. All candidates reject;actual user-run production acceptance op
 
 ### M8.1 — Build correct generation and stable artifact export
 
-Owner: Lead agent. Status: planned. Dependencies: M7.1, M4.2; early generation
+Owner: Lead agent. Status: native CPU implementation complete;final-source acceptance in progress,optional runtime/quantization extensions deferred. Dependencies: M7.1, M4.2; early generation
 used by M6.3 must already have reference tests.
 
-- [ ] Provide greedy and seeded sampling, stopping rules, context checks,
+- [x] Provide greedy and seeded sampling, stopping rules, context checks,
   batching, streaming, KV-cache lifecycle, and per-request resource limits.
-- [ ] Export weights, tokenizer, config, and metadata in a reviewed versioned
+- [x] Export weights, tokenizer, config, and metadata in a reviewed versioned
   format; test reload/logit parity and reject incompatible or corrupt artifacts.
-- [ ] Add quantization or external-runtime compatibility only after capability,
+- [ ] Deferred optional extension:Add quantization or external-runtime compatibility only after capability,
   license, accuracy, and memory validation; do not promise universal support.
 
 Acceptance: cached/uncached and export/reload reference comparisons pass;

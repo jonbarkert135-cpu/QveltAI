@@ -79,7 +79,8 @@ uv run --frozen --extra cpu --extra tensorboard --extra wandb pytest tests/unit/
 | Conversational SFT | Yes (CPU demo) | Assistant-only masks, whole-dialog packing, pinned base weights and exact replay; [runbook04](runbooks/04_supervised_finetuning.md) |
 | Preferences/reasoning RL | Yes (CPU demos) | DPO and bounded outcome-GRPO exact replay;negative/unchanged heldout results,no promotion |
 | Versioned evaluation | Yes (CPU original fixtures) | Exact/numeric/choice/LM references,immutable reports and lexical audit;public/final/GPU quality gates remain open |
-| Serving/export formats beyond safetensors | No | Phase8;no serving readiness claim |
+| Native generation/export | Yes (CPU reference) | Greedy/seeded true batching,private cache,stream snapshots and data-only native export/reload;see runbook09 |
+| Serving/quantization/external runtimes | No | M8.2 and later capability gates;no serving readiness claim |
 
 See [current state](STATE.md), [roadmap](PLAN.md), [engineering design](docs/development/foundation_design.md),
 [validation](docs/development/validation_foundation.md), [decisions](DECISIONS.md),
@@ -174,3 +175,9 @@ LR ablation,with isolated CPU inference measurements. See
 [comparison and promotion runbook](runbooks/08_model_promotion.md).
 Necessary controls can reject a candidate or request more validation;they do not
 automatically promote an original-fixture model to production.
+
+Native CPU inference now supports `qvelt export` and `qvelt generate` with bounded
+greedy/seeded batching,private cache and cumulative-text streaming. Portable native
+snapshots reload without original checkpoint/data directories;see
+[inference/export runbook](runbooks/09_inference_export.md). Streaming text is a
+snapshot,not an append-only delta. HTTP/GPU/quantization support remains separate.
