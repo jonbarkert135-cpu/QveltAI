@@ -877,3 +877,8 @@ Pre-final-ARC full local822 passed/2 two-rank timeouts/7 GPU deselected505.11s.
 Failures:NaN recovery and packed training replay,120s each. No skip/forced pass.
 Two confirmed orphan workers cleaned only after outcomes were recorded. Source-
 clean standalone rerun and authoritative final-source remote CI follow below.
+
+R028 first clean f741151 repeat succeeds with dirty=false,but first CI42302984907
+catches missing runs/ parent in fresh checkout. Parent creation fixed without
+relaxing exclusive outputs;actual nested-parent smoke and exact path argv added.
+Focused71 pass20.68s. Final clean acceptance is rerun after this source correction.

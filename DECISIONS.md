@@ -1382,3 +1382,9 @@ Actual publisher payload203808 bytes/1172 rows,62f03257e737aed263f55c6abf87c7bb0
 read only after DATA_CARD approval. Native character-without-delimiter mode excludes
 the stored leading target space from the denominator,matching upstream acc_norm;
 raw choice likelihood remains unchanged. No raw corpus/predictions in public receipts.
+
+ADR0049 CI correction:initial42302984907 evaluation-suite fails because fresh
+checkout has no ignored runs directory. Create only requested parent directories,
+retain exclusive output creation,and add actual nested-parent/reuse-rejection smoke.
+Record actual relative output/source-cache argv,not a fixed example. Final focused
+71 pass20.68s;new source-clean receipts supersede initial f741151 acceptance.

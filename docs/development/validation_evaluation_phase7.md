@@ -71,3 +71,12 @@ remote success cannot itself diagnose the historical intermittent Gloo issue.
 Ruff/format,mypy195 files,lock consistency,installed dependency check and build pass.
 The harmless read-only-home fontconfig warning appears during actual successful
 PNG generation;plot metadata and image hashes are verified.
+
+Initial source f741151 passed a clean local standalone repeat,all input run/report
+provenance dirty=false. First CI42302984907 exposed a fresh-checkout assumption:
+`runs/` did not exist and exclusive bundle creation requires an existing parent.
+The suite now creates parent directories while still refusing an existing output;
+actual nested-parent end-to-end test added. Reproduction argv also records the
+actual supplied relative directory/source-cache path instead of a fixed example.
+Final focused71 pass20.68s,mypy195/format/lint pass after this correction.
+The first CI failure is retained;it was not a metrics/scoring or distributed failure.

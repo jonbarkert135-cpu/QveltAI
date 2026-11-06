@@ -38,3 +38,18 @@ def test_registry_results_cli_and_stale_checks(tmp_path: Path) -> None:
     assert main(["results", "--output", str(results)]) == 0
     assert main(["results", "--output", str(results), "--check"]) == 0
     assert main(["results", "--output", str(results), "--release"]) != 0
+
+
+def test_suite_creates_missing_parent_and_preserves_existing_outputs(
+    tmp_path: Path,
+) -> None:
+    from qvelt.eval.suite_smoke import run_suite_smoke
+
+    destination = tmp_path / "new-parent" / "run"
+    result = run_suite_smoke(destination, ROOT)
+    assert result["weights_optimizer_rng_exact"]
+    assert result["sampled_predictions_metrics_audit_exact"]
+    assert result["final_cases_scored"] == 0
+    assert (destination / "training/regression/curve-step-00000003.png").exists()
+    with pytest.raises(FileExistsError):
+        run_suite_smoke(destination, ROOT)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -37,6 +38,7 @@ def run_suite_smoke(
     with_harness: bool = False,
     external_sources: Path | None = None,
 ) -> dict[str, Any]:
+    directory.parent.mkdir(parents=True, exist_ok=True)
     root = create_directory(directory)
     repository = repository.resolve()
     settings = load_suite_settings(repository / "configs/eval/quick.yaml")
@@ -148,14 +150,17 @@ def run_suite_smoke(
         "python",
         "scripts/evaluation_suite_smoke.py",
         "--directory",
-        "runs/phase7-reproduce",
+        os.path.relpath(root, repository),
         "--repository",
         ".",
     )
     if with_harness:
         command += ("--with-harness",)
     if external_sources is not None:
-        command += ("--external-sources", "runs/eval-source-cache")
+        command += (
+            "--external-sources",
+            os.path.relpath(external_sources.resolve(), repository),
+        )
     evidence: dict[str, Any] = {}
     receipts = []
     before = hash_file(a / "model.safetensors")
