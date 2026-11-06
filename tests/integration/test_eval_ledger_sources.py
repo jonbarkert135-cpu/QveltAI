@@ -239,3 +239,50 @@ def test_arc_hand_parquet_oracle() -> None:
     assert case.target == " four" and case.choices == (" three", " four")
     assert case.prompt == "Question: 2+2?\nAnswer:"
     assert BENCHMARKS["arc-challenge"]["conversion_license"].startswith("CC-BY-SA-4.0")
+
+
+def test_encoded_preference_audit_uses_train_frames_only(
+    ledger_case: tuple[Path, dict[str, Any]],
+    tmp_path: Path,
+) -> None:
+    from qvelt.data.demo import PERMISSION, authored_source
+    from qvelt.data.records import write_raw_bundle
+    from qvelt.posttrain.preference_smoke import math_preferences
+    from qvelt.posttrain.preferences import load_preferences, prepare_preferences
+
+    root, receipt = ledger_case
+    raw = write_raw_bundle(
+        math_preferences(), tmp_path / "raw", authored_source("audit-pairs"), PERMISSION
+    )
+    token_path = root / "fixture/model-data/prepared/tokenizer/manifest.json"
+    token_sha = receipt["evaluation"]["tokenizer"]["sha256"]
+    prepared = prepare_preferences(
+        tmp_path / "raw/manifest.json",
+        manifest_digest(raw),
+        token_path,
+        token_sha,
+        tmp_path / "prepared",
+        context=256,
+        approved_for_training=True,
+    )
+    ref = ArtifactRef(
+        str(tmp_path / "prepared/manifest.json"), manifest_digest(prepared)
+    )
+    from qvelt.tokenizer.workflow import load_tokenizer_bundle
+
+    tokenizer, _ = load_tokenizer_bundle(token_path, token_sha)
+    _, _, pairs = load_preferences(
+        Path(ref.path), ref.sha256, tokenizer.vocab_size, 256
+    )
+    _, rows, coverage = shard_documents(ref)
+    docs = list(rows)
+    train = [p for p in pairs if p.split == "train"]
+    assert len(docs) == 2 * len(train) and len(train) < len(pairs)
+    assert (
+        coverage["document_boundaries_verified"]
+        and coverage["storage_format"] == "encoded_preferences"
+    )
+    assert coverage["tokens"] == sum(
+        len(frame) for p in train for frame in (p.chosen, p.rejected)
+    )
+    assert docs[0].text == tokenizer.decode(train[0].chosen[1:-1])

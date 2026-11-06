@@ -17,16 +17,30 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-Expanded Phase7 evaluation implementation is under acceptance. Native v2,actual
-optional lm-eval bridge,original EN/RU/code controls,pinned GSM8K/MMLU/ARC development
-imports,actual training-shard audit,checkpoint regression/repair/plots and receipt-
-bound generated RESULTS are implemented. Focused66 checks pass;diagnostic suite
-passes exact stop2/resume3 weights/Adam/RNG,curves and repeated sampled reports.
-Final focused70 pass14.08s;lint/mypy195/build pass. Pre-final-ARC full CPU822
-passed,2 two-rank timeouts,7 GPU deselected505.11s. Source-clean evidence/CI
-publication remain in progress. Public subsets
-are not official full scores;blocked benchmark rights/execution remain explicit.
-Final800 untouched. See runbooks/04_evaluation.md and ADR0049.
+Expanded Phase7 portable evaluation accepted onacced9071be0896b2fa6e915c7ed9d1b0f73e9d9;
+all17 CI42303284852 jobs successful. CPU3.11/3.12/3.13 each823 passed,6 optional
+skips,7 GPU deselected;actual optional harness11 tests and metrics SDKs separately
+verified. Final focused71 pass20.68s;additional preference-shard audit covered by
+8-test ledger/source set4.28s. Lint/format,mypy195,lock/dependencies and build pass.
+Native v2 metrics/majority/failure witnesses,actual lm-eval0.4.13 bridge,original
+EN/RU/code controls,pinned bounded GSM8K/MMLU/ARC imports,train-only actual-shard
+audits,per-checkpoint regression/repair/plots and verified generated RESULTS.
+Clean source17fb568ce0a6a1c52dbfba10a743bf07af72cc42fa9c2f2bded9373cbbd3e1b3:
+123904-parameter debug model,three training updates,stop2/resume3 model/Adam/RNG
+and curve values exact;sampled predictions/metrics/audits byte-equal,weights unchanged.
+All three input runs and nine native report receipts dirty=false. Negative bounded
+zero-shot prefixes:GSM8K0/16 (4 context overflows),MMLU algebra4/16 (5 failed
+contexts),ARC raw2/16,normalized3/16 (5 failed contexts). Original generated math/
+code all fail;regression0/0/0. No official full benchmark score or model promotion.
+Nine receipts,acceptance and curve JSON/PNG committed;root RESULTS generated/checks.
+MATH-500/AMC-AIME/HellaSwag/full HumanEval block release artifact coverage;rights,
+access,LaTeX metric/full Python sandbox remain explicit gates. Final800 unscored.
+Pre-final-ARC local full822 passed/2 two-rank120s timeouts/7 deselected505.11s;
+no suppression. Initial f741151 CI caught missing runs/ parent;corrected with nested
+parent/exclusive-output test. Remote green does not diagnose historical Gloo faults.
+See runbooks/04_evaluation.md,validation_evaluation_phase7.md and source CI receipt.
+Next dependency-ready implementation:M8.2 measured serving;large/GPU/DDP evaluation
+and production quality/release gates remain separate.
 
 Previous expanded Phase6 acceptance follows.
 

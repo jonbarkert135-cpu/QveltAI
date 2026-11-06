@@ -48,11 +48,26 @@ Acquire ONLY the immutable source/license URLs and byte hashes in the registry.
 Stage locally as `runs/eval-source-cache/gsm8k-test.jsonl`, `gsm8k-LICENSE`,
 `mmlu-abstract-algebra-test.parquet`, `mmlu-LICENSE`,
 `arc-challenge-test.parquet`, `arc-LICENSE`. These are ignored, private
-inputs; do not commit them. MMLU Parquet conversion needs the optional harness
+inputs; do not commit them. MMLU/ARC Parquet conversion needs the optional harness
 extra; converted native evaluation itself needs no harness.
 
+Exact pinned cache preparation (network required;the evaluator itself stays offline):
+
 ```bash
-uv run --frozen --extra cpu --extra eval-harness python scripts/evaluation_suite_smoke.py --directory runs/phase7-reproduce --repository . --with-harness --external-sources runs/eval-source-cache
+mkdir -p runs/eval-source-cache
+curl --fail --location https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/test.jsonl --output runs/eval-source-cache/gsm8k-test.jsonl
+curl --fail --location https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/LICENSE --output runs/eval-source-cache/gsm8k-LICENSE
+curl --fail --location https://huggingface.co/datasets/cais/mmlu/resolve/c30699e8356da336a370243923dbaf21066bb9fe/abstract_algebra/test-00000-of-00001.parquet --output runs/eval-source-cache/mmlu-abstract-algebra-test.parquet
+curl --fail --location https://raw.githubusercontent.com/hendrycks/test/4450500f923c49f1fb1dd3d99108a0bd9717b660/LICENSE --output runs/eval-source-cache/mmlu-LICENSE
+curl --fail --location https://huggingface.co/datasets/allenai/ai2_arc/resolve/210d026faf9955653af8916fad021475a3f00453/ARC-Challenge/test-00000-of-00001.parquet --output runs/eval-source-cache/arc-challenge-test.parquet
+curl --fail --location https://raw.githubusercontent.com/creativecommons/legalcode/4d2de083a6dcc5095ed1a30885bc48f868b9bb55/by-sa_4.0.txt --output runs/eval-source-cache/arc-LICENSE
+```
+
+The importer verifies every payload/license hash against the reviewed registry
+before writing any converted dataset. Prepare this cache before the external run.
+
+```bash
+uv run --frozen --extra cpu --extra eval-harness python scripts/evaluation_suite_smoke.py --directory runs/phase7-final --repository . --with-harness --external-sources runs/eval-source-cache
 ```
 
 This imports the first16 test rows of each reviewed source with full copied license
@@ -90,8 +105,8 @@ manifest paths/hashes, protocol, prompts, extraction, sampling, seeds, budgets,
 tolerances and audit settings. Evaluate an existing approved recipe:
 
 ```bash
-uv run --frozen --extra cpu qvelt evaluate runs/phase7-reproduce/final.yaml --directory runs/new-report --repository .
-uv run --frozen --extra cpu qvelt eval-audit runs/phase7-reproduce/final.yaml --output runs/new-audit.json
+uv run --frozen --extra cpu qvelt evaluate runs/phase7-final/final.yaml --directory runs/new-report --repository .
+uv run --frozen --extra cpu qvelt eval-audit runs/phase7-final/final.yaml --output runs/new-audit.json
 ```
 
 Use a fresh output directory. A report commits metrics, predictions, audit, exact
@@ -128,7 +143,7 @@ Add both fields to a supported training job:
 
 ```yaml
 training:
-  regression_recipe: runs/phase7-reproduce/regression.yaml
+  regression_recipe: runs/phase7-final/regression.yaml
   regression_sha256: EXACT_FILE_SHA256
 ```
 
@@ -143,7 +158,7 @@ A failed evaluation leaves the valid training checkpoint intact and fails loudly
 Resume repairs the report before continuing optimization; explicit repair:
 
 ```bash
-uv run --frozen --extra cpu qvelt eval-repair runs/phase7-reproduce/training --repository .
+uv run --frozen --extra cpu qvelt eval-repair runs/phase7-final/training --repository .
 ```
 
 Plots show fixed-control accuracy against optimizer steps. A flat or zero curve

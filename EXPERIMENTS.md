@@ -882,3 +882,27 @@ R028 first clean f741151 repeat succeeds with dirty=false,but first CI4230298490
 catches missing runs/ parent in fresh checkout. Parent creation fixed without
 relaxing exclusive outputs;actual nested-parent smoke and exact path argv added.
 Focused71 pass20.68s. Final clean acceptance is rerun after this source correction.
+
+R028 final clean source:acced9071be0896b2fa6e915c7ed9d1b0f73e9d9,package
+17fb568ce0a6a1c52dbfba10a743bf07af72cc42fa9c2f2bded9373cbbd3e1b3. Exact
+command in evaluation-suite-acceptance-v2.json/validation_evaluation_phase7.md.
+All three input run manifests and nine exported reports dirty=false,source-bound.
+Stop2/resume3 model/Adam/RNG and curve values exact;sampled predictions/metrics/
+audits byte-equal,weights unchanged,final count0. Negative public-prefix results
+unchanged:GSM8K0/16 with4 context overflows,MMLU4/16 with5 failed contexts,
+ARC raw2/16,normalized3/16 with5 failed contexts. Original math/code all fail;
+fixed regression points0/0/0. Public receipts exclude raw data and predictions.
+Generated RESULTS contains every registered evaluation/config/hash/command;
+release gate rejects missing four blocked benchmarks. Final source CI42303284852
+has actual standalone/harness jobs green;full matrix closure follows.
+
+R028 final source CI42303284852 all17 jobs pass. CPU3.11/3.12/3.13 each823 pass,
+6 optional skips,7 GPU deselected in273.77s/241.92s/256.25s. Actual harness11
+passes13.46s with HF offline flags;SDKs separately verified. Current-source full
+RFC tiny19338560-parameter pretraining200-step SIGKILL89/resume75 again has loss
+max difference0 and model/Adam/RNG/application exact. This is training recovery,
+not a public reasoning score. Nine clean evaluator receipts and final curve are
+registered;new preference-shard audit branch separately passes in8-test set4.28s.
+Runtime source unchanged after acced90. See evaluation-suite-ci-v2.json and
+validation_evaluation_phase7.md. Both local distributed timeouts and initial CI
+fresh-parent failure remain recorded;no tests suppressed or forced successful.

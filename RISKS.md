@@ -341,3 +341,11 @@ needs separate work. Evaluation failures preserve checkpoints but interrupt trai
 until repair/resume succeeds. Plotting adds CPU overhead. A complete audit/ledger
 is necessary release evidence,not proof of clean history or model promotion.
 Final800 remain unscored. Historical intermittent Gloo failures remain open.
+
+R028 acceptance update:ARC limited evaluation is cleared under publisher-declared
+CC-BY-SA4.0 with full official legal text/attribution/change notice;raw/converted
+corpus is not redistributed in Git. First16 ARC/MMLU contain5 context failures each;
+GSM8K contains4. Tiny-context/debug results are not useful headline benchmarks.
+All17 source CI jobs pass,but local NaN-recovery and packed-DDP timeouts remain
+unresolved. Release is explicitly blocked by MATH-500,AMC/AIME,HellaSwag and full
+HumanEval. Final800 unscored;no hardware or quality promotion follows.

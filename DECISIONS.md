@@ -1388,3 +1388,15 @@ checkout has no ignored runs directory. Create only requested parent directories
 retain exclusive output creation,and add actual nested-parent/reuse-rejection smoke.
 Record actual relative output/source-cache argv,not a fixed example. Final focused
 71 pass20.68s;new source-clean receipts supersede initial f741151 acceptance.
+
+ADR0049 final portable acceptance:acced9071be0896b2fa6e915c7ed9d1b0f73e9d9,
+source17fb568ce0a6a1c52dbfba10a743bf07af72cc42fa9c2f2bded9373cbbd3e1b3,
+all17 CI42303284852 jobs green. CPU3.11/12/13 each823 pass,6 optional skips,
+7 GPU deselected;actual harness11 tests and optional SDKs separately pass.
+Focused71 pass20.68s;preference-frame train-only audit separately covered in
+8-test ledger/source set4.28s. Source-clean123904-param debug control yields
+GSM8K0/16,MMLU4/16,ARC raw2/16 and normalized3/16,with context failures recorded.
+No full benchmark/quality promotion. Nine report-bound receipts,hash-bound plot/
+points and generated RESULTS published without raw corpus/predictions/weights.
+Initial fresh-checkout failure and two local distributed timeouts retained.
+Main-run hardware,blocked public source/full-code execution and release gates open.

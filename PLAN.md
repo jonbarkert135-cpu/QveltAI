@@ -4,17 +4,19 @@ Last updated: 2026-11-06. Owner of every milestone: **Lead agent**.
 
 ## User-directed expanded Phase7 evaluation (2026-11-06)
 
-Status:implemented portable reference,acceptance in progress. Supersedes the next
-M8.2 implementation until expanded evaluation delivery is verified.
+Status:portable CPU reference accepted onacced90,all17 CI42303284852 jobs green.
+Full public benchmark/release gates remain blocked;next implementation resumes M8.2.
 
 - [x] Native v2 generation/metrics/failure witnesses with legacy freeze compatibility.
 - [x] Actual optional lm-eval LM/local task integration and numerical parity tests.
-- [x] Reviewed/pinned limited GSM8K/MMLU imports,original EN/RU/code controls.
+- [x] Reviewed/pinned limited GSM8K/MMLU/ARC imports,original EN/RU/code controls.
 - [x] Train-only actual-shard audit and mandatory release artifact coverage gate.
 - [x] Per-checkpoint pinned regression,crash repair,RNG-safe exact replay and plots.
 - [x] Report-bound portable receipts,generated RESULTS and README numeric guard.
 - [x] Consolidated runbooks/04_evaluation.md and explicit comparison methodology.
-- [ ] Final full checks,clean source-bound standalone evidence,ledger and green CI.
+- [x] Focused71 checks,additional preference-audit coverage,clean nine report
+  receipts,generated ledger/curve and all17 source CI jobs successful. Local two-
+  rank timeouts retained;remote green is not a Gloo root-cause diagnosis.
 - [ ] Separate future gates:blocked public datasets/full Python isolation,GPU/DDP/
   large checkpoint evaluation and independent quality/release readiness.
 

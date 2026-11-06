@@ -80,3 +80,59 @@ actual nested-parent end-to-end test added. Reproduction argv also records the
 actual supplied relative directory/source-cache path instead of a fixed example.
 Final focused71 pass20.68s,mypy195/format/lint pass after this correction.
 The first CI failure is retained;it was not a metrics/scoring or distributed failure.
+
+## Final clean source acceptance
+
+Implementation correction:acced9071be0896b2fa6e915c7ed9d1b0f73e9d9.
+Runtime source SHA256:17fb568ce0a6a1c52dbfba10a743bf07af72cc42fa9c2f2bded9373cbbd3e1b3.
+Exact command,after staging the reviewed cache:
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 python scripts/evaluation_suite_smoke.py --directory runs/phase7-final --repository . --with-harness --external-sources runs/eval-source-cache
+```
+
+All three input run manifests and all nine report receipts record dirty=false and
+the exact correction commit. The repeated sample reports match byte-for-byte;
+weights/Adam/RNG and three curve values match stop2/resume3. Evaluation leaves
+weights unchanged;prospective final scoring count remains0.
+
+Public artifacts:
+
+- [Acceptance receipt](evidence/evaluation-suite-acceptance-v2.json)
+- [Regression points and report/checkpoint hashes](evidence/evaluation-suite-curve-v2.json)
+- [Standalone regression plot](evidence/evaluation-suite-curve-v2.png)
+- [Generated results ledger](../../RESULTS.md),backed by nine evaluation-phase7
+  receipts in evidence;no public raw questions,predictions or weights.
+
+The final measured results reproduce the diagnostics:original generated math/code
+0 correct,GSM8K0/16 (4 context overflows),MMLU4/16 (5 failed contexts),ARC raw2/16
+and normalized3/16 (5 failed contexts). The fixed regression curve is0 at all three
+steps. These are diagnostic results on a debug model with context256/completion8,
+not an accuracy improvement or full public benchmark score. No quality promotion.
+
+The ledger regenerates and checks exactly. Default release coverage deliberately
+fails with missing amc-aime,hellaswag,humaneval,math-500. Original and three approved
+public development sets all have actual train-shard audits. Those audits certify
+neither unknown prior history nor semantic cleanliness.
+
+Final-source CI42303284852 has passed evaluation-suite and eval-harness jobs;
+remaining source acceptance is recorded once all jobs complete.
+
+## Source CI closure
+
+[CI42303284852](https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42303284852)
+completed successfully:all17 jobs. [Verified job/count receipt](evidence/evaluation-suite-ci-v2.json).
+CPU3.11/3.12/3.13 each823 passed,6 optional skips,7 GPU deselected in273.77s/
+241.92s/256.25s. The skips are optional SDK/harness/Parquet tests,not hidden core
+failures;actual harness11 tests pass13.46s in its dedicated offline job,SDKs in
+another. Both original evaluation and expanded standalone suite jobs pass.
+Current-source RFC tiny200-step actual SIGKILL89/resume75 still has all losses
+exact (max difference0),model/Adam/RNG/application exact. All old SFT/DPO/GRPO/
+inference/promotion workflows remain green. The local Gloo timeouts are not
+claimed fixed by this remote run.
+
+A final test-only extension exercises the encoded-preference audit path using
+actual approved pair preparation:only train chosen/rejected frames are decoded,
+counts/token coverage and exact text match an independent bundle decode. The full
+ledger/source module passes8 tests4.28s;runtime source remains identical to acced90.
+Final Ruff/format,mypy195,build,ledger/inventory and changed guide-link checks pass.
