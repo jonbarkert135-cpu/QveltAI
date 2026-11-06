@@ -1,6 +1,6 @@
 # Qvelt data register
 
-Last updated: 2026-10-31. Owner: Lead agent.
+Last updated: 2026-11-06. Owner: Lead agent.
 
 ## D-GSM8K-TRAIN-BOUNDED-01 — Original human-written training problems
 

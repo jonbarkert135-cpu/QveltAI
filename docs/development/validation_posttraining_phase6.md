@@ -2,7 +2,59 @@
 
 Date:2026-11-06. Base:fbd7a3a. [Design](posttraining_phase6_design.md),ADR0048
 and [consolidated runbook](../../runbooks/03_posttraining.md) define the supported
-scope. Final clean-source standalone/CI receipts are pending at this source commit.
+scope. Final executable source8e9b44c and package SHA256
+28addb6ad1641aebd047a16931b4177db276022609a39eae9e63ca5e273a3bc3.
+All15 [CI jobs](https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42253772192)
+pass. This is portable framework acceptance;quality gates reject the control model.
+
+## Final measured evidence
+
+All five control-stage run manifests record clean source8e9b44c. SFT20,DPO4,
+RL60 reproduce the diagnostics. RL60 optimizer steps,56 policy-signal windows,
+4639 sampled actions,90 constant groups. Training reward first10=.3125,last10=
+.709375. Fixed64-sample validation15->26 correct,59->62 complete. Offline replay
+matches all60 losses,model,Adam and RNG exactly.
+
+**Quality rejects:**validation golds are balanced32 zero/32 one,but all59 parseable
+post-RL numeric responses are zero. Correctness for answer1 remains0/32;
+answer0 goes15/32->26/32. Overall26/64 is below the32/64 always-zero baseline.
+Training has12 zero/4 one problems (75% constant-zero baseline). Reward rises
+with answer/termination collapse. These results do not demonstrate arithmetic learning or a reasoning
+improvement. Original broader negative studies remain authoritative;no promotion.
+
+Final rejection:16 training-only problems x4 samples,64 candidates,46 correct
+before dedup,pass@1=.71875,pass@2/3/4=.75 (difficulty easy only). Selection keeps12
+answer-only examples,all gold0. Numeric spelling variants no longer create trace
+diversity. No actual free-text reasoning trace/process correctness is demonstrated.
+Feeding this corpus back into SFT would reinforce imbalance without coverage review.
+
+Final rank4/alpha8 LoRA20 independently repeats stop6/resume20 against continuous
+weights/Adam/RNG/application exactly;9728 trainable parameters,127104 base unchanged,
+training probe6.133254->5.143521. Full SFT's same-budget probe is0.755217;this is
+adapter correctness,not superiority. Final original GSM8K import has16 distinct
+unrated problems and exact pinned MIT/source bytes;no optimization consumes them.
+
+Final focused88 tests pass in47.29s;Ruff/format,strict mypy179 files and build pass.
+CI source8e9b44c:CPU3.11/3.12/3.13 each798 passed,2 optional SDK skips,7 GPU
+deselected in324.22s/341.83s/212.55s. Optional SDK tests separately pass. All15
+jobs pass,including native export,posttraining/replay,SFT,DPO,GRPO,studies and
+full19.34M200-step pretraining with actual SIGKILL89/restore75;all200 losses have
+delta0 and model/Adam/RNG/application match. These pretraining checks are not a
+19.34M post-training quality result. Local pre-selector full798 pass/2 distributed
+failures and prior CI3.13 timeout remain recorded below;no Gloo fix is claimed.
+The orphan worker from the already-failed local packed test was explicitly cleaned
+after results were recorded;test return codes/checkpoints were not changed.
+
+Committed receipts and readable logs (no raw external corpus/model weights):
+
+- [Complete control/validation audit](evidence/posttraining-control.json).
+- [All60 RL metric windows](evidence/posttraining-metrics.json).
+- [Question/gold/text sample audit](evidence/posttraining-sample-audit.json).
+- [Derived answer-collapse/constant-baseline audit](evidence/posttraining-quality-audit.json).
+- [LoRA20 replay](evidence/posttraining-lora.json).
+- [Pinned GSM8K16 import](evidence/posttraining-gsm8k.json).
+- [Fourteen fixed verifier controls](evidence/posttraining-verifier-audit.json).
+- [All15 CI job identities/counts/recovery receipts](evidence/posttraining-ci.json).
 
 ## Implemented and tested interfaces
 

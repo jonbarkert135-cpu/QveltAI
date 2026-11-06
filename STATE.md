@@ -17,25 +17,27 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-Expanded Phase6 requested after M8.1. Implemented CPU extensions: explicit
-reasoning/chat-v2 masks, original LoRA in the packed SFT loop, bounded rational/
-numeric/SymPy-polynomial verifiers, own-checkpoint rejection/lexical diversity/
-difficulty pass@k, reviewed original GSM8K train-source ingress, default-off local
-teacher trace/terms ingestion, native-engine GRPO and verified offline replay.
-Lean remains design only. Preliminary fixed arithmetic control:127104params,
-SFT20/DPO4/RL60,training reward first10=.3125,last10=.709375;fixed-seed validation
-15/64->26/64,online/offline weights/Adam/RNG/losses exact. Two-answer mechanism
-fixture,not general math improvement;DPO heldout loss worsens. Original final800
-remain unscored. Focused79 checks passed before the last source-adapter additions;
-final full-source verification and publication are in progress. See runbook03,
-Source49876b0 clean control/LoRA20 replay pass;local full798 pass/2 old distributed
-failures/7 GPU deselected. CI42252195349:14 of15 jobs pass,CPU3.13 has the existing
-numeric-DDP90s timeout. Final selector fix excludes equivalent numeric spellings
-from trace diversity;focused4 plus final3 checks and lint/mypy179/build pass.
-Final corrected-source CI/receipt are pending. See
-posttraining_phase6_design.md and ADR0048. CPU GRPO remains<1M parameters;
-GPU/QLoRA/arbitrary external-problem RL and production source/model gates stay open.
-Next after acceptance:resume M8.2;user-directed Phase6 extension takes precedence.
+Expanded Phase6 portable extensions accepted on8e9b44c;all15 CI42253772192 jobs
+successful. CPU3.11/3.12/3.13 each798 passed,2 optional SDK skips,7 GPU deselected;
+SDKs verified separately. Final focused88 passed in47.29s;lint,mypy179/build pass.
+Chat-v2 reasoning masks,shared full/LoRA SFT,bounded exact/numeric/SymPy polynomial
+verifiers,own-model rejection/difficulty pass@k,default-off teacher/terms ingress,
+pinned original GSM8K train adapter,native-engine GRPO/offline replay and Lean design.
+Clean source28addb6ad1641aebd047a16931b4177db276022609a39eae9e63ca5e273a3bc3:
+SFT20/DPO4/RL60 on127104params;training reward .3125->.709375,validation15/64->26/64.
+Quality rejects:all59 parseable post-RL numeric outputs0,answer1 remains0/32;
+26/64 is below32/64 always-zero baseline. DPO heldout loss worsens. Rejection12
+of64 candidates (46 correct before dedup),all selected gold0;not reasoning traces
+or a promotion. LoRA20 rank4/alpha8 stop6/resume20 exact weights/Adam/RNG/cursor,
+9728 trainable parameters,base127104 unchanged. Actual16-row GSM8K train import,
+no optimization on it. Native offline all60 losses/model/Adam/RNG exact. All five
+control stage manifests clean on8e9b44c. Final800 unscored. See runbook03,
+validation_posttraining_phase6.md and eight posttraining evidence receipts.
+Pre-selector local full798 passed/2 historical distributed failures/7 deselected;
+prior CI3.13 also had a numeric-DDP timeout. Remote success does not diagnose/fix
+Gloo. No tests suppressed. GRPO stays original-environment CPU<1M;QLoRA/GPU/
+distributed/arbitrary-problem RL,Lean execution and production source/model gates
+remain open. Next dependency-ready implementation:M8.2 measured serving.
 
 Historical M8.1 acceptance follows.
 

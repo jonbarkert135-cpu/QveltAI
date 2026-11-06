@@ -54,6 +54,15 @@ model,Adam and RNG exactly on the same locked CPU setup. Run source/hardware/
 precision/world-size identity remains mandatory for exact resume; initialization
 from checked weights is distinct from restoring a training run.
 
+Observed2026-11-06:training reward .3125->.709375 (first/last10),fixed validation
+15/64->26/64. **Quality rejects:**all59 parseable post-RL numeric outputs are0,
+answer1 stays0/32;validation is below the32/64 always-zero baseline. Training
+problems are12 gold0/4 gold1,so always-zero earns75% there. The12 selected
+rejection examples also all have gold0. Review answer/problem coverage before
+feeding any such self-generated corpus back into SFT. These are negative math
+quality findings despite the real reward increase. See the
+[source-bound report and logs](../docs/development/validation_posttraining_phase6.md).
+
 ## Full SFT and LoRA
 
 Full fine-tuning is the default/main method. It reuses packed document attention,

@@ -1,6 +1,6 @@
 # Qvelt risk register
 
-Last updated: 2026-10-31. Owner for all risks: Lead agent unless external action
+Last updated: 2026-11-06. Owner for all risks: Lead agent unless external action
 is named. Likelihoods are qualitative judgments, not measured probabilities.
 
 | ID | Risk | Status / impact | Mitigation and acceptance evidence | Review gate |
@@ -313,3 +313,12 @@ coefficients can still lead to format gaming or answer collapse;inspect correctn
 KL,gradients,zero groups,truncation and readable audits separately. No throughput
 claim follows from sequential cached rollouts. Lean is a design,not a checked
 runtime. Historical intermittent local Gloo faults remain a separate open issue.
+
+Observed R027 collapse:all59 parseable post-RL numbers0,answer1 accuracy0/32,
+validation26/64 below always-zero32/64. Train has75% gold0;all12 rejection-selected
+examples have gold0. A rising reward/verification pass rate can reinforce answer
+imbalance through self-training. Block promotion and inspect coverage/baselines.
+Final source8e9b44c has all15 CI jobs green,but local numeric-DDP SIGABRT/packed
+DDP timeout and earlier remote3.13 timeout remain unresolved. No test suppression
+or forced-success process exit was introduced. Cleanup affected only the orphan
+worker after the already-recorded failed test;checkpoints/results were retained.

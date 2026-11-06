@@ -1,6 +1,6 @@
 # Qvelt decision log
 
-Last updated: 2026-10-31. Project owner for implementation decisions: Lead agent.
+Last updated: 2026-11-06. Project owner for implementation decisions: Lead agent.
 
 ## Evidence rules
 
@@ -1243,8 +1243,8 @@ than changing architecture or claiming new mixed-precision hardware evidence.
 
 ## ADR-0048 — Expanded math post-training with bounded native CPU interfaces
 
-- **Date/status:**2026-11-06;implementation and diagnostics verified;final-source
-  standalone/full-suite/CI acceptance pending.
+- **Date/status:**2026-11-06;portable CPU extensions accepted on8e9b44c,
+  all15 CI42253772192 jobs pass;model quality/promotion rejected.
 - **Context:**the user's expanded Phase6 follows accepted M8.1 and adds requirements
   beyond original M6.1–M6.3. Reuse the existing packed SFT,DPO,GRPO and checkpoint
   engine rather than introduce TRL/Transformers/PEFT dependencies or fork loops.
@@ -1303,3 +1303,13 @@ ADR0048 review update: equivalent final-number spellings are not distinct traces
 Selection now compares only reasoning bodies and retains at most one answer-only
 row/problem. Correct-candidate/pass@k counts are computed before dedup. This
 closes an observed lexical-diversity loophole without changing training/rewards.
+
+ADR0048 final acceptance:8e9b44c/package28addb6ad1641aebd047a16931b4177db276022609a39eae9e63ca5e273a3bc3,
+all15 CI42253772192 jobs pass;each CPU798 passed/2 optional SDK skips/7 GPU
+deselected,SDKs separately checked. Final focused88 pass,mypy179/build pass.
+Clean control/LoRA20/source ingress/offline replay receipts committed. Quality
+rejected:all59 parseable post-RL numbers0,answer1 stays0/32;26/64 validation is
+below the32/64 constant-zero baseline. All12 selected rejection examples gold0.
+Reward rise does not establish reasoning;coverage/model promotion remains blocked.
+Local798 pass/2 historical Gloo failures and prior CI3.13 timeout are retained;
+remote green does not diagnose their root cause. Final800 remain unscored.

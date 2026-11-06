@@ -1,8 +1,9 @@
 # Qvelt experiment register
 
-Last updated: 2026-10-31. Owner: Lead agent.
+Last updated: 2026-11-06. Owner: Lead agent.
 
-**Completed ML experiments: 0. Training runs: 0. Benchmark results: 0.**
+**Initial documentation-only session: no ML experiments or training at that time.**
+Subsequent actual experiments and their limited acceptance are recorded below.
 The initial session created documentation only. Phase 1 adds source review and
 analytical checks, not ML experiments. Their evidence is recorded below and in
 `docs/research/validation.md`; no learning or GPU smoke result is claimed.
@@ -821,3 +822,30 @@ GitHub42252195349:14/15 jobs pass;CPU3.13 has the existing numeric-DDP90s timeou
 evaluation/export recovery jobs pass. Not a green full acceptance. Audit found
 23 lexical answer variants from12 solved problems;numeric spellings now dedup
 by reasoning body/answer-only singleton. Final source/CI receipt follows.
+
+Final R027 source8e9b44c/package28addb6ad1641aebd047a16931b4177db276022609a39eae9e63ca5e273a3bc3
+clean standalone repeats all findings and exact online/offline60-step replay.
+Five stage manifests dirty=false and commit8e9b44c. Final LoRA20/rank4/alpha8
+stop6/resume20 matches model/Adam/RNG/application;9728 trainable parameters,
+base127104 unchanged. Final16-row original GSM8K import is source-bound;no optimizer
+consumes it. Native rejection64 candidates,46 correct,12 retained after reasoning-
+body/answer-only dedup;pass@1=.71875,pass@2/3/4=.75,easy only.
+
+**Quality rejection:**all59 parseable post-RL numeric responses are zero.
+Balanced validation:answer0 correct15/32->26/32,answer1 remains0/32;26/64 is below
+the32/64 always-zero baseline. Training16 problems have12 zero/4 one answers,
+so a constant-zero baseline earns75%. All12 rejection-selected rows also have
+zero gold. Reward increase is answer/termination collapse;it does not demonstrate
+arithmetic reasoning. Do not self-train on this corpus without coverage review.
+No quality promotion. Prior broader multi-seed negative studies remain in force.
+
+Final focused88 pass in47.29s;lint/format,mypy179 and wheel/sdist pass.
+GitHub42253772192 all15 jobs successful:CPU3.11/3.12/3.13 each798 passed,
+2 optional SDK skips,7 GPU deselected in324.22s/341.83s/212.55s;SDKs separately
+verified. Dedicated posttraining independently repeats reward means and exact
+online/offline updates. Current full RFC tiny19.34M200-step actual-SIGKILL89,
+restore75:all200 losses delta0,model/Adam/RNG/application exact. This is pretraining
+recovery,not a19.34M post-training quality experiment. Local/prior-CI distributed
+faults remain open;one orphan from the recorded packed timeout was cleaned only
+after results,without altering test outcomes or artifacts. See eight committed
+posttraining evidence JSONs and validation_posttraining_phase6.md/runbook03.

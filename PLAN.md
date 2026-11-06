@@ -1,11 +1,12 @@
 # Qvelt master roadmap
 
-Last updated: 2026-11-05. Owner of every milestone: **Lead agent**.
+Last updated: 2026-11-06. Owner of every milestone: **Lead agent**.
 
 ## User-directed expanded Phase6 follow-up (2026-11-06)
 
-Status:implemented CPU extensions;final-source acceptance in progress. This
-request takes precedence over the next M8.2 serving milestone.
+Status:CPU extensions accepted on8e9b44c,all15 CI42253772192 jobs successful.
+The user-directed extension is complete for the declared portable scope;
+next implementation resumes M8.2 serving.
 
 - [x] Chat-v2 explicit reasoning fields with exact shifted assistant masks;
   legacy control versions and multi-turn/packed document isolation preserved.
@@ -20,13 +21,17 @@ request takes precedence over the next M8.2 serving milestone.
 - [x] Fixed real SFT20->DPO4->RL60 arithmetic mechanism control shows higher
   sampled reward;online/offline losses/model/Adam/RNG exact in diagnostics.
 - [x] Consolidated runbooks/03_posttraining.md and design-only Lean track.
-- [ ] Observe final full-source local checks,standalone receipts and remote CI.
+- [x] Record final focused88 checks,clean-source standalone/LoRA/source receipts
+  and all15 green CI jobs;retain local and prior-CI distributed failures explicitly.
 - [ ] Separate future gates:QLoRA/GPU/distributed/large main run,arbitrary public
   problem RL,production decontamination and independently demonstrated math gains.
 
 Initial control reward .3125->.709375 (first/last10 training windows),fixed-seed
 validation15/64->26/64. Easy two-answer fixture,not a general reasoning score;
-DPO heldout negative finding retained. The final800 remain unscored. Main-run
+DPO heldout negative finding retained. All59 parseable numeric outputs after RL
+are0;answer1 remains0/32,validation26/64 is below the32/64 constant-zero baseline.
+All12 rejection-selected problems have gold0;coverage audit rejects self-training
+promotion. The final800 remain unscored. Main-run
 quality/hardware acceptance is not satisfied by this engineering control.
 
 ## Mission and boundaries
