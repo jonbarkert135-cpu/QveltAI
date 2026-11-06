@@ -2,6 +2,22 @@
 
 Last updated: 2026-11-06. Owner of every milestone: **Lead agent**.
 
+## User-directed expanded Phase7 evaluation (2026-11-06)
+
+Status:implemented portable reference,acceptance in progress. Supersedes the next
+M8.2 implementation until expanded evaluation delivery is verified.
+
+- [x] Native v2 generation/metrics/failure witnesses with legacy freeze compatibility.
+- [x] Actual optional lm-eval LM/local task integration and numerical parity tests.
+- [x] Reviewed/pinned limited GSM8K/MMLU imports,original EN/RU/code controls.
+- [x] Train-only actual-shard audit and mandatory release artifact coverage gate.
+- [x] Per-checkpoint pinned regression,crash repair,RNG-safe exact replay and plots.
+- [x] Report-bound portable receipts,generated RESULTS and README numeric guard.
+- [x] Consolidated runbooks/04_evaluation.md and explicit comparison methodology.
+- [ ] Final full checks,clean source-bound standalone evidence,ledger and green CI.
+- [ ] Separate future gates:blocked public datasets/full Python isolation,GPU/DDP/
+  large checkpoint evaluation and independent quality/release readiness.
+
 ## User-directed expanded Phase6 follow-up (2026-11-06)
 
 Status:CPU extensions accepted on8e9b44c,all15 CI42253772192 jobs successful.

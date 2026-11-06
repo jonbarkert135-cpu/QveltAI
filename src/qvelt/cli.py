@@ -142,6 +142,9 @@ def _parser() -> argparse.ArgumentParser:
     external.add_argument("--approved-for-training", action="store_true")
     external.add_argument("--terms", type=Path, required=True)
     external.add_argument("--terms-sha256", required=True)
+    from qvelt.eval.cli import add_parser as add_eval_parser
+
+    add_eval_parser(commands)
     evaluation = commands.add_parser("evaluate", help="Read-only pinned CPU evaluation")
     evaluation.add_argument("path", type=Path)
     evaluation.add_argument("--directory", type=Path, required=True)
@@ -180,7 +183,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     logger = configure_logging()
     try:
-        if args.command == "import-gsm8k":
+        if args.command in {
+            "eval-import",
+            "eval-audit",
+            "eval-receipt",
+            "eval-registry",
+            "eval-repair",
+            "eval-harness",
+            "results",
+        }:
+            from qvelt.eval.cli import run as run_eval_command
+
+            print(json.dumps(run_eval_command(args), sort_keys=True))
+        elif args.command == "import-gsm8k":
             from qvelt.eval.config import ArtifactRef
             from qvelt.posttrain.gsm8k import import_gsm8k_training
 
@@ -293,7 +308,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(
                 json.dumps(
                     run_evaluation(
-                        load_eval(args.path), args.directory, args.repository
+                        load_eval(args.path),
+                        args.directory,
+                        args.repository,
+                        command=(
+                            "qvelt",
+                            "evaluate",
+                            str(args.path),
+                            "--directory",
+                            str(args.directory),
+                            "--repository",
+                            str(args.repository),
+                        ),
                     ),
                     sort_keys=True,
                 )

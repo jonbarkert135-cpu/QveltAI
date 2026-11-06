@@ -69,6 +69,8 @@ class EvalCase:
     prompt: str
     target: str
     choices: tuple[str, ...] = ()
+    language: str = "und"
+    expected_method: str | None = None
 
     def __post_init__(self) -> None:
         for key in ("identifier", "domain", "family"):
@@ -78,8 +80,13 @@ class EvalCase:
             "numeric",
             "choice",
             "lm",
+            "code",
         ) or self.partition not in ("validation", "final", "control"):
             raise ValueError("Unknown evaluation kind/partition")
+        if self.language not in ("en", "ru", "und"):
+            raise ValueError("Unknown declared case language")
+        if self.expected_method is not None:
+            identifier(self.expected_method, "evaluation.expected_method")
         for key in ("prompt", "target"):
             value = getattr(self, key)
             _validate_text(value)
@@ -106,6 +113,10 @@ class EvalCase:
             )
         if self.kind == "lm" and (self.target or self.choices):
             raise ValueError("Plain LM task has no separate gold/choices")
+        if self.kind == "code":
+            from qvelt.eval.code_eval import code_spec
+
+            code_spec(self.target)
         if self.kind != "choice" and self.choices:
             raise ValueError("Only choice tasks have choices")
 
@@ -120,9 +131,19 @@ def load_cases(job: EvalJob) -> tuple[Manifest, list[EvalCase], int]:
         row = read_json(document.text)
         if (
             not isinstance(row, dict)
-            or set(row) != {"schema_version", *EvalCase.__dataclass_fields__}
+            or set(row)
+            not in (
+                {"schema_version", *EvalCase.__dataclass_fields__},
+                {
+                    "schema_version",
+                    *(
+                        set(EvalCase.__dataclass_fields__)
+                        - {"language", "expected_method"}
+                    ),
+                },
+            )
             or type(row["schema_version"]) is not int
-            or row.pop("schema_version") != 1
+            or row.pop("schema_version") not in (1, 2)
             or not isinstance(row["choices"], list)
         ):
             raise ValueError("Invalid version1 evaluation record")
@@ -157,7 +178,12 @@ def _fragments(text: str) -> list[str]:
         if isinstance(messages, list) and all(
             isinstance(m, dict) and isinstance(m.get("content"), str) for m in messages
         ):
-            return [m["content"] for m in messages]
+            return [
+                piece
+                for m in messages
+                for piece in (m["content"], m.get("reasoning"))
+                if isinstance(piece, str)
+            ]
         if isinstance(row.get("prompt"), str):
             return [row["prompt"]]
     return [text]
@@ -190,15 +216,33 @@ def audit_overlap(cases: list[EvalCase], job: EvalJob) -> dict[str, Any]:
     }
     coverage = []
     for source in job.training_sources:
-        manifest = licensed_raw(source, ("training", "decontamination"))
+        probe = ArtifactStore(Path(source.path).parent).read_manifest(
+            Path(source.path).name, expected_sha256=source.sha256, verify=False
+        )
+        shard_coverage: dict[str, Any] = {}
+        if (
+            isinstance(probe.metadata, DataInfo)
+            and probe.metadata.representation == "token_ids"
+        ):
+            from qvelt.eval.shard_audit import shard_documents
+
+            manifest, records, shard_coverage = shard_documents(source)
+        else:
+            manifest = licensed_raw(source, ("training", "decontamination"))
+            records = iter_records(Path(source.path), source.sha256)
         documents = truncated = 0
-        for document in iter_records(Path(source.path), source.sha256):
+        for document in records:
             documents += 1
             for fragment in _fragments(document.text):
                 tokens = normalized_tokens(fragment)
                 if len(tokens) > 8192:
-                    truncated += 1
-                    tokens = tokens[:8192]
+                    if job.protocol == "qvelt-eval-v1":
+                        truncated += 1
+                        tokens = tokens[:8192]
+                    elif len(tokens) > 131072:
+                        raise ValueError(
+                            "Audit document exceeds bounded full-scan capacity"
+                        )
                 normalized = " ".join(tokens)
                 sourcegrams = {
                     length: shingles(normalized, length)
@@ -238,9 +282,13 @@ def audit_overlap(cases: list[EvalCase], job: EvalJob) -> dict[str, Any]:
                 else [],
                 "documents": documents,
                 "truncated_fragments": truncated,
+                **shard_coverage,
             }
         )
     return {
+        "protocol": "shard-aware-v2"
+        if job.protocol == "qvelt-eval-v2"
+        else "raw-lexical-v1",
         "scope": "declared lexical sources only;unknown lineage and semantic leakage remain unverified",
         "complete_training_history_verified": False,
         "cleanliness_claim": False,

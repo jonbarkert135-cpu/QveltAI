@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import uuid
 from collections import Counter
 from dataclasses import asdict, replace
@@ -14,10 +15,19 @@ from typing import Any
 import torch
 
 from qvelt.config import ExperimentConfig, config_digest, dump_config
+from qvelt.eval.code_eval import score_code
 from qvelt.eval.config import EvalJob, dump_eval, eval_digest
 from qvelt.eval.corpus import EvalCase, audit_overlap, load_cases
+from qvelt.eval.diagnostics import (
+    arithmetic_witnesses,
+    canonical_answer,
+    failure_mode,
+    majority_vote,
+)
 from qvelt.eval.scoring import pass_at_k, perplexity, score_answer, wilson_interval
 from qvelt.inference.artifacts import checked_payload, load_checkpoint_model
+from qvelt.inference.config import GenerationOptions, TokenRequest
+from qvelt.inference.generation import GenerationEngine
 from qvelt.model.decoder import Decoder
 from qvelt.posttrain.dpo import response_logps
 from qvelt.tokenizer.core import QveltTokenizer
@@ -69,13 +79,39 @@ def generate_attempt(
 ) -> dict[str, Any]:
     prefix = prompt_ids(tokenizer, case.prompt, job.prompt_format)
     context = min(model.config.context, job.context_limit)
-    seed = attempt_seed(job.seed, case.identifier, attempt)
+    seed = attempt_seed(job.seed, case.identifier, attempt) % (
+        2**32 if job.protocol == "qvelt-eval-v2" else 2**63
+    )
     generator = torch.Generator(device="cpu").manual_seed(seed)
     actions: list[int] = []
     content: list[int] = []
     stop = "token_limit"
     text = ""
-    for _ in range(job.max_new_tokens):
+    native = job.protocol == "qvelt-eval-v2"
+    if native and len(prefix) + job.max_new_tokens > context:
+        stop = "context_overflow"
+    elif native:
+        request = TokenRequest(
+            "evaluation",
+            tuple(prefix),
+            GenerationOptions(
+                max_new_tokens=job.max_new_tokens,
+                strategy=job.sampling,
+                temperature=job.temperature,
+                seed=seed % 2**32,
+                context_limit=context,
+                max_seconds=300,
+                stop_tokens=(6,) if job.prompt_format == "chat-v1" else (2,),
+            ),
+        )
+        output = GenerationEngine(model, tokenizer).generate((request,))[0]
+        actions, text = list(output.token_ids), output.text
+        stop = {
+            "stop_token": "complete",
+            "max_tokens": "token_limit",
+            "nonfinite": "nonfinite_logits",
+        }.get(output.reason, output.reason)
+    for _ in range(0 if native else job.max_new_tokens):
         if len(prefix) + len(actions) > context:
             stop = "context_overflow"
             break
@@ -106,23 +142,41 @@ def generate_attempt(
         if len(text) > 8192:
             text, stop = text[:8192], "character_limit"
             break
-    return {
+    attempt_result = {
         "attempt": attempt,
         "seed": seed,
         "action_ids": actions,
         "generated_tokens": len(actions),
         "text": text,
         "stop": stop,
-        **score_answer(
-            text,
-            case.target,
-            case.kind,
-            job.extraction,
-            complete=stop == "complete",
-            atol=job.numeric_atol,
-            rtol=job.numeric_rtol,
+        **(
+            score_code(text, case.target, complete=stop == "complete")
+            if case.kind == "code"
+            else score_answer(
+                text,
+                case.target,
+                case.kind,
+                job.extraction,
+                complete=stop == "complete",
+                atol=job.numeric_atol,
+                rtol=job.numeric_rtol,
+            )
         ),
     }
+    if stop not in ("complete", "token_limit"):
+        attempt_result["correct"] = False
+    attempt_result["failure_mode"] = failure_mode(
+        attempt_result, expected_method=case.expected_method
+    )
+    attempt_result["arithmetic_witnesses"] = arithmetic_witnesses(text)
+    body: list[int] = []
+    if tokenizer.control_version == 2 and actions.count(8) == actions.count(9) == 1:
+        start, end = actions.index(8), actions.index(9)
+        if end > start:
+            body = actions[start + 1 : end]
+    attempt_result["reasoning_tokens"] = len(body)
+    attempt_result["reasoning_characters"] = len(tokenizer.decode(body))
+    return attempt_result
 
 
 @torch.no_grad()
@@ -153,7 +207,18 @@ def score_choice(
             "correct": False,
             "normalized_correct": False,
         }
-    normalized = [s / len(c) for s, c in zip(scores, choices, strict=True)]
+    lengths = (
+        [len(c) for c in choices]
+        if job.choice_normalization == "token"
+        else [len(c) for c in case.choices]
+    )
+    if job.choice_normalization == "character-without-delimiter":
+        if any(not c.startswith(" ") or len(c) < 2 for c in case.choices):
+            raise ValueError(
+                "Delimiter-excluded normalization needs one stored leading space"
+            )
+        lengths = [len(c) - 1 for c in case.choices]
+    normalized = [s / n for s, n in zip(scores, lengths, strict=True)]
     selected = max(range(len(scores)), key=scores.__getitem__)
     selected_normalized = max(range(len(scores)), key=normalized.__getitem__)
     return {
@@ -193,11 +258,49 @@ def score_lm(
 
 
 def aggregate(rows: list[dict[str, Any]], job: EvalJob) -> dict[str, Any]:
-    generated = [r for r in rows if r["kind"] in ("math", "numeric")]
+    generated = [r for r in rows if r["kind"] in ("math", "numeric", "code")]
     choice = [r for r in rows if r["kind"] == "choice"]
     lm = [r for r in rows if r["kind"] == "lm"]
     first = sum(bool(r["attempts"][0]["correct"]) for r in generated)
     attempts = [a for r in generated for a in r["attempts"]]
+    votes: dict[str, Any] = {}
+    math_rows = [r for r in generated if r["kind"] != "code"]
+    for k in job.pass_k:
+        correct = ties = 0
+        for row in math_rows:
+            vote = majority_vote(
+                [
+                    canonical_answer(a, row["kind"], job.extraction)
+                    for a in row["attempts"]
+                ],
+                k,
+            )
+            ties += vote["tied"]
+            if vote["answer"] is not None:
+                correct += (
+                    (vote["answer"] == row["target"].replace(",", "").removesuffix("."))
+                    if job.extraction == "gsm8k-strict-v1"
+                    else bool(
+                        score_answer(
+                            vote["answer"],
+                            row["target"],
+                            row["kind"],
+                            "whole-v1",
+                            complete=True,
+                            atol=job.numeric_atol,
+                            rtol=job.numeric_rtol,
+                        )["correct"]
+                    )
+                )
+        votes[str(k)] = {
+            "problems": len(math_rows),
+            "correct": correct,
+            "accuracy": correct / len(math_rows) if math_rows else None,
+            "ties": ties,
+            "wilson95_descriptive": wilson_interval(correct, len(math_rows))
+            if math_rows
+            else None,
+        }
     domains: dict[str, dict[str, Any]] = {}
     for domain in sorted({r["domain"] for r in rows}):
         subset = [r for r in rows if r["domain"] == domain and r["kind"] != "lm"]
@@ -229,6 +332,29 @@ def aggregate(rows: list[dict[str, Any]], job: EvalJob) -> dict[str, Any]:
     total_targets = sum(r["score"]["targets"] for r in lm)
     total_nll = sum(r["score"]["nll"] for r in lm)
     failed_lm = sum(bool(r["score"]["failed"]) for r in lm)
+    languages: dict[str, Any] = {}
+    for language in sorted({r.get("language", "und") for r in rows}):
+        subset = [
+            r
+            for r in rows
+            if r.get("language", "und") == language and r["kind"] != "lm"
+        ]
+        correct = sum(
+            bool(
+                r["attempts"][0]["correct"]
+                if "attempts" in r
+                else r["score"]["correct"]
+            )
+            for r in subset
+        )
+        languages[language] = {
+            "problems": len(subset),
+            "correct": correct,
+            "accuracy": correct / len(subset) if subset else None,
+            "wilson95_descriptive": wilson_interval(correct, len(subset))
+            if subset
+            else None,
+        }
     return {
         "official_benchmark": False,
         "problems": len(rows),
@@ -236,6 +362,7 @@ def aggregate(rows: list[dict[str, Any]], job: EvalJob) -> dict[str, Any]:
             sorted(Counter(r.get("family", "unknown") for r in rows).items())
         ),
         "domains": domains,
+        "languages": languages,
         "generation": {
             "problems": len(generated),
             "attempts": len(attempts),
@@ -264,6 +391,25 @@ def aggregate(rows: list[dict[str, Any]], job: EvalJob) -> dict[str, Any]:
                 for a in attempts
             ),
             "tokens": sum(a["generated_tokens"] for a in attempts),
+            "average_completion_tokens": sum(a["generated_tokens"] for a in attempts)
+            / len(attempts)
+            if attempts
+            else None,
+            "average_reasoning_tokens": sum(
+                a.get("reasoning_tokens", 0) for a in attempts
+            )
+            / len(attempts)
+            if attempts
+            else None,
+            "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+            "failure_modes": dict(
+                sorted(
+                    Counter(
+                        a.get("failure_mode", failure_mode(a)) for a in attempts
+                    ).items()
+                )
+            ),
+            "majority_vote_at_k": votes,
             "stop_counts": dict(sorted(Counter(a["stop"] for a in attempts).items())),
             "wilson95_descriptive": wilson_interval(first, len(generated))
             if generated
@@ -274,6 +420,15 @@ def aggregate(rows: list[dict[str, Any]], job: EvalJob) -> dict[str, Any]:
             "correct": sum(r["score"]["correct"] for r in choice),
             "normalized_correct": sum(r["score"]["normalized_correct"] for r in choice),
             "failed": sum(bool(r["score"]["failed"]) for r in choice),
+            "accuracy": sum(r["score"]["correct"] for r in choice) / len(choice)
+            if choice
+            else None,
+            "wilson95_descriptive": wilson_interval(
+                sum(r["score"]["correct"] for r in choice), len(choice)
+            )
+            if choice
+            else None,
+            "normalization": job.choice_normalization,
         },
         "lm": {
             "documents": len(lm),
@@ -285,14 +440,22 @@ def aggregate(rows: list[dict[str, Any]], job: EvalJob) -> dict[str, Any]:
         "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed.",
         "protocols": {
             "generation": "explicit-control-stop-v1",
-            "choice": "continuation-sum-and-token-mean-v1;first-option-tie",
+            "choice": "continuation-sum-and-"
+            + job.choice_normalization
+            + "-mean;first-option-tie",
             "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
             "pass_at_k": "1-C(n-c,k)/C(n,k)",
         },
     }
 
 
-def run_evaluation(job: EvalJob, directory: Path, repository: Path) -> dict[str, Any]:
+def run_evaluation(
+    job: EvalJob,
+    directory: Path,
+    repository: Path,
+    *,
+    command: tuple[str, ...] | None = None,
+) -> dict[str, Any]:
     dataset, cases, available = load_cases(job)
     audit = audit_overlap(cases, job)
     tokenizer, token_manifest = load_tokenizer_bundle(
@@ -311,7 +474,7 @@ def run_evaluation(job: EvalJob, directory: Path, repository: Path) -> dict[str,
                 raise ValueError("Checkpoint/tokenizer vocabularies disagree")
             for case in cases:
                 row = asdict(case)
-                if case.kind in ("math", "numeric"):
+                if case.kind in ("math", "numeric", "code"):
                     row["attempts"] = [
                         generate_attempt(model, tokenizer, case, job, i)
                         for i in range(job.samples)
@@ -346,6 +509,23 @@ def run_evaluation(job: EvalJob, directory: Path, repository: Path) -> dict[str,
     )
     run_id = uuid.uuid4().hex
     store = ArtifactStore(create_directory(directory))
+    if command is None:
+        command = (
+            "qvelt",
+            "evaluate",
+            os.path.relpath(directory / "evaluation.yaml", root),
+            "--directory",
+            os.path.relpath(directory.parent / (directory.name + "-reproduce"), root),
+            "--repository",
+            ".",
+        )
+    if not 1 <= len(command) <= 128 or any(
+        not isinstance(part, str)
+        or not 1 <= len(part) <= 2048
+        or any(ord(c) < 32 for c in part)
+        for part in command
+    ):
+        raise ValueError("Evaluation reproduction argv is invalid")
     files = [
         store.add_bytes("config.yaml", dump_config(config).encode(), role="config"),
         store.add_file("uv.lock", root / "uv.lock", role="dependency_lock"),
@@ -357,6 +537,11 @@ def run_evaluation(job: EvalJob, directory: Path, repository: Path) -> dict[str,
         ),
         store.add_bytes("metrics.json", _json(metrics), role="metrics"),
         store.add_bytes("audit.json", _json(audit), role="overlap_audit"),
+        store.add_bytes(
+            "command.json",
+            _json({"argv": command, "kind": "reproduction_command"}),
+            role="reproduction_command",
+        ),
         store.add_bytes(
             "provenance.json",
             _json(

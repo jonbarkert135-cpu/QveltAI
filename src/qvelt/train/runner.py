@@ -73,7 +73,11 @@ def train_synthetic(
         model = parallelize(model, job, context)
         optimizer = make_optimizer(model, config)
         start = (
-            load_checkpoint(model, optimizer, job, directory, context) if resume else 0
+            load_checkpoint(
+                model, optimizer, job, directory, context, repository=repository
+            )
+            if resume
+            else 0
         )
         if final < start:
             raise ValueError("A resumed job cannot move backwards")
@@ -189,6 +193,7 @@ def train_synthetic(
                         step,
                         context,
                         sharded=config.strategy == "fsdp",
+                        repository=repository,
                     )
                     last_saved = step
             if step != last_saved:
@@ -200,6 +205,7 @@ def train_synthetic(
                     step,
                     context,
                     sharded=config.strategy == "fsdp",
+                    repository=repository,
                 )
             return {
                 "rank": context.rank,

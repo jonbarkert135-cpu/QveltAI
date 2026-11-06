@@ -322,3 +322,22 @@ Final source8e9b44c has all15 CI jobs green,but local numeric-DDP SIGABRT/packed
 DDP timeout and earlier remote3.13 timeout remain unresolved. No test suppression
 or forced-success process exit was introduced. Cleanup affected only the orphan
 worker after the already-recorded failed test;checkpoints/results were retained.
+
+## R028 — Expanded evaluation coverage is not benchmark or release readiness
+
+The optional actual harness is CPU/single-rank and rejects oversized contexts or
+retokenized prefix boundaries. Limited zero-shot public prefixes differ from full
+five-shot benchmark protocols;template/prefix Wilson intervals are descriptive.
+Original code checks cover a pure bounded-expression DSL,not arbitrary Python or
+HumanEval. Russian original controls do not establish standardized Russian quality.
+MATH-500/AMC/AIME/HellaSwag/full HumanEval remain blocked by explicit rights,
+access or execution prerequisites. A benchmark registry entry is not a score.
+
+Training-shard audit covers declared train artifacts/tokenizer/frame boundaries,
+not unknown prior checkpoints or semantic paraphrases. Old bundles missing copied
+usage policies fail closed. Regression evaluation currently requires CPU FP32
+single rank<=20M and rejects unmerged LoRA;GPU/DDP/asynchronous production evaluation
+needs separate work. Evaluation failures preserve checkpoints but interrupt training
+until repair/resume succeeds. Plotting adds CPU overhead. A complete audit/ledger
+is necessary release evidence,not proof of clean history or model promotion.
+Final800 remain unscored. Historical intermittent Gloo failures remain open.

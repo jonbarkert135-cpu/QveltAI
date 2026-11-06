@@ -134,6 +134,12 @@ def initialize_training_run(
             raise ValueError(
                 "Actual data/tokenizer lineage and application recipe must agree"
             )
+    if job.training.regression_recipe is not None:
+        from qvelt.eval.regression import regression_policy
+
+        if tokenizer is None or application_recipe is None:
+            raise ValueError("Checkpoint regression requires actual BPE training data")
+        regression_policy(job, tokenizer)
 
     def initialize() -> None:
         root, code = capture_code(repository)
@@ -357,8 +363,11 @@ def save_checkpoint(
     sharded: bool = False,
     processed_tokens: int | None = None,
     application_state: dict[str, Any] | None = None,
+    repository: Path | None = None,
 ) -> Path:
     """Save at an optimizer boundary; only manifest.json commits the directory."""
+    if job.training.regression_recipe is not None and repository is None:
+        raise ValueError("Checkpoint regression requires the actual repository")
     run_store = ArtifactStore(directory)
     run = run_store.read_manifest()
     data_sha, tokenizer_sha = _run_lineage(run_store, run)
@@ -507,6 +516,11 @@ def save_checkpoint(
         )
 
     context.rank_zero(publish)
+    if job.training.regression_recipe is not None:
+        from qvelt.eval.regression import evaluate_checkpoint
+
+        assert repository is not None
+        context.rank_zero(lambda: evaluate_checkpoint(directory, step, job, repository))
     return checkpoint
 
 
@@ -619,7 +633,10 @@ def load_checkpoint(
     *,
     application_validator: Callable[[dict[str, Any], int, int], None] | None = None,
     checkpoint: Path | None = None,
+    repository: Path | None = None,
 ) -> int:
+    if job.training.regression_recipe is not None and repository is None:
+        raise ValueError("Checkpoint regression resume requires the repository")
     if checkpoint is None:
         checkpoint = latest_checkpoint(directory)
     store = ArtifactStore(checkpoint)
@@ -741,4 +758,9 @@ def load_checkpoint(
         map_location="cpu",
     )
     _restore_rng(rng, context.device)
+    if job.training.regression_recipe is not None:
+        from qvelt.eval.regression import evaluate_checkpoint
+
+        assert repository is not None
+        evaluate_checkpoint(directory, metadata.optimizer_step, job, repository)
     return metadata.optimizer_step

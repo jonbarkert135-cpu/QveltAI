@@ -13,6 +13,7 @@ dependencies = [
     "PyYAML==6.0.3",
     "datasketch==1.6.5",
     "langdetect==1.0.9",
+    "matplotlib==3.11.2",
     "numpy==2.2.6",
     "safetensors==0.6.2",
     "sympy==1.14.0",
@@ -20,6 +21,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+eval-harness = ["lm-eval==0.4.13"]
 cpu = ["torch==2.9.1"]
 cuda = ["torch==2.9.1; sys_platform == 'linux' or sys_platform == 'win32'"]
 tensorboard = [
@@ -104,3 +106,8 @@ follow_imports = "silent"
 module = ["langdetect.*", "datasketch.*", "sympy.*"]
 ignore_missing_imports = true
 follow_imports = "silent"
+
+[[tool.mypy.overrides]]
+module = ["lm_eval.*", "datasets.*", "pyarrow.*", "matplotlib.*"]
+ignore_missing_imports = true
+follow_imports = "skip"

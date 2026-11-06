@@ -357,6 +357,7 @@ def train_dpo(
                 directory,
                 context,
                 application_validator=validate,
+                repository=repository,
             )
         else:
             initialize_training_run(
@@ -441,6 +442,7 @@ def train_dpo(
                         context,
                         processed_tokens=token_count(step * batch),
                         application_state=state(step),
+                        repository=repository,
                     )
                 sink.log(step, values)
         finally:

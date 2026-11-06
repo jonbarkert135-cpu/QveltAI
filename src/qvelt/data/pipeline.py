@@ -121,6 +121,17 @@ def prepare_recipe(
                         f"sources/{source.name}-license-{i}.txt", stream, role="license"
                     )
                 )
+        for i, record in enumerate(
+            f for f in manifest.files if f.role == "usage_policy"
+        ):
+            with ArtifactStore(path.parent).open_file(record.path) as stream:
+                files.append(
+                    store.add_stream(
+                        f"sources/{source.name}-usage-{i}.json",
+                        stream,
+                        role="usage_policy",
+                    )
+                )
     files.append(
         store.add_file("benchmarks.json", registry.path, role="benchmark_registry")
     )

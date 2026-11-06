@@ -29,10 +29,17 @@ from qvelt.utils.manifests import manifest_digest
 
 
 def case_document(case: EvalCase) -> RawDocument:
+    values = asdict(case)
+    version = 2
+    if case.language == "und" and case.expected_method is None and case.kind != "code":
+        values.pop("language")
+        values.pop("expected_method")
+        version = 1
     return RawDocument(
-        json.dumps({"schema_version": 1, **asdict(case)}, sort_keys=True),
+        json.dumps({"schema_version": version, **values}, sort_keys=True),
         case.identifier,
         case.family,
+        case.language if case.language != "und" else "",
     )
 
 

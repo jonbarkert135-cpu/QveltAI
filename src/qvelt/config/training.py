@@ -23,6 +23,7 @@ from qvelt.config import (
     parse_yaml_mapping,
 )
 from qvelt.config.execution import ModelExecution
+from qvelt.utils.manifest_types import digest
 
 
 @dataclass(frozen=True)
@@ -46,9 +47,27 @@ class TrainingConfig:
     compile: bool = False
     tensor_parallel: int = 1
     pipeline_parallel: int = 1
+    regression_recipe: str | None = None
+    regression_sha256: str | None = None
     execution: ModelExecution = field(default_factory=ModelExecution, kw_only=True)
 
     def __post_init__(self) -> None:
+        if (self.regression_recipe is None) != (self.regression_sha256 is None):
+            raise ConfigError(
+                "Regression evaluation requires recipe and digest together"
+            )
+        if self.regression_recipe is not None:
+            if (
+                not isinstance(self.regression_recipe, str)
+                or not 1 <= len(self.regression_recipe) <= 2048
+                or any(ord(c) < 32 for c in self.regression_recipe)
+            ):
+                raise ConfigError("Invalid regression recipe path")
+            digest(self.regression_sha256, "training.regression_sha256")
+            if self.strategy != "single":
+                raise ConfigError(
+                    "Checkpoint regression currently requires single-rank CPU checkpoints"
+                )
         if not isinstance(self.execution, ModelExecution):
             raise ConfigError("training.execution requires ModelExecution")
         for name in [
@@ -113,6 +132,14 @@ class TrainingJob:
             raise ConfigError("TrainingJob requires validated dataclasses")
         if self.training.sequence_length > self.experiment.model.context:
             raise ConfigError("Training sequence exceeds model context")
+        if self.training.regression_recipe is not None and (
+            self.experiment.runtime.device != "cpu"
+            or self.experiment.runtime.precision != "fp32"
+            or self.experiment.model.parameter_count > 20_000_000
+        ):
+            raise ConfigError(
+                "Checkpoint regression currently supports bounded CPU FP32 models"
+            )
 
 
 def parse_training_job(text: str) -> TrainingJob:
@@ -155,6 +182,8 @@ def parse_training_job(text: str) -> TrainingJob:
             compile=cast(bool, d["compile"]),
             tensor_parallel=cast(int, d["tensor_parallel"]),
             pipeline_parallel=cast(int, d["pipeline_parallel"]),
+            regression_recipe=cast(str | None, d["regression_recipe"]),
+            regression_sha256=cast(str | None, d["regression_sha256"]),
         ),
         schema_version=cast(int, root.get("schema_version", 1)),
     )

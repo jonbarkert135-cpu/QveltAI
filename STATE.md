@@ -17,6 +17,21 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
+Expanded Phase7 evaluation implementation is under acceptance. Native v2,actual
+optional lm-eval bridge,original EN/RU/code controls,pinned GSM8K/MMLU/ARC development
+imports,actual training-shard audit,checkpoint regression/repair/plots and receipt-
+bound generated RESULTS are implemented. Focused66 checks pass;diagnostic suite
+passes exact stop2/resume3 weights/Adam/RNG,curves and repeated sampled reports.
+Final focused70 pass14.08s;lint/mypy195/build pass. Pre-final-ARC full CPU822
+passed,2 two-rank timeouts,7 GPU deselected505.11s. Source-clean evidence/CI
+publication remain in progress. Public subsets
+are not official full scores;blocked benchmark rights/execution remain explicit.
+Final800 untouched. See runbooks/04_evaluation.md and ADR0049.
+
+Previous expanded Phase6 acceptance follows.
+
+
+
 Expanded Phase6 portable extensions accepted on8e9b44c;all15 CI42253772192 jobs
 successful. CPU3.11/3.12/3.13 each798 passed,2 optional SDK skips,7 GPU deselected;
 SDKs verified separately. Final focused88 passed in47.29s;lint,mypy179/build pass.

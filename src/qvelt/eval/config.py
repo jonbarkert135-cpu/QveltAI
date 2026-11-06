@@ -61,14 +61,21 @@ class EvalJob:
     audit_jaccard: float = 0.85
     schema_version: int = 1
     protocol: str = "qvelt-eval-v1"
+    choice_normalization: str = "token"
 
     def __post_init__(self) -> None:
         if (
             type(self.schema_version) is not int
             or self.schema_version != 1
-            or self.protocol != "qvelt-eval-v1"
+            or self.protocol not in ("qvelt-eval-v1", "qvelt-eval-v2")
         ):
-            raise ConfigError("Only qvelt-eval-v1/schema1 is supported")
+            raise ConfigError("Only qvelt-eval-v1/v2 with schema1 is supported")
+        if self.choice_normalization not in (
+            "token",
+            "character",
+            "character-without-delimiter",
+        ):
+            raise ConfigError("Unknown choice normalization")
         if (
             not all(
                 isinstance(getattr(self, k), ArtifactRef)
@@ -90,7 +97,13 @@ class EvalJob:
             raise ConfigError("Evaluation approval/final access must be boolean")
         if (
             self.prompt_format not in ("chat-v1", "plain-v1")
-            or self.extraction not in ("whole-v1", "final-line-v1")
+            or self.extraction
+            not in (
+                "whole-v1",
+                "final-line-v1",
+                "gsm8k-strict-v1",
+                "reasoning-final-v2",
+            )
             or self.sampling not in ("greedy", "sample")
         ):
             raise ConfigError("Unknown evaluation prompt/extraction/sampler protocol")
@@ -185,6 +198,8 @@ def parse_eval(text: str) -> EvalJob:
 
 def eval_digest(job: EvalJob) -> str:
     value = asdict(job)
+    if job.protocol == "qvelt-eval-v1" and job.choice_normalization == "token":
+        value.pop("choice_normalization")
     for key in ("checkpoint", "tokenizer", "dataset"):
         value[key].pop("path")
     for source in value["training_sources"]:

@@ -518,6 +518,7 @@ def train_pretraining(
                     directory,
                     context,
                     application_validator=restore_application,
+                    repository=repository,
                 )
             elif mode == "auto":
                 if chosen is None:
@@ -533,6 +534,7 @@ def train_pretraining(
                         context,
                         application_validator=restore_application,
                         checkpoint=Path(chosen),
+                        repository=repository,
                     )
                     LOGGER.warning("auto-resume: restored %s", chosen)
             if final < start:
@@ -667,6 +669,7 @@ def train_pretraining(
                     sharded=sharded,
                     processed_tokens=0,
                     application_state=application_state(0),
+                    repository=repository,
                 )
             last_validation = initial
             interrupted: str | None = None
@@ -808,6 +811,7 @@ def train_pretraining(
                             context,
                             application_validator=rollback_application,
                             checkpoint=Path(target),
+                            repository=repository,
                         )
                         counters["rollbacks"] += 1
                         counters["optimizer_updates"] = rollback_updates["value"]
@@ -921,6 +925,7 @@ def train_pretraining(
                         sharded=sharded,
                         processed_tokens=tokens,
                         application_state=application_state(tokens),
+                        repository=repository,
                     )
                     saved = step
                     if recipe.keep_checkpoints:

@@ -47,6 +47,7 @@ def write_raw_bundle(
     permission: bytes,
     *,
     allowed_uses: tuple[str, ...] = ("training", "evaluation", "decontamination"),
+    evidence: tuple[tuple[str, bytes, str], ...] = (),
 ) -> Manifest:
     """Author/export one versioned source; preserve text and metadata row alignment."""
     import tempfile
@@ -93,12 +94,15 @@ def write_raw_bundle(
             ),
         )
     sources = (source,) if isinstance(source, SourceIdentity) else source
+    extra_files = tuple(
+        store.add_bytes(name, payload, role=role) for name, payload, role in evidence
+    )
     manifest = Manifest(
         "data",
         sources[0].name,
         "2026-10-31T00:00:00Z",
         DataInfo("raw", sources, count, None, None),
-        files,
+        (*files, *extra_files),
     )
     store.publish(manifest)
     return manifest

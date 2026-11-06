@@ -2,6 +2,46 @@
 
 Last updated: 2026-11-06. Owner: Lead agent.
 
+## D-EVAL-PHASE7-01 — Expanded suite sources and original controls
+
+Approved2026-11-06 before payload ingestion. Evaluation/decontamination only;
+no tokenizer fitting,training,teacher use or production cleanliness approval.
+
+- Original EN/RU math,choice,LM and bounded integer-function controls are authored
+  Apache-2.0 fixtures. New seed20261106 namespace;no final800 examples consumed.
+  Function checks interpret an allowlisted pure integer-expression AST,not arbitrary
+  Python or official HumanEval. Register per-record language and test vectors.
+- GSM8K original test at3101c7d5072418e28b9008a6636bde82a006892c uses the previously
+  reviewed publisher MIT release;expand the existing evaluation approval to numeric
+  gold labels needed for scoring. Exact payload749738 bytes/1319 rows,
+  SHA256 and original license remain pinned by the existing acquisition record.
+  Development imports<=64 (acceptance16);all test examples remain excluded from
+  optimization. No Socratic/model-solutions file. Strict#### extraction follows
+  installed lm-eval0.4.13's first regex capture/literal comparison;subset/zero-shot/
+  context/completion differences are recorded and are not official full scores.
+- MMLU abstract_algebra test only:publisher CAIS HF revision
+  c30699e8356da336a370243923dbaf21066bb9fe,
+  abstract_algebra/test-00000-of-00001.parquet,9964 bytes,SHA256
+  92338cdcdb43d2871691ef9a0e125e633ca57335ed635a635fe6dead94f224c2.
+  Immutable card explicitly attributes MIT to the original Hendrycks repository.
+  Read that repository's LICENSE/README/evaluate.py at
+  4450500f923c49f1fb1dd3d99108a0bd9717b660:MIT copyright2020 Dan Hendrycks,
+  license SHA2565d841b9eee8bf0d721359b79fbae956a8b426d3139bfefee32149c7d4f2a1a9c.
+  Preserve full MIT text/card provenance. Original evaluator uses5 exemplars,
+  subject heading,A-D options and candidate-letter likelihood/accuracy. Our bounded
+  acceptance uses an explicitly labeled zero-shot16-case subject prefix;no full
+  MMLU or directly comparable paper score. Publisher-license determination is not
+  exhaustive upstream question-rights verification. No other MMLU subject approved.
+
+Blocked pending rights/access/execution evidence: MATH/MATH-500 (MATH repository
+MIT is for loaders/evaluation;reviewed MATH-500 card lacks an explicit data license),
+AMC/AIME (competition reuse rights not established),HellaSwag (publisher access
+HTTP451;no alternative data mirror fetched),full HumanEval (MIT release reviewed,
+arbitrary Python sandbox unimplemented). ARC legal-text review was initially
+blocked by403,then completed from the official Creative Commons repository;the
+approval/pins/conditions are recorded in the closure below. No raw external corpus
+is committed to Git.
+
 ## D-GSM8K-TRAIN-BOUNDED-01 — Original human-written training problems
 
 Approved 2026-11-06 before fetching the train payload, within the user's expanded
@@ -335,3 +375,25 @@ and earlier approved original BPE fixture data;Apache-2.0,no external source or
 teacher. Test-only examples are software fixtures,not a benchmark. The standalone
 model remains untrained;tokenizer fitting uses only the preexisting approved demo
 corpus. No final800 questions are generated/scored by inference acceptance.
+
+### D-EVAL-PHASE7-01 ARC review closure (before corpus download)
+
+The official Creative Commons GitHub legalcode repository was located after the
+web legalcode403. Full unmodified CC-BY-SA4.0 text read at immutable
+4d2de083a6dcc5095ed1a30885bc48f868b9bb55/by-sa_4.0.txt,20005 bytes,SHA256
+ a0bd498de6b7991f563789715e3cf9f9a77860b6bb5b2c2b072fb3bb36361008.
+Sections2/3/4 permit reproduction/technical conversion subject to attribution,
+indication of modifications and ShareAlike for distributed adaptations/database
+rights. Publisher AllenAI HF card210d026faf9955653af8916fad021475a3f00453 explicitly
+states cc-by-sa-4.0;its unfinished body license field is disclosed. Approval is a
+publisher-license determination,not exhaustive upstream exam-question-rights proof.
+
+Approve only bounded evaluation/decontamination of ARC-Challenge test,first<=64
+rows (acceptance16),never training or tokenizer fitting. Exact publisher Parquet:
+ARC-Challenge/test-00000-of-00001.parquet,203808 bytes,SHA256
+62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9.
+Retain AllenAI/source/revision attribution,CC-BY-SA4.0 full text/URL and mark JSON
+conversion/prompt formatting as changes. Converted data retains CC-BY-SA4.0,
+not framework Apache. No raw/converted ARC text is published in Git;receipts omit
+predictions/questions. Original score-only aggregate artifacts are separate.
+ARC is no longer blocked solely by the legal-text fetch;other listed gates remain.

@@ -1,0 +1,7 @@
+schema_version: 1
+taskset: qvelt-original-mixed-v2
+math_per_language: 4
+samples: 4
+max_new_tokens: 8
+context_limit: 256
+seed: 20261106

@@ -1,0 +1,84 @@
+benchmarks:
+  amc-aime:
+    metric: contest exact final answer;AIME bounded integer answer
+    reason: competition problem reuse rights and exact snapshots not established;no
+      data fetched
+    status: blocked_license
+  arc-challenge:
+    attribution: Allen Institute for AI;ARC-Challenge;Clark et al.2018;publisher card
+      license declaration
+    conversion_license: CC-BY-SA-4.0;JSON/prompt formatting changes indicated;no raw
+      text published
+    development_fewshot: 0
+    legal_text_url: https://raw.githubusercontent.com/creativecommons/legalcode/4d2de083a6dcc5095ed1a30885bc48f868b9bb55/by-sa_4.0.txt
+    license_id: CC-BY-SA-4.0
+    license_sha256: a0bd498de6b7991f563789715e3cf9f9a77860b6bb5b2c2b072fb3bb36361008
+    license_url: https://creativecommons.org/licenses/by-sa/4.0/
+    metric: raw choice likelihood acc;acc_norm divides by choice text character length
+      excluding the added delimiter;lm-eval taskv1
+    official_fewshot: 0
+    payload_bytes: 203808
+    payload_sha256: 62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9
+    prompt: 'Question: QUESTION
+
+      Answer: + space + choice text'
+    revision: 210d026faf9955653af8916fad021475a3f00453
+    source_url: https://huggingface.co/datasets/allenai/ai2_arc/resolve/210d026faf9955653af8916fad021475a3f00453/ARC-Challenge/test-00000-of-00001.parquet
+    status: approved_bounded_evaluation
+  gsm8k:
+    development_fewshot: 0
+    license_id: MIT
+    license_sha256: 86bbb73e855821d7c401912fd4bf82e34313e6e3b6fd6f909f2b6cc9e209a53b
+    license_url: https://github.com/openai/grade-school-math/blob/3101c7d5072418e28b9008a6636bde82a006892c/LICENSE
+    metric: 'strict first #### regex capture,literal normalized exact match;lm-eval0.4.13
+      task v3'
+    official_fewshot: 5
+    payload_bytes: 749738
+    payload_sha256: 3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14
+    prompt: 'Question: QUESTION
+
+      Answer:'
+    revision: 3101c7d5072418e28b9008a6636bde82a006892c
+    source_url: https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/test.jsonl
+    status: approved_bounded_evaluation
+  hellaswag:
+    metric: continuation acc and character-length-normalized acc_norm;lm-eval task
+      v1
+    reason: publisher access HTTP451;no mirror bypass;prompt preprocessing read from
+      installed harness only
+    status: blocked_access
+  humaneval:
+    license_id: MIT
+    metric: execute official tests,unbiased pass@k;raw Python completion prefix
+    reason: publisher MIT/README verified;arbitrary Python sandbox not implemented;original
+      bounded-expression controls are separate
+    revision: b9453e8f1865df0a0057a1383767caa400acfbcf
+    status: blocked_execution
+  math-500:
+    metric: original MATH LaTeX/string equivalence,not the rational verifier
+    reason: reviewed MATH-500 card has no data license;MATH repo MIT covers loaders/eval;general
+      LaTeX metric not implemented
+    revision: 6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be
+    status: blocked_license
+  mmlu-abstract-algebra:
+    development_fewshot: 0
+    license_id: MIT
+    license_sha256: 5d841b9eee8bf0d721359b79fbae956a8b426d3139bfefee32149c7d4f2a1a9c
+    license_url: https://github.com/hendrycks/test/blob/4450500f923c49f1fb1dd3d99108a0bd9717b660/LICENSE
+    metric: argmax A-D continuation log likelihood;accuracy;single subject is not
+      full MMLU
+    official_fewshot: 5
+    payload_bytes: 9964
+    payload_sha256: 92338cdcdb43d2871691ef9a0e125e633ca57335ed635a635fe6dead94f224c2
+    prompt: subject heading + question + A-D options + Answer:;leading-space answer
+      letters
+    revision: c30699e8356da336a370243923dbaf21066bb9fe
+    source_url: https://huggingface.co/datasets/cais/mmlu/resolve/c30699e8356da336a370243923dbaf21066bb9fe/abstract_algebra/test-00000-of-00001.parquet
+    status: approved_bounded_evaluation
+  original-en-ru-code:
+    license_id: Apache-2.0
+    metric: versioned original exact/numeric/choice/LM and bounded integer-function
+      tests
+    reason: not a public benchmark;Russian original controls included;final800 untouched
+    status: approved_original_evaluation
+schema_version: 1

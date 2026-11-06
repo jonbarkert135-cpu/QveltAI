@@ -849,3 +849,31 @@ recovery,not a19.34M post-training quality experiment. Local/prior-CI distribute
 faults remain open;one orphan from the recorded packed timeout was cleaned only
 after results,without altering test outcomes or artifacts. See eight committed
 posttraining evidence JSONs and validation_posttraining_phase6.md/runbook03.
+
+## R028 — Expanded Phase7 evaluation engineering acceptance (2026-11-06)
+
+Commands:OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python
+scripts/evaluation_suite_smoke.py --directory runs/phase7-diagnostic-2 --repository .
+--with-harness --external-sources runs/eval-source-cache;focused evaluator and
+checkpoint-regression pytest set. Sources:locked CPU3.12/Torch2.9.1,optional actual
+lm-eval0.4.13. Pinned approved GSM8K/MMLU source bytes staged outside Git before
+conversion;no training on evaluation text. Original BPE fixture training3 steps,
+stop2/resume3 matches weights/Adam/RNG and all three regression curve values.
+Sampled mixed predictions/metrics/audits repeat exactly;model weights unchanged.
+Actual standard harness and native choice accuracy/normalization agree.
+
+Negative diagnostic:original math/code generation all fail;GSM8K0/16 includes4
+context overflows,MMLU abstract algebra4/16 includes5 failed contexts. Zero-shot
+first16 prefixes,context256,completion8,debug training only;not official benchmark
+scores,independent quality validation or promotion. No hyperparameter adjustment
+based on scores. Final800 untouched. Initial focused66 pass22.20s,additional
+CLI/source/boundary8 pass4.08s. Source-clean receipts/CI closure follow separately.
+
+R028 ARC follow-up:official CC legal text was successfully obtained/read;approval
+recorded before publisher payload download. Actual16-row ARC control yields raw2/16,
+character-normalized3/16,5 failed contexts. New normalization excludes the explicit
+stored delimiter to match upstream character denominators. Focused70 pass14.08s.
+Pre-final-ARC full local822 passed/2 two-rank timeouts/7 GPU deselected505.11s.
+Failures:NaN recovery and packed training replay,120s each. No skip/forced pass.
+Two confirmed orphan workers cleaned only after outcomes were recorded. Source-
+clean standalone rerun and authoritative final-source remote CI follow below.

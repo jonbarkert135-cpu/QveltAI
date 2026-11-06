@@ -371,6 +371,7 @@ def train_grpo(
                 directory,
                 context,
                 application_validator=validate,
+                repository=repository,
             )
         else:
             initialize_training_run(
@@ -562,6 +563,7 @@ def train_grpo(
                             context,
                             processed_tokens=counters["tokens"],
                             application_state=state(step),
+                            repository=repository,
                         )
         finally:
             sink.close()

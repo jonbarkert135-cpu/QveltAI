@@ -34,6 +34,13 @@ def extract_answer(text: str, protocol: str) -> str | None:
         return None
     if protocol == "whole-v1":
         return text.strip()
+    if protocol == "reasoning-final-v2":
+        from qvelt.posttrain.verifiers import extract_answer as framed_answer
+
+        return framed_answer(text, framed=True)
+    if protocol == "gsm8k-strict-v1":
+        matches = re.findall(r"#### (\-?[0-9\.\,]+)", text)
+        return matches[0].replace(",", "").removesuffix(".") if matches else None
     if protocol != "final-line-v1":
         raise ValueError("Unknown answer extraction protocol")
     lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -66,6 +73,16 @@ def score_answer(
     if gold is None:
         raise ValueError("Malformed evaluation gold answer")
     extracted = extract_answer(text, protocol)
+    if protocol == "gsm8k-strict-v1":
+        # lm-eval0.4.13 strict-match uses first regex capture and literal equality;
+        # a terminal EOS is not a prerequisite of the publisher/harness metric.
+        expected = target.replace(",", "").removesuffix(".")
+        return {
+            "correct": extracted == expected,
+            "format_valid": extracted is not None,
+            "extracted": extracted,
+            "complete": complete,
+        }
     predicted = None if extracted is None else parse_number(extracted, kind)
     correct = False
     if complete and predicted is not None:

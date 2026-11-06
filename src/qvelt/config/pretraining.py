@@ -102,6 +102,7 @@ class PretrainingJob:
             or self.job.experiment.runtime.device != "cpu"
             or self.job.experiment.runtime.precision != "fp32"
             or self.job.training.compile
+            or self.job.training.regression_recipe is not None
         ):
             raise ConfigError(
                 "LoRA currently requires single-process CPU FP32 SFT without compile"

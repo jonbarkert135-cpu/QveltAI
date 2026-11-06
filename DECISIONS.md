@@ -1313,3 +1313,72 @@ below the32/64 constant-zero baseline. All12 selected rejection examples gold0.
 Reward rise does not establish reasoning;coverage/model promotion remains blocked.
 Local798 pass/2 historical Gloo failures and prior CI3.13 timeout are retained;
 remote green does not diagnose their root cause. Final800 remain unscored.
+
+## ADR0049 — Expanded offline evaluation, checkpoint regression and result receipts
+
+- **Date/status:**2026-11-06;implemented CPU reference, acceptance in progress.
+- **Context:**the expanded Phase7 request needs actual standard-harness integration,
+  reproducible math/choice/code/Russian controls, actual-shard audits and an auditable
+  ledger. Existing v1 reports/frozen final holdout must remain compatible.
+- **Decision:**add explicit qvelt-eval-v2 using the native cached engine; preserve
+  legacy v1 digest. Exact/numeric/GSM-strict answer extraction, Wilson intervals,
+  unbiased pass@k, fixed-prefix plurality@k with first-seen tie diagnostics, explicit
+  reasoning-token lengths and conservative failure witnesses. Incorrect free text
+  without evidence stays unclassified. Code controls interpret a bounded pure
+  integer-expression AST;never exec generated Python or label these HumanEval scores.
+- **Harness:**pin optional lm-eval0.4.13 and implement its real LM API. Likelihood
+  has numerical PyTorch references;rolling uses the actual upstream window helper;
+  generation uses native inference. Actual ConfigurableTask/evaluator.evaluate runs
+  on local original tasks. Reject unsupported options/retokenized continuation
+  boundaries/context overflow,not silent changes to benchmark semantics.
+- **Data/protocol sources [verified]:**installed lm-eval0.4.13 GSM8Kv3/MMLU/ARC/
+  HellaSwagv1/HumanEvalv1 task definitions,filters,choice-normalization metrics and
+  HellaSwag preprocessing source read. GSM8K publisher revision3101c7d5072418e28b9008a6636bde82a006892c
+  README/full MIT and exact test bytes;MMLU publisher HFc30699e8356da336a370243923dbaf21066bb9fe
+  card + original Hendrycks4450500f923c49f1fb1dd3d99108a0bd9717b660 README/LICENSE/
+  evaluate.py read. Default5-shot protocols are explicitly different from our
+  zero-shot first16 development controls. Full source pins/hashes in DATA_CARD and
+  benchmark inventory;no official full benchmark score claim.
+- **Blocked sources:**MATH loaders/equivalence source985bdc1696e88e8643f081a0ff4719da39f2ae2a
+  read;its MIT code license does not clear MATH-500 data (reviewed card6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be
+  lacks explicit license). AMC/AIME reuse rights unresolved. HellaSwag publisher451
+  respected without mirror bypass. AllenAI official ARC URL redirects to publisher
+  HF210d026faf9955653af8916fad021475a3f00453 CC-BY-SA4 card;full legal-text403,
+  terms review pending,no data. HumanEval b9453e8f1865df0a0057a1383767caa400acfbcf
+  full MIT/README read,but arbitrary Python isolation unimplemented. These are
+  explicit unavailable benchmark gates,not fake toy implementations.
+- **Audit:**copy original usage policies into prepared artifacts;validate permissions,
+  checksums,tokenizer and complete train-only frame coordinates before decoding.
+  N-gram/exact/Jaccard/family findings never join documents. V2 full-scan bounds
+  fail explicitly. Encoded preference frames have their own validated path.
+  Unknown earlier model history and semantic leakage remain unverified.
+- **Checkpoint regression:**optional pinned recipe through shared save/load hooks,
+  evaluated every committed supported checkpoint with RNG restoration. Crash after
+  checkpoint publication leaves weights safe;resume/repair completes reports and
+  hash-bound PNG/JSON curves. CPU FP32/single<=20M only;unmerged LoRA/GPU/DDP reject.
+- **Ledger:**verified receipts preserve exact metrics,audit,configs,source/inputs and
+  reproduction argv without raw corpus/weights. Deterministic RESULTS.md and README
+  numeric-result guard are checked in CI. Comparison key requires identical semantic
+  evaluation/data/tokenizer/evaluator source;no paper scores copied. Release coverage
+  requires every registered benchmark and actual training-shard audit,currently
+  blocked;even passing artifact coverage is not quality promotion or history proof.
+- **Dependencies:**Matplotlib3.11.2 supplies real standalone curves;optional lm-eval
+  pins its actual dependencies via uv.lock. HuggingFace datasets constrains fsspec,
+  so lock resolves2026.9.0->2026.7.0;other previously locked package versions retained.
+  Default native evaluation needs no optional datasets/harness or external services.
+- **Alternatives:**fake harness interfaces,unsafe Python execution,unreviewed mirror
+  datasets and heuristic cognitive labels rejected. No remote service/GPU performance
+  claim. Revisit full task coverage after rights,context,code sandbox and hardware
+  validation;revisit audit bounds before large production corpora.
+
+ADR0049 ARC review closure:full CC-BY-SA4.0 legal text read from official Creative
+Commons legalcode4d2de083a6dcc5095ed1a30885bc48f868b9bb55 (20005 bytes,
+a0bd498de6b7991f563789715e3cf9f9a77860b6bb5b2c2b072fb3bb36361008) after
+web403. Publisher AllenAI HF card explicitly declares CC-BY-SA4.0,although its
+body license subsection is unfinished. Register bounded first16 ARC-Challenge
+only,evaluation/decontamination,no training. Preserve full license,AllenAI/source
+attribution and conversion change indication;converted data remains CC-BY-SA.
+Actual publisher payload203808 bytes/1172 rows,62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9,
+read only after DATA_CARD approval. Native character-without-delimiter mode excludes
+the stored leading target space from the denominator,matching upstream acc_norm;
+raw choice likelihood remains unchanged. No raw corpus/predictions in public receipts.
