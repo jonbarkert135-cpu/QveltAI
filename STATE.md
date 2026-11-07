@@ -1,34 +1,71 @@
-# Qvelt current state
+# QVELT current state
 
-Updated:2026-11-07. Owner:Lead agent.
+Updated:2026-11-07. Implementation lead:Lead agent; named human reviewers pending.
 
-## Current task: frontier design prerequisites, Step A only
+## Current task: Step A owner-spec amendment, documentation only
 
-Owner approved the design direction after the assessment of main
-`901cb9b03632a5a3dc36beb3ef0e1fc29ce71b2e`. [ADR-0052 through ADR-0056](DECISIONS.md#adr-0052-frontier-horizon-and-gated-validation-ladder)
-record the horizon/gated ladder, tokenizer-v3 control block with undecided V,
-typed SFT schema3, truthful serving capabilities and three replay classes.
-These are accepted designs, not implemented or measured scale capabilities.
+Base main:`f15b8274a9cf493acc640bc2515d078ce92483b4`. The owner supplied the full
+Russian strategic specification (Q1-Q19 and principles1-5) in the conversation on
+2026-11-07 after the attachment was unavailable. The entire supplied text was
+read. This records owner requirements/statements, not independent verification.
+[ADR-0052..0056 amendments](DECISIONS.md#adr-0052-frontier-horizon-and-gated-validation-ladder)
+and [ADR-0057..0061](DECISIONS.md#adr-0057-effort-conditioned-training-and-enforced-compute-budgets)
+record the resulting design changes. No implementation or model capability follows.
 
-Targets:1,000,000 total prompt+output tokens, output<=131,072; NVIDIA
-H100/H200/B200-class design targets with backend abstraction and CPU oracle.
-Initial internal tools:read_file/search/apply_patch/exec(tests,lint,build)/git diff;
-an isolated runner is still required. Raw reasoning stays separate under an
-explicit retention/access policy; clients receive summaries by default only
-when implemented. Image input remains a separate later phase/ADR.
+### Owner decisions and statements received 2026-11-07
 
-Owner decisions still open:languages/data mix, compute budget, permitted
-code/teacher sources. Interim scope:EN/RU, code, math, permissive-license sources
-only, no external teachers; no corpus ingestion or expensive run is authorized.
-No final vocabulary size or retention duration is assumed. Historical v1/v2
-artifacts, runtime, checkpoint formats, configs and lockfile are unchanged.
+| Spec | Owner-stated requirement or claim | Verification / operational status |
+| --- | --- | --- |
+| Q1/Q10, conclusion | A frontier general model/ecosystem for reasoning, software engineering, math/science and agents; first-year infrastructure/model/reasoning/platform/agent/limited-launch ambitions; small models are a validation/support ladder. | Goals and deadlines, not achieved results or delivery guarantees. |
+| Q2 | Owner describes budget as practically unlimited; preliminary state-investment program USD50-100 billion over5-7 years, with USD10-15 billion proposed for12-18 months. | Owner statement only; no funding agreement, availability or spending authority independently verified. Numbers must not drive code, configs/defaults, procurement or paid runs. |
+| Q3 | Plans for large owned NVIDIA H100/H200/B200-or-newer clusters, thousands/tens of thousands of GPUs, fast interconnect/storage, cooling/power/datacenters; cloud as needed and backend portability. | Plans, not verified ownership/access. Current environment reports Torch2.13.0+cpu, CUDA available=False, GPU count=0. |
+| Q4/Q18/Q19 | International specialists, technical leads, independent review and qualified human accountability; agents provide clear evidence and explain disagreement simply. | Staffing/appointments unverified; no ML or legal reviewer named. Owner is not a programmer; each report requires a plain-language summary and a review stop. |
+| Q5/Q6 | 100+ languages including low-resource; English/Ukrainian/Russian priorities; named programming languages; starting40/30/20/10 mix hypothesis. | Language scope/mix direction received, replacing EN/RU-only planning. Final registry, per-language weights, rights/data sufficiency and quality remain unverified. |
+| Q7-Q9 | Source/license registry, legal review; lawful external outputs only; separate voluntary training opt-in, withdrawal/deletion, secret/PII filtering and enterprise rules. | No new source approved. Default candidates:own/permissive/explicitly licensed data only; external model outputs OFF pending terms-specific named legal review. Privacy controls unimplemented. |
+| Q11 | File/project/archive/code/terminal/web/API/agent workflows with permission for critical actions. | First internal tools remain read_file, search, apply_patch, exec(tests/lint/build), git diff in an isolated runner; broader tools are later requirements. |
+| Q12, principle5 | Separate retained reasoning with retention/access policy; concise explanations/summaries by default; effort none/instant, low, medium, high, extra high, maximum changes real compute. | Recommend effort field+reserved tokens+budget-conditioned training+enforced limits. No modes/summarizer implemented; effort_levels stays empty until supported. No retention duration assumed. |
+| Q13 | Text/code/tools first, image understanding later; audio/video and visual creation further phases. | Separate later modality ADRs; no image capability or image tokens added. |
+| Q14 | Up to1,000,000 TOTAL tokens including system, history, documents/files, tool results, service framing and generation; one response<=128,000. | Future target, not existing capacity. 128,000 supersedes the earlier131,072 design value. Hidden reasoning consumes output budget. |
+| Q15 | QVELT is the product/model/ecosystem name; trademark/domain checks before launch. | Prose naming updated safely in this task; package paths, identifiers and existing response IDs unchanged. Legal name clearance unverified. |
+| Q16/Q17 | Web first; accounts/auth/session/history/permissions and consumer/enterprise separation from day one; desktop/local agent later; payments before commercial launch, optional for the first closed version. | Product requirements, not features of the current single-key framework server. No account/payment/product implementation in this task. |
+| Principles1-4 | Honesty without flattery, justified initiative/disagreement, sourced factual accuracy without partisan agenda, competence and explicit uncertainty. | Post-training/evaluation requirements; no compliance claim before probes and mandatory human review. Ukraine/Taiwan distinctions are included in the proposed factual-claims suite. |
 
-Step A changes DECISIONS/STATE/PLAN only. Validation:2 documentation-tool tests
-passed in0.09s; MkDocs strict build passed;33 local links/anchors and consecutive
-ADRs0001..0056 checked; control-block/token-budget arithmetic and git diff --check
-passed. These are documentation checks, not ML or scale acceptance. Stop for
-owner review before Step B; tokenizer/schema/reporting/API implementations remain
-unstarted in this sequence.
+**Claims rule:** no assertion that QVELT matches or exceeds another model may
+appear as fact without independent measured evaluation with provenance and
+comparable settings. Funding, team and competitive ambitions do not supply that
+evidence. No architecture/parameter claims about other labs are inferred.
+
+### Amendment scope and remaining gates
+
+Tokenizer v3 still means a NEW lineage before real pretraining. V remains
+configurable/undecided; candidates extend above131072/262144. The proposed
+128-control block now reserves effort IDs22-27 and leaves100 spare slots.
+This changes the unfrozen design only; v1/v2 and all existing artifacts remain
+untouched. No language/data split or numeric effort budget is fixed in configs.
+
+Named ML review is required for tokenizer table/V, architecture family, data
+lineage/licenses and precision. Named legal review is required for the relevant
+source/consent/release decisions. Until reviewers are appointed, every step
+continues to stop for owner review; production freeze is not implied by a draft.
+First small-GPU validation is a separate gated milestone before GPU-dependent
+work. No paid runs, bookings, external teachers or ingestion are authorized here.
+
+Remaining decisions:reviewer names, final100+ registry/per-language allocations,
+approved corpus/sample/revisions, production V, per-run compute budget, effort
+policy and retention/enterprise/jurisdiction details. Current native limits stay
+context<=min(snapshot.context,2048), output<=256; planned capabilities stay false
+until model/backend support is actually validated.
+
+This pass changes DECISIONS/STATE/PLAN and the server-setup runbook only.
+Amendment validation:2 documentation-tool tests passed in0.13s; strict MkDocs
+build passed in0.73s;70 local links/anchors and consecutive ADRs0001..0061 checked.
+The draft table has128 unique controls,6 effort controls and100 reserves; exact
+arithmetic checked the context/output budget and40/30/20/10 mixture sum.
+git diff --check and docs-only scope checks passed. These are document checks,
+not ML/GPU/scale or legal acceptance. UN seed-document endpoints returned403;
+they remain unverified, with human factual/legal adjudication still required.
+Stop for review after this task. Step B and all later implementation remain
+UNSTARTED; the schema2 reporting fix is still Step C.
 
 ## Environment readiness (2026-11-04)
 

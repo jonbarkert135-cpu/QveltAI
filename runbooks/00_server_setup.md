@@ -1,10 +1,18 @@
 # Prepare a Linux NVIDIA GPU training server
 
-Scope: Ubuntu 24.04 LTS x86-64, NVIDIA GPUs and administrator access. The user's
-actual machine is an ASUS TUF F15/RTX3060 Laptop/Core i5/16GB RAM; no server or
-exact GPU/driver/VRAM inventory was supplied. These commands are a server recipe,
-not evidence they ran on that laptop. Review cluster policy before sudo commands.
-The current trainer is a small synthetic engineering path, not full pretraining.
+Scope: Ubuntu 24.04 LTS x86-64, NVIDIA GPUs and administrator access. Earlier
+owner-stated laptop inventory (2026-10-31) was ASUS TUF F15/RTX3060/Core i5/16GB;
+it was not independently verified as available hardware. The owner's strategic
+specification received2026-11-07 describes future large NVIDIA clusters, not
+verified access. Current QVELT environment:CPU only, CUDA available=False, GPU
+count=0. These commands are a manual server recipe, not executed GPU acceptance.
+
+Before provisioning or paid execution, require the owner's explicit node/budget
+approval and named human ML review. Complete the
+[first small GPU validation gate](../PLAN.md#hardware-classes-and-first-small-gpu-validation-gate)
+before any dependent GPU claim or cluster run. No rental, procurement or paid
+run is scheduled here. Review the actual server/cluster policy before sudo.
+Portable framework acceptance does not validate a target GPU or production model.
 
 ## 1. Inventory and driver
 

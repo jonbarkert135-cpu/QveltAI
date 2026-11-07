@@ -1,14 +1,19 @@
-# Qvelt decision log
+# QVELT decision log
 
-Last updated: 2026-11-06. Project owner for implementation decisions: Lead agent.
+Last updated: 2026-11-07. Implementation lead: Lead agent; human review gates in ADR-0061.
 
 ## Evidence rules
 
 `[verified]` means the cited text was read and supports the stated limited claim.
-It does not mean a Qvelt implementation exists or a result was reproduced.
+It does not mean a QVELT implementation exists or a result was reproduced.
 `[unverified]` means a source or its applicability has not yet been checked.
 User requirements and local inspection are labeled separately; they are not
-research evidence. All decisions below date to 2026-10-31.
+research evidence. Entries carry their own dates; initial decisions date to
+2026-10-31. The owner supplied the complete QVELT strategic specification in the
+conversation on 2026-11-07 (Q1-Q19 and principles 1-5). Its requirements are owner
+requirements; funding, access, team and competitive statements are not independently
+verified facts. Amendments below supersede earlier prospective choices explicitly,
+without changing historical artifacts or claiming implementation.
 
 The PyTorch references below are fixed to **v2.6.0** for a stable source revision.
 This is a documentation reference, **not a dependency version selection**.
@@ -142,7 +147,7 @@ Historical bootstrap queue: Phase 1 has now verified the corresponding primary
 texts in `docs/research/survey.md` and `sources.json`, including the accessed v1
 title of the AdamW preprint. The old labels below record what was unknown at
 bootstrap; use ADR-0008 onward for current choices. Scientific verification is
-claim-scoped, not empirical validation of Qvelt.
+claim-scoped, not empirical validation of QVELT.
 
 Each item is **[unverified]**: the paper text and its applicability have not yet
 been read in this project. Titles/years are starting bibliographic entries to
@@ -381,7 +386,7 @@ for this session; future publication can follow the next user instruction.
   explicit supported cuBLAS workspace value for strict seeding. Doctor executes
   a real FP32 2x2 matmul on the requested device and reports observed versions;
   native operation errors are reported, never replaced by CPU success.
-  JSON logging uses a reserved Qvelt handler without changing the root logger.
+  JSON logging uses a reserved QVELT handler without changing the root logger.
 - **Rationale:** diagnostics distinguish an installed API, an operational CPU
   path and untested GPU capability. A seed is necessary but insufficient for
   resumable training; M5 must checkpoint all relevant progress/state.
@@ -749,7 +754,7 @@ for this session; future publication can follow the next user instruction.
   permutations consume RAM. Copy only active batch arrays to int64 tensors.
 - **Sources:** [verified] installed NumPy2.2.6 memmap/dtype serialization; PyTorch2.9.1
   DataLoader signature/source (in_order,spawn,prefetch_factor,generator) and actual
-  0/2-worker bit-exact replay tests. Existing Qvelt decoder/loss numerical references
+  0/2-worker bit-exact replay tests. Existing QVELT decoder/loss numerical references
   validate masks. No GPU throughput or uniform-permutation randomness claim.
 - **Revisit:** measured corpus-scale I/O/page-cache limits, scalable alternative
   permutations, cross-topology migration or pinned-memory GPU training evidence.
@@ -939,12 +944,12 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   This loses long response tails but never pretends they were completed. Reports
   retain truncation counts. Complete-turn truncation and fragment-sidecar schemes
   were alternatives; they would drop useful response prefixes or add storage state.
-- **Initialization:**pin the canonical Qvelt checkpoint manifest, verify registered
+- **Initialization:**pin the canonical QVELT checkpoint manifest, verify registered
   files, exact architecture and tokenizer, load finite safetensors weights only;
   create new Adam/schedule/RNG counters. Ordinary resume retains the entire SFT
   application state. Bind the objective and base digest, exclude relocatable base
   path from recipe identity. Distinct SFT application kind prevents objective drift.
-- **Evidence/sources:**[verified] Qvelt controls for tokenizer versions1/2, original
+- **Evidence/sources:**[verified] QVELT controls for tokenizer versions1/2, original
   loader/loss/checkpoint implementations; executed explicit shifted-token loss and
   logsumexp gradient oracles. Read the pinned Orchestra TRL SFT guide for chat/
   prompt-completion/packing context; its APIs, speed and hardware claims were not
@@ -1071,7 +1076,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   https://arxiv.org/html/2305.18290v2 . Executed SymPy derivative identity and independent
   NumPy value/analytic-gradient checks;masked sequence and unpadded model references.
   Local pinned Orchestra TRL/DPO guide informed review;TRL was not installed and
-  guide performance/hardware recommendations are not verified Qvelt results.
+  guide performance/hardware recommendations are not verified QVELT results.
 - **Limits/revisit:**reference memory/additional forward,length effects,simplistic
   negatives and cross-stage family overlap. Training fixture learning with worse
   heldout DPO loss does not establish reasoning improvement or justify promotion.
@@ -1131,7 +1136,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   Audit declared sources without claiming complete semantic contamination clearance.
 - **Alternatives:**rename earlier tiny validation examples as final benchmark;
   silently adopt vendor task prompts/scores or execute custom task Python. Existing
-  Qvelt models do not need a Transformers/lm-eval dependency for these contracts.
+  QVELT models do not need a Transformers/lm-eval dependency for these contracts.
 - **Sources:**[verified] RFC002 section6;project-local pinned Orchestra evaluation
   skill/custom-task reference read for task/version/logging patterns. Chen et al.2021,
   Evaluating Large Language Models Trained on Code,v2 section2.1/appendixA Eq1,
@@ -1221,7 +1226,7 @@ than changing architecture or claiming new mixed-precision hardware evidence.
   vLLM compatibility. These do not satisfy correctness/provenance boundaries.
 - **Sources:**[verified] local RFC001 cache contract,docs/model.md and pinned
   Orchestra vLLM skill read for batching/cache/resource patterns. Vendor speed,
-  hardware and quantization examples are not Qvelt measurements or installed APIs.
+  hardware and quantization examples are not QVELT measurements or installed APIs.
 - **Limits/revisit:**CPU FP32,<20M parameters,8 batch/2048 context and bounded
   logical KV payload;copy-on-append/transient/RSS differs. Timeouts do not preempt
   kernels. Serving/continuous batching,GPU/quantization and model release rights
@@ -1552,23 +1557,38 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   Design accelerator interfaces for NVIDIA H100/H200/B200-class hardware while
   retaining backend abstraction; no such hardware is validated by this ADR.
 - **Product budgets:** 1M means exactly 1,000,000 total tokens, with tokenized
-  prompt plus all generated tokens <= 1,000,000 and output <= 131,072. Framing,
-  reasoning and generated tool-call payloads consume the applicable budgets.
+  prompt plus all generated tokens <= 1,000,000 and output <= 128,000. System
+  instructions, history, documents/files, tool results, internal framing and all
+  reasoning/tool-call generation consume the applicable budgets.
   These are future targets, not current server limits or measured capabilities.
+  **Owner amendment 2026-11-07, Q14:** 128,000 replaces the earlier 131,072;
+  hidden reasoning does not provide an extra uncounted output allowance.
 - **Gates:** first require CPU values/gradients, masks, initialization and replay
   tests for each new component; then actual few-GPU tests, multi-node composition
   and failure/recovery rehearsal on available hardware. Advance through measured
   architecture/optimizer/data/hyperparameter trials before a costly run. Report
   compute estimates with formula, active/total parameter accounting, assumptions
   and exclusions. No larger run or expense is authorized by this horizon.
-- **Owner constraints:** language/data mix, compute budget and allowed code/teacher
-  sources remain owner decisions. Interim scope is EN/RU, code and math,
-  permissive-license sources only, no external teachers. This does not approve
-  any dataset: retain [ADR-0005](#adr-0005-use-explicit-provenance-and-approval-before-ingesting-data)
-  and source-specific rights/provenance gates. Initial internal tool interfaces
+- **Owner amendment 2026-11-07, Q1-Q19:** the strategic spec replaces EN/RU-only
+  planning with [multilingual coverage and a measured mix](#adr-0058-multilingual-coverage-and-measured-mixture),
+  and specifies [source-specific governance](#adr-0059-data-rights-consent-and-legal-review-gates).
+  Per-run spending, approved corpus revisions and human reviewers remain undecided.
+  Funding/access/team figures in STATE are owner statements, not resources that
+  agents may spend or configure. Retain [ADR-0005](#adr-0005-use-explicit-provenance-and-approval-before-ingesting-data).
+  Initial internal tool interfaces
   are read_file, search, apply_patch, exec for tests/lint/build, and git diff;
   execution requires a separate isolated runner, never unrestricted host access.
-  Image input is a later, separately reviewed phase and ADR.
+  Q11's broader file/archive/web/API/agent actions are later requirements with
+  permissions for destructive actions and publication, not current capabilities.
+  Image/audio/video and other modalities remain separate later phases/ADRs.
+- **Product decisions (owner Q15-Q17, 2026-11-07):** use QVELT as the product/model/
+  ecosystem name, retaining code/package paths. Web first; accounts, session/access
+  control, history and consumer/enterprise separation from the product's first
+  design. Desktop/local agent and broader product API come later. Payments are
+  required before commercial launch, not the first closed version. Existing
+  single-key framework serving is not an accounts or product implementation.
+  Trademark/domain clearance remains a legal launch gate. Competitive superiority
+  is an owner ambition, never a fact without independent measured evaluation.
 - **Rationale/alternatives:** a gated ladder tests transfer and systems assumptions
   without treating parameter count as quality. Alternatives were retaining the
   laptop family as the destination or jumping directly to a cluster-scale run.
@@ -1580,6 +1600,9 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
 - **Delivery gate/revisit:** Steps A through E are separate changes in that order;
   stop for owner review after each. This change is Step A only. Review this
   direction when hardware, budget, source permissions or measured transfer change.
+  **Amendment acceptance:** only the documents change; Steps B-E remain unstarted.
+  Read Q1-Q19/principles 1-5 in full as owner-supplied text on 2026-11-07. This
+  verifies receipt, not funding, hardware access, staffing, deadlines or quality.
 
 ## ADR-0053 — Tokenizer v3 control block and explicit new lineage
 
@@ -1599,12 +1622,18 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   | 13 | `<\|end_tool_result\|>` |
   | 14-17 | `<\|fim_prefix\|>`, `<\|fim_suffix\|>`, `<\|fim_middle\|>`, `<\|fim_end\|>` |
   | 18-21 | `<\|file_start\|>`, `<\|file_end\|>`, `<\|path\|>`, `<\|section\|>` |
-  | 22-127 | `<\|reserved_000\|>` through `<\|reserved_105\|>` |
+  | 22-27 | `<\|effort_none\|>`, `<\|effort_low\|>`, `<\|effort_medium\|>`, `<\|effort_high\|>`, `<\|effort_extra_high\|>`, `<\|effort_maximum\|>` |
+  | 28-127 | `<\|reserved_000\|>` through `<\|reserved_099\|>` |
 
 - **Vocabulary:** V includes controls and byte symbols and must be configurable;
   no final V or production default is selected. The later measured decision
-  considers 32768/65536/131072/262144 on an owner-approved corpus sample. Allocation
-  of controls does not establish a trained FIM/tool capability. Positions and
+  considers 32768/65536/131072/262144 plus larger candidates such as 524288 and
+  1048576 on an owner-approved corpus sample; these are candidates, not selected
+  defaults or claims of current support. Record requested versus achieved V.
+  Current TokenizerSettings caps V at262144; testing larger v3 candidates will
+  require a separately reviewed v3-specific bound and resource validation while
+  preserving v1/v2. Allocation of controls does not establish trained effort,
+  FIM or tool capabilities. Positions and
   document IDs remain metadata, not a special token per context position. File
   markers require a declared corpus format; image tokens are outside this ADR.
 - **Lineage/migration:** decide and freeze production v3 before real pretraining.
@@ -1618,6 +1647,12 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   test every control's literal-spelling isolation and deterministic artifact hash,
   and exercise a real v3 tokenizer with a CPU model <=20M parameters. Recompute
   model sizes for the selected test V; historical tier counts do not carry over.
+  **Owner-spec amendment 2026-11-07:** reserve six effort IDs before Step B freezes
+  its table, as recommended in [ADR-0057](#adr-0057-effort-conditioned-training-and-enforced-compute-budgets).
+  This replaces the earlier unfrozen reservation of IDs22-127; block size remains
+  128. Ordinary text cannot set effort. Require per-language fertility and the
+  [language/data audit](#adr-0058-multilingual-coverage-and-measured-mixture) before
+  production selection, plus [named human freeze review](#adr-0061-named-human-review-and-hardware-validation-gates).
 - **Rationale/alternatives:** a versioned reserved block stabilizes framing while
   leaving compression a measured decision. Alternatives were keeping 32 controls,
   silently consuming old reserved IDs, or fixing a larger V without measurements.
@@ -1658,6 +1693,7 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   | Target | Loss |
   | --- | --- |
   | System/user content, tool definitions, role headers | false |
+  | Trusted effort control in the assistant prefix | false |
   | Assistant final text | true |
   | Assistant tool_use payload and its opening/closing delimiters | true |
   | Tool result payload, delimiters and tool end-turn | false |
@@ -1678,6 +1714,14 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   Clients receive a summary by default once that interface is implemented.
   Never present raw reasoning as a summary or infer trace correctness from a
   correct answer. Dataset permission and supervised-mask policy remain hash-bound.
+  **Owner-spec amendment 2026-11-07, Q9/Q12/principle5:** effort conditioning
+  follows [ADR-0057](#adr-0057-effort-conditioned-training-and-enforced-compute-budgets).
+  Any schema3 effort metadata and its prefix placement must be explicit and
+  validated; do not invent labels for historical schema1/2 data. Retention,
+  consent/deletion and enterprise handling follow [ADR-0059](#adr-0059-data-rights-consent-and-legal-review-gates).
+  Honesty/initiative/factuality requirements are [post-training/eval work](#adr-0060-measurable-honesty-initiative-and-factuality),
+  not effects of this tokenizer/schema change. The schema2 reporting fix remains
+  Step C, not this amendment.
 - **Rationale/alternatives:** typed blocks make loss masks and call/result links
   testable. Alternatives were raw chat strings, supervising tool results, or
   silently reinterpreting schema 2. Tool execution remains outside SFT parsing.
@@ -1711,7 +1755,8 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   <=256, plus existing admission limits. A current tiny deployment with C=512
   could advertise max_input_tokens=511 and max_tokens=256, subject to P+R<=512.
   This is a derived contract example, not a running-server measurement. Future
-  target budgets remain 1,000,000 total and output<=131,072 only after validation.
+  target budgets remain 1,000,000 total and output<=128,000 only after validation
+  (owner Q14 amendment, 2026-11-07; replaces 131,072).
 - **Capabilities:** use explicit support details for streaming, tools, reasoning,
   structured_outputs and image_input. Current tools/structured_outputs/image_input
   remain supported=false. Reasoning distinguishes historical reasoning-field
@@ -1726,8 +1771,23 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   reasoning_content/reasoning_summary fields need their own implementation tests.
   Default clients receive summaries, never raw reasoning; any raw access and
   persistence require an explicit authorized retention/access policy. Until an
-  actual summarizer is implemented, advertise no summary capability. Effort is
-  a later training/serving decision, not a synonym for raising max_tokens.
+  actual summarizer is implemented, advertise no summary capability. Effort
+  follows [ADR-0057](#adr-0057-effort-conditioned-training-and-enforced-compute-budgets),
+  not a prompt-only label or synonym for raising max_tokens.
+- **Owner-spec effort amendment (2026-11-07):** capabilities.reasoning publishes
+  effort_levels, default_effort, budget_policy_revision and per-level enforced
+  reasoning/output/step or time ceilings once implemented and measured. Initial
+  aliases normalize none/instant, low, medium, high, extra_high, maximum; names
+  may change before freeze. Until support is real, effort_levels=[],
+  default_effort=null and budget_policy_revision=null, with unsupported flags
+  false and all explicit effort requests rejected. Step D must not advertise
+  these levels merely because Step B reserves tokens or Step C accepts metadata.
+  Output includes hidden reasoning, final text, summary and generated tool-call
+  framing/payload; tool results and later histories consume input context.
+  Account all additional model/tool work separately as well; retries, summaries
+  and subcalls cannot bypass an aggregate request budget. Native C<=2048 and
+  output<=256 remain current bounds. Discovery is an interface contract, not a
+  measured guarantee of reasoning quality or instant latency.
 - **Rationale/alternatives:** products discover effective limits and unsupported
   features. Alternatives were hard-coded client limits, token-presence-based
   flags or silently accepting unsupported options.
@@ -1774,7 +1834,280 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   GPU reshard tests, actual topology-change recovery and failure injection.
   Statistical claims need repetitions. None are established by this docs change;
   retain current strict resume behaviour until separately reviewed implementation.
+  **Owner-spec amendment 2026-11-07:** [ADR-0061](#adr-0061-named-human-review-and-hardware-validation-gates)
+  requires named ML review for precision/lineage/freeze decisions and first actual
+  small-GPU validation before dependent GPU work. The owner-stated future cluster
+  does not establish cross-topology, cross-precision or statistical acceptance.
 - **Evidence:** [verified] owner-approved taxonomy, [checkpoint compatibility](src/qvelt/utils/checkpoints.py),
   [loader fingerprint](src/qvelt/data/loader.py) and
   [restricted DCP reader](src/qvelt/utils/safe_dcp.py) at `901cb9b`.
   Cross-topology recovery and cluster statistical reproducibility are [unverified].
+
+## ADR-0057 — Effort-conditioned training and enforced compute budgets
+
+- **Date/status:** 2026-11-07; proposed implementation design for owner review;
+  no effort levels implemented or measured. Owner principle5 requires actual
+  compute control; Q12 requires understandable explanations, not a raw thought dump.
+- **Links:** amends [v3 controls](#adr-0053-tokenizer-v3-control-block-and-explicit-new-lineage),
+  [SFT schema3](#adr-0054-sft-schema-3-with-typed-tool-blocks-and-shifted-supervision)
+  and [capability discovery](#adr-0055-truthful-deployment-capabilities-and-shared-token-budgets).
+  Historical v1/v2 and current HTTP behaviour remain unchanged.
+- **Mechanisms considered:**
+
+  | Mechanism | Role and limitation |
+  | --- | --- |
+  | Effort control tokens | Stable learned conditioning; reserve six IDs before Step B. Tokens alone do not enforce or prove different compute. |
+  | System-level/API field | Authoritative request/policy input and normalization; plain prompt wording alone fails the requirement. |
+  | Training at different reasoning budgets | Teach conditioned concise/extended responses using approved data; measure cost and task outcomes separately. |
+  | Length-penalized or budget-aware RL | Later correctness-gated cost shaping; can reward premature/incomplete answers if designed poorly. Requires a verifier and ablations. |
+  | Inference budget forcing | Enforce reasoning/output/step/time limits; truncation is not evidence of a correct answer or complete call. |
+  | Routing to different compute paths | Could change model/expert/search work; defer until architecture, lineage, routing and cost are independently validated. |
+
+- **Recommendation:** combine a validated system-level reasoning_effort field,
+  one trusted effort token immediately after the assistant role in its generation
+  prefix, budget-conditioned training, and actual backend-enforced ceilings.
+  Reserve IDs22-27 for none/low/medium/high/extra_high/maximum; instant is an alias
+  for none, not a seventh token. Untrusted text cannot set this field or insert a
+  control. Input controls are masked SFT context. Missing historical labels are
+  not guessed; any schema3 conditioning/label policy is explicit and hash-bound.
+  The unfrozen draft table changes now; production freeze needs ADR-0061 review.
+- **Budget meaning:** none suppresses an explicit generated reasoning segment,
+  not ordinary neural computation; it does not promise instant latency. Other
+  levels select measured finite budgets, not unlimited resources or guaranteed
+  quality. Do not assign numeric per-level defaults from the owner's funding
+  statements. Actual tokens, model forwards/rollouts, tool work and elapsed time
+  must be logged to test that the modes change compute beyond their prompt.
+  Higher effort is not assumed better on every task.
+- **Accounting:** P includes system/history/files/tool results/controls; generated
+  reasoning, final answer, summary and tool-call payloads share R. For the target
+  main sequence P+R<=1,000,000 and R<=128,000. The reasoning allowance is a subset
+  of R with an explicit remaining final-answer allowance, not an extra budget.
+  Additional calls each obey their context ceiling and aggregate request quotas;
+  account their prompts, outputs, compute and retention, including hidden work.
+  On exhaustion report truncation/incompletion honestly; do not fabricate closing
+  delimiters, execute partial tool JSON, or pass incomplete output as verified.
+- **Acceptance:** CPU prefix/masking/accounting/limit tests and adversarial literal
+  isolation precede a trained checkpoint test comparing actual compute across
+  levels under identical tasks/seeds/budgets. Accelerator execution needs the
+  first-small-GPU gate; deployment claims require measured backend enforcement.
+  Until then publish effort_levels=[] and reject explicit effort requests.
+- **Rationale/alternatives:** conditioning plus enforcement gives a testable
+  contract. Prompt-only effort, tokens without training, inference caps alone
+  and immediate multi-path routing do not establish the requested capability.
+- **Evidence/revisit:** owner-supplied principle5/Q12 read in full on 2026-11-07;
+  this verifies the requirement only. All proposed mechanisms, their benefits,
+  budgets and effort quality are [unverified]. Revisit labels, numeric policies,
+  RL/routing and retention after human review and measurements.
+
+## ADR-0058 — Multilingual coverage and measured mixture
+
+- **Date/status:** 2026-11-07; owner requirements recorded, experiments not run.
+- **Links:** extend [ADR-0009](#adr-0009-freeze-the-tokenizer-budget-not-untested-tokenizer-quality),
+  [ADR-0012](#adr-0012-treat-data-mixtures-as-conditional-proposals-not-approvals),
+  [ADR-0052](#adr-0052-frontier-horizon-and-gated-validation-ladder) and
+  [ADR-0053](#adr-0053-tokenizer-v3-control-block-and-explicit-new-lineage).
+- **Owner Q5 requirement:** target 100+ languages, including low-resource languages;
+  English, Ukrainian and Russian are mandatory priorities. This is a future
+  coverage/quality requirement, not measured language support. The starter list
+  also includes German, French, Spanish, Portuguese, Italian, Polish, Czech,
+  Dutch, Swedish, Norwegian, Danish, Finnish, Greek, Romanian, Bulgarian, Serbian,
+  Croatian, Slovak, Slovenian, Hungarian, Lithuanian, Latvian, Estonian, Albanian,
+  Basque, Catalan, Icelandic; Chinese (simplified/traditional), Japanese, Korean,
+  Hindi, Bengali, Urdu, Punjabi, Vietnamese, Thai, Indonesian, Malay, Filipino,
+  Burmese, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam; Arabic, Persian,
+  Hebrew, Turkish; Swahili, Amharic, Somali, Yoruba; Kazakh, Mongolian, Georgian
+  and Armenian. This list is not the final 100+ registry; distinguish language,
+  script and variety rather than counting script variants as extra languages.
+- **Code languages (owner Q5):** Python, JavaScript, TypeScript, Java, C, C++, C#,
+  Go, Rust, PHP, Swift, Kotlin, SQL and a reviewed extension list. Validate code,
+  documentation, identifiers, JSON, LaTeX and whitespace/indentation separately.
+- **Data-availability gate:** per language audit legally usable quantity, quality,
+  deduplication, provenance, domain coverage, tokenizer fit and independent eval
+  supply before making support promises. Adequate permissive data may not exist
+  for some low-resource languages. Record missing/insufficient sources and ask
+  for collection/licensing decisions; neither oversampling nor a larger V proves
+  competence. Native-language review and independently held-out cases are needed.
+- **Mixture hypothesis (owner Q6):** 40% general/knowledge, 30% code/engineering,
+  20% math/science, 10% instructions/tools/agents is an initial research proposal,
+  not a config/default or fixed schedule. Define non-overlapping source categories,
+  stage/objective and denominator before trials; report post-filter optimization
+  token shares. General/science overlaps need one declared assignment policy.
+  Within general, weights are 0.40*alpha_language with sum(alpha_language)=1;
+  alpha values are measured decisions informed by rights, data supply, fertility,
+  domain evals and the EN/UK/RU priorities, not an assumed equal or fixed split.
+- **Tokenizer study requirements:** include V=32768/65536/131072/262144 and larger
+  candidates such as 524288/1048576. No V is selected. Report requested/achieved V,
+  per-language bytes/token, fertility in tokens/Unicode character and tokens/word
+  under a declared word-segmentation policy, sample sizes and tail distributions.
+  For scripts without whitespace word boundaries use a reviewed segmenter and
+  retain the character metric. Report script/code-switching coverage and code/
+  math/JSON/LaTeX/whitespace metrics without hiding weak languages in an aggregate.
+  Estimate downstream projection/attention/token-storage costs from measured
+  lengths and explicit model shapes, formulas and assumptions; small fixed-budget
+  model studies follow approval. Byte coverage alone is not language competence.
+  V>262144 needs new v3 bounds/resource tests, not a claim about today's codec.
+- **Evaluation:** per-language factuality, reasoning, instruction/tool following
+  and safety/calibration sets with source/translation provenance and human review;
+  code tests per named language in an isolated runner. Report failures/coverage,
+  not an unsupported blanket 100+ language quality claim.
+- **Rationale/alternatives:** measure allocation and trade-offs instead of freezing
+  an EN/RU-only scope, equal language shares or a vocabulary cap from laptop needs.
+- **Evidence/revisit:** owner Q5/Q6 and amendment request read on 2026-11-07;
+  [verified] current [V bound](src/qvelt/tokenizer/core.py) and
+  [token storage dtype selection](src/qvelt/data/shards.py) at `f15b827`.
+  Language rights/data sufficiency, tokenizer results and per-language quality
+  are [unverified]. Review the registry, corpus sample and criteria before study.
+
+## ADR-0059 — Data rights consent and legal review gates
+
+- **Date/status:** 2026-11-07; owner B/Q7-Q9 governance requirements; not legal clearance.
+- **Links:** retain [ADR-0005](#adr-0005-use-explicit-provenance-and-approval-before-ingesting-data),
+  [ADR-0012](#adr-0012-treat-data-mixtures-as-conditional-proposals-not-approvals)
+  and [ADR-0048](#adr-0048-expanded-math-post-training-with-bounded-native-cpu-interfaces).
+  Broad owner interest in web/books/papers/code/partners is not ingestion approval.
+- **Registry and gate:** for each dataset and code repository/revision record
+  publisher/provenance, payload identity, license and notices, terms/acquisition
+  method, allowed uses, personal-data basis, transformations, exclusions, review
+  date and named approving legal reviewer where required. A legal review gate
+  precedes production ingestion/release, including jurisdiction and scraping terms.
+  Public access, a repository license badge or purchased access alone is insufficient.
+- **Default until named legal sign-off:** candidate sources are own data, open
+  permissively licensed data and explicitly licensed data only, with verified
+  rights scope and recorded source approval. This is an eligibility policy, not
+  clearance for a named corpus; ambiguity blocks use. Prior explicitly approved
+  authored fixtures remain bounded historical approvals. Do not broaden them.
+  No new corpus is acquired or ingested by this docs change.
+- **External model outputs:** default OFF. Require named legal review of the
+  specific model/provider/revision/terms, permitted training/redistribution uses,
+  acquisition provenance and contamination controls before enabling a particular
+  source. The owner's permission to consider lawful outputs does not waive this
+  gate. Own synthetic generation retains model/data lineage and verifier audits.
+- **User data:** account creation, service use, reasoning retention and product
+  history do not imply training consent. Separate voluntary opt-in is required;
+  allow refusal/withdrawal/deletion and retain an auditable consent record. Before
+  any training export, enforce permission, secret/password/key/PII filtering,
+  minimization/anonymization and re-identification review. Define retention and
+  deletion propagation through raw stores, derived shards, caches/backups and
+  future training sets. Do not claim filtering is perfect or that deleting source
+  records removes influence from already trained weights; model-level deletion
+  needs its own verified policy and limitations disclosed before consent.
+- **Enterprise:** default no training on enterprise data; require a separate
+  authorized enterprise agreement and data-owner rights review. Separate tenants,
+  storage/access/retention rules and audit logs; an individual consumer opt-in
+  does not authorize an enterprise corpus. Named legal review must settle scope.
+- **Reasoning:** raw reasoning, if retained, uses a separate controlled field with
+  explicit retention/access/deletion policy; no duration is assumed. Summaries
+  do not grant access to raw records or permission to train on either. Account
+  and consent separation must be designed from the first product version.
+- **Acceptance:** approved registry entries and notices, consent/withdrawal/
+  deletion tests, secret/PII filter error audits and enterprise isolation tests
+  precede any claim of enforcement. Legal decisions require named humans; an
+  agent cannot certify legal compliance. All controls remain unimplemented here.
+- **Rationale/alternatives:** source-specific rights and consent preserve existing
+  fail-closed provenance. Alternatives were blanket owner approval, automatic
+  opt-in, scraping anything public or enabling external teachers by default.
+- **Evidence/revisit:** full owner section B and amendment instructions received
+  2026-11-07; historical ADRs describe limited prior reviews, not new clearance.
+  Contracts, legal sign-offs and privacy enforcement are [unverified]; reviewer
+  names, jurisdictions, corpus permissions and retention details remain open.
+
+## ADR-0060 — Measurable honesty initiative and factuality
+
+- **Date/status:** 2026-11-07; owner principles1-4 translated into proposed
+  post-training/evaluation requirements; none declared met.
+- **Links:** extend [ADR-0048](#adr-0048-expanded-math-post-training-with-bounded-native-cpu-interfaces),
+  [ADR0049](#adr0049-expanded-offline-evaluation-checkpoint-regression-and-result-receipts),
+  [ADR0051](#adr0051-phase9-bounded-release-readiness-and-security-upgrade-2026-11-07)
+  and [ADR-0058](#adr-0058-multilingual-coverage-and-measured-mixture).
+  These behaviours are data/training/evaluation work, not tokenizer/architecture
+  decisions or abilities conferred by special tokens.
+- **Proposed measurable suites:**
+
+  | Requirement | Probe and measurement |
+  | --- | --- |
+  | Honest, non-sycophantic assessment | Paired neutral/leading/flattering prompts with the same known facts/code defects; measure false agreement, correct corrections, false disagreement, fabricated praise and evidence-supported explanations. |
+  | Initiative with stated disagreement | Seed flawed architecture/security plans; score defect detection, justified alternatives, explicit disagreement and adherence to authorization. More unsolicited actions is not a success metric. |
+  | Factual accuracy without partisan agenda | Citation-grounded claims, matched identity/party swaps with unchanged evidence, currentness checks and human adjudication; distinguish facts, hypotheses, opinions, attributed claims and legal interpretation without false equivalence. |
+  | Uncertainty and competence limits | Answerable/unanswerable/outdated-source cases; measure unsupported certainty, appropriate abstention, evidence retrieval and calibration when confidence is collected under a declared protocol. |
+  | Refusal calibration | Benign, unsafe, privacy and tool-permission cases; measure over-refusal and appropriate refusal with human-reviewed labels. Political controversy alone is not a reason to refuse factual explanation. |
+  | Verifiable work reports | Compare claimed commands, edits and tests with actual tool transcripts; measure fabricated verification and omitted material limitations. |
+
+- **Factual-claims set:** each item requires claim, scope/date, language, cited
+  source/passage, source revision or captured hash, evidence category, limitations,
+  expected distinctions and named human adjudication. Contested political/legal
+  items require appropriate domain review, not an agent-generated gold label.
+  Preserve held-out cases, counter-framings and inter-reviewer disagreements;
+  publish denominators/uncertainty and preregister acceptance thresholds.
+- **Owner examples to source and review:** Ukraine probes must distinguish
+  internationally recognized Ukrainian territory (including Crimea, Donetsk and
+  Luhansk regions) from dated de facto control/occupation. Taiwan probes must
+  distinguish de facto self-government/institutions, sovereignty claims and the
+  recognition/relations policy of each named state. Do not collapse these into
+  one diplomatic slogan or infer all legal status from UN representation alone.
+  These record owner-required distinctions, not a completed adjudicated dataset.
+- **Seed citations and access scope (2026-11-07):** proposed UN primary documents
+  [A/RES/68/262](https://docs.un.org/en/A/RES/68/262) and
+  [A/RES/2758(XXVI)](https://docs.un.org/en/A/RES/2758%28XXVI%29)
+  returned403 and remain [unverified] in this pass. The
+  [Taiwan MOFA diplomatic-relations page](https://en.mofa.gov.tw/AlliesIndex.aspx?n=1294&sms=1007)
+  was read [verified, page content only]; it is that institution's account of
+  relations, not independent adjudication of sovereignty. Collect dated governing
+  documents and individual states' diplomatic/legal positions before human gold
+  approval; a source citation alone is not adequate coverage or training rights.
+- **Limits:** subjective opinions must be marked subjective; respectful honesty
+  is not gratuitous insult. Photo-based owner examples remain for the later image
+  phase. No competence, political-neutrality, safety or comparison claim is allowed
+  before independent measured evaluation under an approved protocol.
+- **Rationale/alternatives:** use evidence, paired probes and human review instead
+  of hard-coded political answers, prompt-only virtue labels or self-scored success.
+- **Evidence/revisit:** owner principles1-4 read fully on 2026-11-07; probe design
+  is proposed and [unverified]. Named reviewers, source snapshots, legal approval,
+  thresholds and actual evaluation remain prerequisites, not claimed results.
+
+## ADR-0061 — Named human review and hardware validation gates
+
+- **Date/status:** 2026-11-07; owner Q4/Q18/Q19 and amendment review requirements.
+- **Links:** governs [ADR-0052](#adr-0052-frontier-horizon-and-gated-validation-ladder)
+  through [ADR-0060](#adr-0060-measurable-honesty-initiative-and-factuality),
+  retaining [ADR-0003](#adr-0003-define-reproducibility-within-explicit-execution-conditions)
+  and [ADR0051](#adr0051-phase9-bounded-release-readiness-and-security-upgrade-2026-11-07).
+- **Human accountability:** owner plans for an international team, chief technical
+  lead and independent reviewers are owner statements, not evidence that these
+  people are appointed. A named qualified human retains responsibility for critical
+  architecture/security/training/release decisions. Agent agreement or passing
+  tests does not replace human review. Reviewer identities are not yet supplied.
+
+  | Irreversible or costly-to-reverse decision | Required review before freeze/use |
+  | --- | --- |
+  | Tokenizer-v3 control table and production V/merges | Named human with ML expertise; measured corpus/tokenization evidence and migration impact. |
+  | Dense/MoE/attention architecture family | Named ML expert; CPU oracles, training/system evidence and active/total accounting. |
+  | Data lineage, source/license and public release | Named ML expert plus named legal reviewer for rights; provenance, consent, exclusions and downstream deletion limits. |
+  | Precision recipe/backend changes | Named ML expert; numerical/recovery checks on actual target hardware and replay-class declaration. |
+
+- **Interim rule:** until the owner appoints the ML reviewer, every step stops
+  for owner review. Reversible drafts/codec fixtures do not constitute a final
+  production freeze or expert sign-off. High-cost production freezes/runs remain
+  blocked without the required named human reviews and explicit owner budget.
+  Preserve v1/v2 artifacts; do not treat approval of a roadmap as approval of
+  later steps, expenses, dataset acquisition or destructive/public actions.
+- **Hardware gate:** current environment has no GPU; future large NVIDIA clusters
+  are owner-stated plans only. Before any GPU-dependent acceptance, require an
+  owner-authorized small rented multi-GPU node with a stated spend ceiling and
+  named ML review. First validate inventory/runtime, BF16 numerical parity,
+  DDP/FSDP and checkpoint/recovery on that node. Cluster composition/performance
+  and failure tests need a separate available cluster and budget. CPU tests are
+  required references but not substitutes for those executions. Schedule no paid
+  run or reservation in this documentation task.
+- **Reports:** owner is not a programmer. Every step report must include a plain-
+  language summary of what changed, why, what passed/failed, limitations and the
+  next decision, alongside commit, files, exact command output and risks. State
+  missing evidence simply; do not hide it behind technical terminology.
+- **Rationale/alternatives:** explicit responsibility and hardware gates prevent
+  irreversible decisions from being inferred from agent autonomy or unverified
+  funding. Alternatives were agents approving themselves or treating CPU results
+  as cluster validation.
+- **Evidence/revisit:** owner specification and amendment instructions read on
+  2026-11-07. Local Torch2.13.0+cpu reports CUDA available=False/GPU count=0.
+  Reviewer appointments, legal approval, rented nodes, future clusters and scale
+  guarantees remain [unverified]. Review gates when named humans and approved
+  resources actually become available, not when an aspiration is restated.

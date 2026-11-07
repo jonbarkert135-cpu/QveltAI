@@ -1,6 +1,6 @@
-# Qvelt master roadmap
+# QVELT master roadmap
 
-Last updated: 2026-11-07. Owner of every milestone: **Lead agent**.
+Last updated: 2026-11-07. Implementation lead: **Lead agent**; human reviewers pending.
 
 ## Owner-gated frontier prerequisites: one reviewed change per step
 
@@ -9,39 +9,96 @@ Design decisions: [ADR-0052](DECISIONS.md#adr-0052-frontier-horizon-and-gated-va
 [ADR-0054](DECISIONS.md#adr-0054-sft-schema-3-with-typed-tool-blocks-and-shifted-supervision),
 [ADR-0055](DECISIONS.md#adr-0055-truthful-deployment-capabilities-and-shared-token-budgets),
 [ADR-0056](DECISIONS.md#adr-0056-separate-exact-replay-topology-migration-and-statistical-reproducibility).
+Owner-spec amendments add [effort](DECISIONS.md#adr-0057-effort-conditioned-training-and-enforced-compute-budgets),
+[multilingual allocation](DECISIONS.md#adr-0058-multilingual-coverage-and-measured-mixture),
+[data governance](DECISIONS.md#adr-0059-data-rights-consent-and-legal-review-gates),
+[behavioural evaluation](DECISIONS.md#adr-0060-measurable-honesty-initiative-and-factuality)
+and [human/hardware gates](DECISIONS.md#adr-0061-named-human-review-and-hardware-validation-gates).
 This sequence takes precedence over historical next-step suggestions below.
 Stop for owner review after each step; approval of the sequence is not approval
-to start the next step. CPU remains the numerical oracle; GPU/cluster validation
-needs actual available hardware and a separately approved compute budget.
+to start the next step. Until a qualified human ML reviewer is named, each change
+continues to stop for owner review. Production tokenizer/architecture/data/precision
+freezes require the named expert reviews in ADR-0061, not an agent's approval.
 
 - [x] **A:docs only.** Record the five consecutive ADRs and update STATE/PLAN.
-  Verify documentation, links and consistency; no runtime/artifact/lock changes.
-  Await owner review before B.
-- [ ] **B:tokenizer v3 codec.** Implement the 128-control table and configurable V;
-  leave production V undecided, preserve v1/v2. CPU checks:literal isolation,
-  deterministic artifact hash, legacy compatibility and a real-tokenizer model
-  fixture <=20M parameters. Stop for review before C.
-- [ ] **C:SFT schema3.** Typed tool_use/tool_result, tool role and complete shifted
+  **CPU-validated documentation only:**original checks recorded in STATE/history.
+  This owner-spec amendment is docs only and needs its own link/consistency/build
+  checks. Await review of the amendment before B; do not start B automatically.
+- [ ] **B:tokenizer v3 codec — CPU reference validation required, UNSTARTED.**
+  Implement the amended128-control table with six effort markers and configurable
+  V under explicit tested v3 bounds; preserve v1/v2. No final V/default selection.
+  Include larger multilingual candidates in bounds/resource planning; do not
+  claim existing support above262144. Test literal isolation including effort
+  injection, deterministic artifact hash, legacy compatibility and a real-tokenizer
+  CPU model <=20M parameters. Recompute sizes for the actual V. Reserve/freeze
+  review must precede production artifacts. Stop for review before C.
+- [ ] **C:SFT schema3 — CPU reference validation required, UNSTARTED.**
+  Typed tool_use/tool_result, tool role and complete shifted
   masks; CPU tests for roles, valid tool errors, orphan/duplicate results,
-  truncation and gradient oracles. In this same change fix schema2 being reported
-  as schema1, with a regression. Stop for review before D.
-- [ ] **D:capability discovery.** Add truthful context_window/max_input_tokens/
+  truncation and gradient oracles. Trusted effort prefix controls are masked
+  context with explicit label policy; no guessed historical labels. Keep reasoning
+  separate and hash-bound to permission/retention policy. In this same change fix
+  schema2 being reported as schema1, with a regression. Stop for review before D.
+- [ ] **D:capability discovery — CPU HTTP validation required, UNSTARTED.**
+  Add truthful context_window/max_input_tokens/
   max_tokens/capabilities to /v1/models, derived from loaded snapshot and backend.
-  Test effective limits, false unsupported flags and effort rejection; retain
-  JSON/SSE contract. Tokenizer/schema support alone must not enable HTTP tools.
+  Publish effort_levels=[] and false unsupported flags until trained model/backend
+  enforcement is real; reject explicit effort requests. Test limits, output/
+  reasoning accounting, false flags, effort rejection and JSON/SSE parity.
+  Tokenizer/schema support alone must not enable HTTP tools, effort or summaries.
   Stop for review before E.
-- [ ] **E:design only.** Plan V experiments on an owner-approved corpus sample for
-  EN/RU/code/math/JSON/LaTeX/whitespace:bytes/token and downstream compute for
-  32768/65536/131072/262144, assumptions and decision criteria. Do not select V,
-  ingest sources or run the study without the required approvals. Stop for review.
+- [ ] **E:design only — CPU documentation/estimate validation, UNSTARTED.**
+  Plan V experiments on an owner-approved sample covering the100+ language target,
+  mandatory EN/UK/RU, low-resource languages, named code languages and math/JSON/
+  LaTeX/whitespace. Include32768/65536/131072/262144 and larger candidates such as
+  524288/1048576. Require per-language rights/data-availability audits, bytes/token,
+  fertility(tokens per character/word with declared segmentation), tails/sample
+  counts, per-language evals and downstream compute/resource estimates with
+  assumptions. Define criteria without fixing V or language shares. This step
+  only designs the study; acquisition/experiments need separate approvals, and
+  any GPU experiment also needs G1. Stop for review after E.
 
-Owner decisions remain open:languages/data mix, budget and code/teacher sources.
-Interim scope is EN/RU, code, math, permissive-license sources only, no external
-teachers; source-specific rights approval remains mandatory. Accepted targets
-are total prompt+output<=1,000,000 and output<=131,072; backend design includes
-NVIDIA H100/H200/B200-class targets without claiming hardware validation.
-Keep reasoning in a separate retained field under an explicit policy and expose
-summaries by default only once implemented; images require a later separate ADR.
+### Hardware classes and first small GPU validation gate
+
+Current environment:CPU only, no GPU. CPU is always the numerical oracle.
+"CPU reference validation required" does not mean an unstarted component passed.
+All hardware-dependent work below is blocked pending actual access/review/budget;
+there are no paid run dates or reservations. Historical phase records below are
+past engineering evidence and limitations, not authorization to bypass these gates.
+
+| Future acceptance work | Hardware class | Mandatory dependency |
+| --- | --- | --- |
+| A amendment; B/C/D/E as scoped above | CPU; docs validated only after checks, implementations pending | Owner review after each; named human review before production freezes. |
+| G1: first small GPU validation | Needs a small rented multi-GPU node; NOT available/authorized | Owner-approved node/cost ceiling and named ML reviewer; inventory/runtime, BF16 parity, DDP/FSDP and real checkpoint/recovery tests against CPU. |
+| Bounded real GPU training, SFT/DPO/RL and sharded initialization/resharding | Needs a small rented multi-GPU node | G1 plus separately reviewed component, data and compute budget. |
+| TP/PP/EP/CP kernel and per-component distributed acceptance | Needs a small rented multi-GPU node | G1 and CPU value/gradient/layout/mask oracles; combined multi-node mesh goes to cluster class. |
+| Accelerated serving, FP8, quantization and effort-compute measurements | Needs a small rented multi-GPU node | G1, backend/precision review, trained snapshot and declared measurement protocol. |
+| Multilingual tokenizer corpus audit and approved bounded tokenization study | CPU reference work; experiments not authorized by E | Corpus/legal/sample approval; any downstream GPU trial first needs G1. |
+| Product accounts/privacy/enterprise isolation and sandbox/tool contracts | CPU functional/security validation | Separate approved product work, named security/legal review; not included in B-E. |
+| Multi-node mesh composition, elastic/topology changes, storage/fault rehearsal | Needs a cluster | G1 and node-level components accepted, named review, actual cluster inventory and owner budget. |
+| Main-model1M-total/128,000-output training/eval/serving acceptance | Needs a cluster | G1, cluster composition, approved long data and measured resource budgets; short CPU retrieval is only an oracle. |
+| Large scaling-ladder runs and final training/release | Needs a cluster | G1 and all relevant data/legal/architecture/recovery/quality gates; independent eval and owner spending decision. |
+
+### Owner-spec constraints, not resource authorization
+
+Owner supplied Q1-Q19/principles1-5 on2026-11-07. The100+ language target and
+EN/UK/RU priorities replace EN/RU-only planning. Starting40general/30code/
+20math-science/10instructions-tools-agents is a measured mix hypothesis, not a
+config; the40% language allocation stays a measured decision. Individual source
+permissions, corpus/sample/revisions, production V and per-run budgets stay open.
+Default candidates:own/permissive/explicitly licensed data only. External model
+outputs stay OFF pending terms-specific named legal review. User training data
+requires separate voluntary opt-in, deletion and secret/PII filtering; enterprise
+rules are separate. No new ingestion is authorized by this amendment.
+
+Targets:total prompt+output<=1,000,000, output<=128,000 (supersedes131,072),
+including system/history/files/tool results/internal framing/reasoning. NVIDIA
+H100/H200/B200-or-newer and large clusters are design goals/owner plans, not
+verified access. Funding/team figures in STATE cannot drive code/defaults or paid
+runs. Web and accounts from product day one; desktop/local agent and modalities
+later; payments before commercial launch. Reasoning is separate with an explicit
+retention/access policy; clients get summaries only when implemented. Validate
+honesty/initiative/factuality with sources and human review before any claims.
 
 ## User-directed Phase9 documentation,hardening and release readiness
 
