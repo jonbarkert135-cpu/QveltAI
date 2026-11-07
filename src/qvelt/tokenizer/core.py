@@ -129,7 +129,9 @@ class QveltTokenizer:
     def decode(self, ids: Sequence[int]) -> str:
         """Preserve explicit controls; reject bool, negative and unknown IDs."""
         checked = list(ids)
-        if any(type(i) is not int or not 0 <= i < self.vocab_size for i in checked):
+        # Backend vocabulary queries are costly at RFC vocabulary sizes.
+        vocab_size = self.vocab_size
+        if any(type(i) is not int or not 0 <= i < vocab_size for i in checked):
             raise TokenizerError("Token IDs must be integers within the vocabulary")
         return str(self._backend.decode(checked, skip_special_tokens=False))
 

@@ -3,6 +3,7 @@
 import json
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -28,6 +29,29 @@ def byte_tokenizer() -> QveltTokenizer:
         ["Original property fixture. Русский текст. café 123 😀"],
         TokenizerSettings(vocab_size=320),
     )
+
+
+def test_decode_queries_vocabulary_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    tokenizer = train_tokenizer(
+        ["Example original text."], TokenizerSettings(vocab_size=320)
+    )
+    original = tokenizer._backend
+    calls = []
+
+    def vocabulary() -> int:
+        calls.append(True)
+        return int(original.get_vocab_size())
+
+    monkeypatch.setattr(
+        tokenizer,
+        "_backend",
+        SimpleNamespace(get_vocab_size=vocabulary, decode=original.decode),
+    )
+    tokens = original.encode("Original").ids
+    assert tokenizer.decode(tokens * 128) == "Original" * 128
+    assert len(calls) == 1
+    with pytest.raises(TokenizerError):
+        tokenizer.decode([*tokens, original.get_vocab_size()])
 
 
 @settings(max_examples=200, derandomize=True, database=None, deadline=None)
