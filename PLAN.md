@@ -847,3 +847,28 @@ Owner: Lead agent. Date: 2026-11-04. Status: complete.
 Acceptance: ordinary Make setup works with read-only home; actual CPU/distributed
 and offline-metrics tests pass, evidence distinguishes unrun GPU paths, and the
 verified environment fix is published. The following M6.1 acceptance is recorded in validation_sft.md.
+
+## Phase10 owner workflow intake — 2026-11-07
+
+[ADR-0062](DECISIONS.md#adr-0062-evidence-gated-improvement-after-each-real-training-run)
+and [runbook10](runbooks/10_continuous_improvement.md) govern each real-run review.
+This append-only update records the new instruction; historical plans/results
+above remain unchanged. Read-only post-run analysis need not wait for model release.
+
+- [x] Record diagnosis/attribution/planning/implementation/evidence/report protocol
+  and existing metadata-collection command. Documentation checks only.
+- [ ] **Priority0, blocked on owner inputs:** identify a completed real run and
+  obtain resolved config/command, hashes, raw metrics/curves, eval/audit outputs,
+  baseline, scaling controls, hardware and seeds. No such new inputs supplied.
+- [ ] Diagnose facts versus hypotheses and compare the six cause categories;
+  reject incomparable scaling extrapolation and inspect evaluation artifacts first.
+- [ ] Append a ranked experiment queue only after diagnosis: hypothesis, baseline,
+  one major diff, compute assumptions, exact command, success/stop/rollback rules
+  and expected-gain/cost uncertainty. No run-specific experiment is selected yet.
+- [ ] Implement only evidence-required fixes with CPU/reference tests and relevant
+  integration/hardware tests; append outcomes/negative results and decisions.
+
+CPU analysis/doc checks are available; any new GPU experiment still requires G1,
+actual hardware, named human review where required and an explicit owner budget.
+Stop for review after each coherent change. Step B remains unstarted/unapproved;
+no paid training, corpus ingestion or automatic next experiment is authorized.

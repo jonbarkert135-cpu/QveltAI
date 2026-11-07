@@ -989,3 +989,18 @@ retained;session proxy blocks hosted blob downloads403,so hosted numeric log cou
 are not asserted. Current wheel installed into isolated target over locked deps:
 CPU doctor and all8 native stream events equal the editable tutorial output.
 No GPU/final-scale/model release/tag/upload performed.
+
+## Phase10 intake — 2026-11-07 (not an ML experiment)
+
+Base main:`fe5ee52ad8946b7f0c436d8f2e2e67a6ff5e87bf`. Owner requested the recurring
+post-run diagnose/attribute/plan/implement/record/report workflow. No new completed
+real-run logs, curves, resolved config, baseline, eval or contamination artifacts
+were supplied. Existing CPU/synthetic engineering evidence remains historical;
+R018's descriptive fixture scaling fit is not a prediction for an unseen corpus.
+
+No training, evaluation, hypothesis test, code/config/data change or improvement
+claim occurred. No ML experiment number is assigned. Run-specific findings and
+prioritized trials are blocked on intake; see [runbook10](runbooks/10_continuous_improvement.md)
+and [ADR-0062](DECISIONS.md#adr-0062-evidence-gated-improvement-after-each-real-training-run).
+Original experiment entries are unchanged. Documentation validation is recorded
+in the current session's STATE append, separate from ML evidence.

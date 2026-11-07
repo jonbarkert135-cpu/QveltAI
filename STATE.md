@@ -432,3 +432,24 @@ uv run --frozen --extra cpu python scripts/pretraining_smoke.py --directory runs
 
 Use a new output path,uv0.12.23,Linux/Python3.11–3.13. CPU is default. Operator
 commands/actual-data identities/schedule/replay limitations are in runbook03.
+
+## Latest session — Phase10 protocol intake, 2026-11-07
+
+Base main:`fe5ee52ad8946b7f0c436d8f2e2e67a6ff5e87bf`. Owner requested recurring
+analysis after each real training run. [ADR-0062](DECISIONS.md#adr-0062-evidence-gated-improvement-after-each-real-training-run)
+and [runbook10](runbooks/10_continuous_improvement.md) record the protocol and
+existing log-archive command. No new real-run artifacts/config/eval were supplied;
+diagnosis, cause attribution, ranked experiments and exact next-training commands
+remain blocked. Do not substitute historical demo results for owner training.
+
+Only workflow documentation and intake status change. No ML experiment/result,
+code/config/data/runtime change or paid run. Existing historical records are
+preserved; pending Step A amendment review/Step B gates are not bypassed.
+Documentation/link checks must pass before committing this protocol update.
+
+Phase10 intake validation:2 documentation-tool tests passed in0.13s; strict
+MkDocs build passed;81 local links/anchors and ADR0001..0062 sequence checked.
+All four existing files are append-only; the sole new file is runbook10.
+git diff --check and docs-only scope checks passed. The existing summarizer's
+--help executed and confirmed directory/--archive arguments. No real-run archive,
+loss analysis, training/eval execution, MFU measurement or scale claim was made.

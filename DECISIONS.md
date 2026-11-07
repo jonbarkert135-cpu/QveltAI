@@ -2111,3 +2111,33 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   Reviewer appointments, legal approval, rented nodes, future clusters and scale
   guarantees remain [unverified]. Review gates when named humans and approved
   resources actually become available, not when an aspiration is restated.
+
+## ADR-0062 — Evidence-gated improvement after each real training run
+
+- **Date/status:** 2026-11-07; owner-requested standing workflow; awaiting real-run inputs.
+- **Context/links:** [ADR-0010](#adr-0010-use-adamwwsd-and-staged-budgets-as-tested-hypotheses),
+  [ADR-0046](#adr-0046-matched-lineage-cpu-study-and-fail-closed-promotion-controls)
+  and [ADR-0061](#adr-0061-named-human-review-and-hardware-validation-gates)
+  require measured hypotheses, baseline comparisons and human/resource gates.
+- **Decision:** use the [post-run loop](runbooks/10_continuous_improvement.md) after
+  each owner-identified real run: diagnose, compare competing causes, rank cheap
+  discriminating experiments, implement only required changes with tests, append
+  evidence/decisions and report in Russian. Analyze loss/validation, throughput/
+  MFU and comparable eval/scaling evidence without converting hypotheses to facts.
+  Preserve baselines and history; one major factor per experiment. Prefer checking
+  evaluation/data quality over architecture novelty at small scale. Improvement
+  requires held-out decontaminated evidence and repeated seeds where noise matters.
+- **Boundary:** missing artifacts block run-specific diagnosis/ranking and training
+  commands. Existing synthetic/CPU controls cannot stand in for a new owner run;
+  R018's short fixture fit is not a general scaling law. Append intake status
+  without inventing an ML experiment/result. Read-only analysis need not await
+  model release, but implementation/production/data/legal/budget gates remain.
+  This workflow does not approve the pending tokenizer Step B or paid execution.
+- **Rationale/alternatives:** evidence-first attribution minimizes confounding and
+  wasted compute. Alternatives were automatic architecture changes, assuming a
+  cause from a symptom, or extrapolating fixture losses to a production corpus.
+- **Evidence/revisit:** [verified] owner Phase10 instruction and current
+  [collector](scripts/summarize_run.py)/[archive allowlist](src/qvelt/train/report.py)
+  read at `fe5ee52`. No new real-run logs/config/eval were supplied in this intake;
+  run-specific causes, gains, budgets and scaling predictions are [unverified].
+  Revisit the queue only after identifying and validating the actual run inputs.
