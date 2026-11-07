@@ -14,6 +14,7 @@ from qvelt.data.records import RawDocument, write_raw_bundle
 from qvelt.eval.config import ArtifactRef, EvalJob, dump_eval
 from qvelt.eval.corpus import EvalCase
 from qvelt.eval.fixtures import freeze_holdout
+from qvelt.eval.freeze_identity import verify_frozen_identity
 from qvelt.eval.runner import run_evaluation
 from qvelt.model.decoder import Decoder
 from qvelt.train.pretraining import prepare_inputs
@@ -195,8 +196,7 @@ def run_evaluation_smoke(directory: Path, repository: Path) -> dict[str, Any]:
     registered = json.loads(
         (repository / "docs/development/evidence/evaluation-frozen-v1.json").read_text()
     )
-    if registry != registered:
-        raise ValueError("Prospective heldout no longer matches its committed freeze")
+    verify_frozen_identity(registry, registered, root / "heldout")
     controls = create_evaluation_fixture(root / "fixture", repository)
     validation = registry["partitions"]["validation"]
     heldout = replace(

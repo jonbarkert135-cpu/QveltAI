@@ -60,3 +60,21 @@ fails. No tag,public GitHub release,PyPI publication or model upload was perform
 Follow the tiny reproduction,hardware/data checks and short small pilot before
 committing a real training horizon. Preserve historical receipts with their actual
 source/library identities;security upgrades are not exact-resume compatible.
+
+## Updated candidate checks and corrections
+
+Initial full updated local suite:910 passed,2 distributed90/120-second timeouts,
+5 promotion-fixture setup errors,7 GPU deselected543.60s. The setup errors share
+one real version-envelope bug:0.1.0 differs from the historical0.1.0.dev0 producer.
+The repair reconstructs the complete historical envelope and checks its original
+hash after verifying every current file;it does not regenerate the committed
+freeze or change generator/payloads/rights/case identities. The five affected
+integration tests pass after repair;unit negative cases reject payload/count/rights
+changes. An initial new negative test expected ValueError instead of the actual
+ArtifactIntegrityError;the test expectation was corrected.
+
+Fresh CPU+HF+serving profile dependency audit:exit0,no known vulnerabilities and
+no skipped Torch local-version record. All-extras optional sqlitedict failure
+remains separate. Offline secret gate:132 reviewed findings,zero unexpected.
+The hash-only baseline is explicitly excluded from recursively scanning itself;
+source/provider detectors remain active for tracked code and vendored references.

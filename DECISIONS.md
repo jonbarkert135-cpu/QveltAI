@@ -1515,3 +1515,12 @@ All15 native eval receipts regenerate RESULTS. Final800 remains unscored.
 - **Revisit:** upstream DCP/API changes,advisory updates,a real training server or
   eligible independently evaluated model. Re-run profile-specific audits and
   recovery before adopting the new runtime on private hardware.
+
+ADR0051 version follow-up:the original heldout manifests were produced by
+0.1.0.dev0. SemVer0.1.0 changes only that envelope field and therefore its digest.
+Do not rewrite the committed freeze/generator or ignore manifest identities.
+The new freeze-identity verifier checks all actual files,requires the current
+producer,reconstructs the complete original0.1.0.dev0 envelope hash and compares
+all registry fields exactly. Payloads,rights,timestamps,case IDs,counts,generator
+and license remain bound to the original preregistration. Final cases are not
+model-scored. Source and metric protocols remain independent of framework version.

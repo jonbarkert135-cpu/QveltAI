@@ -13,6 +13,7 @@ from qvelt.data.records import iter_records, write_raw_bundle
 from qvelt.eval.config import ArtifactRef, EvalJob, dump_eval
 from qvelt.eval.corpus import EvalCase
 from qvelt.eval.fixtures import freeze_holdout
+from qvelt.eval.freeze_identity import verify_frozen_identity
 from qvelt.eval.smoke import case_document, control_cases
 from qvelt.eval.study import run_study
 from qvelt.eval.study_config import StudyEntry, StudyJob, dump_study
@@ -79,8 +80,7 @@ def prepare_study(
     registered = json.loads(
         (repository / "docs/development/evidence/evaluation-frozen-v1.json").read_text()
     )
-    if frozen != registered:
-        raise ValueError("Study protected corpus differs from its preregistered freeze")
+    verify_frozen_identity(frozen, registered, root / "heldout")
     validation = frozen["partitions"]["validation"]
     primary = []
     for doc in iter_records(

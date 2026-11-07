@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from collections import Counter
 from pathlib import Path
@@ -10,6 +11,8 @@ import pytest
 
 from qvelt.data.records import iter_records
 from qvelt.eval.fixtures import freeze_holdout, protected_cases
+from qvelt.eval.freeze_identity import verify_frozen_identity
+from qvelt.utils.artifacts import ArtifactIntegrityError
 
 
 def test_frozen_counts_bands_and_deterministic_ids() -> None:
@@ -46,3 +49,22 @@ def test_freeze_is_write_once_and_eval_only(tmp_path: Path) -> None:
         assert "training" not in policy["allowed_uses"]
     with pytest.raises(FileExistsError):
         freeze_holdout(tmp_path / "frozen", root)
+
+
+def test_release_version_preserves_original_frozen_bytes(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2]
+    registered = json.loads(
+        (root / "docs/development/evidence/evaluation-frozen-v1.json").read_text()
+    )
+    directory = tmp_path / "freeze"
+    current = freeze_holdout(directory, root)
+    verify_frozen_identity(current, registered, directory)
+    for key in ("count", "payload_sha256", "cases"):
+        bad = copy.deepcopy(current)
+        bad["partitions"]["validation"][key] = 0
+        with pytest.raises(ValueError, match="preregistered"):
+            verify_frozen_identity(bad, registered, directory)
+    path = directory / "validation/usage.json"
+    path.write_bytes(path.read_bytes() + b" ")
+    with pytest.raises(ArtifactIntegrityError):
+        verify_frozen_identity(current, registered, directory)

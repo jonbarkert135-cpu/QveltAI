@@ -36,6 +36,8 @@ def main() -> None:
         "detect_secrets",
         "scan",
         "--no-verify",
+        "--exclude-files",
+        r"^\.secrets\.baseline$",
         "--disable-plugin",
         "HexHighEntropyString",
     ]
