@@ -1,0 +1,1653 @@
+{
+  "checkpoint_sha256": "893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325",
+  "checkpoint_weights_unchanged": true,
+  "command": [
+    "python",
+    "scripts/inference_phase8_smoke.py",
+    "--directory",
+    "runs/phase8-acceptance",
+    "--repository",
+    "."
+  ],
+  "evaluation_receipts": [
+    "evaluation-phase8-mixed-0.json",
+    "evaluation-phase8-mixed-4.json",
+    "evaluation-phase8-mixed-8.json",
+    "evaluation-phase8-needle-1.json",
+    "evaluation-phase8-needle-2.json",
+    "evaluation-phase8-needle-4.json"
+  ],
+  "evaluations": {
+    "mixed-0": {
+      "metrics": {
+        "available_problems": 14,
+        "choice": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "failed": 0,
+          "normalization": "character",
+          "normalized_correct": 0,
+          "problems": 2,
+          "wilson95_descriptive": [
+            0.0,
+            0.6576197724933468
+          ]
+        },
+        "domains": {
+          "original-code": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "original-general": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "original-language": {
+            "accuracy": null,
+            "correct": 0,
+            "lm": {
+              "documents": 2,
+              "failed_documents": 0,
+              "nll": 331.89776611328125,
+              "perplexity": 374.9324301437019,
+              "targets": 56
+            },
+            "problems": 0,
+            "wilson95_descriptive": null
+          },
+          "original-math": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 8,
+            "wilson95_descriptive": [
+              0.0,
+              0.3244075648838801
+            ]
+          }
+        },
+        "evaluated_prefix": 14,
+        "evaluation_sha256": "8d9e30fe3602d4792e479f4f20e19f31b7e2e50ff78d92f9164a5cc8f21f5291",
+        "families": {
+          "arithmetic-fraction": 2,
+          "arithmetic-sum": 2,
+          "capital-control": 2,
+          "integer-function-control": 2,
+          "language-control": 2,
+          "linear-integer": 2,
+          "linear-rational": 2
+        },
+        "generation": {
+          "attempts": 10,
+          "average_completion_tokens": 8.0,
+          "average_reasoning_tokens": 0.0,
+          "failed": 0,
+          "failure_modes": {
+            "truncation": 10
+          },
+          "first_correct": 0,
+          "invalid": 10,
+          "majority_vote_at_k": {
+            "1": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "problems": 8,
+              "ties": 0,
+              "wilson95_descriptive": [
+                0.0,
+                0.3244075648838801
+              ]
+            }
+          },
+          "pass_at_1_first": 0.0,
+          "pass_at_k": {
+            "1": 0.0
+          },
+          "problems": 10,
+          "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+          "stop_counts": {
+            "token_limit": 10
+          },
+          "tokens": 80,
+          "truncated": 10,
+          "wilson95_descriptive": [
+            2.7755575615628914e-17,
+            0.27753279986288915
+          ]
+        },
+        "languages": {
+          "en": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 7,
+            "wilson95_descriptive": [
+              0.0,
+              0.3543304350666873
+            ]
+          },
+          "ru": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 5,
+            "wilson95_descriptive": [
+              2.7755575615628914e-17,
+              0.43448246478317465
+            ]
+          }
+        },
+        "lm": {
+          "documents": 2,
+          "failed_documents": 0,
+          "nll": 331.89776611328125,
+          "perplexity": 374.9324301437019,
+          "targets": 56
+        },
+        "official_benchmark": false,
+        "problems": 14,
+        "protocols": {
+          "choice": "continuation-sum-and-character-mean;first-option-tie",
+          "generation": "explicit-control-stop-v1",
+          "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+          "pass_at_k": "1-C(n-c,k)/C(n,k)"
+        },
+        "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+      },
+      "report_sha256": "fdd9cbf941ffe2f55d39289a5c528d479a4a1d8117c343cfd0d49f35778b5efe"
+    },
+    "mixed-4": {
+      "metrics": {
+        "available_problems": 14,
+        "choice": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "failed": 0,
+          "normalization": "character",
+          "normalized_correct": 0,
+          "problems": 2,
+          "wilson95_descriptive": [
+            0.0,
+            0.6576197724933468
+          ]
+        },
+        "domains": {
+          "original-code": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "original-general": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "original-language": {
+            "accuracy": null,
+            "correct": 0,
+            "lm": {
+              "documents": 2,
+              "failed_documents": 0,
+              "nll": 331.9114227294922,
+              "perplexity": 375.0238753703861,
+              "targets": 56
+            },
+            "problems": 0,
+            "wilson95_descriptive": null
+          },
+          "original-math": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 8,
+            "wilson95_descriptive": [
+              0.0,
+              0.3244075648838801
+            ]
+          }
+        },
+        "evaluated_prefix": 14,
+        "evaluation_sha256": "46c088e48c1a19786aeffb9b31c058aac22524fe58407e41a7108b9d104dec23",
+        "families": {
+          "arithmetic-fraction": 2,
+          "arithmetic-sum": 2,
+          "capital-control": 2,
+          "integer-function-control": 2,
+          "language-control": 2,
+          "linear-integer": 2,
+          "linear-rational": 2
+        },
+        "generation": {
+          "attempts": 10,
+          "average_completion_tokens": 8.0,
+          "average_reasoning_tokens": 0.0,
+          "failed": 0,
+          "failure_modes": {
+            "truncation": 10
+          },
+          "first_correct": 0,
+          "invalid": 10,
+          "majority_vote_at_k": {
+            "1": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "problems": 8,
+              "ties": 0,
+              "wilson95_descriptive": [
+                0.0,
+                0.3244075648838801
+              ]
+            }
+          },
+          "pass_at_1_first": 0.0,
+          "pass_at_k": {
+            "1": 0.0
+          },
+          "problems": 10,
+          "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+          "stop_counts": {
+            "token_limit": 10
+          },
+          "tokens": 80,
+          "truncated": 10,
+          "wilson95_descriptive": [
+            2.7755575615628914e-17,
+            0.27753279986288915
+          ]
+        },
+        "languages": {
+          "en": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 7,
+            "wilson95_descriptive": [
+              0.0,
+              0.3543304350666873
+            ]
+          },
+          "ru": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 5,
+            "wilson95_descriptive": [
+              2.7755575615628914e-17,
+              0.43448246478317465
+            ]
+          }
+        },
+        "lm": {
+          "documents": 2,
+          "failed_documents": 0,
+          "nll": 331.9114227294922,
+          "perplexity": 375.0238753703861,
+          "targets": 56
+        },
+        "model_variant": {
+          "backend": "pytorch-fp32-cpu",
+          "group_size": 32,
+          "library_version": "0.2.8.post1",
+          "method": "HQQ-weight-only",
+          "packed_payload_sha256": "d3917c023f00785a28c6059863eae1b42841ed8e683e10102fc869305a77f3fb",
+          "quantization_bits": 4,
+          "weight_tensor_bytes": 176128
+        },
+        "official_benchmark": false,
+        "problems": 14,
+        "protocols": {
+          "choice": "continuation-sum-and-character-mean;first-option-tie",
+          "generation": "explicit-control-stop-v1",
+          "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+          "pass_at_k": "1-C(n-c,k)/C(n,k)"
+        },
+        "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+      },
+      "report_sha256": "64749fe8a6ae7fb8fb725ef01982a03ab2ba283c23db7707ab88e03178f1c567"
+    },
+    "mixed-8": {
+      "metrics": {
+        "available_problems": 14,
+        "choice": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "failed": 0,
+          "normalization": "character",
+          "normalized_correct": 0,
+          "problems": 2,
+          "wilson95_descriptive": [
+            0.0,
+            0.6576197724933468
+          ]
+        },
+        "domains": {
+          "original-code": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "original-general": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "original-language": {
+            "accuracy": null,
+            "correct": 0,
+            "lm": {
+              "documents": 2,
+              "failed_documents": 0,
+              "nll": 331.89503479003906,
+              "perplexity": 374.9141437742822,
+              "targets": 56
+            },
+            "problems": 0,
+            "wilson95_descriptive": null
+          },
+          "original-math": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 8,
+            "wilson95_descriptive": [
+              0.0,
+              0.3244075648838801
+            ]
+          }
+        },
+        "evaluated_prefix": 14,
+        "evaluation_sha256": "c21c5f22ba37785e49bdbe522bd5a1273f54b167066bad243767b62bf3298e55",
+        "families": {
+          "arithmetic-fraction": 2,
+          "arithmetic-sum": 2,
+          "capital-control": 2,
+          "integer-function-control": 2,
+          "language-control": 2,
+          "linear-integer": 2,
+          "linear-rational": 2
+        },
+        "generation": {
+          "attempts": 10,
+          "average_completion_tokens": 8.0,
+          "average_reasoning_tokens": 0.0,
+          "failed": 0,
+          "failure_modes": {
+            "truncation": 10
+          },
+          "first_correct": 0,
+          "invalid": 10,
+          "majority_vote_at_k": {
+            "1": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "problems": 8,
+              "ties": 0,
+              "wilson95_descriptive": [
+                0.0,
+                0.3244075648838801
+              ]
+            }
+          },
+          "pass_at_1_first": 0.0,
+          "pass_at_k": {
+            "1": 0.0
+          },
+          "problems": 10,
+          "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+          "stop_counts": {
+            "token_limit": 10
+          },
+          "tokens": 80,
+          "truncated": 10,
+          "wilson95_descriptive": [
+            2.7755575615628914e-17,
+            0.27753279986288915
+          ]
+        },
+        "languages": {
+          "en": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 7,
+            "wilson95_descriptive": [
+              0.0,
+              0.3543304350666873
+            ]
+          },
+          "ru": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 5,
+            "wilson95_descriptive": [
+              2.7755575615628914e-17,
+              0.43448246478317465
+            ]
+          }
+        },
+        "lm": {
+          "documents": 2,
+          "failed_documents": 0,
+          "nll": 331.89503479003906,
+          "perplexity": 374.9141437742822,
+          "targets": 56
+        },
+        "model_variant": {
+          "backend": "pytorch-fp32-cpu",
+          "group_size": 32,
+          "library_version": "0.2.8.post1",
+          "method": "HQQ-weight-only",
+          "packed_payload_sha256": "ddda17a89bea5cd2dae7f87a46bd2a535fabaafe94309172ebec0de76da29d99",
+          "quantization_bits": 8,
+          "weight_tensor_bytes": 225280
+        },
+        "official_benchmark": false,
+        "problems": 14,
+        "protocols": {
+          "choice": "continuation-sum-and-character-mean;first-option-tie",
+          "generation": "explicit-control-stop-v1",
+          "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+          "pass_at_k": "1-C(n-c,k)/C(n,k)"
+        },
+        "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+      },
+      "report_sha256": "599df787c245a1b6a5e38f7244684445d9fcec9bdaa677fd6dd1ba7d2a633cb6"
+    },
+    "needle-1": {
+      "metrics": {
+        "available_problems": 30,
+        "choice": {
+          "accuracy": null,
+          "correct": 0,
+          "failed": 0,
+          "normalization": "character",
+          "normalized_correct": 0,
+          "problems": 0,
+          "wilson95_descriptive": null
+        },
+        "domains": {
+          "needle-L1024-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L1024-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L1024-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          }
+        },
+        "evaluated_prefix": 30,
+        "evaluation_sha256": "c1f97828981c42cd347fd9a97fea662990e1ae5c8246c978c7b9a107d8b748b0",
+        "families": {
+          "needle-retrieval": 30
+        },
+        "generation": {
+          "attempts": 30,
+          "average_completion_tokens": 4.8,
+          "average_reasoning_tokens": 0.0,
+          "failed": 12,
+          "failure_modes": {
+            "truncation": 30
+          },
+          "first_correct": 0,
+          "invalid": 30,
+          "majority_vote_at_k": {
+            "1": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "problems": 30,
+              "ties": 0,
+              "wilson95_descriptive": [
+                0.0,
+                0.11351339317396873
+              ]
+            }
+          },
+          "pass_at_1_first": 0.0,
+          "pass_at_k": {
+            "1": 0.0
+          },
+          "problems": 30,
+          "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+          "stop_counts": {
+            "context_overflow": 12,
+            "token_limit": 18
+          },
+          "tokens": 144,
+          "truncated": 30,
+          "wilson95_descriptive": [
+            0.0,
+            0.11351339317396873
+          ]
+        },
+        "languages": {
+          "en": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 30,
+            "wilson95_descriptive": [
+              0.0,
+              0.11351339317396873
+            ]
+          }
+        },
+        "lm": {
+          "documents": 0,
+          "failed_documents": 0,
+          "nll": 0,
+          "perplexity": null,
+          "targets": 0
+        },
+        "official_benchmark": false,
+        "problems": 30,
+        "protocols": {
+          "choice": "continuation-sum-and-character-mean;first-option-tie",
+          "generation": "explicit-control-stop-v1",
+          "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+          "pass_at_k": "1-C(n-c,k)/C(n,k)"
+        },
+        "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+      },
+      "report_sha256": "1a941d3204ec77fa64be1744976a7e7eb821591e94f5887c10fc04609123f2d6"
+    },
+    "needle-2": {
+      "metrics": {
+        "available_problems": 30,
+        "choice": {
+          "accuracy": null,
+          "correct": 0,
+          "failed": 0,
+          "normalization": "character",
+          "normalized_correct": 0,
+          "problems": 0,
+          "wilson95_descriptive": null
+        },
+        "domains": {
+          "needle-L1024-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L1024-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L1024-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          }
+        },
+        "evaluated_prefix": 30,
+        "evaluation_sha256": "6e420a3efb5f7931caeb075f4aec9e9ff7106656c77c9d884abc498bd456300d",
+        "families": {
+          "needle-retrieval": 30
+        },
+        "generation": {
+          "attempts": 30,
+          "average_completion_tokens": 6.4,
+          "average_reasoning_tokens": 0.0,
+          "failed": 6,
+          "failure_modes": {
+            "truncation": 30
+          },
+          "first_correct": 0,
+          "invalid": 30,
+          "majority_vote_at_k": {
+            "1": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "problems": 30,
+              "ties": 0,
+              "wilson95_descriptive": [
+                0.0,
+                0.11351339317396873
+              ]
+            }
+          },
+          "pass_at_1_first": 0.0,
+          "pass_at_k": {
+            "1": 0.0
+          },
+          "problems": 30,
+          "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+          "stop_counts": {
+            "context_overflow": 6,
+            "token_limit": 24
+          },
+          "tokens": 192,
+          "truncated": 30,
+          "wilson95_descriptive": [
+            0.0,
+            0.11351339317396873
+          ]
+        },
+        "languages": {
+          "en": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 30,
+            "wilson95_descriptive": [
+              0.0,
+              0.11351339317396873
+            ]
+          }
+        },
+        "lm": {
+          "documents": 0,
+          "failed_documents": 0,
+          "nll": 0,
+          "perplexity": null,
+          "targets": 0
+        },
+        "model_variant": {
+          "context_extension": 2,
+          "model_context": 512,
+          "position_method": "linear_interpolation",
+          "rope_scale": 2.0
+        },
+        "official_benchmark": false,
+        "problems": 30,
+        "protocols": {
+          "choice": "continuation-sum-and-character-mean;first-option-tie",
+          "generation": "explicit-control-stop-v1",
+          "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+          "pass_at_k": "1-C(n-c,k)/C(n,k)"
+        },
+        "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+      },
+      "report_sha256": "d6adca2d0b793fdee69557f525dd147397f0220ecfabe57f41a24bb138f521f3"
+    },
+    "needle-4": {
+      "metrics": {
+        "available_problems": 30,
+        "choice": {
+          "accuracy": null,
+          "correct": 0,
+          "failed": 0,
+          "normalization": "character",
+          "normalized_correct": 0,
+          "problems": 0,
+          "wilson95_descriptive": null
+        },
+        "domains": {
+          "needle-L1024-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L1024-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L1024-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L128-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L256-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L512-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D10": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D50": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          },
+          "needle-L64-D90": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "lm": {
+              "documents": 0,
+              "failed_documents": 0,
+              "nll": 0,
+              "perplexity": null,
+              "targets": 0
+            },
+            "problems": 2,
+            "wilson95_descriptive": [
+              0.0,
+              0.6576197724933468
+            ]
+          }
+        },
+        "evaluated_prefix": 30,
+        "evaluation_sha256": "20033aa93643df67d0f0ddcde53b5156e75728d5e50ef891ad62080de7fc17ad",
+        "families": {
+          "needle-retrieval": 30
+        },
+        "generation": {
+          "attempts": 30,
+          "average_completion_tokens": 8.0,
+          "average_reasoning_tokens": 0.0,
+          "failed": 0,
+          "failure_modes": {
+            "truncation": 30
+          },
+          "first_correct": 0,
+          "invalid": 30,
+          "majority_vote_at_k": {
+            "1": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "problems": 30,
+              "ties": 0,
+              "wilson95_descriptive": [
+                0.0,
+                0.11351339317396873
+              ]
+            }
+          },
+          "pass_at_1_first": 0.0,
+          "pass_at_k": {
+            "1": 0.0
+          },
+          "problems": 30,
+          "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+          "stop_counts": {
+            "token_limit": 30
+          },
+          "tokens": 240,
+          "truncated": 30,
+          "wilson95_descriptive": [
+            0.0,
+            0.11351339317396873
+          ]
+        },
+        "languages": {
+          "en": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "problems": 30,
+            "wilson95_descriptive": [
+              0.0,
+              0.11351339317396873
+            ]
+          }
+        },
+        "lm": {
+          "documents": 0,
+          "failed_documents": 0,
+          "nll": 0,
+          "perplexity": null,
+          "targets": 0
+        },
+        "model_variant": {
+          "context_extension": 4,
+          "model_context": 1024,
+          "position_method": "linear_interpolation",
+          "rope_scale": 4.0
+        },
+        "official_benchmark": false,
+        "problems": 30,
+        "protocols": {
+          "choice": "continuation-sum-and-character-mean;first-option-tie",
+          "generation": "explicit-control-stop-v1",
+          "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+          "pass_at_k": "1-C(n-c,k)/C(n,k)"
+        },
+        "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+      },
+      "report_sha256": "0972d78642ed64133af0101f98ff0260fcff720845303c1270fe5818957ddedb"
+    }
+  },
+  "final_cases_scored": 0,
+  "hf": {
+    "1": {
+      "cached_max_abs_error": 1.341104507446289e-07,
+      "export_manifest_sha256": "15e04da1361e95adfb48a0b4dd2af2005b8b7c970d5273279de209ff74e1f264",
+      "full_max_abs_error": 1.7881393432617188e-07
+    },
+    "2": {
+      "cached_max_abs_error": 1.7881393432617188e-07,
+      "export_manifest_sha256": "6cd599a91fb86d44d441e9661fe6baafa2e52807aba02a30552751c36f4065b4",
+      "full_max_abs_error": 2.384185791015625e-07
+    }
+  },
+  "hqq": {
+    "4": {
+      "manifest_sha256": "95832b29bbdfeb01c1fd770908d285815591815dceee82e831f87fbe87a2251b",
+      "payload_sha256": "d3917c023f00785a28c6059863eae1b42841ed8e683e10102fc869305a77f3fb"
+    },
+    "8": {
+      "manifest_sha256": "172c8cba42eb50841e449d836bad7183a821c0d99b7d86d3ce34e0c72dbfaa65",
+      "payload_sha256": "ddda17a89bea5cd2dae7f87a46bd2a535fabaafe94309172ebec0de76da29d99"
+    }
+  },
+  "http": {
+    "body": {
+      "max_tokens": 16,
+      "messages": [
+        {
+          "content": "What is two plus two?",
+          "role": "user"
+        }
+      ],
+      "model": "qvelt",
+      "seed": 20261107,
+      "temperature": 0.8,
+      "top_k": 32,
+      "top_p": 0.9
+    },
+    "completed_tokens": 109,
+    "concurrency": 4,
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "device": "cpu",
+    "dtype": "float32",
+    "elapsed_seconds": 0.29143735300021945,
+    "latency_p50_seconds": 0.11922491699988313,
+    "latency_p95_seconds": 0.23349555999993754,
+    "protocol": "qvelt-loopback-http-v1",
+    "requests": 8,
+    "rss_scope": "isolated server process lifetime VmHWM,includes startup",
+    "scope": "bounded CPU loopback workload,not high-throughput/GPU/production capacity",
+    "server_peak_rss_bytes": 264736768,
+    "server_returncode": -15,
+    "server_shutdown": {
+      "batches": [
+        1,
+        3,
+        4,
+        1,
+        1,
+        1,
+        1
+      ],
+      "cancelled_or_expired": 1,
+      "pending_after_shutdown": 0,
+      "stopped": true
+    },
+    "serving_policy": {
+      "allow_unauthenticated": false,
+      "api_key_env": "QVELT_API_KEY",
+      "batch_wait_ms": 10,
+      "host": "127.0.0.1",
+      "max_body_bytes": 65536,
+      "max_pending": 16,
+      "model_name": "qvelt",
+      "num_threads": 1,
+      "port": 36605,
+      "request_timeout": 5.0,
+      "snapshot": {
+        "path": "runs/phase8-acceptance/snapshot/manifest.json",
+        "sha256": "5857a9bf403006889b104668a3c638554e979ca47ba54b1f4e7f378c4e41d16c"
+      },
+      "snapshot_format": "native"
+    },
+    "snapshot_sha256": "5857a9bf403006889b104668a3c638554e979ca47ba54b1f4e7f378c4e41d16c",
+    "stream_disconnected_after_role": true,
+    "stream_first_content_seconds": 0.020915993999551574,
+    "stream_text_matches_nonstream": true,
+    "threads": 1,
+    "tokens_per_second": 374.0083379082774,
+    "warmup_requests": 1
+  },
+  "model_config": {
+    "context": 256,
+    "ffn": 192,
+    "heads": 4,
+    "hidden": 64,
+    "kv_heads": 2,
+    "layers": 2,
+    "norm_eps": 1e-06,
+    "rope_scale": 1.0,
+    "rope_theta": 10000.0,
+    "vocab": 395
+  },
+  "native_snapshot_sha256": "5857a9bf403006889b104668a3c638554e979ca47ba54b1f4e7f378c4e41d16c",
+  "parameters": 123904,
+  "raw_result_sha256": "4a18fbf2621c28ac0fd49f9fc158b6e1a74336a28a756cd8f2ff0a66f0f30664",
+  "receipts": [
+    "mixed-0.json",
+    "mixed-4.json",
+    "mixed-8.json",
+    "needle-1.json",
+    "needle-2.json",
+    "needle-4.json"
+  ],
+  "sampling_cached_uncached_stream_repeat_exact": true,
+  "scope": "tiny three-update engineering model;no release quality or GPU throughput claim",
+  "source_commit": "b5deaf40d161a260be50cfe135b67dda479ccd7c",
+  "source_dirty": false,
+  "source_sha256": "307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061",
+  "tokenizer_sha256": "6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9"
+}

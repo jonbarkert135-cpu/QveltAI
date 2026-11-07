@@ -17,18 +17,41 @@ M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was perfor
 
 ## Current task
 
-Expanded Phase8 implementation and portable diagnostics complete;source-clean
-acceptance/full CI remain in progress. Shared Engine/sampling controls,standard
-HF Llama export with Q/K conversion and direct dense streamed shards,safe HQQ4/8,
-actual FastAPI JSON/SSE/microbatch/auth/deadline/Unicode/failure paths,RFC linear
-RoPE and original needle evaluation,three immutable-base Docker targets,model card
-and runbooks05 are implemented. HF3,focused25 and HQQ/policy9 tests pass (overlap),
-Ruff/format,mypy217,lock/package checks and wheel/sdist pass. Real HTTP smoke has
-batched concurrent requests,exact SSE and cooperative cleanup. Dirty diagnostic
-retrieval has zero baseline ability;no quality claim. Local serving image builds,
-but vfs runtime failed ENOSPC;dedicated container CI is required. Full CPU suite,
-clean six native receipts/RESULTS and remote acceptance are pending. Final800
-unscored. See validation_serving_phase8.md and serving_phase8_design.md.
+Expanded Phase8 portable CPU reference accepted onb5deaf40d161a260be50cfe135b67dda479ccd7c;
+all19 CI42356828424 jobs successful. CPU3.11/3.12/3.13 each846 passed,18 optional
+skips,7 GPU deselected;actual HF/HQQ/API34 tests and complete source-clean smoke
+pass separately. Local all-extras864 passed/7 deselected331.00s,no skips. Ruff,
+mypy217,lock/package consistency and wheel/sdist pass. Final test-only extension
+checks historical reasoning parity in HF/native chat;focused10 pass7.75s.
+
+Shared Engine/sampling,private cached streaming,standard builtin HF Llama export
+with Q/K conversion and direct dense indexed shards,safe numeric HQQ4/8,actual
+FastAPI chat JSON/SSE/auth/microbatches/deadlines/failures,linear RoPE diagnostics,
+three reproducible Docker targets,MODEL_CARD and runbooks05 implemented.
+Clean runtime307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061:
+123904-param three-update debug model,all seven run/export artifacts and six eval
+reports dirty=false. HF max error2.384e-7;sampled cached/full/stream exact. Matched
+PPL374.932430/375.023875/374.914144 for FP32/HQQ4/HQQ8,56 original targets only;
+all generation/choice0. Needles0/30 at factors1/2/4,context overflow12/6/0. This
+cannot establish useful accuracy preservation or long-context quality. Final800
+unscored,source weights unchanged. Six report-bound receipts added;RESULTS now
+regenerates from15 native receipts,preserving Phase7 history.
+
+Actual local CPU HTTP sample:109 completion tokens,8 requests/concurrency4,
+374.008338tokens/s,P50.119225s/P95.233496s,server lifetime peak264736768 bytes;
+EPYC9V74,Torch1 thread. SSE exact,real microbatches3/4,disconnect/expiry1,pending0.
+CI builds all3 Docker targets,defaults UID10001,real container3-update training,
+authenticated JSON/SSE and clean shutdown pass;quantized dependencies import.
+Local vfs runtime ENOSPC remains a recorded failure,not a successful launch.
+Current-source RFC tiny200-step actual SIGKILL89/resume75 keeps all losses/model/
+Adam/RNG/application exact. Existing workflows remain green. See runbooks05,
+validation_serving_phase8.md and serving-phase8-{acceptance,container,ci}.json.
+
+Unrun/separate gates:GPU/vLLM deployment,large conversion/quantization,sharded
+checkpoint consolidation,production serving and trained retrieval/benchmark
+quality. Native/HQQ remain CPU FP32<=20M,batch8,context2048. vLLM source compatibility
+is verified,not runtime acceptance. Next dependency-ready milestone:M9.1 clean
+workflow documentation/release preparation,subject to existing rights/quality gates.
 
 Previous Phase7 acceptance follows.
 

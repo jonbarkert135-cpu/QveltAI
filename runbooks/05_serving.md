@@ -249,7 +249,7 @@ Container CI builds all targets and executes nonroot doctor,three real training
 updates and authenticated JSON/SSE server cleanup. Local managed Docker uses vfs:
 the serving image built,but runtime root-copy allocation exhausted the small disk.
 That local launch is recorded as failed,not accepted. Check the container CI
-receipt for actual runtime acceptance on a runner with sufficient disk.
+[verified receipt](../docs/development/evidence/serving-phase8-container.json) for actual runtime acceptance on a runner with sufficient disk.
 
 ## What to send for analysis
 

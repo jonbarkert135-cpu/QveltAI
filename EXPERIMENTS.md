@@ -925,3 +925,33 @@ serving Docker image builds locally but runtime fails ENOSPC on vfs. Only own
 scratch/build artifacts were cleaned;no user training data/checkpoint deleted.
 Container runtime acceptance and clean-source/remote checks follow separately.
 See validation_serving_phase8.md and runbooks/05_serving.md.
+
+R029 clean-source acceptance:b5deaf40d161a260be50cfe135b67dda479ccd7c,
+package307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061.
+All seven input run/export artifacts and six evaluator reports dirty=false. Full
+local864 passed/7 GPU deselected331.00s;all extras installed,no optional skips.
+Real HF baseline/PI2 max logit error2.384e-7;cached/full sampled streams exact.
+Matched PPL baseline374.932430,int4 375.023875,int8 374.914144 over56 original
+LM targets;all generation/choice0. Accuracy-floor deltas are not useful quality
+preservation evidence. Needle0/30 for all factors,overflow12/6/0 at1/2/4;long
+quality is unestablished. Final800 unscored,source weights unchanged.
+
+Named CPU HTTP workload:EPYC9V74,Torch1 thread,8 requests/concurrency4,109 tokens
+in0.291437353s (374.008338tokens/s),P50.119225s/P95.233496s,lifetime server peak
+264736768 bytes. Actual microbatches3/4,SSE exact,disconnect/expiry1,pending0.
+Native6 eval receipts and acceptance are registered;root ledger contains15
+receipts including preserved Phase7 history. No production/GPU claim.
+Source CI42356828424 container job succeeds:three pinned images build,UID10001,
+real3-update container training,auth401/JSON/SSE/shutdown pass;quantized SDKs
+import. GitHub artifact13567369659 SHA verified and container receipt published.
+Dedicated inference-serving34 tests19.05s and full smoke pass. CPU matrix/recovery
+closure is recorded after completion. Local vfs ENOSPC remains recorded.
+
+R029 final source CI42356828424:all19 jobs success. CPU3.11/12/13 each846 pass,
+18 optional skips,7 GPU deselected216.69s/388.65s/332.56s;optional34-pass job
+uses actual HF/HQQ/API and standalone smoke. Existing workflows all pass. Full
+RFC tiny200 updates SIGKILL89/resume75 has maximum loss difference0 and exact
+weights/Adam/RNG/application state on the new runtime digest. Extra actual HQQ4
+CLI HTTP/SSE process passes;final historical-reasoning HF/native chat extension
+10 pass7.75s. Runtime unchanged after b5deaf4. Results/receipts/state/runbook/card
+are complete for portable scope;hardware/quality and local Gloo risks remain.

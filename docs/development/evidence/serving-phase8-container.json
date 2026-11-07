@@ -1,0 +1,29 @@
+{
+  "artifact_id": 13567369659,
+  "artifact_sha256": "1fbd48dcf96e1e4b661012358056788322e581bda3c5d90ef14cffe6325668f7",
+  "authenticated_json_sse_exact": true,
+  "checkpoint_sha256": "cfb93de97572e6133c1e3f08c8308284c4a2d959bfb9e58ed44eaf794313ded4",
+  "default_users": {
+    "qvelt-serving:phase8": 10001,
+    "qvelt-training:phase8": 10001
+  },
+  "dependency_lock_sha256": "614b325447ed5ef4611b0475e50ea7311810e2d4471bec11dbd019dec8701d34",
+  "job_id": 128356624104,
+  "quantized_image_imports": "verified from completed container job logs",
+  "scope": "CPU tiny image smoke;no CUDA or production claim",
+  "serving_image_id": "sha256:6e92896945423d8f2e2118a922cd7d367b67f05c78cfbbade865a03eae2f5f19",
+  "shutdown": {
+    "batches": [
+      1,
+      1
+    ],
+    "cancelled_or_expired": 0,
+    "pending_after_shutdown": 0,
+    "stopped": true
+  },
+  "source_commit": "b5deaf40d161a260be50cfe135b67dda479ccd7c",
+  "training_image_id": "sha256:c60fb00de33dd4d443386d6eb7548b6acb9253f55bfdb24e5c672891988160ba",
+  "training_updates": 3,
+  "unauthenticated_status": 401,
+  "workflow_url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42356828424"
+}

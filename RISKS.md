@@ -369,3 +369,10 @@ gateway timeouts,tenant isolation and rate limiting remain deployment work.
 Local vfs Docker image root copies exhausted the small disk;runtime launch was
 not accepted. Dedicated runner container CI is required. No user artifacts were
 deleted to recover space. Historical Gloo faults remain separate open risks.
+
+R029 source acceptance update:actual three-target Docker builds and tiny container
+training/HTTP runtime pass in CI42356828424. This supplies the required runtime
+evidence on its hosted runner,not a fix for local vfs disk exhaustion. Clean
+native receipts record PPL differences but all generation/retrieval accuracy is
+zero;quality gates remain open. CPU native/reference limits and unrun GPU/vLLM/
+large export/quantization claims are unchanged. Final800 remains unscored.

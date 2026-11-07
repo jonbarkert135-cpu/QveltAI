@@ -1,0 +1,164 @@
+{
+  "source_commit": "b5deaf40d161a260be50cfe135b67dda479ccd7c",
+  "source_sha256": "307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061",
+  "workflow_id": 42356828424,
+  "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42356828424",
+  "jobs": [
+    {
+      "id": 128356624104,
+      "name": "containers",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624221,
+      "name": "supervised-finetuning",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624248,
+      "name": "posttraining",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624260,
+      "name": "data-smoke",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624267,
+      "name": "promotion-study",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624273,
+      "name": "packed-pretraining",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624279,
+      "name": "inference-serving",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624294,
+      "name": "pretraining-recovery",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624297,
+      "name": "optional-metrics",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624316,
+      "name": "cpu (3.11)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624344,
+      "name": "eval-harness",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624350,
+      "name": "preference-optimization",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624355,
+      "name": "cpu (3.12)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624374,
+      "name": "inference",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624377,
+      "name": "outcome-grpo",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624384,
+      "name": "smoke",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624395,
+      "name": "cpu (3.13)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624408,
+      "name": "evaluation",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 128356624444,
+      "name": "evaluation-suite",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "cpu": {
+    "311": {
+      "passed": 846,
+      "skipped": 18,
+      "gpu_deselected": 7,
+      "seconds": 216.69
+    },
+    "312": {
+      "passed": 846,
+      "skipped": 18,
+      "gpu_deselected": 7,
+      "seconds": 388.65
+    },
+    "313": {
+      "passed": 846,
+      "skipped": 18,
+      "gpu_deselected": 7,
+      "seconds": 332.56
+    }
+  },
+  "optional_inference": {
+    "job_id": 128356624279,
+    "passed": 34,
+    "seconds": 19.05,
+    "standalone_smoke": "passed"
+  },
+  "recovery": {
+    "application_state_exact": true,
+    "killed_returncode": -9,
+    "maximum_loss_difference": 0,
+    "observed_kill_step": 89,
+    "optimizer_bit_exact": true,
+    "parameters": 19338560,
+    "processed_tokens": 6386,
+    "requested_kill_after": 89,
+    "resumed_checkpoint_step": 75,
+    "rng_bit_exact": true,
+    "scope": "Original-data CPU process recovery, not production/model quality",
+    "source_sha256": "307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061",
+    "steps": 200,
+    "weights_bit_exact": true
+  }
+}

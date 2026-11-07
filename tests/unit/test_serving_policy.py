@@ -45,7 +45,7 @@ def test_open_chat_exactly_matches_training_frame() -> None:
     history = (
         Message("system", "Solve arithmetic."),
         Message("user", "2+2?"),
-        Message("assistant", "4"),
+        Message("assistant", "4", "Add two and two."),
         Message("user", "3+3?"),
     )
     closed, _ = encode_chat((*history, Message("assistant", "6")), tokenizer, 256)

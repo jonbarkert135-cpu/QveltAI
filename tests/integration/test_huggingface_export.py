@@ -54,13 +54,16 @@ def test_real_offline_builtin_hf_export_and_cache(tmp_path: Path) -> None:
     messages = (
         Message("system", "You solve math."),
         Message("user", "2+2?"),
-        Message("assistant", "4"),
+        Message("assistant", "4", "Add two and two."),
         Message("user", "3+3?"),
         Message("assistant", "6"),
     )
     native, _ = encode_chat(messages, snapshot.tokenizer, 256)
     hf_ids = tokenizer.apply_chat_template(
-        [{"role": m.role, "content": m.content} for m in messages],
+        [
+            {"role": m.role, "content": m.content, "reasoning": m.reasoning}
+            for m in messages
+        ],
         tokenize=True,
         add_generation_prompt=False,
         return_dict=False,

@@ -4,16 +4,16 @@ Last updated: 2026-11-07. Owner of every milestone: **Lead agent**.
 
 ## User-directed expanded Phase8 inference/export/serving (2026-11-07)
 
-Status:in progress;extends accepted native M8.1 and implements M8.2.
+Status:portable CPU reference accepted onb5deaf4;all19 CI42356828424 jobs pass.
 
 - [x] Sampling controls and shared Engine protocol;legacy default decode references pass.
 - [x] Actual builtin HF Llama export/native full/cache/tokenizer parity,including Q/K permutation.
 - [x] Actual HQQ4/HQQ8 packing/dense reconstruction/reload;numeric-only safe artifact path.
 - [x] First HTTP/SSE/auth/limits/real batching/deadline/shutdown tests pass.
 - [x] Failure/concurrency/Unicode tests,actual quantization/needle eval and real HTTP diagnostics.
-- [ ] Clean provenance-bound RESULTS/server measurements and actual container CI smoke.
+- [x] Clean provenance-bound RESULTS/server measurements and actual container CI smoke.
 - [x] MODEL_CARD/runbooks05 and implementation/state/decision documentation.
-- [ ] Clean evidence and full/remote CI closure.
+- [x] Clean evidence,full864 local checks and19-job remote CI closure.
 - [ ] Separate hardware/quality gates:GPU/high-throughput engine execution,large
   model quantization and demonstrated long-context quality;final800 unscored.
 
@@ -521,15 +521,15 @@ bound separately. All candidates reject;actual user-run production acceptance op
 
 ### M8.1 — Build correct generation and stable artifact export
 
-Owner: Lead agent. Status: native CPU core accepted on699ff0b,all14 CI42239279899 jobs successful;optional runtime/quantization extensions deferred. Dependencies: M7.1, M4.2; early generation
+Owner: Lead agent. Status: native CPU core accepted on699ff0b;expanded Phase8 HF/HQQ reference accepted onb5deaf4. External GPU runtime remains unrun. Dependencies: M7.1, M4.2; early generation
 used by M6.3 must already have reference tests.
 
 - [x] Provide greedy and seeded sampling, stopping rules, context checks,
   batching, streaming, KV-cache lifecycle, and per-request resource limits.
 - [x] Export weights, tokenizer, config, and metadata in a reviewed versioned
   format; test reload/logit parity and reject incompatible or corrupt artifacts.
-- [ ] Deferred optional extension:Add quantization or external-runtime compatibility only after capability,
-  license, accuracy, and memory validation; do not promise universal support.
+- [x] Expanded Phase8 adds measured native CPU HQQ4/8 and verified builtin HF
+  export;external GPU runtime remains unrun,with source compatibility documented.
 
 Acceptance: cached/uncached and export/reload reference comparisons pass;
 generation reproducibility has explicit device/precision/batch conditions.
@@ -543,13 +543,13 @@ Extracted-wheel generation passes. No HTTP/GPU/quality/quantization claim.
 
 ### M8.2 — Deliver a measured serving interface
 
-Owner: Lead agent. Status: planned. Dependencies: M8.1.
+Owner: Lead agent. Status: portable CPU reference accepted onb5deaf4;CI42356828424 all19 pass. Dependencies: M8.1.
 
-- [ ] Implement a documented request schema, streaming/cancellation, admission
+- [x] Implement a documented request schema, streaming/cancellation, admission
   limits, backpressure, health/readiness, error handling, and safe logging.
-- [ ] Test concurrent requests, cache isolation, malformed inputs, capacity
+- [x] Test concurrent requests, cache isolation, malformed inputs, capacity
   limits, shutdown, and timeouts; document deployment/authentication boundaries.
-- [ ] Measure latency, tokens/s, and peak memory on named hardware/workloads;
+- [x] Measure latency, tokens/s, and peak memory on named hardware/workloads;
   keep correctness tests and load tests separate.
 
 Acceptance: functional and failure-path integration tests pass. Any throughput
@@ -647,7 +647,7 @@ clearance remain blocked. M6.1 original-data chat/SFT,assistant masks and tiny o
 CPU acceptance. M6.2 DPO,bounded M6.3 outcome-GRPO and M7.1 original evaluation
 pass portable CPU acceptance/clean CI. M7.2 CPU necessary comparisons/gates and
 LR/RoPE ablations are implemented with negative findings. Native CPU M8.1 inference/
-export is accepted. Next:M8.2 measured serving;production promotion still needs
+export and expanded CPU M8.2 serving are accepted. Next:M9.1;production promotion still needs
 actual user-run and licensed quality evidence.
 Keep final heldout
 families separate; do not promote demo loss to a reasoning benchmark score.

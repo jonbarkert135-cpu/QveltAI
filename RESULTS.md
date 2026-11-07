@@ -6,6 +6,453 @@ All entries are Qvelt measurements. Limited original/development subsets are not
 Wilson intervals are descriptive;template correlation/nonrandom prefixes limit population inference.
 Compare only rows with the same comparison key. No scores from external papers are imported.
 
+## Matched weight-only quantization comparisons
+
+Same source checkpoint,tokenizer,prompts,scoring,budgets and evaluator source;CPU PyTorch fallback,not a speed claim.
+
+```json
+[
+  {
+    "baseline_perplexity": 374.9324301437019,
+    "baseline_report": "fdd9cbf941ffe2f55d39289a5c528d479a4a1d8117c343cfd0d49f35778b5efe",
+    "bits": 4,
+    "choice_accuracy_delta": 0.0,
+    "generation_accuracy_delta": 0.0,
+    "perplexity_delta": 0.09144522668424315,
+    "quantized_perplexity": 375.0238753703861,
+    "quantized_report": "64749fe8a6ae7fb8fb725ef01982a03ab2ba283c23db7707ab88e03178f1c567"
+  },
+  {
+    "baseline_perplexity": 374.9324301437019,
+    "baseline_report": "fdd9cbf941ffe2f55d39289a5c528d479a4a1d8117c343cfd0d49f35778b5efe",
+    "bits": 8,
+    "choice_accuracy_delta": 0.0,
+    "generation_accuracy_delta": 0.0,
+    "perplexity_delta": -0.01828636941968398,
+    "quantized_perplexity": 374.9141437742822,
+    "quantized_report": "599df787c245a1b6a5e38f7244684445d9fcec9bdaa677fd6dd1ba7d2a633cb6"
+  }
+]
+```
+
+## original-needle / 0972d78642ed
+
+[Verified receipt](docs/development/evidence/evaluation-phase8-needle-4.json)
+
+- Checkpoint manifest: `893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325`
+- Model payload SHA256: `53ad69233d88eeb365a23ef6ae4add04301f1fed4d5323d42278243033c8e31e`
+- Tokenizer: `6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9`
+- Dataset: `b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4`
+- Evaluator source: `307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061`
+- Comparison key: `f7cfbded0a55df7763277d9a971ab062011fa8b22ea2d82062bfceb7754ae667`
+
+Reproduction command:
+
+```bash
+python scripts/inference_phase8_smoke.py --directory runs/phase8-acceptance --repository .
+```
+
+Exact semantic evaluation config (artifact paths are relocatable content addresses):
+
+```yaml
+allow_final: false
+approved_for_evaluation: true
+audit_jaccard: 0.85
+audit_ngram: 13
+checkpoint:
+  path: artifacts/checkpoint-893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325/manifest.json
+  sha256: 893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325
+choice_normalization: character
+context_extension: 4
+context_limit: 1024
+dataset:
+  path: artifacts/dataset-b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4/manifest.json
+  sha256: b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4
+extraction: whole-v1
+lm_window: 64
+max_cases: 64
+max_new_tokens: 8
+numeric_atol: 1.0e-08
+numeric_rtol: 1.0e-06
+pass_k:
+- 1
+prompt_format: plain-v1
+protocol: qvelt-eval-v2
+quantization_bits: 0
+samples: 1
+sampling: greedy
+schema_version: 1
+seed: 20261107
+temperature: 0.0
+tokenizer:
+  path: artifacts/tokenizer-6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9/manifest.json
+  sha256: 6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9
+training_sources:
+- path: artifacts/training-67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335/manifest.json
+  sha256: 67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335
+```
+
+Exact model/runtime config:
+
+```yaml
+model:
+  context: 1024
+  ffn: 192
+  heads: 4
+  hidden: 64
+  kv_heads: 2
+  layers: 2
+  norm_eps: 1.0e-06
+  rope_scale: 4.0
+  rope_theta: 10000.0
+  vocab: 395
+name: ci-synthetic-smoke
+runtime:
+  deterministic: true
+  device: cpu
+  log_level: INFO
+  precision: fp32
+  seed: 20261107
+schema_version: 1
+```
+
+Measured metrics,including failures/intervals:
+
+```json
+{
+  "available_problems": 30,
+  "choice": {
+    "accuracy": null,
+    "correct": 0,
+    "failed": 0,
+    "normalization": "character",
+    "normalized_correct": 0,
+    "problems": 0,
+    "wilson95_descriptive": null
+  },
+  "domains": {
+    "needle-L1024-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L1024-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L1024-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    }
+  },
+  "evaluated_prefix": 30,
+  "evaluation_sha256": "20033aa93643df67d0f0ddcde53b5156e75728d5e50ef891ad62080de7fc17ad",
+  "families": {
+    "needle-retrieval": 30
+  },
+  "generation": {
+    "attempts": 30,
+    "average_completion_tokens": 8.0,
+    "average_reasoning_tokens": 0.0,
+    "failed": 0,
+    "failure_modes": {
+      "truncation": 30
+    },
+    "first_correct": 0,
+    "invalid": 30,
+    "majority_vote_at_k": {
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "problems": 30,
+        "ties": 0,
+        "wilson95_descriptive": [
+          0.0,
+          0.11351339317396873
+        ]
+      }
+    },
+    "pass_at_1_first": 0.0,
+    "pass_at_k": {
+      "1": 0.0
+    },
+    "problems": 30,
+    "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+    "stop_counts": {
+      "token_limit": 30
+    },
+    "tokens": 240,
+    "truncated": 30,
+    "wilson95_descriptive": [
+      0.0,
+      0.11351339317396873
+    ]
+  },
+  "languages": {
+    "en": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 30,
+      "wilson95_descriptive": [
+        0.0,
+        0.11351339317396873
+      ]
+    }
+  },
+  "lm": {
+    "documents": 0,
+    "failed_documents": 0,
+    "nll": 0,
+    "perplexity": null,
+    "targets": 0
+  },
+  "model_variant": {
+    "context_extension": 4,
+    "model_context": 1024,
+    "position_method": "linear_interpolation",
+    "rope_scale": 4.0
+  },
+  "official_benchmark": false,
+  "problems": 30,
+  "protocols": {
+    "choice": "continuation-sum-and-character-mean;first-option-tie",
+    "generation": "explicit-control-stop-v1",
+    "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+    "pass_at_k": "1-C(n-c,k)/C(n,k)"
+  },
+  "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+}
+```
+
+Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
+
 ## mmlu-abstract-algebra / 0f2b85aa567c
 
 [Verified receipt](docs/development/evidence/evaluation-phase7-mmlu-abstract-algebra.json)
@@ -360,6 +807,419 @@ Measured metrics,including failures/intervals:
   },
   "official_benchmark": false,
   "problems": 16,
+  "protocols": {
+    "choice": "continuation-sum-and-character-mean;first-option-tie",
+    "generation": "explicit-control-stop-v1",
+    "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+    "pass_at_k": "1-C(n-c,k)/C(n,k)"
+  },
+  "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+}
+```
+
+Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
+
+## original-needle / 1a941d3204ec
+
+[Verified receipt](docs/development/evidence/evaluation-phase8-needle-1.json)
+
+- Checkpoint manifest: `893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325`
+- Model payload SHA256: `53ad69233d88eeb365a23ef6ae4add04301f1fed4d5323d42278243033c8e31e`
+- Tokenizer: `6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9`
+- Dataset: `b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4`
+- Evaluator source: `307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061`
+- Comparison key: `684a922165f6d2a10bfdb8f2b2add1afc915665027d8da583d88f5ea61ec3922`
+
+Reproduction command:
+
+```bash
+python scripts/inference_phase8_smoke.py --directory runs/phase8-acceptance --repository .
+```
+
+Exact semantic evaluation config (artifact paths are relocatable content addresses):
+
+```yaml
+allow_final: false
+approved_for_evaluation: true
+audit_jaccard: 0.85
+audit_ngram: 13
+checkpoint:
+  path: artifacts/checkpoint-893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325/manifest.json
+  sha256: 893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325
+choice_normalization: character
+context_extension: 1
+context_limit: 1024
+dataset:
+  path: artifacts/dataset-b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4/manifest.json
+  sha256: b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4
+extraction: whole-v1
+lm_window: 64
+max_cases: 64
+max_new_tokens: 8
+numeric_atol: 1.0e-08
+numeric_rtol: 1.0e-06
+pass_k:
+- 1
+prompt_format: plain-v1
+protocol: qvelt-eval-v2
+quantization_bits: 0
+samples: 1
+sampling: greedy
+schema_version: 1
+seed: 20261107
+temperature: 0.0
+tokenizer:
+  path: artifacts/tokenizer-6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9/manifest.json
+  sha256: 6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9
+training_sources:
+- path: artifacts/training-67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335/manifest.json
+  sha256: 67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335
+```
+
+Exact model/runtime config:
+
+```yaml
+model:
+  context: 256
+  ffn: 192
+  heads: 4
+  hidden: 64
+  kv_heads: 2
+  layers: 2
+  norm_eps: 1.0e-06
+  rope_scale: 1.0
+  rope_theta: 10000.0
+  vocab: 395
+name: ci-synthetic-smoke
+runtime:
+  deterministic: true
+  device: cpu
+  log_level: INFO
+  precision: fp32
+  seed: 20261107
+schema_version: 1
+```
+
+Measured metrics,including failures/intervals:
+
+```json
+{
+  "available_problems": 30,
+  "choice": {
+    "accuracy": null,
+    "correct": 0,
+    "failed": 0,
+    "normalization": "character",
+    "normalized_correct": 0,
+    "problems": 0,
+    "wilson95_descriptive": null
+  },
+  "domains": {
+    "needle-L1024-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L1024-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L1024-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    }
+  },
+  "evaluated_prefix": 30,
+  "evaluation_sha256": "c1f97828981c42cd347fd9a97fea662990e1ae5c8246c978c7b9a107d8b748b0",
+  "families": {
+    "needle-retrieval": 30
+  },
+  "generation": {
+    "attempts": 30,
+    "average_completion_tokens": 4.8,
+    "average_reasoning_tokens": 0.0,
+    "failed": 12,
+    "failure_modes": {
+      "truncation": 30
+    },
+    "first_correct": 0,
+    "invalid": 30,
+    "majority_vote_at_k": {
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "problems": 30,
+        "ties": 0,
+        "wilson95_descriptive": [
+          0.0,
+          0.11351339317396873
+        ]
+      }
+    },
+    "pass_at_1_first": 0.0,
+    "pass_at_k": {
+      "1": 0.0
+    },
+    "problems": 30,
+    "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+    "stop_counts": {
+      "context_overflow": 12,
+      "token_limit": 18
+    },
+    "tokens": 144,
+    "truncated": 30,
+    "wilson95_descriptive": [
+      0.0,
+      0.11351339317396873
+    ]
+  },
+  "languages": {
+    "en": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 30,
+      "wilson95_descriptive": [
+        0.0,
+        0.11351339317396873
+      ]
+    }
+  },
+  "lm": {
+    "documents": 0,
+    "failed_documents": 0,
+    "nll": 0,
+    "perplexity": null,
+    "targets": 0
+  },
+  "official_benchmark": false,
+  "problems": 30,
   "protocols": {
     "choice": "continuation-sum-and-character-mean;first-option-tie",
     "generation": "explicit-control-stop-v1",
@@ -1071,6 +1931,526 @@ Measured metrics,including failures/intervals:
 
 Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
 
+## original-en-ru-code / 599df787c245
+
+[Verified receipt](docs/development/evidence/evaluation-phase8-mixed-8.json)
+
+- Checkpoint manifest: `893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325`
+- Model payload SHA256: `53ad69233d88eeb365a23ef6ae4add04301f1fed4d5323d42278243033c8e31e`
+- Tokenizer: `6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9`
+- Dataset: `d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4`
+- Evaluator source: `307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061`
+- Comparison key: `6a5ac067dab884e7d7f7c2020a588d4bdbd3af85b0d54f105c97939a23f032c4`
+
+Reproduction command:
+
+```bash
+python scripts/inference_phase8_smoke.py --directory runs/phase8-acceptance --repository .
+```
+
+Exact semantic evaluation config (artifact paths are relocatable content addresses):
+
+```yaml
+allow_final: false
+approved_for_evaluation: true
+audit_jaccard: 0.85
+audit_ngram: 13
+checkpoint:
+  path: artifacts/checkpoint-893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325/manifest.json
+  sha256: 893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325
+choice_normalization: character
+context_extension: 1
+context_limit: 256
+dataset:
+  path: artifacts/dataset-d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4/manifest.json
+  sha256: d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4
+extraction: whole-v1
+lm_window: 64
+max_cases: 64
+max_new_tokens: 8
+numeric_atol: 1.0e-08
+numeric_rtol: 1.0e-06
+pass_k:
+- 1
+prompt_format: plain-v1
+protocol: qvelt-eval-v2
+quantization_bits: 8
+samples: 1
+sampling: greedy
+schema_version: 1
+seed: 20261107
+temperature: 0.0
+tokenizer:
+  path: artifacts/tokenizer-6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9/manifest.json
+  sha256: 6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9
+training_sources:
+- path: artifacts/training-67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335/manifest.json
+  sha256: 67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335
+```
+
+Exact model/runtime config:
+
+```yaml
+model:
+  context: 256
+  ffn: 192
+  heads: 4
+  hidden: 64
+  kv_heads: 2
+  layers: 2
+  norm_eps: 1.0e-06
+  rope_scale: 1.0
+  rope_theta: 10000.0
+  vocab: 395
+name: ci-synthetic-smoke
+runtime:
+  deterministic: true
+  device: cpu
+  log_level: INFO
+  precision: fp32
+  seed: 20261107
+schema_version: 1
+```
+
+Measured metrics,including failures/intervals:
+
+```json
+{
+  "available_problems": 14,
+  "choice": {
+    "accuracy": 0.0,
+    "correct": 0,
+    "failed": 0,
+    "normalization": "character",
+    "normalized_correct": 0,
+    "problems": 2,
+    "wilson95_descriptive": [
+      0.0,
+      0.6576197724933468
+    ]
+  },
+  "domains": {
+    "original-code": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "original-general": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "original-language": {
+      "accuracy": null,
+      "correct": 0,
+      "lm": {
+        "documents": 2,
+        "failed_documents": 0,
+        "nll": 331.89503479003906,
+        "perplexity": 374.9141437742822,
+        "targets": 56
+      },
+      "problems": 0,
+      "wilson95_descriptive": null
+    },
+    "original-math": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 8,
+      "wilson95_descriptive": [
+        0.0,
+        0.3244075648838801
+      ]
+    }
+  },
+  "evaluated_prefix": 14,
+  "evaluation_sha256": "c21c5f22ba37785e49bdbe522bd5a1273f54b167066bad243767b62bf3298e55",
+  "families": {
+    "arithmetic-fraction": 2,
+    "arithmetic-sum": 2,
+    "capital-control": 2,
+    "integer-function-control": 2,
+    "language-control": 2,
+    "linear-integer": 2,
+    "linear-rational": 2
+  },
+  "generation": {
+    "attempts": 10,
+    "average_completion_tokens": 8.0,
+    "average_reasoning_tokens": 0.0,
+    "failed": 0,
+    "failure_modes": {
+      "truncation": 10
+    },
+    "first_correct": 0,
+    "invalid": 10,
+    "majority_vote_at_k": {
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "problems": 8,
+        "ties": 0,
+        "wilson95_descriptive": [
+          0.0,
+          0.3244075648838801
+        ]
+      }
+    },
+    "pass_at_1_first": 0.0,
+    "pass_at_k": {
+      "1": 0.0
+    },
+    "problems": 10,
+    "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+    "stop_counts": {
+      "token_limit": 10
+    },
+    "tokens": 80,
+    "truncated": 10,
+    "wilson95_descriptive": [
+      2.7755575615628914e-17,
+      0.27753279986288915
+    ]
+  },
+  "languages": {
+    "en": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 7,
+      "wilson95_descriptive": [
+        0.0,
+        0.3543304350666873
+      ]
+    },
+    "ru": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 5,
+      "wilson95_descriptive": [
+        2.7755575615628914e-17,
+        0.43448246478317465
+      ]
+    }
+  },
+  "lm": {
+    "documents": 2,
+    "failed_documents": 0,
+    "nll": 331.89503479003906,
+    "perplexity": 374.9141437742822,
+    "targets": 56
+  },
+  "model_variant": {
+    "backend": "pytorch-fp32-cpu",
+    "group_size": 32,
+    "library_version": "0.2.8.post1",
+    "method": "HQQ-weight-only",
+    "packed_payload_sha256": "ddda17a89bea5cd2dae7f87a46bd2a535fabaafe94309172ebec0de76da29d99",
+    "quantization_bits": 8,
+    "weight_tensor_bytes": 225280
+  },
+  "official_benchmark": false,
+  "problems": 14,
+  "protocols": {
+    "choice": "continuation-sum-and-character-mean;first-option-tie",
+    "generation": "explicit-control-stop-v1",
+    "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+    "pass_at_k": "1-C(n-c,k)/C(n,k)"
+  },
+  "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+}
+```
+
+Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
+
+## original-en-ru-code / 64749fe8a6ae
+
+[Verified receipt](docs/development/evidence/evaluation-phase8-mixed-4.json)
+
+- Checkpoint manifest: `893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325`
+- Model payload SHA256: `53ad69233d88eeb365a23ef6ae4add04301f1fed4d5323d42278243033c8e31e`
+- Tokenizer: `6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9`
+- Dataset: `d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4`
+- Evaluator source: `307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061`
+- Comparison key: `6a5ac067dab884e7d7f7c2020a588d4bdbd3af85b0d54f105c97939a23f032c4`
+
+Reproduction command:
+
+```bash
+python scripts/inference_phase8_smoke.py --directory runs/phase8-acceptance --repository .
+```
+
+Exact semantic evaluation config (artifact paths are relocatable content addresses):
+
+```yaml
+allow_final: false
+approved_for_evaluation: true
+audit_jaccard: 0.85
+audit_ngram: 13
+checkpoint:
+  path: artifacts/checkpoint-893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325/manifest.json
+  sha256: 893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325
+choice_normalization: character
+context_extension: 1
+context_limit: 256
+dataset:
+  path: artifacts/dataset-d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4/manifest.json
+  sha256: d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4
+extraction: whole-v1
+lm_window: 64
+max_cases: 64
+max_new_tokens: 8
+numeric_atol: 1.0e-08
+numeric_rtol: 1.0e-06
+pass_k:
+- 1
+prompt_format: plain-v1
+protocol: qvelt-eval-v2
+quantization_bits: 4
+samples: 1
+sampling: greedy
+schema_version: 1
+seed: 20261107
+temperature: 0.0
+tokenizer:
+  path: artifacts/tokenizer-6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9/manifest.json
+  sha256: 6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9
+training_sources:
+- path: artifacts/training-67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335/manifest.json
+  sha256: 67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335
+```
+
+Exact model/runtime config:
+
+```yaml
+model:
+  context: 256
+  ffn: 192
+  heads: 4
+  hidden: 64
+  kv_heads: 2
+  layers: 2
+  norm_eps: 1.0e-06
+  rope_scale: 1.0
+  rope_theta: 10000.0
+  vocab: 395
+name: ci-synthetic-smoke
+runtime:
+  deterministic: true
+  device: cpu
+  log_level: INFO
+  precision: fp32
+  seed: 20261107
+schema_version: 1
+```
+
+Measured metrics,including failures/intervals:
+
+```json
+{
+  "available_problems": 14,
+  "choice": {
+    "accuracy": 0.0,
+    "correct": 0,
+    "failed": 0,
+    "normalization": "character",
+    "normalized_correct": 0,
+    "problems": 2,
+    "wilson95_descriptive": [
+      0.0,
+      0.6576197724933468
+    ]
+  },
+  "domains": {
+    "original-code": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "original-general": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "original-language": {
+      "accuracy": null,
+      "correct": 0,
+      "lm": {
+        "documents": 2,
+        "failed_documents": 0,
+        "nll": 331.9114227294922,
+        "perplexity": 375.0238753703861,
+        "targets": 56
+      },
+      "problems": 0,
+      "wilson95_descriptive": null
+    },
+    "original-math": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 8,
+      "wilson95_descriptive": [
+        0.0,
+        0.3244075648838801
+      ]
+    }
+  },
+  "evaluated_prefix": 14,
+  "evaluation_sha256": "46c088e48c1a19786aeffb9b31c058aac22524fe58407e41a7108b9d104dec23",
+  "families": {
+    "arithmetic-fraction": 2,
+    "arithmetic-sum": 2,
+    "capital-control": 2,
+    "integer-function-control": 2,
+    "language-control": 2,
+    "linear-integer": 2,
+    "linear-rational": 2
+  },
+  "generation": {
+    "attempts": 10,
+    "average_completion_tokens": 8.0,
+    "average_reasoning_tokens": 0.0,
+    "failed": 0,
+    "failure_modes": {
+      "truncation": 10
+    },
+    "first_correct": 0,
+    "invalid": 10,
+    "majority_vote_at_k": {
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "problems": 8,
+        "ties": 0,
+        "wilson95_descriptive": [
+          0.0,
+          0.3244075648838801
+        ]
+      }
+    },
+    "pass_at_1_first": 0.0,
+    "pass_at_k": {
+      "1": 0.0
+    },
+    "problems": 10,
+    "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+    "stop_counts": {
+      "token_limit": 10
+    },
+    "tokens": 80,
+    "truncated": 10,
+    "wilson95_descriptive": [
+      2.7755575615628914e-17,
+      0.27753279986288915
+    ]
+  },
+  "languages": {
+    "en": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 7,
+      "wilson95_descriptive": [
+        0.0,
+        0.3543304350666873
+      ]
+    },
+    "ru": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 5,
+      "wilson95_descriptive": [
+        2.7755575615628914e-17,
+        0.43448246478317465
+      ]
+    }
+  },
+  "lm": {
+    "documents": 2,
+    "failed_documents": 0,
+    "nll": 331.9114227294922,
+    "perplexity": 375.0238753703861,
+    "targets": 56
+  },
+  "model_variant": {
+    "backend": "pytorch-fp32-cpu",
+    "group_size": 32,
+    "library_version": "0.2.8.post1",
+    "method": "HQQ-weight-only",
+    "packed_payload_sha256": "d3917c023f00785a28c6059863eae1b42841ed8e683e10102fc869305a77f3fb",
+    "quantization_bits": 4,
+    "weight_tensor_bytes": 176128
+  },
+  "official_benchmark": false,
+  "problems": 14,
+  "protocols": {
+    "choice": "continuation-sum-and-character-mean;first-option-tie",
+    "generation": "explicit-control-stop-v1",
+    "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+    "pass_at_k": "1-C(n-c,k)/C(n,k)"
+  },
+  "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+}
+```
+
+Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
+
 ## original-en-ru-code / 878d1d668748
 
 [Verified receipt](docs/development/evidence/evaluation-phase7-regression-2.json)
@@ -1628,6 +3008,425 @@ Measured metrics,including failures/intervals:
 
 Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
 
+## original-needle / d6adca2d0b79
+
+[Verified receipt](docs/development/evidence/evaluation-phase8-needle-2.json)
+
+- Checkpoint manifest: `893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325`
+- Model payload SHA256: `53ad69233d88eeb365a23ef6ae4add04301f1fed4d5323d42278243033c8e31e`
+- Tokenizer: `6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9`
+- Dataset: `b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4`
+- Evaluator source: `307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061`
+- Comparison key: `343f1c0431bbc5b80522c100e85172e28b41fe43328d11d2bc86d3fb9411d603`
+
+Reproduction command:
+
+```bash
+python scripts/inference_phase8_smoke.py --directory runs/phase8-acceptance --repository .
+```
+
+Exact semantic evaluation config (artifact paths are relocatable content addresses):
+
+```yaml
+allow_final: false
+approved_for_evaluation: true
+audit_jaccard: 0.85
+audit_ngram: 13
+checkpoint:
+  path: artifacts/checkpoint-893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325/manifest.json
+  sha256: 893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325
+choice_normalization: character
+context_extension: 2
+context_limit: 1024
+dataset:
+  path: artifacts/dataset-b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4/manifest.json
+  sha256: b8032cfd2d2ed6462e7ca5016932086d429d87843720895dd5a84789ea79b4c4
+extraction: whole-v1
+lm_window: 64
+max_cases: 64
+max_new_tokens: 8
+numeric_atol: 1.0e-08
+numeric_rtol: 1.0e-06
+pass_k:
+- 1
+prompt_format: plain-v1
+protocol: qvelt-eval-v2
+quantization_bits: 0
+samples: 1
+sampling: greedy
+schema_version: 1
+seed: 20261107
+temperature: 0.0
+tokenizer:
+  path: artifacts/tokenizer-6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9/manifest.json
+  sha256: 6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9
+training_sources:
+- path: artifacts/training-67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335/manifest.json
+  sha256: 67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335
+```
+
+Exact model/runtime config:
+
+```yaml
+model:
+  context: 512
+  ffn: 192
+  heads: 4
+  hidden: 64
+  kv_heads: 2
+  layers: 2
+  norm_eps: 1.0e-06
+  rope_scale: 2.0
+  rope_theta: 10000.0
+  vocab: 395
+name: ci-synthetic-smoke
+runtime:
+  deterministic: true
+  device: cpu
+  log_level: INFO
+  precision: fp32
+  seed: 20261107
+schema_version: 1
+```
+
+Measured metrics,including failures/intervals:
+
+```json
+{
+  "available_problems": 30,
+  "choice": {
+    "accuracy": null,
+    "correct": 0,
+    "failed": 0,
+    "normalization": "character",
+    "normalized_correct": 0,
+    "problems": 0,
+    "wilson95_descriptive": null
+  },
+  "domains": {
+    "needle-L1024-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L1024-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L1024-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L128-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L256-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L512-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D10": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D50": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "needle-L64-D90": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    }
+  },
+  "evaluated_prefix": 30,
+  "evaluation_sha256": "6e420a3efb5f7931caeb075f4aec9e9ff7106656c77c9d884abc498bd456300d",
+  "families": {
+    "needle-retrieval": 30
+  },
+  "generation": {
+    "attempts": 30,
+    "average_completion_tokens": 6.4,
+    "average_reasoning_tokens": 0.0,
+    "failed": 6,
+    "failure_modes": {
+      "truncation": 30
+    },
+    "first_correct": 0,
+    "invalid": 30,
+    "majority_vote_at_k": {
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "problems": 30,
+        "ties": 0,
+        "wilson95_descriptive": [
+          0.0,
+          0.11351339317396873
+        ]
+      }
+    },
+    "pass_at_1_first": 0.0,
+    "pass_at_k": {
+      "1": 0.0
+    },
+    "problems": 30,
+    "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+    "stop_counts": {
+      "context_overflow": 6,
+      "token_limit": 24
+    },
+    "tokens": 192,
+    "truncated": 30,
+    "wilson95_descriptive": [
+      0.0,
+      0.11351339317396873
+    ]
+  },
+  "languages": {
+    "en": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 30,
+      "wilson95_descriptive": [
+        0.0,
+        0.11351339317396873
+      ]
+    }
+  },
+  "lm": {
+    "documents": 0,
+    "failed_documents": 0,
+    "nll": 0,
+    "perplexity": null,
+    "targets": 0
+  },
+  "model_variant": {
+    "context_extension": 2,
+    "model_context": 512,
+    "position_method": "linear_interpolation",
+    "rope_scale": 2.0
+  },
+  "official_benchmark": false,
+  "problems": 30,
+  "protocols": {
+    "choice": "continuation-sum-and-character-mean;first-option-tie",
+    "generation": "explicit-control-stop-v1",
+    "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+    "pass_at_k": "1-C(n-c,k)/C(n,k)"
+  },
+  "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+}
+```
+
+Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
+
 ## original-en-ru-code / d8a1865714c4
 
 [Verified receipt](docs/development/evidence/evaluation-phase7-base.json)
@@ -1861,6 +3660,257 @@ Measured metrics,including failures/intervals:
     "failed_documents": 0,
     "nll": 336.35357666015625,
     "perplexity": 405.984048301208,
+    "targets": 56
+  },
+  "official_benchmark": false,
+  "problems": 14,
+  "protocols": {
+    "choice": "continuation-sum-and-character-mean;first-option-tie",
+    "generation": "explicit-control-stop-v1",
+    "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+    "pass_at_k": "1-C(n-c,k)/C(n,k)"
+  },
+  "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+}
+```
+
+Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
+
+## original-en-ru-code / fdd9cbf941ff
+
+[Verified receipt](docs/development/evidence/evaluation-phase8-mixed-0.json)
+
+- Checkpoint manifest: `893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325`
+- Model payload SHA256: `53ad69233d88eeb365a23ef6ae4add04301f1fed4d5323d42278243033c8e31e`
+- Tokenizer: `6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9`
+- Dataset: `d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4`
+- Evaluator source: `307139e86588377d9e01eded8d156b7534c0cea13722901e9b81f9a97fbaf061`
+- Comparison key: `6a5ac067dab884e7d7f7c2020a588d4bdbd3af85b0d54f105c97939a23f032c4`
+
+Reproduction command:
+
+```bash
+python scripts/inference_phase8_smoke.py --directory runs/phase8-acceptance --repository .
+```
+
+Exact semantic evaluation config (artifact paths are relocatable content addresses):
+
+```yaml
+allow_final: false
+approved_for_evaluation: true
+audit_jaccard: 0.85
+audit_ngram: 13
+checkpoint:
+  path: artifacts/checkpoint-893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325/manifest.json
+  sha256: 893ccae63d57e57f98b5948522e5837520f5c81aff726244fa5615d80f518325
+choice_normalization: character
+context_extension: 1
+context_limit: 256
+dataset:
+  path: artifacts/dataset-d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4/manifest.json
+  sha256: d8ae87d10707648d3a2497ec9498d6d2598ceb36cb38d5d5ab7cd4739f8270b4
+extraction: whole-v1
+lm_window: 64
+max_cases: 64
+max_new_tokens: 8
+numeric_atol: 1.0e-08
+numeric_rtol: 1.0e-06
+pass_k:
+- 1
+prompt_format: plain-v1
+protocol: qvelt-eval-v2
+quantization_bits: 0
+samples: 1
+sampling: greedy
+schema_version: 1
+seed: 20261107
+temperature: 0.0
+tokenizer:
+  path: artifacts/tokenizer-6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9/manifest.json
+  sha256: 6473423b74169a3ea48e20f7a804dcf1736effc9ec41584e8328c229bbf38ef9
+training_sources:
+- path: artifacts/training-67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335/manifest.json
+  sha256: 67d0e44fcab7dea5b1b288dc566c43a4e93a70d4c35630107ebd99da999d1335
+```
+
+Exact model/runtime config:
+
+```yaml
+model:
+  context: 256
+  ffn: 192
+  heads: 4
+  hidden: 64
+  kv_heads: 2
+  layers: 2
+  norm_eps: 1.0e-06
+  rope_scale: 1.0
+  rope_theta: 10000.0
+  vocab: 395
+name: ci-synthetic-smoke
+runtime:
+  deterministic: true
+  device: cpu
+  log_level: INFO
+  precision: fp32
+  seed: 20261107
+schema_version: 1
+```
+
+Measured metrics,including failures/intervals:
+
+```json
+{
+  "available_problems": 14,
+  "choice": {
+    "accuracy": 0.0,
+    "correct": 0,
+    "failed": 0,
+    "normalization": "character",
+    "normalized_correct": 0,
+    "problems": 2,
+    "wilson95_descriptive": [
+      0.0,
+      0.6576197724933468
+    ]
+  },
+  "domains": {
+    "original-code": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "original-general": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "original-language": {
+      "accuracy": null,
+      "correct": 0,
+      "lm": {
+        "documents": 2,
+        "failed_documents": 0,
+        "nll": 331.89776611328125,
+        "perplexity": 374.9324301437019,
+        "targets": 56
+      },
+      "problems": 0,
+      "wilson95_descriptive": null
+    },
+    "original-math": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 8,
+      "wilson95_descriptive": [
+        0.0,
+        0.3244075648838801
+      ]
+    }
+  },
+  "evaluated_prefix": 14,
+  "evaluation_sha256": "8d9e30fe3602d4792e479f4f20e19f31b7e2e50ff78d92f9164a5cc8f21f5291",
+  "families": {
+    "arithmetic-fraction": 2,
+    "arithmetic-sum": 2,
+    "capital-control": 2,
+    "integer-function-control": 2,
+    "language-control": 2,
+    "linear-integer": 2,
+    "linear-rational": 2
+  },
+  "generation": {
+    "attempts": 10,
+    "average_completion_tokens": 8.0,
+    "average_reasoning_tokens": 0.0,
+    "failed": 0,
+    "failure_modes": {
+      "truncation": 10
+    },
+    "first_correct": 0,
+    "invalid": 10,
+    "majority_vote_at_k": {
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "problems": 8,
+        "ties": 0,
+        "wilson95_descriptive": [
+          0.0,
+          0.3244075648838801
+        ]
+      }
+    },
+    "pass_at_1_first": 0.0,
+    "pass_at_k": {
+      "1": 0.0
+    },
+    "problems": 10,
+    "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+    "stop_counts": {
+      "token_limit": 10
+    },
+    "tokens": 80,
+    "truncated": 10,
+    "wilson95_descriptive": [
+      2.7755575615628914e-17,
+      0.27753279986288915
+    ]
+  },
+  "languages": {
+    "en": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 7,
+      "wilson95_descriptive": [
+        0.0,
+        0.3543304350666873
+      ]
+    },
+    "ru": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 5,
+      "wilson95_descriptive": [
+        2.7755575615628914e-17,
+        0.43448246478317465
+      ]
+    }
+  },
+  "lm": {
+    "documents": 2,
+    "failed_documents": 0,
+    "nll": 331.89776611328125,
+    "perplexity": 374.9324301437019,
     "targets": 56
   },
   "official_benchmark": false,

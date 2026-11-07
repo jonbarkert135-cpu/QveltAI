@@ -1403,7 +1403,7 @@ Main-run hardware,blocked public source/full-code execution and release gates op
 
 ## ADR0050 — Standard Llama export,safe HQQ artifacts and bounded OpenAI serving
 
-- **Date/status:**2026-11-07;implementation/acceptance in progress.
+- **Date/status:**2026-11-07;portable CPU reference accepted onb5deaf4,CI42356828424 all19 successful.
 - **Context:**expanded Phase8 adds sampler controls,HF interoperability,weight-only
   quantization,HTTP batching,SSE,long-context evaluation and reproducible containers
   to the existing trusted CPU engine. Existing source/recipe/report contracts remain.
@@ -1467,3 +1467,13 @@ Installed metadata licenses:Transformers/HQQ Apache2,FastAPI MIT,Starlette/Uvico
 HTTPX/HTTPX2 BSD3. No upstream implementation code was copied.
 Pinned Uvicorn re-raises SIGTERM after graceful shutdown;emit sanitized operational
 counters in lifespan cleanup and require them before accepting Unix signal exit.
+
+ADR0050 final acceptance:local all-extras864 passed/7 GPU deselected331.00s;
+CI CPU3.11/12/13 each846 pass,18 optional skips,7 GPU deselected. Dedicated actual
+HF/HQQ/API34 tests plus full smoke pass. All3 Docker targets build;nonroot actual
+training/HTTP runtime passes in CI. Local vfs ENOSPC is retained as failed.
+Seven clean source artifacts/six native reports,quantized payload identity match,
+HF max error2.384e-7 and real HTTP workload are registered. PPL deltas are tiny
+fixture measurements,all generation/retrieval accuracy0;no quality promotion.
+Final test-only historical reasoning extension10 pass7.75s;runtime unchanged.
+All15 native eval receipts regenerate RESULTS. Final800 remains unscored.
