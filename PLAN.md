@@ -2,6 +2,47 @@
 
 Last updated: 2026-11-07. Owner of every milestone: **Lead agent**.
 
+## Owner-gated frontier prerequisites: one reviewed change per step
+
+Design decisions: [ADR-0052](DECISIONS.md#adr-0052-frontier-horizon-and-gated-validation-ladder),
+[ADR-0053](DECISIONS.md#adr-0053-tokenizer-v3-control-block-and-explicit-new-lineage),
+[ADR-0054](DECISIONS.md#adr-0054-sft-schema-3-with-typed-tool-blocks-and-shifted-supervision),
+[ADR-0055](DECISIONS.md#adr-0055-truthful-deployment-capabilities-and-shared-token-budgets),
+[ADR-0056](DECISIONS.md#adr-0056-separate-exact-replay-topology-migration-and-statistical-reproducibility).
+This sequence takes precedence over historical next-step suggestions below.
+Stop for owner review after each step; approval of the sequence is not approval
+to start the next step. CPU remains the numerical oracle; GPU/cluster validation
+needs actual available hardware and a separately approved compute budget.
+
+- [x] **A:docs only.** Record the five consecutive ADRs and update STATE/PLAN.
+  Verify documentation, links and consistency; no runtime/artifact/lock changes.
+  Await owner review before B.
+- [ ] **B:tokenizer v3 codec.** Implement the 128-control table and configurable V;
+  leave production V undecided, preserve v1/v2. CPU checks:literal isolation,
+  deterministic artifact hash, legacy compatibility and a real-tokenizer model
+  fixture <=20M parameters. Stop for review before C.
+- [ ] **C:SFT schema3.** Typed tool_use/tool_result, tool role and complete shifted
+  masks; CPU tests for roles, valid tool errors, orphan/duplicate results,
+  truncation and gradient oracles. In this same change fix schema2 being reported
+  as schema1, with a regression. Stop for review before D.
+- [ ] **D:capability discovery.** Add truthful context_window/max_input_tokens/
+  max_tokens/capabilities to /v1/models, derived from loaded snapshot and backend.
+  Test effective limits, false unsupported flags and effort rejection; retain
+  JSON/SSE contract. Tokenizer/schema support alone must not enable HTTP tools.
+  Stop for review before E.
+- [ ] **E:design only.** Plan V experiments on an owner-approved corpus sample for
+  EN/RU/code/math/JSON/LaTeX/whitespace:bytes/token and downstream compute for
+  32768/65536/131072/262144, assumptions and decision criteria. Do not select V,
+  ingest sources or run the study without the required approvals. Stop for review.
+
+Owner decisions remain open:languages/data mix, budget and code/teacher sources.
+Interim scope is EN/RU, code, math, permissive-license sources only, no external
+teachers; source-specific rights approval remains mandatory. Accepted targets
+are total prompt+output<=1,000,000 and output<=131,072; backend design includes
+NVIDIA H100/H200/B200-class targets without claiming hardware validation.
+Keep reasoning in a separate retained field under an explicit policy and expose
+summaries by default only once implemented; images require a later separate ADR.
+
 ## User-directed Phase9 documentation,hardening and release readiness
 
 Status:portable framework accepted on8c08214,all22 CI42384342511 jobs pass.

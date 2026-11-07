@@ -2,6 +2,34 @@
 
 Updated:2026-11-07. Owner:Lead agent.
 
+## Current task: frontier design prerequisites, Step A only
+
+Owner approved the design direction after the assessment of main
+`901cb9b03632a5a3dc36beb3ef0e1fc29ce71b2e`. [ADR-0052 through ADR-0056](DECISIONS.md#adr-0052-frontier-horizon-and-gated-validation-ladder)
+record the horizon/gated ladder, tokenizer-v3 control block with undecided V,
+typed SFT schema3, truthful serving capabilities and three replay classes.
+These are accepted designs, not implemented or measured scale capabilities.
+
+Targets:1,000,000 total prompt+output tokens, output<=131,072; NVIDIA
+H100/H200/B200-class design targets with backend abstraction and CPU oracle.
+Initial internal tools:read_file/search/apply_patch/exec(tests,lint,build)/git diff;
+an isolated runner is still required. Raw reasoning stays separate under an
+explicit retention/access policy; clients receive summaries by default only
+when implemented. Image input remains a separate later phase/ADR.
+
+Owner decisions still open:languages/data mix, compute budget, permitted
+code/teacher sources. Interim scope:EN/RU, code, math, permissive-license sources
+only, no external teachers; no corpus ingestion or expensive run is authorized.
+No final vocabulary size or retention duration is assumed. Historical v1/v2
+artifacts, runtime, checkpoint formats, configs and lockfile are unchanged.
+
+Step A changes DECISIONS/STATE/PLAN only. Validation:2 documentation-tool tests
+passed in0.09s; MkDocs strict build passed;33 local links/anchors and consecutive
+ADRs0001..0056 checked; control-block/token-budget arithmetic and git diff --check
+passed. These are documentation checks, not ML or scale acceptance. Stop for
+owner review before Step B; tokenizer/schema/reporting/API implementations remain
+unstarted in this sequence.
+
 ## Environment readiness (2026-11-04)
 
 Managed CPU development is restored: Python3.12.14/uv0.12.23/Torch2.9.1+cpu,
@@ -15,7 +43,7 @@ Git-hook invocations need the README cache exports in read-only-home environment
 network operations/local distributed sockets need execution network permission.
 M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was performed.
 
-## Current task: Phase9 portable framework acceptance
+## Previous task: Phase9 portable framework acceptance
 
 Accepted runtime8c082145201d6c27d2798ca5362945ddcc6390e3;all22 GitHub CI
 42384342511 jobs successful,including complete CPU3.11/3.12/3.13 suites,fresh

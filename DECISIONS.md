@@ -1535,3 +1535,246 @@ advisory audit exit0;all-extras sqlitedict remains failed. Current-tree offline
 secret gate132 reviewed findings,zero unexpected. Installed-wheel native stream
 parity passes. Local numeric-DDP timeout persists and is not declared fixed by
 remote green. No GPU/model-quality/safety acceptance or actual release/upload.
+
+## ADR-0052 — Frontier horizon and gated validation ladder
+
+- **Date/status:** 2026-11-07; owner-approved design direction; documentation only.
+- **Context/links:** [ADR-0008](#adr-0008-select-a-dense-tied-gqa-baseline-and-exact-size-family)
+  selects the dense reference family; [ADR-0010](#adr-0010-use-adamwwsd-and-staged-budgets-as-tested-hypotheses)
+  treats budgets as hypotheses; [ADR0051](#adr0051-phase9-bounded-release-readiness-and-security-upgrade-2026-11-07)
+  separates portable framework acceptance from model release.
+- **Decision:** the long-term research target is a frontier-class general model
+  for reasoning and software engineering, with multi-trillion total parameters,
+  likely sparse/MoE. The existing 19M/125M/493M/1.5B configurations are the
+  validation ladder, not the destination. Preserve the dense CPU reference as
+  the numerical oracle. Architecture selection, expert counts and active size
+  remain unimplemented research decisions, not accepted performance results.
+  Design accelerator interfaces for NVIDIA H100/H200/B200-class hardware while
+  retaining backend abstraction; no such hardware is validated by this ADR.
+- **Product budgets:** 1M means exactly 1,000,000 total tokens, with tokenized
+  prompt plus all generated tokens <= 1,000,000 and output <= 131,072. Framing,
+  reasoning and generated tool-call payloads consume the applicable budgets.
+  These are future targets, not current server limits or measured capabilities.
+- **Gates:** first require CPU values/gradients, masks, initialization and replay
+  tests for each new component; then actual few-GPU tests, multi-node composition
+  and failure/recovery rehearsal on available hardware. Advance through measured
+  architecture/optimizer/data/hyperparameter trials before a costly run. Report
+  compute estimates with formula, active/total parameter accounting, assumptions
+  and exclusions. No larger run or expense is authorized by this horizon.
+- **Owner constraints:** language/data mix, compute budget and allowed code/teacher
+  sources remain owner decisions. Interim scope is EN/RU, code and math,
+  permissive-license sources only, no external teachers. This does not approve
+  any dataset: retain [ADR-0005](#adr-0005-use-explicit-provenance-and-approval-before-ingesting-data)
+  and source-specific rights/provenance gates. Initial internal tool interfaces
+  are read_file, search, apply_patch, exec for tests/lint/build, and git diff;
+  execution requires a separate isolated runner, never unrestricted host access.
+  Image input is a later, separately reviewed phase and ADR.
+- **Rationale/alternatives:** a gated ladder tests transfer and systems assumptions
+  without treating parameter count as quality. Alternatives were retaining the
+  laptop family as the destination or jumping directly to a cluster-scale run.
+- **Evidence:** [verified] owner decisions in the Step A request and current
+  [architecture RFC](docs/research/architecture_rfc.md), reviewed at main
+  `901cb9b03632a5a3dc36beb3ef0e1fc29ce71b2e`. [unverified] frontier quality,
+  large-run cost, accelerator support and 1M/128K operation. No claims about
+  other labs' parameter counts or internal architectures follow.
+- **Delivery gate/revisit:** Steps A through E are separate changes in that order;
+  stop for owner review after each. This change is Step A only. Review this
+  direction when hardware, budget, source permissions or measured transfer change.
+
+## ADR-0053 — Tokenizer v3 control block and explicit new lineage
+
+- **Date/status:** 2026-11-07; accepted design; codec/artifacts not implemented.
+- **Context/links:** [ADR-0009](#adr-0009-freeze-the-tokenizer-budget-not-untested-tokenizer-quality)
+  remains the historical vocabulary baseline; [ADR-0029](#adr-0029-versioned-controls-and-exact-original-math-environments)
+  preserves v1/v2 controls. This decision adds a future v3, without rewriting
+  either existing version, its IDs, merges, artifacts or checkpoints.
+- **Decision:** retain byte-BPE coverage and literal-spelling isolation. Only the
+  validated structured codec inserts control IDs; ordinary text containing their
+  spellings remains ordinary text. Allocate the following 128-entry v3 block:
+
+  | IDs | Tokens, in ID order |
+  | --- | --- |
+  | 0-7 | `<\|pad\|>`, `<\|bos\|>`, `<\|eos\|>`, `<\|system\|>`, `<\|user\|>`, `<\|assistant\|>`, `<\|end_turn\|>`, `<\|tool\|>` |
+  | 8-12 | `<think>`, `</think>`, `<\|tool_call\|>`, `<\|end_tool_call\|>`, `<\|tool_result\|>` |
+  | 13 | `<\|end_tool_result\|>` |
+  | 14-17 | `<\|fim_prefix\|>`, `<\|fim_suffix\|>`, `<\|fim_middle\|>`, `<\|fim_end\|>` |
+  | 18-21 | `<\|file_start\|>`, `<\|file_end\|>`, `<\|path\|>`, `<\|section\|>` |
+  | 22-127 | `<\|reserved_000\|>` through `<\|reserved_105\|>` |
+
+- **Vocabulary:** V includes controls and byte symbols and must be configurable;
+  no final V or production default is selected. The later measured decision
+  considers 32768/65536/131072/262144 on an owner-approved corpus sample. Allocation
+  of controls does not establish a trained FIM/tool capability. Positions and
+  document IDs remain metadata, not a special token per context position. File
+  markers require a declared corpus format; image tokens are outside this ADR.
+- **Lineage/migration:** decide and freeze production v3 before real pretraining.
+  Bind control map, byte/merge vocabulary, preprocessing, recipe, ordered corpus
+  identity and implementation versions into tokenizer provenance. v3 starts a new
+  lineage and requires retokenized data and matching model/export identities.
+  Preserving IDs 0-12 does not make remaining IDs or embeddings compatible.
+  Any old-weight transfer is a separate explicit initialization experiment;
+  never relabel an old checkpoint or claim exact resume after retokenization.
+- **Acceptance before use:** Step B must preserve v1/v2 loading and behaviour,
+  test every control's literal-spelling isolation and deterministic artifact hash,
+  and exercise a real v3 tokenizer with a CPU model <=20M parameters. Recompute
+  model sizes for the selected test V; historical tier counts do not carry over.
+- **Rationale/alternatives:** a versioned reserved block stabilizes framing while
+  leaving compression a measured decision. Alternatives were keeping 32 controls,
+  silently consuming old reserved IDs, or fixing a larger V without measurements.
+- **Evidence:** [verified] owner-approved control-block draft and
+  [current tokenizer](src/qvelt/tokenizer/core.py) at `901cb9b`; v3 runtime,
+  compression and downstream effects are [unverified]. The three-digit reserve
+  spellings make the new block explicit; they do not rename v1/v2 reserves.
+- **Revisit:** measured tokenizer study, new protocol requirements or independently
+  justified migration; never mutate an already frozen artifact in place.
+
+## ADR-0054 — SFT schema 3 with typed tool blocks and shifted supervision
+
+- **Date/status:** 2026-11-07; accepted design; schema/codec not implemented.
+- **Context/links:** extend [ADR-0039](#adr-0039-whole-dialog-assistant-supervision-and-weights-only-sft-initialization)
+  and [ADR-0048](#adr-0048-expanded-math-post-training-with-bounded-native-cpu-interfaces)
+  while retaining their existing schema 1/2 behaviour; use
+  [ADR-0053](#adr-0053-tokenizer-v3-control-block-and-explicit-new-lineage)
+  for new framing. Keep DPO's distinct objective/reference contract in
+  [ADR-0043](#adr-0043-original-sigmoid-dpo-with-explicit-frozen-sft-lineage).
+- **Decision:** schema 3 has schema_version=3 and messages with a role and ordered
+  typed blocks. Roles are system/user/assistant/tool. A text block contains text;
+  an assistant tool_use block contains id, name and an arguments object; a tool
+  tool_result block contains tool_use_id, is_error and text. Optional reasoning
+  belongs only to an assistant reasoning block, separate from final text.
+  Tool definitions are a separate validated input field and masked context.
+- **Framing:** use role IDs and end-turn boundaries; tool_use uses tool_call /
+  end_tool_call, tool_result uses tool_result / end_tool_result. Encode structured
+  payloads with one canonical JSON/ID policy; literal content cannot inject
+  controls. Keep inference action framing consistent with SFT, including assistant
+  turns containing only a call. Tool results never become assistant targets.
+  Initially permit one outstanding call: require unique IDs and the matching
+  result before assistant continuation. A failed result with is_error=true is
+  valid context. Reject orphan/duplicate results, role/block mismatches, unknown
+  fields and malformed arguments. Parallel tool calls need a separate extension.
+- **Shifted target table:** attention validity is independent of supervision;
+  derive flags against next-token targets, never against unshifted input positions.
+
+  | Target | Loss |
+  | --- | --- |
+  | System/user content, tool definitions, role headers | false |
+  | Assistant final text | true |
+  | Assistant tool_use payload and its opening/closing delimiters | true |
+  | Tool result payload, delimiters and tool end-turn | false |
+  | Assistant reasoning and its delimiters | true only under explicit approved reasoning-supervision policy |
+  | Completed assistant end-turn | true |
+  | Outer BOS/EOS and PAD | false |
+
+- **Truncation/errors:** never synthesize completed JSON, a call/result delimiter
+  or end-turn after cutting a block. Reject truncated tool/reasoning structures;
+  any retained plain assistant prefix must obey an explicit truncation rule with
+  masked outer EOS. Reject examples without assistant targets. Preserve document
+  isolation and report rejects/truncation. Step C must cover the full mask table,
+  valid error results, orphan/duplicate/order cases and truncation boundaries with
+  independent target/gradient oracles. Report observed chat schema version(s);
+  fix the current hard-coded schema-1 report for schema-2 input with a regression.
+- **Reasoning/data policy:** retained raw reasoning has a separate field/record
+  and explicit access, retention and deletion policy; no duration is assumed.
+  Clients receive a summary by default once that interface is implemented.
+  Never present raw reasoning as a summary or infer trace correctness from a
+  correct answer. Dataset permission and supervised-mask policy remain hash-bound.
+- **Rationale/alternatives:** typed blocks make loss masks and call/result links
+  testable. Alternatives were raw chat strings, supervising tool results, or
+  silently reinterpreting schema 2. Tool execution remains outside SFT parsing.
+- **Evidence:** [verified] owner decisions and [chat codec](src/qvelt/posttrain/chat.py),
+  [SFT preparation](src/qvelt/posttrain/data.py) at `901cb9b`. Schema 3, execution
+  isolation, summary generation and retention enforcement are [unverified].
+- **Revisit:** parallel calls, structured tool-result payloads, measured truncation
+  needs or an approved reasoning-retention policy; version protocol changes.
+
+## ADR-0055 — Truthful deployment capabilities and shared token budgets
+
+- **Date/status:** 2026-11-07; accepted design; endpoint extension not implemented.
+- **Context/links:** extend [ADR0050](#adr0050-standard-llama-exportsafe-hqq-artifacts-and-bounded-openai-serving)
+  using [ADR-0052](#adr-0052-frontier-horizon-and-gated-validation-ladder)
+  targets without advertising them as current support. Token/control availability
+  under [ADR-0053](#adr-0053-tokenizer-v3-control-block-and-explicit-new-lineage)
+  or SFT schema 3 alone does not enable an HTTP feature.
+- **Decision:** each /v1/models entry retains the existing model identity and adds
+  capabilities_schema_version, context_window, max_input_tokens, max_tokens and
+  a capabilities object. Derive values from the loaded model/tokenizer snapshot,
+  backend and deployment policy, not a model-name lookup or aspirational config.
+  Report additional body/message/cache limits where they constrain admission.
+- **Limits:** context_window=C is the served total token ceiling. Prompt count P
+  includes template/control tokens; generation budget R includes reasoning and
+  tool-call tokens. Require P+R<=C, R>=1 and R<=max_tokens. max_input_tokens=C-1
+  is the prompt upper bound with at least one output token reserved, not a promise
+  that maximal prompt and maximal output fit together. Smaller requested outputs
+  do not waive body/message/cache limits. Compute the effective output ceiling
+  from model/backend/policy; never exceed the configured cap.
+- **Current population:** native serving C<=min(snapshot.context,2048), output
+  <=256, plus existing admission limits. A current tiny deployment with C=512
+  could advertise max_input_tokens=511 and max_tokens=256, subject to P+R<=512.
+  This is a derived contract example, not a running-server measurement. Future
+  target budgets remain 1,000,000 total and output<=131,072 only after validation.
+- **Capabilities:** use explicit support details for streaming, tools, reasoning,
+  structured_outputs and image_input. Current tools/structured_outputs/image_input
+  remain supported=false. Reasoning distinguishes historical reasoning-field
+  input, separate output, summaries, adaptive operation and effort_levels;
+  history support follows the tokenizer and codec, not just token spellings.
+  The current separate-output/summary/adaptive features remain false and
+  effort_levels=[]; reject effort requests instead of ignoring them. No supported
+  flag implies trained quality. Step D must test snapshot/backend-derived limits,
+  false unsupported capabilities, effort rejection and ordinary JSON/SSE parity.
+- **Future HTTP contract:** typed tools/tool_choice/tool_calls and tool_call_id,
+  structured outputs with a bounded declared JSON-schema subset, and distinct
+  reasoning_content/reasoning_summary fields need their own implementation tests.
+  Default clients receive summaries, never raw reasoning; any raw access and
+  persistence require an explicit authorized retention/access policy. Until an
+  actual summarizer is implemented, advertise no summary capability. Effort is
+  a later training/serving decision, not a synonym for raising max_tokens.
+- **Rationale/alternatives:** products discover effective limits and unsupported
+  features. Alternatives were hard-coded client limits, token-presence-based
+  flags or silently accepting unsupported options.
+- **Evidence:** [verified] owner request, [HTTP models/schema](src/qvelt/inference/api.py),
+  [admission](src/qvelt/inference/generation.py) and
+  [serving setup](src/qvelt/inference/cli.py) at `901cb9b`. Extended discovery,
+  tools, effort, summaries and multimodal operation are [unverified].
+- **Revisit:** new backend validation, policy/model limits or implemented protocol
+  features. Keep discovery and actual request validation in agreement.
+
+## ADR-0056 — Separate exact replay, topology migration and statistical reproducibility
+
+- **Date/status:** 2026-11-07; accepted guarantee taxonomy; migration not implemented.
+- **Context/links:** retain [ADR-0003](#adr-0003-define-reproducibility-within-explicit-execution-conditions),
+  [ADR-0026](#adr-0026-checkpoint-completed-updates-with-explicit-replay-compatibility),
+  [ADR-0037](#adr-0037-atomic-application-checkpoints-and-split-bound-loader-cursors)
+  and [ADR-0042](#adr-0042-expanded-pretraining-recovery-and-measured-portable-controls).
+  Current checkpoint and loader identities bind world size; a taxonomy does not
+  relax their checks or implement elastic restart.
+- **Decision:** name and record the guarantee for every recovery/study:
+
+  | Class | Contract |
+  | --- | --- |
+  | Exact replay | Bitwise trajectory only within explicitly tested source/runtime/device/precision/topology/batch/kernel conditions; restore model, optimizer, scheduler/counters, RNG and committed data position. |
+  | Topology migration | Explicit parent-linked execution lineage; restore logical tensors/optimizer state and data progress under a validated placement mapping; no bitwise continuation claim. |
+  | Statistical reproducibility | Repeated runs with declared seeds/protocol and predeclared comparison metrics/tolerances; report distributions and uncertainty, not equality from one run. |
+
+- **Exact boundary:** checkpoint only a common completed optimizer boundary with
+  verified committed bytes. Keep source/runtime/config/tokenizer/data checks.
+  Same topology alone does not establish determinism. Rollback-and-skip changes
+  exposure/updates and must remain separately logged, not called uninterrupted
+  exact replay. Hardware/version changes require explicit compatibility review.
+- **Migration boundary:** preserve logical parameter/expert names, shapes, dtype
+  meaning, optimizer moments/step, schedules, global data cursor and applicable
+  router/precision/RNG state. Verify no lost/duplicated samples and a complete
+  committed checkpoint. Declare RNG mapping and changed reduction order. A
+  changed tokenizer/objective/architecture is not a placement-only migration.
+  Reset optimizer state only as an explicitly different initialization workflow.
+  Do not bypass the restricted DCP reader or claim cross-version format support.
+- **Rationale/alternatives:** recoverable state and identical floating-point
+  trajectories are different contracts. Alternatives were promising exactness
+  across arbitrary world sizes, weakening hashes, or prohibiting all migration.
+- **Acceptance/revisit:** future migration needs CPU tensor/layout/cursor oracles,
+  GPU reshard tests, actual topology-change recovery and failure injection.
+  Statistical claims need repetitions. None are established by this docs change;
+  retain current strict resume behaviour until separately reviewed implementation.
+- **Evidence:** [verified] owner-approved taxonomy, [checkpoint compatibility](src/qvelt/utils/checkpoints.py),
+  [loader fingerprint](src/qvelt/data/loader.py) and
+  [restricted DCP reader](src/qvelt/utils/safe_dcp.py) at `901cb9b`.
+  Cross-topology recovery and cluster statistical reproducibility are [unverified].
