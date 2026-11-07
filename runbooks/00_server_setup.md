@@ -207,10 +207,14 @@ No server command, Slurm job or paid GPU was launched by this cloud session.
 
 ## Sources and support limits
 
-Verified text/API sources: NVIDIA CUDA 12.8 GA release notes, Linux driver 570.26
+Historical verified text/API sources: NVIDIA CUDA 12.8 GA release notes, Linux driver 570.26
 and CUDA 12.x minor-compat 525.60.13 tables (2026-10-31);
 https://docs.nvidia.com/cuda/archive/12.8.0/cuda-toolkit-release-notes/index.html .
 PyTorch 2.9.1 installed torchrun/distributed/FSDP2/DCP/state-dict API sources and
 actual CPU runs. Ubuntu/Slurm commands are an assumed-platform operator recipe,
 not executed server validation. Consult the actual provider/cluster documentation
 for driver ownership, partitions, fabric and filesystem policy.
+
+Current Phase9 profile is Torch2.13.0/CUDA13.0. Its CPU tests and restricted DCP
+reload pass;the actual intended GPU/driver/NCCL/FSDP path is unrun. Historical
+CUDA12.8 driver numbers above are not a current compatibility guarantee.

@@ -1,0 +1,207 @@
+{
+  "conclusion": "success",
+  "focused_distributed_recheck": {
+    "failed": 1,
+    "limit": "numeric-DDP90s timeout remains local;remote green does not diagnose it",
+    "passed": 2,
+    "seconds": 144.48
+  },
+  "jobs": [
+    {
+      "completedAt": "2026-11-07T15:02:12Z",
+      "conclusion": "success",
+      "databaseId": 128438525705,
+      "name": "data-smoke",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525705"
+    },
+    {
+      "completedAt": "2026-11-07T15:09:25Z",
+      "conclusion": "success",
+      "databaseId": 128438525864,
+      "name": "cpu (3.11)",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525864"
+    },
+    {
+      "completedAt": "2026-11-07T15:09:25Z",
+      "conclusion": "success",
+      "databaseId": 128438525871,
+      "name": "cpu (3.13)",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525871"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:41Z",
+      "conclusion": "success",
+      "databaseId": 128438525926,
+      "name": "posttraining",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525926"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:34Z",
+      "conclusion": "success",
+      "databaseId": 128438525937,
+      "name": "evaluation-suite",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525937"
+    },
+    {
+      "completedAt": "2026-11-07T15:04:00Z",
+      "conclusion": "success",
+      "databaseId": 128438525945,
+      "name": "release-hardening",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525945"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:13Z",
+      "conclusion": "success",
+      "databaseId": 128438525956,
+      "name": "packed-pretraining",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525956"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:13Z",
+      "conclusion": "success",
+      "databaseId": 128438525961,
+      "name": "optional-metrics",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438525961"
+    },
+    {
+      "completedAt": "2026-11-07T15:05:30Z",
+      "conclusion": "success",
+      "databaseId": 128438526007,
+      "name": "pretraining-recovery",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526007"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:19Z",
+      "conclusion": "success",
+      "databaseId": 128438526009,
+      "name": "inference",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526009"
+    },
+    {
+      "completedAt": "2026-11-07T15:08:17Z",
+      "conclusion": "success",
+      "databaseId": 128438526012,
+      "name": "cpu (3.12)",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526012"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:32Z",
+      "conclusion": "success",
+      "databaseId": 128438526040,
+      "name": "eval-harness",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526040"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:59Z",
+      "conclusion": "success",
+      "databaseId": 128438526041,
+      "name": "inference-serving",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526041"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:34Z",
+      "conclusion": "success",
+      "databaseId": 128438526061,
+      "name": "documentation",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526061"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:10Z",
+      "conclusion": "success",
+      "databaseId": 128438526064,
+      "name": "smoke",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526064"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:43Z",
+      "conclusion": "success",
+      "databaseId": 128438526067,
+      "name": "supervised-finetuning",
+      "startedAt": "2026-11-07T15:02:11Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526067"
+    },
+    {
+      "completedAt": "2026-11-07T15:03:16Z",
+      "conclusion": "success",
+      "databaseId": 128438526113,
+      "name": "first-model-clean",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526113"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:23Z",
+      "conclusion": "success",
+      "databaseId": 128438526136,
+      "name": "preference-optimization",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526136"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:29Z",
+      "conclusion": "success",
+      "databaseId": 128438526146,
+      "name": "outcome-grpo",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526146"
+    },
+    {
+      "completedAt": "2026-11-07T15:04:21Z",
+      "conclusion": "success",
+      "databaseId": 128438526199,
+      "name": "promotion-study",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526199"
+    },
+    {
+      "completedAt": "2026-11-07T15:02:22Z",
+      "conclusion": "success",
+      "databaseId": 128438526200,
+      "name": "evaluation",
+      "startedAt": "2026-11-07T15:01:52Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526200"
+    },
+    {
+      "completedAt": "2026-11-07T15:03:45Z",
+      "conclusion": "success",
+      "databaseId": 128438526667,
+      "name": "containers",
+      "startedAt": "2026-11-07T15:02:14Z",
+      "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511/job/128438526667"
+    }
+  ],
+  "local_full_suite": {
+    "errors": 5,
+    "failed": 2,
+    "failures": "two local distributed timeouts;five shared freeze-envelope setup errors subsequently fixed and integration-tested",
+    "gpu_deselected": 7,
+    "passed": 910,
+    "seconds": 543.6
+  },
+  "scope": "official GitHub job/step success states;artifact/log blob download blocked by session proxy403,not locally inspected hosted numeric logs",
+  "source_commit": "8c082145201d6c27d2798ca5362945ddcc6390e3",
+  "source_sha256": "9763ade2fb82dd8bdb6e2108f757946432a3fa388693d01f8de1346b39a1ac69",
+  "url": "https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511",
+  "wheel": {
+    "all_eight_stream_events_equal": true,
+    "doctor_passed": true,
+    "installed_into_isolated_target": true,
+    "same_locked_dependency_environment": true,
+    "sha256": "caba73112c097703b0475ecf871e00d07c46dc5aa58cc5b758b484a96bd0d783"
+  },
+  "workflow_run": 42384342511
+}

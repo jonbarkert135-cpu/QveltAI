@@ -15,19 +15,41 @@ Git-hook invocations need the README cache exports in read-only-home environment
 network operations/local distributed sockets need execution network permission.
 M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was performed.
 
-## Phase9 current work
+## Current task: Phase9 portable framework acceptance
 
-Documentation/hardening/release candidate in progress. Strict offline MkDocs site,
-Mermaid architecture,SFT safety fixture,release/version/archive plumbing implemented.
-Security audit required Torch2.13.0/Transformers5.10.4/pytest9.0.3;old environment
-readiness above is historical. DCP metadata/optimizer bytes restricted;trusted
-ranks still required. Focused61 pass;critical113 pass,combined coverage85.3186%
-to89.2463%;mypy237 passes. Browser five routes/zero errors passes. Full updated
-suite,clean tiny reproduction and current CI remain acceptance gates. Optional
-sqlitedict audit fails;CUDA13.0 and model-quality/safety release gates remain open.
-No tag/public release/model upload. See validation_release_phase9.md and ADR0051.
+Accepted runtime8c082145201d6c27d2798ca5362945ddcc6390e3;all22 GitHub CI
+42384342511 jobs successful,including complete CPU3.11/3.12/3.13 suites,fresh
+RFC tiny tutorial,200-step actual-kill recovery,docs/browser,security and containers.
+Official status evidence retained;hosted blob downloads hit session-proxy403,
+so no uninspected hosted test counts/measurements are asserted.
 
-## Current task
+Strict offline MkDocs site,original Mermaid,subsystem guides/FAQ/troubleshooting,
+small safety SFT design/data,SemVer0.1.0/changelog/draft-only release plumbing and
+README claim evidence complete. Security upgrades:Torch2.13.0,Transformers5.10.4,
+pytest9.0.3. Restricted DCP metadata/extents and weights-only optimizer bytes tested.
+Critical114 tests pass10.97s;coverage85.3186% ->89.2562%,no exclusions. Ruff,mypy238,
+lock,16 historical/native receipts,wheel/sdist and actual installed-wheel native
+stream parity pass. Original freeze remains byte-bound across version envelopes.
+
+Fresh local clean7ef8bfd/new virtualenv with shared package cache completed full
+RFC tiny19,338,560-param base6/stop3/resume6/SFT3/eval/HF/HTTP in477.817426s.
+HF max error7.152557e-7,weights unchanged;one receipt added to RESULTS. Actual
+current-source fresh hosted tutorial passes separately. Profiling fixed costly
+per-token backend vocab queries;the same two-source audit now1.843169s with an
+identical full report. This is engineering plumbing,not useful/safe model training.
+
+Native+HF+serving advisory audit exit0;optional harness sqlitedict advisory remains
+an all-extras failure.133 reviewed offline credential findings,zero unexpected;
+hex entropy/history review scope explicit. Initial local full910pass/2timeouts/
+5freeze setup errors retained;freeze repaired,local distributed recheck2pass/1DDP
+timeout144.48s. Remote success does not establish a local Gloo root-cause fix.
+CUDA13.0/GPU/production rights/complete contamination/model quality/safety gates
+remain open;final800 unscored. No tag/public release/Hub upload. Next:reproduce
+on intended hardware,approve production rights/exclusions,and run the bounded
+small pilot in runbooks02 before a full horizon. See validation_release_phase9.md,
+ADR0051 and release-phase9 evidence. Previous Phase8 acceptance follows.
+
+## Previous task: Phase8 acceptance
 
 Expanded Phase8 portable CPU reference accepted onb5deaf40d161a260be50cfe135b67dda479ccd7c;
 all19 CI42356828424 jobs successful. CPU3.11/3.12/3.13 each846 passed,18 optional

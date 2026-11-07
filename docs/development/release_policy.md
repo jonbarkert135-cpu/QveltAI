@@ -22,7 +22,8 @@ compatibility check. A new schema needs reviewed migration and tests.
 ## Framework release
 
 The release workflow validates version/tag alignment,builds wheel/sdist,installs
-the wheel in a fresh environment,checks source licensing and produces checksums.
+the wheel in a fresh environment,packages the declared source license and produces checksums. The operator must
+review dependency/data rights;the workflow does not automate a legal audit.
 Required CI/security/docs/reproduction evidence must be reviewed. It can create
 a **draft** release after an operator creates a stable version tag;no automatic
 PyPI upload or public model release is configured.

@@ -3008,6 +3008,256 @@ Measured metrics,including failures/intervals:
 
 Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
 
+## original-en-ru-code / cde5cd27997e
+
+[Verified receipt](docs/development/evidence/evaluation-phase9-tutorial.json)
+
+- Checkpoint manifest: `3f08c47a09ca9edca26949bc01d40cdb22b2dac41e05e2cd7db811d40973c0d6`
+- Model payload SHA256: `c21e5a41035e36d1015b941f93264ff64e780d9997989220449f6216677ea137`
+- Tokenizer: `c3ff308325ea4e1b726950df1a0eff21331e25ca644d1904318434e61ae98f14`
+- Dataset: `fd53fba0805627528c503399a0381e1e9bc9e5be5e5d5d43c5cdcdfbe9fea873`
+- Evaluator source: `f7cc29c54fbd697f42b530db27b8809a58b26f802cf7f8837d500f927097dfd8`
+- Comparison key: `2d3a81b0d97827a5d812fc01fbe9af7273d61745d268d26ba8b5de5c588e1ac4`
+
+Reproduction command:
+
+```bash
+python scripts/first_model.py --directory runs/first-model --repository . --steps 6
+```
+
+Exact semantic evaluation config (artifact paths are relocatable content addresses):
+
+```yaml
+allow_final: false
+approved_for_evaluation: true
+audit_jaccard: 0.85
+audit_ngram: 13
+checkpoint:
+  path: artifacts/checkpoint-3f08c47a09ca9edca26949bc01d40cdb22b2dac41e05e2cd7db811d40973c0d6/manifest.json
+  sha256: 3f08c47a09ca9edca26949bc01d40cdb22b2dac41e05e2cd7db811d40973c0d6
+choice_normalization: character
+context_extension: 1
+context_limit: 512
+dataset:
+  path: artifacts/dataset-fd53fba0805627528c503399a0381e1e9bc9e5be5e5d5d43c5cdcdfbe9fea873/manifest.json
+  sha256: fd53fba0805627528c503399a0381e1e9bc9e5be5e5d5d43c5cdcdfbe9fea873
+extraction: whole-v1
+lm_window: 64
+max_cases: 64
+max_new_tokens: 4
+numeric_atol: 1.0e-08
+numeric_rtol: 1.0e-06
+pass_k:
+- 1
+prompt_format: plain-v1
+protocol: qvelt-eval-v2
+quantization_bits: 0
+samples: 1
+sampling: greedy
+schema_version: 1
+seed: 20261107
+temperature: 0.0
+tokenizer:
+  path: artifacts/tokenizer-c3ff308325ea4e1b726950df1a0eff21331e25ca644d1904318434e61ae98f14/manifest.json
+  sha256: c3ff308325ea4e1b726950df1a0eff21331e25ca644d1904318434e61ae98f14
+training_sources:
+- path: artifacts/training-b69d293fcd1b7411c39f39a81bf3d75b17b6b5d30a5342ed1c5c649d7a4e6287/manifest.json
+  sha256: b69d293fcd1b7411c39f39a81bf3d75b17b6b5d30a5342ed1c5c649d7a4e6287
+- path: artifacts/training-fb92f923f71e36ec754ded61f4d57a5b66c0c0d4f28e02e2e1671d73fcb74173/manifest.json
+  sha256: fb92f923f71e36ec754ded61f4d57a5b66c0c0d4f28e02e2e1671d73fcb74173
+```
+
+Exact model/runtime config:
+
+```yaml
+model:
+  context: 512
+  ffn: 896
+  heads: 5
+  hidden: 320
+  kv_heads: 1
+  layers: 8
+  norm_eps: 1.0e-06
+  rope_scale: 1.0
+  rope_theta: 10000.0
+  vocab: 32768
+name: ci-synthetic-smoke
+runtime:
+  deterministic: true
+  device: cpu
+  log_level: INFO
+  precision: fp32
+  seed: 20261107
+schema_version: 1
+```
+
+Measured metrics,including failures/intervals:
+
+```json
+{
+  "available_problems": 8,
+  "choice": {
+    "accuracy": 0.5,
+    "correct": 1,
+    "failed": 0,
+    "normalization": "character",
+    "normalized_correct": 0,
+    "problems": 2,
+    "wilson95_descriptive": [
+      0.09453120573423074,
+      0.9054687942657693
+    ]
+  },
+  "domains": {
+    "original-code": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    },
+    "original-general": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.09453120573423074,
+        0.9054687942657693
+      ]
+    },
+    "original-language": {
+      "accuracy": null,
+      "correct": 0,
+      "lm": {
+        "documents": 2,
+        "failed_documents": 0,
+        "nll": 715.6272888183594,
+        "perplexity": 20728.563353509788,
+        "targets": 72
+      },
+      "problems": 0,
+      "wilson95_descriptive": null
+    },
+    "original-math": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "lm": {
+        "documents": 0,
+        "failed_documents": 0,
+        "nll": 0,
+        "perplexity": null,
+        "targets": 0
+      },
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    }
+  },
+  "evaluated_prefix": 8,
+  "evaluation_sha256": "80dded116a36741bf9abe1b85a399fc96f3ec660fa7eff65b0421279c5a7b24f",
+  "families": {
+    "arithmetic-sum": 2,
+    "capital-control": 2,
+    "integer-function-control": 2,
+    "language-control": 2
+  },
+  "generation": {
+    "attempts": 4,
+    "average_completion_tokens": 4.0,
+    "average_reasoning_tokens": 0.0,
+    "failed": 0,
+    "failure_modes": {
+      "truncation": 4
+    },
+    "first_correct": 0,
+    "invalid": 4,
+    "majority_vote_at_k": {
+      "1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "problems": 2,
+        "ties": 0,
+        "wilson95_descriptive": [
+          0.0,
+          0.6576197724933468
+        ]
+      }
+    },
+    "pass_at_1_first": 0.0,
+    "pass_at_k": {
+      "1": 0.0
+    },
+    "problems": 4,
+    "reasoning_length_protocol": "explicit-v2-think-token-span;completion-length-separate",
+    "stop_counts": {
+      "token_limit": 4
+    },
+    "tokens": 16,
+    "truncated": 4,
+    "wilson95_descriptive": [
+      0.0,
+      0.4898908364545972
+    ]
+  },
+  "languages": {
+    "en": {
+      "accuracy": 0.25,
+      "correct": 1,
+      "problems": 4,
+      "wilson95_descriptive": [
+        0.0455872608097006,
+        0.699358157417598
+      ]
+    },
+    "ru": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "problems": 2,
+      "wilson95_descriptive": [
+        0.0,
+        0.6576197724933468
+      ]
+    }
+  },
+  "lm": {
+    "documents": 2,
+    "failed_documents": 0,
+    "nll": 715.6272888183594,
+    "perplexity": 20728.563353509788,
+    "targets": 72
+  },
+  "official_benchmark": false,
+  "problems": 8,
+  "protocols": {
+    "choice": "continuation-sum-and-character-mean;first-option-tie",
+    "generation": "explicit-control-stop-v1",
+    "lm": "rolling-disjoint-targets-v1;BOS-first,previous-token-reset,EOS-last",
+    "pass_at_k": "1-C(n-c,k)/C(n,k)"
+  },
+  "uncertainty": "Wilson95 is descriptive under iid problems;template families are clustered,not population confidence. Sampled pass@k assumes iid attempts conditional on each problem;no across-family interval is claimed."
+}
+```
+
+Audit completeness: declared training sources only;unknown lineage/semantic overlap is unverified.
+
 ## original-needle / d6adca2d0b79
 
 [Verified receipt](docs/development/evidence/evaluation-phase8-needle-2.json)

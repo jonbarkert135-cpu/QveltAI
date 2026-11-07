@@ -969,3 +969,23 @@ errors;SVGs inspected. Diagnostic RFC tiny base/resume/SFT/eval executed,but rec
 export exposed/fixed multi-source audit-role validation. Final clean reproduction
 is a separate required gate. Initial root-space interruption and archive inclusion
 failure retained in validation_release_phase9.md. No quality/safety promotion.
+
+
+E-PHASE9 reproduction follow-up:clean local7ef8bfd/new virtualenv,shared package
+cache,full RFC tiny19,338,560 parameters,base6 stop3/resume6,SFT3,original eval,
+verified exports/HF parity and real auth/JSON/SSE/HTTP shutdown passed477.817426s.
+Max HF error7.152557e-7;weights unchanged;final800 not scored. Receipt registered
+in RESULTS,not a useful-model/safety promotion. cProfile found per-token backend
+vocabulary-size queries in decode;one query per sequence preserves the exact
+original two-source audit and reduces that audit to1.843169s. Final114 critical
+tests10.97s,combined coverage89.256198%. New freeze compatibility unit3 pass1.18s;
+affected promotion integration checks pass. Local two-rank DCP+packed replay pass,
+numeric-DDP resume still90s timeout(1 fail,2 pass144.48s);not suppressed.
+
+E-PHASE9 final hosted acceptance:8c08214,all22 CI42384342511 jobs successful,
+including CPU3.11/12/13,fresh source-clean RFC tiny,actual-kill200-step replay,
+optional interfaces,containers,docs/browser and hardening. Official status receipt
+retained;session proxy blocks hosted blob downloads403,so hosted numeric log counts
+are not asserted. Current wheel installed into isolated target over locked deps:
+CPU doctor and all8 native stream events equal the editable tutorial output.
+No GPU/final-scale/model release/tag/upload performed.

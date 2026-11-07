@@ -1,21 +1,21 @@
 {
   "after": {
     "covered_branches": 248,
-    "covered_lines": 723,
+    "covered_lines": 724,
     "excluded_lines": 0,
     "missing_branches": 56,
     "missing_lines": 61,
     "num_branches": 304,
     "num_partial_branches": 52,
-    "num_statements": 784,
+    "num_statements": 785,
     "percent_branches_covered": 81.57894736842105,
     "percent_branches_covered_display": "82",
-    "percent_covered": 89.24632352941177,
+    "percent_covered": 89.25619834710744,
     "percent_covered_display": "89",
-    "percent_statements_covered": 92.21938775510205,
+    "percent_statements_covered": 92.22929936305732,
     "percent_statements_covered_display": "92"
   },
-  "after_tests": 113,
+  "after_tests": 114,
   "before": {
     "covered_branches": 228,
     "covered_lines": 696,
@@ -34,7 +34,7 @@
   },
   "before_tests": 98,
   "exclusions": 0,
-  "limitation": "Focused critical modules,not whole-project coverage;baseline Torch2.9.1,updated Torch2.13.0. Three constructor validation statements added.",
+  "limitation": "Focused critical modules,not whole-project coverage;baseline Torch2.9.1,updated Torch2.13.0. Four validation/performance statements added.",
   "scope": [
     "qvelt.tokenizer.core",
     "qvelt.data.shards",

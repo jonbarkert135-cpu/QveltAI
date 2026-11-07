@@ -78,3 +78,87 @@ no skipped Torch local-version record. All-extras optional sqlitedict failure
 remains separate. Offline secret gate:132 reviewed findings,zero unexpected.
 The hash-only baseline is explicitly excluded from recursively scanning itself;
 source/provider detectors remain active for tracked code and vendored references.
+
+
+## Clean local reproduction and measured performance follow-up
+
+Fresh local checkout7ef8bfd/new virtualenv passed every tutorial step,including
+all verification/streaming commands. Package cache was shared;this is not a cold
+machine proof. Full RFC tiny19,338,560 parameters,base6 updates,stop3/resume6,
+full safety SFT3,original eval with both actual training-source audits,HF/native
+parity and authenticated real loopback HTTP. Elapsed477.817426s;HF max absolute
+logit error7.152557e-7. Weights unchanged by eval;final800 not model-scored;no
+trained-safety assertion. Raw-result hash and environment/source/config identities
+are in release-phase9-reproduction.json;one native receipt adds the sixteenth
+RESULTS row group,with its actual older candidate identity preserved.
+
+The full-size tokenizer exposed a real decoder audit bottleneck. A15-second
+cProfile budget recorded3572 backend vocabulary-size queries,13.523s in that
+method. Query once per decoded sequence;the ID check still covers every token.
+The exact same two-source audit now takes1.843169s and its entire report equals
+the original report. This is a diagnostic comparison,not a GPU/kernel benchmark.
+A dedicated backend-call-count/reference-output test verifies the invariant.
+Final expanded critical suite114 passed10.97s;combined coverage89.256198%,
+statements92.229299%,branches81.578947%,zero exclusions. Initial113-test evidence
+above is historical;the final denominator adds one decoding statement.
+
+The focused distributed recheck passed real two-rank DCP/all-reduce and packed
+replay,but replicated numeric-DDP resume timed out again(1 failed,2 passed144.48s).
+Its initial failure remains unresolved locally. Hosted CI is checked independently;
+a green remote run does not diagnose this environment's Gloo issue.
+
+New optional/dev dependency license metadata: MkDocs1.6.1 BSD-2-Clause,
+mkdocs-gen-files0.5.0 MIT,pymdown-extensions12.3 MIT,Hypothesis6.170.15 MPL-2.0,
+coverage7.17.2 Apache-2.0,Playwright1.64.1 Apache-2.0. pip-audit2.10.1 and
+ detect-secrets1.5.0 installed license files declare Apache2.0. Renderer
+Mermaid12.0.0 is MIT;verified npm integrity and generated-source/SVG hashes are
+recorded. This is a distribution notice review,not a legal opinion about an
+unselected production corpus or weights.
+
+## Final current-runtime CI and framework checklist
+
+Source8c082145201d6c27d2798ca5362945ddcc6390e3:all22 jobs in
+[CI42384342511](https://github.com/jonbarkert135-cpu/QveltAI/actions/runs/42384342511)
+successful. This includes full CPU3.11/3.12/3.13 tests,actual optional HF/HQQ/API,
+all containers,original training/posttraining/recovery smokes,source-clean first
+model tutorial,strict docs/browser,native security/secret/coverage/archive gates.
+Receipt records official job/step states. The session proxy blocks hosted blob
+artifact/log downloads with403;do not infer unread hosted counts or numeric logs.
+The independent local tutorial/evidence are retained and inspectable.
+
+Actual current wheel/sdist content/version validation passes. Installed the wheel
+into an isolated target over the same locked dependencies:package path/version,
+CPU doctor and all eight actual native stream events match the documented editable
+run. This is a wheel packaging check,not another fresh-dependency reproduction.
+No tag or draft/public release was created;the operator-triggered draft action is
+prepared but unexecuted. Optional Hub upload is deliberately deferred.
+
+| Checklist | Result | Scope or remaining gap |
+| --- | --- | --- |
+| Site,diagrams,tutorial,subsystem docs,FAQ,status | PASS | Strict build and actual browser;not human screen-reader audit |
+| Critical tests/properties/fuzz/coverage | PASS |114 focused;whole CPU suites pass on three hosted Python versions |
+| Restricted loading and native dependency/secret audit | PASS | Explicit source/current-tree scope;not hostile-file sandbox/history scan |
+| Optional all-extras advisory audit | FAIL | Unpatched sqlitedict CVE-2024-35515;native eval avoids it |
+| Clean-machine tiny reproduction | PASS | Fresh hosted runner;independent fresh local venv uses warm cache |
+| Rights/contamination release controls | PASS | Existing declared-source controls and blocked rights preserved |
+| Production corpus/full benchmark/unknown-parent clearance | FAIL | No selected approved production mix or complete coverage |
+| Safety design and small implementation | PASS |24 original examples,exact assistant masks,family split tests |
+| Demonstrated useful/safe trained model | FAIL | No independent quality/safety/human acceptance |
+| Version/changelog/archive/wheel/workflow/templates | PASS | Framework candidate;draft creation/model upload unexecuted |
+| README provenance | PASS | Claim matrix and16 verified native receipts;no unbacked quality score |
+| Intended GPU/production hardware | FAIL | CUDA13.0/NCCL/FSDP/large/high-throughput acceptance unrun |
+| Local numeric-DDP timeout diagnosis | FAIL | Reproduced locally;hosted green is not a local root-cause fix |
+
+Recommended first real run:tiny tutorial on the intended server;hardware/driver/
+precision/recovery and representative-context resource checks;approved exact data
+rights/mix/dedup/exclusions/tokenizer;fixed independent domain probes;small200-step
+pilot and log review;only then commit the full horizon. Evaluate base before SFT,
+preferences or RL. Keep final holdout untouched and stop on answer collapse or
+invalid audit/recovery evidence. Exact commands are in runbooks02 and the tutorial.
+
+Final evidence adds one reviewed Base64 false positive:the public npm Mermaid
+SHA512 tarball integrity. The final baseline therefore has133 findings(previous132
+were source/vendor examples). It is a public artifact digest,not a credential.
+After successful clean reproduction,only owned failed diagnostic payload copies
+were removed to free scratch space;their manifests/recipes/metrics/logs were retained.
+The successful clean tutorial,weights,exports and full local logs remain in scratch.

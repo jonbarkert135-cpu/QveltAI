@@ -1,0 +1,497 @@
+{
+  "audit_optimization": {
+    "after": {
+      "elapsed_seconds": 1.8431689009994443,
+      "source_counts": [
+        {
+          "documents": 54,
+          "manifest_sha256": "b69d293fcd1b7411c39f39a81bf3d75b17b6b5d30a5342ed1c5c649d7a4e6287"
+        },
+        {
+          "documents": 12,
+          "manifest_sha256": "fb92f923f71e36ec754ded61f4d57a5b66c0c0d4f28e02e2e1671d73fcb74173"
+        }
+      ]
+    },
+    "before_get_vocab_size_calls": 3572,
+    "before_get_vocab_size_seconds": 13.523,
+    "before_profile_budget_seconds": 15,
+    "full_audit_unchanged": true,
+    "limit": "profiling budget,not a full before/after throughput benchmark"
+  },
+  "base_updates": 6,
+  "checkpoint_sha256": "3f08c47a09ca9edca26949bc01d40cdb22b2dac41e05e2cd7db811d40973c0d6",
+  "code": {
+    "commit": "7ef8bfd78d8a056253fdf7e1514e96fab131e40a",
+    "dirty": false,
+    "lock_sha256": "9ceffb9b6672b76e6de3573fbf710bc127e095c08dc2b0b86a5fee8633768055"
+  },
+  "command": [
+    "python",
+    "scripts/first_model.py",
+    "--directory",
+    "runs/first-model",
+    "--repository",
+    ".",
+    "--steps",
+    "6"
+  ],
+  "elapsed_seconds": 477.8174261439999,
+  "environment": {
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "packages": [
+      {
+        "name": "annotated-doc",
+        "version": "0.0.5"
+      },
+      {
+        "name": "annotated-types",
+        "version": "0.8.0"
+      },
+      {
+        "name": "anyio",
+        "version": "4.15.1"
+      },
+      {
+        "name": "boolean-py",
+        "version": "5.0"
+      },
+      {
+        "name": "build",
+        "version": "1.6.1"
+      },
+      {
+        "name": "cachecontrol",
+        "version": "0.14.4"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.10.23"
+      },
+      {
+        "name": "cfgv",
+        "version": "3.5.0"
+      },
+      {
+        "name": "charset-normalizer",
+        "version": "3.5.2"
+      },
+      {
+        "name": "click",
+        "version": "8.5.0"
+      },
+      {
+        "name": "contourpy",
+        "version": "1.4.0"
+      },
+      {
+        "name": "coverage",
+        "version": "7.17.2"
+      },
+      {
+        "name": "cycler",
+        "version": "0.12.1"
+      },
+      {
+        "name": "cyclonedx-python-lib",
+        "version": "11.12.0"
+      },
+      {
+        "name": "datasketch",
+        "version": "1.6.5"
+      },
+      {
+        "name": "defusedxml",
+        "version": "0.7.1"
+      },
+      {
+        "name": "detect-secrets",
+        "version": "1.5.0"
+      },
+      {
+        "name": "distlib",
+        "version": "0.4.4"
+      },
+      {
+        "name": "fastapi",
+        "version": "0.162.0"
+      },
+      {
+        "name": "filelock",
+        "version": "4.2.6"
+      },
+      {
+        "name": "fonttools",
+        "version": "4.68.0"
+      },
+      {
+        "name": "fsspec",
+        "version": "2026.7.0"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "hatchling",
+        "version": "1.27.0"
+      },
+      {
+        "name": "hf-xet",
+        "version": "1.8.0"
+      },
+      {
+        "name": "httpcore",
+        "version": "1.0.9"
+      },
+      {
+        "name": "httpcore2",
+        "version": "2.16.0"
+      },
+      {
+        "name": "httpx",
+        "version": "0.28.1"
+      },
+      {
+        "name": "httpx2",
+        "version": "2.16.0"
+      },
+      {
+        "name": "huggingface-hub",
+        "version": "1.33.0"
+      },
+      {
+        "name": "hypothesis",
+        "version": "6.170.15"
+      },
+      {
+        "name": "identify",
+        "version": "2.6.20"
+      },
+      {
+        "name": "idna",
+        "version": "3.20"
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.1"
+      },
+      {
+        "name": "jinja2",
+        "version": "3.1.6"
+      },
+      {
+        "name": "kiwisolver",
+        "version": "1.5.1"
+      },
+      {
+        "name": "langdetect",
+        "version": "1.0.9"
+      },
+      {
+        "name": "license-expression",
+        "version": "30.4.4"
+      },
+      {
+        "name": "markdown-it-py",
+        "version": "4.2.0"
+      },
+      {
+        "name": "markupsafe",
+        "version": "3.0.4"
+      },
+      {
+        "name": "matplotlib",
+        "version": "3.11.2"
+      },
+      {
+        "name": "mdurl",
+        "version": "0.1.2"
+      },
+      {
+        "name": "mpmath",
+        "version": "1.3.0"
+      },
+      {
+        "name": "msgpack",
+        "version": "1.2.4"
+      },
+      {
+        "name": "mypy",
+        "version": "1.15.0"
+      },
+      {
+        "name": "mypy-extensions",
+        "version": "1.1.0"
+      },
+      {
+        "name": "networkx",
+        "version": "3.7"
+      },
+      {
+        "name": "nodeenv",
+        "version": "1.12.0"
+      },
+      {
+        "name": "numpy",
+        "version": "2.2.6"
+      },
+      {
+        "name": "opentelemetry-api",
+        "version": "1.45.2"
+      },
+      {
+        "name": "packageurl-python",
+        "version": "0.17.6"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pathspec",
+        "version": "1.1.1"
+      },
+      {
+        "name": "pillow",
+        "version": "13.0.0"
+      },
+      {
+        "name": "pip",
+        "version": "26.3"
+      },
+      {
+        "name": "pip-api",
+        "version": "0.0.35"
+      },
+      {
+        "name": "pip-audit",
+        "version": "2.10.1"
+      },
+      {
+        "name": "pip-requirements-parser",
+        "version": "32.0.1"
+      },
+      {
+        "name": "platformdirs",
+        "version": "4.14.2"
+      },
+      {
+        "name": "pluggy",
+        "version": "1.7.0"
+      },
+      {
+        "name": "pre-commit",
+        "version": "4.2.0"
+      },
+      {
+        "name": "py-serializable",
+        "version": "2.2.0"
+      },
+      {
+        "name": "pydantic",
+        "version": "2.14.2"
+      },
+      {
+        "name": "pydantic-core",
+        "version": "2.50.2"
+      },
+      {
+        "name": "pygments",
+        "version": "2.21.0"
+      },
+      {
+        "name": "pyparsing",
+        "version": "3.3.3"
+      },
+      {
+        "name": "pyproject-hooks",
+        "version": "1.3.3"
+      },
+      {
+        "name": "pytest",
+        "version": "9.0.3"
+      },
+      {
+        "name": "python-dateutil",
+        "version": "4.0.0"
+      },
+      {
+        "name": "python-discovery",
+        "version": "1.9.0"
+      },
+      {
+        "name": "pyyaml",
+        "version": "6.0.3"
+      },
+      {
+        "name": "qvelt",
+        "version": "0.1.0"
+      },
+      {
+        "name": "regex",
+        "version": "2026.11.7"
+      },
+      {
+        "name": "requests",
+        "version": "2.34.2"
+      },
+      {
+        "name": "rich",
+        "version": "15.0.0"
+      },
+      {
+        "name": "ruff",
+        "version": "0.11.13"
+      },
+      {
+        "name": "safetensors",
+        "version": "0.6.2"
+      },
+      {
+        "name": "scipy",
+        "version": "1.18.1"
+      },
+      {
+        "name": "setuptools",
+        "version": "84.2.1"
+      },
+      {
+        "name": "shellingham",
+        "version": "1.5.4"
+      },
+      {
+        "name": "six",
+        "version": "1.17.0"
+      },
+      {
+        "name": "sortedcontainers",
+        "version": "2.4.0"
+      },
+      {
+        "name": "starlette",
+        "version": "1.10.0"
+      },
+      {
+        "name": "sympy",
+        "version": "1.14.0"
+      },
+      {
+        "name": "tokenizers",
+        "version": "0.22.2"
+      },
+      {
+        "name": "tomli",
+        "version": "2.5.0"
+      },
+      {
+        "name": "tomli-w",
+        "version": "1.2.0"
+      },
+      {
+        "name": "torch",
+        "version": "2.13.0+cpu"
+      },
+      {
+        "name": "tqdm",
+        "version": "4.70.1"
+      },
+      {
+        "name": "transformers",
+        "version": "5.10.4"
+      },
+      {
+        "name": "trove-classifiers",
+        "version": "2026.9.21.13"
+      },
+      {
+        "name": "truststore",
+        "version": "0.10.5"
+      },
+      {
+        "name": "typer",
+        "version": "0.28.0"
+      },
+      {
+        "name": "types-pyyaml",
+        "version": "6.0.12.20261030"
+      },
+      {
+        "name": "typing-extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "typing-inspection",
+        "version": "0.4.4"
+      },
+      {
+        "name": "tzdata",
+        "version": "2026.6"
+      },
+      {
+        "name": "urllib3",
+        "version": "2.8.0"
+      },
+      {
+        "name": "uvicorn",
+        "version": "0.54.0"
+      },
+      {
+        "name": "virtualenv",
+        "version": "21.15.2"
+      }
+    ],
+    "python": "3.12.14",
+    "system": "Linux"
+  },
+  "eval_report_sha256": "cde5cd27997e0044c54fcd98904b5e163126e7a540cf1dcf3aa4ff1a980b391d",
+  "final_cases_scored": 0,
+  "hf_max_abs_error": 7.152557373046875e-07,
+  "http": {
+    "completed_tokens": 128,
+    "concurrency": 4,
+    "requests": 8,
+    "scope": "bounded CPU loopback workload,not high-throughput/GPU/production capacity",
+    "server_returncode": -15,
+    "server_shutdown": {
+      "batches": [
+        1,
+        4,
+        4,
+        1,
+        1,
+        1
+      ],
+      "cancelled_or_expired": 1,
+      "pending_after_shutdown": 0,
+      "stopped": true
+    },
+    "stream_disconnected_after_role": true,
+    "stream_text_matches_nonstream": true
+  },
+  "installation": "fresh local clone and virtualenv;warm package cache shared;separate fresh hosted-runner proof required",
+  "model": {
+    "context": 512,
+    "ffn": 896,
+    "heads": 5,
+    "hidden": 320,
+    "kv_heads": 1,
+    "layers": 8,
+    "norm_eps": 1e-06,
+    "rope_scale": 1.0,
+    "rope_theta": 10000.0,
+    "vocab": 32768
+  },
+  "model_payload_sha256": "c21e5a41035e36d1015b941f93264ff64e780d9997989220449f6216677ea137",
+  "native_snapshot_sha256": "179f7e7d5a0cb2af8f430b16516fecb2284e8e96719e4677a826b358729cc1c8",
+  "parameters": 19338560,
+  "raw_result_sha256": "f1cb3a007aa9cf128f38d87437e9cfdf288f442348fbbe49cb83edb0d8801de2",
+  "resumed_from": 3,
+  "safety_sft_updates": 3,
+  "scope": "real RFC tiny on original nonce/math fixtures;not useful reasoning or safety acceptance",
+  "source_sha256": "f7cc29c54fbd697f42b530db27b8809a58b26f802cf7f8837d500f927097dfd8",
+  "tokenizer_sha256": "c3ff308325ea4e1b726950df1a0eff21331e25ca644d1904318434e61ae98f14",
+  "trained_safety_certified": false,
+  "weights_unchanged_by_eval": true
+}

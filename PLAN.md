@@ -4,7 +4,8 @@ Last updated: 2026-11-07. Owner of every milestone: **Lead agent**.
 
 ## User-directed Phase9 documentation,hardening and release readiness
 
-Status:in progress;portable engineering acceptance separate from model release.
+Status:portable framework accepted on8c08214,all22 CI42384342511 jobs pass.
+Model release remains blocked by separate rights/quality/safety/hardware gates.
 
 - [x] Strict MkDocs/canonical guides,Mermaid,FAQ,troubleshooting,honest status.
 - [x] Real tokenizer/packing properties and verifier fuzz;critical coverage increase.
@@ -12,8 +13,9 @@ Status:in progress;portable engineering acceptance separate from model release.
 - [x] Original bilingual safety SFT design/data/mask tests and release checklist.
 - [x] SemVer/changelog,version/archive checks,draft workflow,issue/PR templates.
 - [x] README claim evidence and explicit optional dependency advisory.
-- [ ] Full updated CPU suite and remote CI,clean documented tiny reproduction.
-- [ ] Final evidence/state/checklist closure and verified main publication.
+- [x] Full updated CPU suites in CI,clean documented tiny reproduction.
+  Local distributed timeouts remain explicitly unresolved;no tests suppressed.
+- [x] Final evidence/state/checklist closure and verified main publication.
 - [ ] Separate model gates:complete rights/contamination/quality/safety/hardware.
 
 ## User-directed expanded Phase8 inference/export/serving (2026-11-07)

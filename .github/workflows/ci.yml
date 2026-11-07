@@ -394,7 +394,7 @@ jobs:
         run: |
           uv run --frozen --extra cpu qvelt eval-registry --check
           shopt -s nullglob
-          receipts=(docs/development/evidence/evaluation-phase[78]-*.json)
+          receipts=(docs/development/evidence/evaluation-phase[789]-*.json)
           uv run --frozen --extra cpu qvelt results "${receipts[@]}" --check --readme README.md
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

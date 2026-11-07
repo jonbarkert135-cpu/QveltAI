@@ -27,8 +27,21 @@
     }
   ],
   "ignore_advisories": [],
+  "native_hf_serving": {
+    "audit_exit": 0,
+    "known_vulnerabilities": 0,
+    "raw_sha256": "3a0ab2cfd496e7249b3886ab71cf5e5a880c528a15105d4d051361bfe96d3abf",
+    "torch_normalized": true
+  },
   "raw_sha256": "81955c000369598dca08e574b30684b747dc3bda201e1f2c3a0cd46913853713",
   "scope": "all installed third-party extras;CPU/CUDA local-version suffixes normalized;local Qvelt excluded for source review",
+  "secrets": {
+    "additional_public_npm_integrity_hash": 1,
+    "initial_source_vendor_findings": 132,
+    "reviewed_findings": 133,
+    "scope": "offline current tracked tree;baseline hash-only file and bare hex entropy excluded;not a full history audit",
+    "unexpected": 0
+  },
   "source_inventory": {
     "calls": [
       {

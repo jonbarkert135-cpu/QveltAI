@@ -1,8 +1,30 @@
 {
   "browser": "154.0.8037.57",
   "browser_errors": [],
+  "diagram_renderer": {
+    "javascript_sha256": "28fca7ae6ebc7ed7bb63bde63136a74bfef14f296a57e403657eeb8b32836073",
+    "license": "MIT",
+    "tarball_integrity": "sha512-/wQXC9iBxoGV8p3erbvaXs9h77VyLDBH6GdayVjj3hEcSQhFU4N1WUhUppotCEqlIxI2pRMwjwBSwTB1MfZBgQ==",
+    "version": "12.0.0"
+  },
   "pages_checked": 5,
   "playwright": "1.64.1",
+  "render_proof": {
+    "browser": "154.0.8037.57",
+    "playwright": "1.64.1",
+    "rendered_diagrams": [
+      {
+        "source": "architecture.mmd",
+        "source_sha256": "1c1fb8b99803fc8a0f2aa910090914fc10624030ee24e809b77ec65bc5d4ec9d",
+        "svg_sha256": "44ad5e5bc679dd18acc2c3a6609c8640d8c77425719190b9850722eedc4f6d53"
+      },
+      {
+        "source": "decoder.mmd",
+        "source_sha256": "c7116a13756e746e3faa8b82e2410ec74249de123d375bb7b62ce78ba4daf3b9",
+        "svg_sha256": "205e78ff59c983b58154ef7fe07ae8a44820e4c9af1d1ade801cbe4f219e9876"
+      }
+    ]
+  },
   "rendered_diagrams": [],
   "scope": "actual local static site navigation,images and screenshots;not a screen-reader human audit",
   "visual_review": "Actual architecture light screenshot inspected;diagrams legible with residual edges and accessible alt text. Mobile/dark captures retained locally."
