@@ -6,7 +6,8 @@ skills, assets and datasets retain their own notices.
 
 Implemented: byte-BPE and packed data preparation, a decoder-only transformer,
 pretraining with atomic resume, assistant-masked SFT and LoRA, DPO, bounded
-verifiable-reward GRPO, native cached inference and versioned evaluation.
+verifiable-reward GRPO, native cached inference,versioned evaluation,builtin HF
+export,HQQ weight-only quantization and a bounded OpenAI-compatible chat server.
 The checked CPU workflows establish engineering behavior. They do not establish
 general reasoning quality or production readiness.
 
@@ -45,7 +46,7 @@ uv run --frozen --extra cpu python scripts/evaluation_suite_smoke.py --directory
 ```
 
 Use `make PROFILE=cuda setup` for the separately pinned CUDA build. Actual GPU,
-NCCL/FSDP, quantization and serving validation remain open. CPU and CUDA extras
+NCCL/FSDP,large-model quantization and high-throughput GPU serving validation remain open. CPU and CUDA extras
 are exclusive. No paid compute or final-scale training is launched automatically.
 
 ## Workflows
@@ -58,6 +59,7 @@ are exclusive. No paid compute or final-scale training is launched automatically
 | Post-training | [Math workflow](runbooks/03_posttraining.md) | Full/LoRA SFT, bounded verifiers, rejection, DPO and native GRPO |
 | Evaluation | [Suite and ledger](runbooks/04_evaluation.md) | Native evaluators, actual optional standard harness, shard audit and checkpoint curves |
 | Inference | [Native export](runbooks/09_inference_export.md) | Portable data-only snapshots, private KV/RNG, batching and streaming |
+| Serving | [HTTP,exports and containers](runbooks/05_serving.md) | HF interoperability,HQQ,OpenAI JSON/SSE,auth,microbatching and context diagnostics |
 | Comparison | [Promotion controls](runbooks/08_model_promotion.md) | Matched lineage/settings, negative findings and necessary quality gates |
 
 Evaluation-only benchmark approval does not grant training permission. Reviewed

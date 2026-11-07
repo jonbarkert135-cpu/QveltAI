@@ -33,9 +33,16 @@ class GenerationOptions:
     max_cache_bytes: int = 64 * 1024**2
     max_seconds: float = 30.0
     max_output_chars: int = 8192
+    top_k: int = 0
+    top_p: float = 1.0
+    min_p: float = 0.0
+    repetition_penalty: float = 1.0
+    frequency_penalty: float = 0.0
+    presence_penalty: float = 0.0
 
     def __post_init__(self) -> None:
         for key, low, high in (
+            ("top_k", 0, 262144),
             ("max_new_tokens", 1, 256),
             ("seed", 0, 2**32 - 1),
             ("context_limit", 4, 2048),
@@ -43,6 +50,21 @@ class GenerationOptions:
             ("max_output_chars", 1, 16384),
         ):
             _integer(getattr(self, key), "generation." + key, minimum=low, maximum=high)
+        for key, scalar_low, scalar_high in (
+            ("top_p", 1e-6, 1),
+            ("min_p", 0, 1),
+            ("repetition_penalty", 0.01, 100),
+            ("frequency_penalty", -2, 2),
+            ("presence_penalty", -2, 2),
+        ):
+            value = getattr(self, key)
+            if (
+                type(value) not in (float, int)
+                or not math.isfinite(value)
+                or not scalar_low <= value <= scalar_high
+            ):
+                raise ConfigError("Invalid generation sampling control:" + key)
+            object.__setattr__(self, key, float(value))
         if self.strategy not in ("greedy", "sample"):
             raise ConfigError("Generation strategy must be greedy or sample")
         for key in ("temperature", "max_seconds"):

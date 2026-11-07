@@ -1,6 +1,6 @@
 # Qvelt current state
 
-Updated:2026-11-06. Owner:Lead agent.
+Updated:2026-11-07. Owner:Lead agent.
 
 ## Environment readiness (2026-11-04)
 
@@ -16,6 +16,21 @@ network operations/local distributed sockets need execution network permission.
 M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was performed.
 
 ## Current task
+
+Expanded Phase8 implementation and portable diagnostics complete;source-clean
+acceptance/full CI remain in progress. Shared Engine/sampling controls,standard
+HF Llama export with Q/K conversion and direct dense streamed shards,safe HQQ4/8,
+actual FastAPI JSON/SSE/microbatch/auth/deadline/Unicode/failure paths,RFC linear
+RoPE and original needle evaluation,three immutable-base Docker targets,model card
+and runbooks05 are implemented. HF3,focused25 and HQQ/policy9 tests pass (overlap),
+Ruff/format,mypy217,lock/package checks and wheel/sdist pass. Real HTTP smoke has
+batched concurrent requests,exact SSE and cooperative cleanup. Dirty diagnostic
+retrieval has zero baseline ability;no quality claim. Local serving image builds,
+but vfs runtime failed ENOSPC;dedicated container CI is required. Full CPU suite,
+clean six native receipts/RESULTS and remote acceptance are pending. Final800
+unscored. See validation_serving_phase8.md and serving_phase8_design.md.
+
+Previous Phase7 acceptance follows.
 
 Expanded Phase7 portable evaluation accepted onacced9071be0896b2fa6e915c7ed9d1b0f73e9d9;
 all17 CI42303284852 jobs successful. CPU3.11/3.12/3.13 each823 passed,6 optional

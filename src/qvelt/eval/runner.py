@@ -47,7 +47,19 @@ _payload = checked_payload
 
 
 def load_model(job: EvalJob) -> tuple[Decoder, ExperimentConfig, Manifest]:
-    return load_checkpoint_model(job.checkpoint, job.tokenizer.sha256)
+    model, config, manifest = load_checkpoint_model(
+        job.checkpoint, job.tokenizer.sha256
+    )
+    if job.context_extension != 1:
+        from qvelt.inference.long_context import extend_context
+
+        model = extend_context(model, job.context_extension)
+        config = replace(config, model=model.config)
+    if job.quantization_bits:
+        from qvelt.inference.quantization import quantize_model
+
+        model = quantize_model(model, job.quantization_bits)
+    return model, config, manifest
 
 
 def text_ids(tokenizer: QveltTokenizer, text: str) -> list[int]:
@@ -488,6 +500,34 @@ def run_evaluation(
         torch.use_deterministic_algorithms(deterministic, warn_only=warn_only)
         torch.set_num_threads(previous_threads)
     metrics = aggregate(rows, job)
+    if job.context_extension != 1:
+        metrics["model_variant"] = {
+            "context_extension": job.context_extension,
+            "position_method": "linear_interpolation",
+            "model_context": experiment.model.context,
+            "rope_scale": experiment.model.rope_scale,
+        }
+    if job.quantization_bits:
+        from importlib.metadata import version
+
+        from safetensors.torch import save
+
+        from qvelt.inference.quantization import compact_state
+
+        state = compact_state(model)
+        metrics.setdefault("model_variant", {}).update(
+            {
+                "quantization_bits": job.quantization_bits,
+                "method": "HQQ-weight-only",
+                "group_size": 32,
+                "backend": "pytorch-fp32-cpu",
+                "library_version": version("hqq"),
+                "packed_payload_sha256": hashlib.sha256(save(state)).hexdigest(),
+                "weight_tensor_bytes": sum(
+                    t.numel() * t.element_size() for t in state.values()
+                ),
+            }
+        )
     metrics.update(
         {
             "available_problems": available,

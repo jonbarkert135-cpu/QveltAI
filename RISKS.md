@@ -349,3 +349,23 @@ GSM8K contains4. Tiny-context/debug results are not useful headline benchmarks.
 All17 source CI jobs pass,but local NaN-recovery and packed-DDP timeouts remain
 unresolved. Release is explicitly blocked by MATH-500,AMC/AIME,HellaSwag and full
 HumanEval. Final800 unscored;no hardware or quality promotion follows.
+
+## R029 — Phase8 interoperability is not trained quality or GPU acceptance
+
+Native/HQQ reference is CPU FP32<=20M,batch8,context2048. Copy-on-append cache,
+padded queued microbatches and pure PyTorch dequantization do not establish GPU,
+paged/continuous scheduling or speedups. Large dense HF conversion has dimension
+checks but no executed large/DDP conversion;DCP consolidation is explicit future
+work. vLLM source architecture/backend predicates are verified;runtime/driver/
+kernel deployment remains unrun. Numeric-only HQQ state avoids the library's eval
+metadata decoder;do not substitute its generic encoded-state loader.
+
+Debug retrieval is at the accuracy floor;no claim of quality preservation or
+long-context degradation threshold is possible. Quantization differences on two
+original LM documents do not predict a trained small model. Final800 remains
+unscored and public release coverage gates remain blocked. HTTP deadlines are
+cooperative after validation,not kernel preemption or slow-body protection;TLS,
+gateway timeouts,tenant isolation and rate limiting remain deployment work.
+Local vfs Docker image root copies exhausted the small disk;runtime launch was
+not accepted. Dedicated runner container CI is required. No user artifacts were
+deleted to recover space. Historical Gloo faults remain separate open risks.

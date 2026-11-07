@@ -81,4 +81,11 @@ benchmarks:
       tests
     reason: not a public benchmark;Russian original controls included;final800 untouched
     status: approved_original_evaluation
+  original-needle:
+    license_id: Apache-2.0
+    metric: greedy whole-answer exact numeric retrieval by token budget and needle
+      depth;context overflow is a failure
+    reason: D-INFERENCE-PHASE8-01;original diagnostic controls,not a standardized
+      benchmark or a trained retrieval task
+    status: approved_original_evaluation
 schema_version: 1

@@ -1,6 +1,21 @@
 # Qvelt master roadmap
 
-Last updated: 2026-11-06. Owner of every milestone: **Lead agent**.
+Last updated: 2026-11-07. Owner of every milestone: **Lead agent**.
+
+## User-directed expanded Phase8 inference/export/serving (2026-11-07)
+
+Status:in progress;extends accepted native M8.1 and implements M8.2.
+
+- [x] Sampling controls and shared Engine protocol;legacy default decode references pass.
+- [x] Actual builtin HF Llama export/native full/cache/tokenizer parity,including Q/K permutation.
+- [x] Actual HQQ4/HQQ8 packing/dense reconstruction/reload;numeric-only safe artifact path.
+- [x] First HTTP/SSE/auth/limits/real batching/deadline/shutdown tests pass.
+- [x] Failure/concurrency/Unicode tests,actual quantization/needle eval and real HTTP diagnostics.
+- [ ] Clean provenance-bound RESULTS/server measurements and actual container CI smoke.
+- [x] MODEL_CARD/runbooks05 and implementation/state/decision documentation.
+- [ ] Clean evidence and full/remote CI closure.
+- [ ] Separate hardware/quality gates:GPU/high-throughput engine execution,large
+  model quantization and demonstrated long-context quality;final800 unscored.
 
 ## User-directed expanded Phase7 evaluation (2026-11-06)
 

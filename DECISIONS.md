@@ -1400,3 +1400,70 @@ No full benchmark/quality promotion. Nine report-bound receipts,hash-bound plot/
 points and generated RESULTS published without raw corpus/predictions/weights.
 Initial fresh-checkout failure and two local distributed timeouts retained.
 Main-run hardware,blocked public source/full-code execution and release gates open.
+
+## ADR0050 — Standard Llama export,safe HQQ artifacts and bounded OpenAI serving
+
+- **Date/status:**2026-11-07;implementation/acceptance in progress.
+- **Context:**expanded Phase8 adds sampler controls,HF interoperability,weight-only
+  quantization,HTTP batching,SSE,long-context evaluation and reproducible containers
+  to the existing trusted CPU engine. Existing source/recipe/report contracts remain.
+- **Choice:**preserve default sampling/cache behavior;add penalty->temperature->
+  top-k->nucleus->min-p controls with independent scalar oracles. Engine protocol
+  is shared by native HTTP and on-policy RL. Fixed padded batches remain the
+  reference;no custom paging/kernel or unsupported throughput claim.
+- **Export:**builtin Llama config/safetensors/fast tokenizer,not remote Python.
+  Adjacent-pair native RoPE requires per-head Q/K row permutation to split halves.
+  Tied head,norm eps,GQA,SwiGLU and linear interpolation map explicitly. Native
+  config/lock/source manifest stay bound alongside HF files;do not weaken the
+  shared artifact verifier to accept a foreign config under its native role.
+- **Quantization:**HQQ0.2.8.post1 actual CPU pure-PyTorch path,group32,4/8-bit
+  projections only;embedding/head/norm FP32. Quantized file contains only numeric
+  packed weights/scales/zeros and ordinary gains/embedding. Its library's encoded
+  dtype loader uses eval;never pass artifact dtype text to it. Regenerate trusted
+  metadata from pinned config/library and validate complete tensor keys/shapes/
+  dtypes/finiteness before restoring. Clone HQQ inference tensors to ordinary
+  parameters for native version-counter/cache contracts. No custom quant kernels,
+  GPU speed or HF/vLLM loading of the separate native HQQ artifact is claimed.
+- **Evaluation reuse:**explicit EvalJob quantization_bits/context_extension fields;
+  defaults omitted from digest to preserve historical v1/v2 receipts. Same native
+  scorer/audit/receipt path,actual packed-payload SHA and library/config recorded.
+  Ledger derives quantization deltas only for identical source checkpoint,prompts,
+  tokenizer,budgets,scorer/source;no parallel invented metrics/receipt framework.
+- **Serving:**one model worker,bounded queued microbatches,private cache/RNG,
+  end-to-end deadlines/cooperative cancellation,strict OpenAI JSON/SSE,body bounds,
+  constant-time bearer hook and loopback-only explicit auth opt-out. Hide unstable
+  trailing UTF-8 replacement chars and stop prefixes before emitting append-only
+  SSE;final concatenation must equal native text. No prompt/key/body logging.
+- **Dependencies [verified]:**actual PyPI metadata/install of Transformers5.1.0,
+  HQQ0.2.8.post1,FastAPI0.162.0/Uvicorn0.54.0;existing tokenizers0.22.2/Hub1.33
+  remain compatible. New Starlette1.10 TestClient recommends httpx2;pin2.16.0 in
+  development dependencies instead of suppressing its deprecation warning.
+  Optional SDK imports are explicitly isolated for default CPU type checks.
+- **Sources [verified]:**installed HF5.1 Llama constructor/linear-RoPE implementation,
+  HQQ quantize/dequantize/state/dtype decoder APIs;actual offline AutoModel/
+  AutoTokenizer full/cache/tokenizer parity and dense HQQ reference tests pass.
+  vLLM0.33.0 commit4ba787ec9959e566d3b587a796dff07673324da5 registry/builtin
+  Llama QKV/tied head/neox-style rotary/linear-scaling source inspected. This is
+  structural compatibility evidence,not executed vLLM/GPU support. Local pinned
+  Orchestra guides are guidance;their speed/quality numbers are not adopted.
+- **Containers:**pin Python3.12.14-slim-bookworm and uv0.12.23 image digests;
+  use signed Debian20261106 snapshot for training Git,uv.lock for Python,nonroot
+  runtime,allowlisted source-only context and transient CA mount. First diagnostic
+  build exhausted local storage;collapse large-venv layers/use hardlinks and clean
+  only build caches. Actual container acceptance remains required.
+- **Revisit:**GPU/sharded/large inference,paged allocation or faster quant backends
+  after profiling;external engine runtime after hardware/compatibility tests;
+  long-context quality after an appropriate trained checkpoint/independent data.
+
+ADR0050 implementation follow-up:direct dense checkpoint export verifies all
+registered bytes but never deserializes optimizer/RNG pickle;validates exact
+FP32 dense shapes before materializing tensors;streams Q/K conversion into indexed
+HF shards,target128MiB. This admits RFC tiers through large independently of the
+native20M CPU cap. DDP replicated dense state is admissible;DCP shards/unmerged
+adapters fail explicitly. Large execution and sharded consolidation remain unrun.
+Inspected vLLM FlashAttention source accepts divisible-by8 head sizes through256,
+FP16/BF16 and capability>=8.0;RFC head64 is structurally eligible,not runtime proof.
+Installed metadata licenses:Transformers/HQQ Apache2,FastAPI MIT,Starlette/Uvicorn/
+HTTPX/HTTPX2 BSD3. No upstream implementation code was copied.
+Pinned Uvicorn re-raises SIGTERM after graceful shutdown;emit sanitized operational
+counters in lifespan cleanup and require them before accepting Unix signal exit.

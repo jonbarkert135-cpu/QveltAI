@@ -90,6 +90,12 @@ BENCHMARKS: dict[str, dict[str, Any]] = {
         "metric": "versioned original exact/numeric/choice/LM and bounded integer-function tests",
         "reason": "not a public benchmark;Russian original controls included;final800 untouched",
     },
+    "original-needle": {
+        "status": "approved_original_evaluation",
+        "license_id": "Apache-2.0",
+        "metric": "greedy whole-answer exact numeric retrieval by token budget and needle depth;context overflow is a failure",
+        "reason": "D-INFERENCE-PHASE8-01;original diagnostic controls,not a standardized benchmark or a trained retrieval task",
+    },
 }
 
 

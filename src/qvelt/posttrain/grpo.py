@@ -12,6 +12,7 @@ from torch import Tensor
 
 from qvelt.data.math import MathProblem
 from qvelt.inference.config import GenerationOptions, TokenRequest
+from qvelt.inference.engine import Engine
 from qvelt.inference.generation import GenerationEngine
 from qvelt.model.decoder import Decoder
 from qvelt.posttrain.verifiers import AnswerSpec, RewardPolicy, score_completion
@@ -183,7 +184,8 @@ def generate_rollout(
             context_limit=min(2048, model.config.context),
             max_seconds=300,
         )
-        result = GenerationEngine(model, tokenizer).generate(
+        engine: Engine = GenerationEngine(model, tokenizer)
+        result = engine.generate(
             (TokenRequest("rollout", prefix, options),), use_cache=use_cache
         )[0]
         if result.reason not in ("max_tokens", "stop_token") or not result.token_ids:

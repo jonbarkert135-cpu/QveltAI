@@ -171,12 +171,16 @@ class Decoder(nn.Module):
         positions: Tensor | None = None,
         document_ids: Tensor | None = None,
         valid_mask: Tensor | None = None,
+        *,
+        last_logits_only: bool = False,
     ) -> tuple[Tensor, KVCache]:
         """Append a bounded suffix; failed calls never advance the original cache.
 
         The caller must use eval mode and must not mutate cache tensors or .data.
         Packed metadata must be supplied explicitly with the same semantics as forward.
         """
+        if type(last_logits_only) is not bool:
+            raise ValueError("Cached logits selection must be boolean")
         if self.training:
             raise ValueError("Cached decoding requires model.eval()")
         if token_ids.ndim != 2:
@@ -213,7 +217,9 @@ class Decoder(nn.Module):
                 x, positions, documents, valid, all_documents, all_valid, past
             )
             states.append(state)
-        logits = F.linear(self.norm(x), self.embedding.weight)
+        logits = F.linear(
+            self.norm(x[:, -1:] if last_logits_only else x), self.embedding.weight
+        )
         result = KVCache(
             ref(self),
             stamp,

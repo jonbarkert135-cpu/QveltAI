@@ -181,7 +181,7 @@ must be regenerated; permission is never inferred from a manifest name.
 ```bash
 uv run --frozen --extra cpu qvelt eval-receipt runs/new-report/manifest.json --sha256 REPORT_SHA --benchmark original-en-ru-code --output runs/receipt.json
 uv run --frozen --extra cpu qvelt results runs/receipt.json --output runs/RESULTS.md
-uv run --frozen --extra cpu qvelt results docs/development/evidence/evaluation-phase7-*.json --output RESULTS.md --readme README.md --check
+uv run --frozen --extra cpu qvelt results docs/development/evidence/evaluation-phase[78]-*.json --output RESULTS.md --readme README.md --check
 ```
 
 Receipts retain exact report-bound metrics/audit/config/provenance and input

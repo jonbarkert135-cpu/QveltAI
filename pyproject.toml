@@ -21,6 +21,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+hf = ["transformers==5.1.0"]
+quantization = ["hqq==0.2.8.post1"]
+serving = ["fastapi==0.162.0", "uvicorn==0.54.0", "httpx==0.28.1"]
 eval-harness = ["lm-eval==0.4.13"]
 cpu = ["torch==2.9.1"]
 cuda = ["torch==2.9.1; sys_platform == 'linux' or sys_platform == 'win32'"]
@@ -36,6 +39,7 @@ qvelt = "qvelt.cli:main"
 
 [dependency-groups]
 dev = [
+  "httpx2==2.16.0",
   "pytest==8.3.5",
   "ruff==0.11.13",
   "mypy==1.15.0",
@@ -109,5 +113,15 @@ follow_imports = "silent"
 
 [[tool.mypy.overrides]]
 module = ["lm_eval.*", "datasets.*", "pyarrow.*", "matplotlib.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = ["transformers.*", "hqq.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = ["fastapi.*", "starlette.*", "uvicorn.*", "pydantic.*"]
 ignore_missing_imports = true
 follow_imports = "skip"

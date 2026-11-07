@@ -62,6 +62,8 @@ class EvalJob:
     schema_version: int = 1
     protocol: str = "qvelt-eval-v1"
     choice_normalization: str = "token"
+    quantization_bits: int = 0
+    context_extension: int = 1
 
     def __post_init__(self) -> None:
         if (
@@ -70,6 +72,19 @@ class EvalJob:
             or self.protocol not in ("qvelt-eval-v1", "qvelt-eval-v2")
         ):
             raise ConfigError("Only qvelt-eval-v1/v2 with schema1 is supported")
+        if (
+            type(self.quantization_bits) is not int
+            or self.quantization_bits not in (0, 4, 8)
+            or type(self.context_extension) is not int
+            or self.context_extension not in (1, 2, 4)
+        ):
+            raise ConfigError(
+                "Evaluation supports FP32/HQQ4/8 and context factors1/2/4"
+            )
+        if self.protocol == "qvelt-eval-v1" and (
+            self.quantization_bits or self.context_extension != 1
+        ):
+            raise ConfigError("Model transformations require explicit evaluation v2")
         if self.choice_normalization not in (
             "token",
             "character",
@@ -198,6 +213,10 @@ def parse_eval(text: str) -> EvalJob:
 
 def eval_digest(job: EvalJob) -> str:
     value = asdict(job)
+    if job.quantization_bits == 0:
+        value.pop("quantization_bits")
+    if job.context_extension == 1:
+        value.pop("context_extension")
     if job.protocol == "qvelt-eval-v1" and job.choice_normalization == "token":
         value.pop("choice_normalization")
     for key in ("checkpoint", "tokenizer", "dataset"):

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import time
 from collections.abc import Callable, Generator, Sequence
 from dataclasses import dataclass, field
@@ -37,18 +38,77 @@ def cache_bytes(config: ModelConfig, batch: int, length: int) -> int:
 
 
 @torch.no_grad()
-def sample_token(
-    logits: Tensor, options: GenerationOptions, generator: torch.Generator
-) -> int:
+def sampling_logits(
+    logits: Tensor,
+    options: GenerationOptions,
+    *,
+    history: Sequence[int] = (),
+    generated: Sequence[int] = (),
+) -> Tensor:
+    """Penalty -> temperature -> top-k -> nucleus -> min-p, always keep a maximum.
+
+    Repetition uses prompt+completion;frequency/presence count completion only.
+    Top-k retains threshold ties;top-p retains the first token crossing the mass.
+    Greedy applies penalties and ignores probabilistic filters/temperature.
+    """
     if (
         logits.ndim != 1
+        or logits.numel() == 0
         or logits.device.type != "cpu"
         or not bool(torch.isfinite(logits).all())
     ):
-        raise FloatingPointError("Sampler requires finite CPU vocabulary logits")
+        raise FloatingPointError(
+            "Sampler requires finite nonempty CPU vocabulary logits"
+        )
+    scores = logits.float().clone()
+    for values in (history, generated):
+        if len(values) > 4096 or any(
+            type(t) is not int or not 0 <= t < scores.numel() for t in values
+        ):
+            raise ValueError("Sampler history is outside vocabulary/capacity")
+    if options.repetition_penalty != 1 and history:
+        ids = torch.tensor(sorted(set(history)), dtype=torch.int64)
+        selected = scores[ids]
+        scores[ids] = torch.where(
+            selected < 0,
+            selected * options.repetition_penalty,
+            selected / options.repetition_penalty,
+        )
+    if generated and (options.frequency_penalty or options.presence_penalty):
+        counts = torch.bincount(torch.tensor(generated), minlength=scores.numel())
+        scores -= options.frequency_penalty * counts + options.presence_penalty * (
+            counts > 0
+        )
     if options.strategy == "greedy":
-        return int(logits.argmax())
-    probabilities = torch.softmax(logits.float() / options.temperature, dim=-1)
+        return scores
+    scores /= options.temperature
+    if options.top_k:
+        threshold = torch.topk(scores, min(options.top_k, scores.numel())).values[-1]
+        scores.masked_fill_(scores < threshold, -torch.inf)
+    if options.top_p < 1:
+        ordered, indices = scores.sort(descending=True, stable=True)
+        remove = ordered.softmax(-1).cumsum(-1) > options.top_p
+        remove[1:] = remove[:-1].clone()
+        remove[0] = False
+        scores[indices[remove]] = -torch.inf
+    if options.min_p:
+        scores.masked_fill_(scores < scores.max() + math.log(options.min_p), -torch.inf)
+    return scores
+
+
+@torch.no_grad()
+def sample_token(
+    logits: Tensor,
+    options: GenerationOptions,
+    generator: torch.Generator,
+    *,
+    history: Sequence[int] = (),
+    generated: Sequence[int] = (),
+) -> int:
+    scores = sampling_logits(logits, options, history=history, generated=generated)
+    if options.strategy == "greedy":
+        return int(scores.argmax())
+    probabilities = torch.softmax(scores, dim=-1)
     if not bool(torch.isfinite(probabilities).all()):
         raise FloatingPointError("Nonfinite categorical sampling distribution")
     return int(torch.multinomial(probabilities, 1, generator=generator))
@@ -123,7 +183,11 @@ class GenerationEngine:
             or model.config.vocab != tokenizer.vocab_size
             or model.config.parameter_count > 20_000_000
             or any(
-                p.device.type != "cpu" or p.dtype != torch.float32
+                p.device.type != "cpu"
+                or (
+                    p.dtype != torch.float32
+                    and not (p.dtype == torch.uint8 and not p.requires_grad)
+                )
                 for p in model.parameters()
             )
         ):
@@ -187,20 +251,19 @@ class GenerationEngine:
         with torch.autocast("cpu", enabled=False):
             if use_cache:
                 logits, cache = self.model.forward_cached(
-                    ids, cache, positions=positions, valid_mask=valid
+                    ids,
+                    cache,
+                    positions=positions,
+                    valid_mask=valid,
+                    last_logits_only=True,
                 )
             else:
                 logits = self.model(ids, positions=positions, valid_mask=valid)
         return logits[:, -1].float(), cache
 
-    def stream(
-        self,
-        requests: Sequence[TokenRequest],
-        *,
-        use_cache: bool = True,
-        cancelled: Callable[[str], bool] | None = None,
-        clock: Callable[[], float] = time.monotonic,
-    ) -> Generator[GenerationEvent, None, None]:
+    def check_batch(
+        self, requests: Sequence[TokenRequest], *, use_cache: bool = True
+    ) -> None:
         if type(use_cache) is not bool:
             raise ValueError("Generation cache policy must be boolean")
         requests = self._token_batch(requests)
@@ -229,6 +292,19 @@ class GenerationEngine:
                 )
         if reserved > self.limits.max_batch_cache_bytes:
             raise ValueError("Batch exceeds logical KV cache capacity")
+
+    def stream(
+        self,
+        requests: Sequence[TokenRequest],
+        *,
+        use_cache: bool = True,
+        cancelled: Callable[[str], bool] | None = None,
+        clock: Callable[[], float] = time.monotonic,
+    ) -> Generator[GenerationEvent, None, None]:
+        self.check_batch(requests, use_cache=use_cache)
+        requests = self._token_batch(requests)
+        batch = len(requests)
+        prefix = max(len(r.tokens) for r in requests)
         states = [
             _State(r, torch.Generator(device="cpu").manual_seed(r.options.seed))
             for r in requests
@@ -311,7 +387,11 @@ class GenerationEngine:
                     self._check_model()
                     try:
                         token = sample_token(
-                            logits[i], state.request.options, state.rng
+                            logits[i],
+                            state.request.options,
+                            state.rng,
+                            history=(*state.request.tokens, *state.actions),
+                            generated=state.actions,
                         )
                     except FloatingPointError:
                         yield terminal(state, "nonfinite")

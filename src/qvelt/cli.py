@@ -145,6 +145,9 @@ def _parser() -> argparse.ArgumentParser:
     from qvelt.eval.cli import add_parser as add_eval_parser
 
     add_eval_parser(commands)
+    from qvelt.inference.cli import add_parser as add_inference_parser
+
+    add_inference_parser(commands)
     evaluation = commands.add_parser("evaluate", help="Read-only pinned CPU evaluation")
     evaluation.add_argument("path", type=Path)
     evaluation.add_argument("--directory", type=Path, required=True)
@@ -183,7 +186,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     logger = configure_logging()
     try:
-        if args.command in {
+        if args.command in {"export-hf", "quantize", "serve"}:
+            from qvelt.inference.cli import run as run_inference_command
+
+            print(json.dumps(run_inference_command(args), sort_keys=True))
+        elif args.command in {
             "eval-import",
             "eval-audit",
             "eval-receipt",

@@ -87,6 +87,9 @@ def comparison_key(receipt: dict[str, Any]) -> str:
         "audit_jaccard",
     ):
         config.pop(key)
+    config.pop("quantization_bits", None)
+    if config.get("context_extension") == 1:
+        config.pop("context_extension")
     config["evaluator_source_sha256"] = receipt["provenance"]["source_sha256"]
     return hashlib.sha256(_json(config)).hexdigest()
 
@@ -269,6 +272,63 @@ def build_results(
         "Compare only rows with the same comparison key. No scores from external papers are imported.",
         "",
     ]
+    variants = [r for _, r in receipts if r["evaluation"].get("quantization_bits", 0)]
+    comparisons = []
+    for variant in variants:
+        baseline = [
+            r
+            for _, r in receipts
+            if not r["evaluation"].get("quantization_bits", 0)
+            and comparison_key(r) == comparison_key(variant)
+            and r["evaluation"]["checkpoint"]["sha256"]
+            == variant["evaluation"]["checkpoint"]["sha256"]
+        ]
+        if len(baseline) != 1:
+            continue
+        original = baseline[0]
+        a, b = original["metrics"], variant["metrics"]
+
+        def difference(left: float | None, right: float | None) -> float | None:
+            return None if left is None or right is None else right - left
+
+        comparisons.append(
+            {
+                "bits": variant["evaluation"]["quantization_bits"],
+                "baseline_report": original["report_sha256"],
+                "quantized_report": variant["report_sha256"],
+                "baseline_perplexity": a["lm"]["perplexity"],
+                "quantized_perplexity": b["lm"]["perplexity"],
+                "perplexity_delta": difference(
+                    a["lm"]["perplexity"], b["lm"]["perplexity"]
+                ),
+                "generation_accuracy_delta": difference(
+                    a["generation"]["pass_at_1_first"],
+                    b["generation"]["pass_at_1_first"],
+                ),
+                "choice_accuracy_delta": difference(
+                    a["choice"]["accuracy"], b["choice"]["accuracy"]
+                ),
+            }
+        )
+    if comparisons:
+        lines.extend(
+            [
+                "## Matched weight-only quantization comparisons",
+                "",
+                "Same source checkpoint,tokenizer,prompts,scoring,budgets and evaluator source;CPU PyTorch fallback,not a speed claim.",
+                "",
+                "```json",
+                json.dumps(
+                    sorted(
+                        comparisons, key=lambda r: (r["baseline_report"], r["bits"])
+                    ),
+                    sort_keys=True,
+                    indent=2,
+                ),
+                "```",
+                "",
+            ]
+        )
     for path, r in sorted(receipts, key=lambda pair: pair[1]["report_sha256"]):
         metrics = r["metrics"]
         checkpoint = _manifest(r["inputs"]["checkpoint"])

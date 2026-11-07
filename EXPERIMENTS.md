@@ -906,3 +906,22 @@ registered;new preference-shard audit branch separately passes in8-test set4.28s
 Runtime source unchanged after acced90. See evaluation-suite-ci-v2.json and
 validation_evaluation_phase7.md. Both local distributed timeouts and initial CI
 fresh-parent failure remain recorded;no tests suppressed or forced successful.
+
+## R029 — Phase8 portable inference/export/serving (2026-11-07)
+
+Development diagnostics:HF3 passed7.79s;sampler/context/variant/API25 passed12.63s;
+final HQQ/policy9 passed9.58s (overlapping sets,not a summed total). Ruff/format,
+mypy217,locked dependencies and wheel/sdist pass. Three-update original debug
+training runs six matched native evals,actual HF full/cache at factors1/2,actual
+HQQ4/8 reloaded from numeric safetensors,and real loopback HTTP microbatches/SSE/
+disconnect/SIGTERM. All final diagnostic assertions pass;dirty development values
+are not the source-clean published acceptance. Final800 remains unscored.
+
+Negative retrieval baseline has no accuracy at any tested length/factor;executing
+longer contexts does not establish preserved long-context quality. First HTTP
+probe failed on Uvicorn's deliberate post-cleanup SIGTERM re-raise;acceptance now
+requires actual lifespan shutdown evidence and Unix signal semantics. Native
+serving Docker image builds locally but runtime fails ENOSPC on vfs. Only own
+scratch/build artifacts were cleaned;no user training data/checkpoint deleted.
+Container runtime acceptance and clean-source/remote checks follow separately.
+See validation_serving_phase8.md and runbooks/05_serving.md.

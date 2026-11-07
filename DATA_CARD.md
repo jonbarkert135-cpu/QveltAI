@@ -397,3 +397,18 @@ conversion/prompt formatting as changes. Converted data retains CC-BY-SA4.0,
 not framework Apache. No raw/converted ARC text is published in Git;receipts omit
 predictions/questions. Original score-only aggregate artifacts are separate.
 ARC is no longer blocked solely by the legal-text fetch;other listed gates remain.
+
+## D-INFERENCE-PHASE8-01 — Original inference and needle controls
+
+Approved2026-11-07 before construction. Reuse the registered original Phase7
+EN/RU/math/choice/LM/bounded-code controls for matched FP32/HQQ4/HQQ8 scoring.
+Add project-authored needle prompts:one explicitly labeled random digit fact,
+non-numeric neutral filler and a retrieval question,with fixed independent seeds,
+length/depth grids and exact recorded token budgets. Apache-2.0 original generated
+fixtures;no external corpus,teacher,PII or prospective final800. Evaluation and
+decontamination only;no training/tokenizer fitting or production rights clearance.
+Keep source manifests/full notice and construction config for every row. These
+controls are not a standardized long-context benchmark or evidence of reasoning.
+The existing debug checkpoint may have zero retrieval baseline;do not infer
+preserved/degraded real long-context quality from a floor result. Quantization
+is calibration-free HQQ,not calibration or optimization on evaluation data.

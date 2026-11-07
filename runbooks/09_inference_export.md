@@ -1,5 +1,8 @@
 # Native CPU generation and export
 
+This guide records the original native artifact workflow. The subsequent
+[Phase8 serving guide](05_serving.md) adds HF,HQQ,HTTP and context diagnostics.
+
 Scope:qvelt-inference-v1 snapshots and qvelt-generate-v1 requests for the original
 Qvelt decoder. CPU FP32 eager,at most20M parameters. No HTTP service,quantization,
 Hugging Face/GGUF/vLLM adapter,GPU performance or model-quality promotion is implied.
