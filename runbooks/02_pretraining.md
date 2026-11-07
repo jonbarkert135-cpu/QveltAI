@@ -1,6 +1,6 @@
 # Distributed pretraining: first small server run
 
-Scope:Linux,Python3.11–3.13,uv0.12.23,PyTorch2.9.1;original Qvelt decoder and
+Scope:Linux,Python3.11–3.13,uv0.12.23,PyTorch2.13.0;original Qvelt decoder and
 manifest-pinned data. CPU correctness and restart have executable tests. Real
 CUDA/NCCL/FSDP2,shared-store and multi-node validation require your actual server;
 this document is an operator recipe,not a claim that those hardware runs occurred.

@@ -15,6 +15,18 @@ Git-hook invocations need the README cache exports in read-only-home environment
 network operations/local distributed sockets need execution network permission.
 M6.1 CPU acceptance is recorded below; no GPU or paid/final-scale run was performed.
 
+## Phase9 current work
+
+Documentation/hardening/release candidate in progress. Strict offline MkDocs site,
+Mermaid architecture,SFT safety fixture,release/version/archive plumbing implemented.
+Security audit required Torch2.13.0/Transformers5.10.4/pytest9.0.3;old environment
+readiness above is historical. DCP metadata/optimizer bytes restricted;trusted
+ranks still required. Focused61 pass;critical113 pass,combined coverage85.3186%
+to89.2463%;mypy237 passes. Browser five routes/zero errors passes. Full updated
+suite,clean tiny reproduction and current CI remain acceptance gates. Optional
+sqlitedict audit fails;CUDA13.0 and model-quality/safety release gates remain open.
+No tag/public release/model upload. See validation_release_phase9.md and ADR0051.
+
 ## Current task
 
 Expanded Phase8 portable CPU reference accepted onb5deaf40d161a260be50cfe135b67dda479ccd7c;

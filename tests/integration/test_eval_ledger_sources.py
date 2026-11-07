@@ -26,6 +26,61 @@ from qvelt.eval.smoke import create_evaluation_fixture
 from qvelt.utils.artifacts import ArtifactStore
 from qvelt.utils.manifests import manifest_digest
 
+
+def test_multiple_declared_audit_sources_are_ordered_and_hash_bound(
+    tmp_path: Path,
+) -> None:
+    from qvelt.utils.manifests import parse_manifest
+
+    fixture = create_evaluation_fixture(tmp_path / "fixture", ROOT)
+    train_path = tmp_path / "fixture/model-data/prepared/manifest.json"
+    training = ArtifactRef(
+        str(train_path),
+        manifest_digest(ArtifactStore(train_path.parent).read_manifest()),
+    )
+    job = replace(
+        fixture,
+        protocol="qvelt-eval-v2",
+        training_sources=(training, *fixture.training_sources),
+        max_cases=1,
+        max_new_tokens=1,
+    )
+    report = run_evaluation(
+        job, tmp_path / "evaluation", ROOT, command=("python", "scripts/first_model.py")
+    )
+    receipt = export_receipt(
+        ArtifactRef(
+            str(tmp_path / "evaluation/manifest.json"), report["report_sha256"]
+        ),
+        tmp_path / "receipt.json",
+        benchmark="original-en-ru-code",
+    )
+    verify_receipt(receipt)
+    for operation in ("remove", "reorder", "wrong_role"):
+        bad = json.loads(json.dumps(receipt))
+        files = bad["report_manifest"]["files"]
+        indexes = [
+            i
+            for i, record in enumerate(files)
+            if record["role"] == "audit_source_manifest"
+        ]
+        assert len(indexes) == 2
+        if operation == "remove":
+            files.pop(indexes[-1])
+        elif operation == "reorder":
+            files[indexes[0]]["sha256"], files[indexes[1]]["sha256"] = (
+                files[indexes[1]]["sha256"],
+                files[indexes[0]]["sha256"],
+            )
+        else:
+            files[indexes[0]]["role"] = "metrics"
+        bad["report_sha256"] = manifest_digest(
+            parse_manifest(json.dumps(bad["report_manifest"]).encode())
+        )
+        with pytest.raises(ValueError, match="audit-source|unique"):
+            verify_receipt(bad)
+
+
 ROOT = Path(__file__).resolve().parents[2]
 
 

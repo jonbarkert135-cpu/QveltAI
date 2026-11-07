@@ -68,6 +68,7 @@ from qvelt.utils.manifests import (
     parse_manifest,
 )
 from qvelt.utils.provenance import capture_code, capture_environment
+from qvelt.utils.safe_dcp import SafeFileSystemReader, SafeLoadPlanner
 
 
 def _json(value: object) -> bytes:
@@ -724,12 +725,28 @@ def load_checkpoint(
         optimizer_state = get_optimizer_state_dict(model, optimizer)
         distributed_load(
             {"model": model_state},
-            checkpoint_id=checkpoint / "model",
+            storage_reader=SafeFileSystemReader(
+                checkpoint / "model",
+                registered_files={
+                    entry.path.removeprefix("model/"): entry.size_bytes
+                    for entry in manifest.files
+                    if entry.path.startswith("model/")
+                },
+            ),
+            planner=SafeLoadPlanner(),
             no_dist=context.world_size == 1,
         )
         distributed_load(
             {"optimizer": optimizer_state},
-            checkpoint_id=checkpoint / "optimizer",
+            storage_reader=SafeFileSystemReader(
+                checkpoint / "optimizer",
+                registered_files={
+                    entry.path.removeprefix("optimizer/"): entry.size_bytes
+                    for entry in manifest.files
+                    if entry.path.startswith("optimizer/")
+                },
+            ),
+            planner=SafeLoadPlanner(),
             no_dist=context.world_size == 1,
         )
         set_model_state_dict(model, model_state)

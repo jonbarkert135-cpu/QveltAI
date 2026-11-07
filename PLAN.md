@@ -2,6 +2,20 @@
 
 Last updated: 2026-11-07. Owner of every milestone: **Lead agent**.
 
+## User-directed Phase9 documentation,hardening and release readiness
+
+Status:in progress;portable engineering acceptance separate from model release.
+
+- [x] Strict MkDocs/canonical guides,Mermaid,FAQ,troubleshooting,honest status.
+- [x] Real tokenizer/packing properties and verifier fuzz;critical coverage increase.
+- [x] Security upgrades,restricted DCP/weights-only loading,source/secrets review.
+- [x] Original bilingual safety SFT design/data/mask tests and release checklist.
+- [x] SemVer/changelog,version/archive checks,draft workflow,issue/PR templates.
+- [x] README claim evidence and explicit optional dependency advisory.
+- [ ] Full updated CPU suite and remote CI,clean documented tiny reproduction.
+- [ ] Final evidence/state/checklist closure and verified main publication.
+- [ ] Separate model gates:complete rights/contamination/quality/safety/hardware.
+
 ## User-directed expanded Phase8 inference/export/serving (2026-11-07)
 
 Status:portable CPU reference accepted onb5deaf4;all19 CI42356828424 jobs pass.

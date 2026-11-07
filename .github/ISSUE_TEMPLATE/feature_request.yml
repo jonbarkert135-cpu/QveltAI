@@ -1,0 +1,16 @@
+name: Evidence-based feature
+description: Propose a bounded behavior change and its acceptance checks.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Concrete problem and desired behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Baseline,scope and acceptance
+      description: Relevant existing command/result,smallest complete change,verification and hardware/data/license constraints.
+    validations:
+      required: true

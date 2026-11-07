@@ -1,0 +1,13 @@
+flowchart TB
+    accTitle: Qvelt artifact pipeline
+    accDescr: Approved source data feed tokenization and packing,then training and checkpoints. Evaluation and post-training produce evidence reviewed before a release.
+    sources["Approve source rights"] --> tokens["Clean and tokenize"]
+    tokens --> packing["Pack isolated documents"]
+    packing --> train["Optimize original decoder"]
+    train --> checkpoints["Commit resumable checkpoints"]
+    checkpoints --> evaluation["Evaluate and audit"]
+    checkpoints --> posttrain["Run SFT DPO GRPO"]
+    posttrain --> evaluation
+    checkpoints --> engine["Export and serve"]
+    evaluation --> release["Review release gates"]
+    engine --> release

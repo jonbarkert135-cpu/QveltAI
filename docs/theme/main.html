@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block styles %}
+{{ super() }}
+{# MkDocs1.6 darkmode expects these IDs even with highlightjs disabled. #}
+<style id="hljs-light">pre code { color: #182230; }</style>
+<style id="hljs-dark" disabled>pre code { color: #e2e8f0; }</style>
+{% endblock %}

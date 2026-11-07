@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import math
 import threading
 import time
 from dataclasses import dataclass, field
@@ -28,6 +29,16 @@ class Batcher:
     def __init__(
         self, engine: Engine, *, max_pending: int, batch_wait_ms: int, timeout: float
     ) -> None:
+        if (
+            type(max_pending) is not int
+            or not 1 <= max_pending <= 64
+            or type(batch_wait_ms) is not int
+            or not 0 <= batch_wait_ms <= 100
+            or type(timeout) not in (int, float)
+            or not math.isfinite(timeout)
+            or not 0 < timeout <= 300
+        ):
+            raise ValueError("Invalid bounded batching policy")
         self.engine = engine
         self.max_pending, self.batch_wait, self.timeout = (
             max_pending,

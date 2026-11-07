@@ -16,6 +16,14 @@ with checkpoint/config/source hashes, commands and verified receipts. Comparison
 require identical evaluation settings. Original controls and limited public
 subsets are labeled separately from official full benchmark results.
 
+The [documentation site sources](docs/site/index.md) include the
+[one-hour tiny tutorial](docs/site/tutorial.md),architecture diagrams and subsystem
+guides. Build locally with `make EXTRA_ARGS="--extra docs" docs`.
+[Claim evidence](docs/development/readme_claims.md),[security scope](SECURITY.md)
+and [release gates](docs/site/responsible-release.md) state what was checked.
+The optional harness dependency audit has an unresolved sqlitedict advisory;
+a useful or safe trained model has not been established.
+
 ## Quickstart
 
 Prerequisites: Linux, Git, make, uv **0.12.23**, Python **3.11–3.13**.
@@ -70,8 +78,9 @@ coincided with answer collapse; no model promotion is claimed.
 
 New output directories are never silently overwritten. Checkpoints bind model,
 Adam, schedule, RNG and consumer cursor to config/data/tokenizer/source identities.
-Optimizer pickle is trusted project state; portable inference exports use data-only
-weights. Estimated MFU needs an explicit hardware peak; it is not measured utilization.
+Training tensor state uses explicit weights-only loaders;DCP metadata has a
+restricted data-class reader and manifest-bound file extents. Cluster ranks and
+storage must still be trusted. Portable inference exports use safetensors. Estimated MFU needs an explicit hardware peak; it is not measured utilization.
 
 ## Project memory
 

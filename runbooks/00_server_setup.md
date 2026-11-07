@@ -30,11 +30,11 @@ sudo reboot
 ```
 
 After reconnecting, `nvidia-smi` must list every GPU without errors. The selected
-PyTorch CUDA 12.8 wheel baseline should use a driver supporting CUDA 12.8 GA
-(Linux 570.26 or newer). NVIDIA also documents CUDA 12.x minor-version compatibility
-from 525.60.13 with feature/PTX limitations; this recipe uses the newer baseline
-instead of assuming every old driver works. A higher driver version alone does
-not prove the selected GPU/precision path works.
+PyTorch2.13.0 CUDA13.0 wheel profile requires a CUDA13-compatible driver and
+supported GPU. Check NVIDIA's current driver/runtime compatibility for the actual
+server before installation;this updated profile has not passed GPU acceptance.
+The earlier CUDA12.8/570.26 recipe was historical evidence,not the current lock.
+A driver version alone does not prove the selected GPU/precision path works.
 
 PyTorch wheels supply their CUDA runtime libraries; a system CUDA toolkit/nvcc
 is not needed for this repository's current kernels. Do not install a toolkit
@@ -85,7 +85,7 @@ print('NCCL version:', torch.cuda.nccl.version())
 PY
 ```
 
-A CUDA 12.8 build string is not the driver version. Keep actual inventory/diagnostic
+A CUDA runtime build string is not the driver version. Keep actual inventory/diagnostic
 output with the run. FP32 is the first numerical reference; only enable bf16 after
 the native capability and a GPU training/reference check pass.
 

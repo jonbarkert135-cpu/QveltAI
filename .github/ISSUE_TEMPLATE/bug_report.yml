@@ -1,0 +1,34 @@
+name: Reproducible bug
+description: Report a framework failure with sanitized evidence.
+body:
+  - type: markdown
+    attributes:
+      value: Never include keys,private datasets,weights or unredacted environment dumps. Use SECURITY.md for sensitive reports.
+  - type: input
+    id: revision
+    attributes:
+      label: Commit and lock identity
+      description: Exact Git SHA and uv.lock SHA256.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS,Python,Torch,device/precision,world size and relevant optional extras.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Exact sanitized reproduction
+      description: Command,new output directory,config and artifact hashes;describe expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized error and checks
+      description: Relevant traceback/test,checkpoint step and minimal logs. Preserve negative results and state whether retries differ.
+    validations:
+      required: true

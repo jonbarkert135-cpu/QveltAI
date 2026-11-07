@@ -412,3 +412,17 @@ controls are not a standardized long-context benchmark or evidence of reasoning.
 The existing debug checkpoint may have zero retrieval baseline;do not infer
 preserved/degraded real long-context quality from a floor result. Quantization
 is calibration-free HQQ,not calibration or optimization on evaluation data.
+
+## D-RELEASE-PHASE9-01 — Original safety/helpfulness SFT design fixture
+
+Approved2026-11-07 before construction. Original Qvelt-authored English/Russian
+prompt/response pairs about account protection,privacy,harassment,self-harm support,
+safe chemistry and benign math/security education. Refusal examples contain no
+operational harmful instructions. No external corpus,teacher or private information.
+Apache-2.0;retain LICENSE/NOTICE. Permitted uses:demo training,evaluation and
+contamination checks. Family hashing keeps translations together across splits.
+Small fixture implementation tests assistant-only masking and data plumbing;it is
+not a safety benchmark,human review or evidence of trained refusal competence.
+A real release requires independent bilingual human audits and benign/unsafe
+contrast sets,not keyword-based safety certification. No model upload is approved
+by this data record;actual model/data lineage and release gates remain required.

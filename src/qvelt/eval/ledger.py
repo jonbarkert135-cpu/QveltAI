@@ -126,7 +126,11 @@ def verify_receipt(receipt: dict[str, Any]) -> None:
     ):
         raise ValueError("Receipt report identity mismatch")
     roles: dict[str, Any] = {}
+    audit_sources = []
     for record in report.files:
+        if record.role == "audit_source_manifest":
+            audit_sources.append(record)
+            continue
         if record.role in roles:
             raise ValueError("Evaluation report roles must be unique")
         roles[record.role] = record
@@ -153,6 +157,11 @@ def verify_receipt(receipt: dict[str, Any]) -> None:
         ):
             raise ValueError("Receipt payload is not bound to native report: " + role)
     policy = parse_eval(yaml.safe_dump(receipt["evaluation"]))
+    if [(record.path, record.sha256) for record in audit_sources] != [
+        (f"audit-source-{i}.manifest.json", reference.sha256)
+        for i, reference in enumerate(policy.training_sources)
+    ]:
+        raise ValueError("Receipt audit-source manifests disagree with the policy")
     if eval_digest(policy) != receipt["metrics"]["evaluation_sha256"]:
         raise ValueError("Receipt resolved evaluation config mismatch")
     for key in ("checkpoint", "tokenizer", "dataset"):

@@ -6,7 +6,7 @@ export UV_CACHE_DIR ?= $(CURDIR)/.cache/uv
 export PRE_COMMIT_HOME ?= $(CURDIR)/.cache/pre-commit
 RUN = $(UV) run --frozen --extra $(PROFILE) $(EXTRA_ARGS)
 
-.PHONY: setup lint format typecheck test smoke hooks build
+.PHONY: setup lint format typecheck test smoke hooks build docs
 setup:
 	$(UV) sync --frozen --extra $(PROFILE) $(EXTRA_ARGS)
 lint:
@@ -25,3 +25,5 @@ hooks:
 	$(RUN) pre-commit install
 build:
 	$(RUN) python -m build --no-isolation
+docs:
+	$(RUN) --extra docs mkdocs build --strict

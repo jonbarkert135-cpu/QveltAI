@@ -1,0 +1,13 @@
+flowchart TB
+    accTitle: Original decoder math
+    accDescr: Token embeddings enter repeated pre-normalized attention and SwiGLU residual blocks,then final RMS normalization and the tied output head.
+    embedding["Embed input tokens"] --> norm_a["Apply pre-attention RMSNorm"]
+    norm_a --> attention["Apply RoPE GQA attention"]
+    attention --> residual_a["Add attention residual"]
+    embedding -.->|Residual| residual_a
+    residual_a --> norm_f["Apply pre-FFN RMSNorm"]
+    norm_f --> ffn["Apply SwiGLU FFN"]
+    ffn --> residual_f["Add FFN residual"]
+    residual_a -.->|Residual| residual_f
+    residual_f --> final_norm["Repeat blocks then RMSNorm"]
+    final_norm --> head["Project with tied embedding"]

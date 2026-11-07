@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qvelt"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Original, reproducible language-model research infrastructure"
 license = {file = "LICENSE"}
 readme = "README.md"
@@ -21,17 +21,27 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-hf = ["transformers==5.1.0"]
+hf = [
+    "transformers==5.10.4",
+]
 quantization = ["hqq==0.2.8.post1"]
 serving = ["fastapi==0.162.0", "uvicorn==0.54.0", "httpx==0.28.1"]
 eval-harness = ["lm-eval==0.4.13"]
-cpu = ["torch==2.9.1"]
-cuda = ["torch==2.9.1; sys_platform == 'linux' or sys_platform == 'win32'"]
+cpu = ["torch==2.13.0"]
+cuda = ["torch==2.13.0; sys_platform == 'linux' or sys_platform == 'win32'"]
 tensorboard = [
     "tensorboard==2.19.0",
 ]
 wandb = [
     "wandb==0.19.11",
+]
+docs = [
+    "mkdocs==1.6.1",
+    "mkdocs-gen-files==0.5.0",
+    "pymdown-extensions==12.3",
+]
+docs-test = [
+    "playwright==1.64.1",
 ]
 
 [project.scripts]
@@ -40,7 +50,7 @@ qvelt = "qvelt.cli:main"
 [dependency-groups]
 dev = [
   "httpx2==2.16.0",
-  "pytest==8.3.5",
+  "pytest==9.0.3",
   "ruff==0.11.13",
   "mypy==1.15.0",
   "types-PyYAML==6.0.12.20261030",
@@ -48,10 +58,19 @@ dev = [
   "hatchling==1.27.0",
   "pre-commit==4.2.0",
   "setuptools==84.2.1",
+  "hypothesis==6.170.15",
+  "coverage==7.17.2",
+  "pip-audit==2.10.1",
+  "detect-secrets==1.5.0",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/qvelt"]
+
+[tool.hatch.build.targets.sdist]
+ignore-vcs = true
+include = ["/src", "/tests", "/scripts", "/configs", "/docs", "/runbooks", "/*.md", "/LICENSE", "/NOTICE", "/SECURITY.md", "/Makefile", "/mkdocs.yml", "/uv.lock", "/.python-version", "/.github", "/.secrets.baseline"]
+exclude = ["/.agents", "/.cursor", "/CLAUDE.md", "/GEMINI.md", "/.cache", "/.venv", "/.bootstrap", "/site", "/runs", "/data", "/checkpoints", "/artifacts", "/configs/tiny.yaml", "/configs/small.yaml", "/configs/base.yaml", "/configs/large.yaml", "/configs/laptop-debug.yaml"]
 
 [tool.uv]
 required-version = "==0.12.23"
@@ -60,7 +79,7 @@ conflicts = [[{extra = "cpu"}, {extra = "cuda"}]]
 [tool.uv.sources]
 torch = [
   {index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'"},
-  {index = "pytorch-cu128", extra = "cuda"},
+  {index = "pytorch-cu130", extra = "cuda"},
 ]
 
 [[tool.uv.index]]
@@ -69,15 +88,19 @@ url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [[tool.uv.index]]
-name = "pytorch-cu128"
-url = "https://download.pytorch.org/whl/cu128"
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
 explicit = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "docs/research"]
 addopts = ["--strict-config", "--strict-markers", "-ra"]
 markers = ["unit: isolated correctness checks", "integration: workflows and real IO/processes", "gpu: requires CUDA hardware", "slow: longer validation runs"]
-filterwarnings = ["error"]
+filterwarnings = [
+  "error",
+  # Torch2.13 imports its deprecated mkldnn ScriptModule while compiling HQQ.
+  'ignore:`torch\.jit\.script_method` is deprecated\..*:DeprecationWarning:torch\.jit\._script',
+]
 
 [tool.ruff]
 extend-exclude = [".agents/skills"]
@@ -123,5 +146,10 @@ follow_imports = "skip"
 
 [[tool.mypy.overrides]]
 module = ["fastapi.*", "starlette.*", "uvicorn.*", "pydantic.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = ["mkdocs_gen_files.*", "playwright.*"]
 ignore_missing_imports = true
 follow_imports = "skip"

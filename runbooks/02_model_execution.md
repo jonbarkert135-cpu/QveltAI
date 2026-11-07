@@ -78,7 +78,7 @@ fails without eviction or advancing the original cache.
 K/V retain only KV heads. The cache holds a weak model reference and parameter
 identity/data_ptr/version stamps, so it cannot keep discarded model weights alive
 or silently attach to a new model. Normal optimizer/in-place/load_state_dict changes
-invalidate it. Torch2.9.1 Tensor._version is a pinned internal dependency; construct
+invalidate it. Torch2.13.0 Tensor._version is a pinned internal dependency; construct
 model parameters outside inference_mode so counters exist. Cached calls themselves
 support inference_mode. Unsafe .data writes, external cache tensor edits and
 concurrent model mutation are outside this trusted in-process API. Do not serialize

@@ -1,0 +1,9 @@
+{
+  "browser": "154.0.8037.57",
+  "browser_errors": [],
+  "pages_checked": 5,
+  "playwright": "1.64.1",
+  "rendered_diagrams": [],
+  "scope": "actual local static site navigation,images and screenshots;not a screen-reader human audit",
+  "visual_review": "Actual architecture light screenshot inspected;diagrams legible with residual edges and accessible alt text. Mobile/dark captures retained locally."
+}

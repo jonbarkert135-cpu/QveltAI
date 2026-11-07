@@ -1477,3 +1477,41 @@ HF max error2.384e-7 and real HTTP workload are registered. PPL deltas are tiny
 fixture measurements,all generation/retrieval accuracy0;no quality promotion.
 Final test-only historical reasoning extension10 pass7.75s;runtime unchanged.
 All15 native eval receipts regenerate RESULTS. Final800 remains unscored.
+
+## ADR0051 — Phase9 bounded release readiness and security upgrade (2026-11-07)
+
+- **Context:** the user requested documentation,hardening,clean reproduction and
+  release plumbing. Framework engineering acceptance does not establish trained
+  model quality,rights or safety.
+- **Decision:** strict MkDocs1.6.1 plus canonical-document generation;original
+  Mermaid sources and offline SVGs;real browser navigation. Use actual RFC tiny
+  for the documented bounded base/resume/SFT/eval/HF/HTTP tutorial. Add seeded
+  tokenizer/packing properties and bounded verifier fuzzing;measure critical
+  branch coverage without exclusions. Original bilingual safety data is a design
+  fixture with family splits and exact assistant masks,not safety acceptance.
+- **Security:** normalize CPU/CUDA local version suffixes during advisory review.
+  The audit required Torch2.13.0,Transformers5.10.4 and pytest9.0.3. Preserve
+  unpatched optional sqlitedict CVE-2024-35515 as a failed all-extras gate. Never
+  carry old security-vulnerable pins merely to preserve exact resume. Start a new
+  lineage from verified safetensors when the runtime changes.
+- **Loaders:** inspected installed Torch2.13 DCP reader/planner still use unrestricted
+  metadata pickle and weights_only=False byte fields. Substitute a bounded static
+  data-class unpickler,manifest-bound relative file extents and explicit weights-only
+  byte loads;test real tensor/optimizer reload and rejected executable payloads.
+  Trusted ranks/network remain required for object collectives. This is not a
+  hostile-file resource sandbox. Numeric-only HQQ restore remains required.
+- **Plumbing:** semantic framework0.1.0 candidate,archive-content/version gates,
+  draft-only GitHub release workflow and sanitized issue/PR forms. No tag,public
+  release,PyPI or model upload is created. Optional Hub automation is deferred
+  until a model is eligible. Existing HF export is not a release permission.
+- **Alternatives:** duplicating runbooks/results would drift;remote diagram/highlight
+  CDNs would weaken offline reproducibility;ignoring CVEs or deleting test failures
+  would create false evidence. MkDocs-gen-files0.5.0 avoids an unrelated fork.
+- **Sources [verified,limited scope]:** installed Torch2.13.0 FileSystemReader,
+  DefaultLoadPlanner and metadata APIs;MkDocs1.6.1 templates;pip-audit2.10.1 advisory
+  artifacts and PyPI normalized Torch2.9.1/2.13.0 JSON;Transformers5.10.4 installed
+  builtin Llama API exercised by tests. This verifies inspected interfaces and
+  recorded CPU checks,not CUDA13.0 deployment or advisory completeness.
+- **Revisit:** upstream DCP/API changes,advisory updates,a real training server or
+  eligible independently evaluated model. Re-run profile-specific audits and
+  recovery before adopting the new runtime on private hardware.

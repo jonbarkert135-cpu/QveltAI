@@ -955,3 +955,17 @@ weights/Adam/RNG/application state on the new runtime digest. Extra actual HQQ4
 CLI HTTP/SSE process passes;final historical-reasoning HF/native chat extension
 10 pass7.75s. Runtime unchanged after b5deaf4. Results/receipts/state/runbook/card
 are complete for portable scope;hardware/quality and local Gloo risks remain.
+
+## E-PHASE9-HARDENING — CPU release candidate (2026-11-07)
+
+Original critical-module baseline:coverage run --branch over tokenizer.core,
+shards,loader,posttrain.verifiers,inference.batching with the existing98 tests.
+Expanded suite adds properties/fuzz/constructor/queue cancellation/carry tests:
+113 passed10.57s. Combined85.3186% ->89.2463%,zero exclusions. Exact counts in
+release-phase9-coverage.json. Focused loader/security/release/eval/HTTP61 passed
+6.82s;real restricted DCP reload and rejected executable payloads included.
+Strict site build and actual five-route Chromium browser check passed,zero page
+errors;SVGs inspected. Diagnostic RFC tiny base/resume/SFT/eval executed,but receipt
+export exposed/fixed multi-source audit-role validation. Final clean reproduction
+is a separate required gate. Initial root-space interruption and archive inclusion
+failure retained in validation_release_phase9.md. No quality/safety promotion.

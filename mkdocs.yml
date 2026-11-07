@@ -1,0 +1,48 @@
+site_name: Qvelt research framework
+site_description: Reproducible original language-model engineering and honest release gates
+repo_url: https://github.com/jonbarkert135-cpu/QveltAI
+docs_dir: docs/site
+site_dir: site
+strict: true
+theme:
+  name: mkdocs
+  custom_dir: docs/theme
+  highlightjs: false
+  color_mode: auto
+  user_color_mode_toggle: true
+  navigation_depth: 3
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - scripts/docs_build.py
+markdown_extensions:
+  - admonition
+  - fenced_code
+  - tables
+  - toc:
+      permalink: true
+nav:
+  - Start: index.md
+  - First tiny model: tutorial.md
+  - Architecture: architecture.md
+  - Subsystems:
+      - Data and tokenizer: subsystems/data.md
+      - Model and numerics: reference/docs/model.md
+      - Training and recovery: subsystems/training.md
+      - Post-training: subsystems/posttraining.md
+      - Evaluation: subsystems/evaluation.md
+      - Inference and serving: subsystems/inference.md
+  - Operations:
+      - Troubleshooting: troubleshooting.md
+      - FAQ: faq.md
+      - Limitations and status: status.md
+      - Responsible release: responsible-release.md
+      - Security review: security.md
+      - Version and release policy: reference/docs/development/release_policy.md
+  - Evidence:
+      - Results ledger: reference/RESULTS.md
+      - Data card: reference/DATA_CARD.md
+      - Model card template: reference/MODEL_CARD.md
+      - Changelog: reference/CHANGELOG.md
+      - Current state: reference/STATE.md

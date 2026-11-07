@@ -17,7 +17,7 @@ ParameterStamp = tuple[tuple[str, int, int, int, str, str], ...]
 def parameter_stamp(model: nn.Module) -> ParameterStamp:
     """Track normal in-place updates/replacements without copying model weights.
 
-    Tensor._version is a pinned torch2.9.1 interface checked by regression tests.
+    Tensor._version is a pinned torch2.13.0 interface checked by regression tests.
     Unsafe .data writes bypass counters and are outside this trusted cache API.
     """
     try:

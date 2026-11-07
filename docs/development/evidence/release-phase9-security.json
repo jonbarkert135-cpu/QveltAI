@@ -1,0 +1,180 @@
+{
+  "audit_exit": 1,
+  "findings": [
+    {
+      "name": "sqlitedict",
+      "version": "2.1.0",
+      "vulns": [
+        {
+          "aliases": [
+            "CVE-2024-35515",
+            "GHSA-g4r7-86gm-pgqc"
+          ],
+          "description": "Insecure deserialization in sqlitedict up to v2.1.0 allows attackers to execute arbitrary code.",
+          "fix_versions": [],
+          "id": "PYSEC-2026-1939"
+        },
+        {
+          "aliases": [
+            "CVE-2024-35515",
+            "GHSA-g4r7-86gm-pgqc"
+          ],
+          "description": "Insecure deserialization in sqlitedict up to v2.1.0 allows attackers to execute arbitrary code.",
+          "fix_versions": [],
+          "id": "PYSEC-2026-1939"
+        }
+      ]
+    }
+  ],
+  "ignore_advisories": [],
+  "raw_sha256": "81955c000369598dca08e574b30684b747dc3bda201e1f2c3a0cd46913853713",
+  "scope": "all installed third-party extras;CPU/CUDA local-version suffixes normalized;local Qvelt excluded for source review",
+  "source_inventory": {
+    "calls": [
+      {
+        "function": "yaml.load",
+        "line": 274,
+        "path": "src/qvelt/config/__init__.py",
+        "reason": "explicit SafeLoader or reviewed subclass required;bound input separately",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 95,
+        "path": "src/qvelt/eval/suite_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 96,
+        "path": "src/qvelt/eval/suite_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 53,
+        "path": "src/qvelt/posttrain/grpo_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 54,
+        "path": "src/qvelt/posttrain/grpo_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 202,
+        "path": "src/qvelt/posttrain/phase6_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 203,
+        "path": "src/qvelt/posttrain/phase6_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 105,
+        "path": "src/qvelt/posttrain/preference_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 106,
+        "path": "src/qvelt/posttrain/preference_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 125,
+        "path": "src/qvelt/posttrain/smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 126,
+        "path": "src/qvelt/posttrain/smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 228,
+        "path": "src/qvelt/train/diagnostics.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 229,
+        "path": "src/qvelt/train/diagnostics.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 95,
+        "path": "src/qvelt/train/pretraining_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 100,
+        "path": "src/qvelt/train/pretraining_smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 48,
+        "path": "src/qvelt/train/smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 49,
+        "path": "src/qvelt/train/smoke.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 765,
+        "path": "src/qvelt/utils/checkpoints.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 772,
+        "path": "src/qvelt/utils/checkpoints.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      },
+      {
+        "function": "torch.load",
+        "line": 140,
+        "path": "src/qvelt/utils/safe_dcp.py",
+        "reason": "explicit weights_only=True required",
+        "safe": true
+      }
+    ],
+    "dcp_metadata": "restricted data-class globals;reviewed separately in safe_dcp.py",
+    "distributed_object_collectives": "trusted ranks/network required;upstream object collectives use pickle",
+    "scope": "first-party src/scripts direct calls;not whole-program analysis or third-party code",
+    "unsafe_calls": []
+  }
+}

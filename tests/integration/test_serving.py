@@ -39,6 +39,75 @@ def settings(**kwargs: Any) -> ServingConfig:
     return replace(ServingConfig(ArtifactRef("unused", "0" * 64)), **kwargs)
 
 
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"max_pending": 0},
+        {"max_pending": True},
+        {"max_pending": 65},
+        {"batch_wait_ms": -1},
+        {"batch_wait_ms": 101},
+        {"timeout": False},
+        {"timeout": float("nan")},
+        {"timeout": 0},
+    ],
+)
+def test_batcher_constructor_bounds(
+    engine: GenerationEngine, change: dict[str, Any]
+) -> None:
+    with pytest.raises(ValueError, match="batching policy"):
+        Batcher(
+            engine, **{"max_pending": 4, "batch_wait_ms": 0, "timeout": 1.0, **change}
+        )
+
+
+def test_cancelled_queue_and_incompatible_microbatch_carry(
+    engine: GenerationEngine,
+) -> None:
+    engine = GenerationEngine(
+        engine.model,
+        engine.tokenizer,
+        EngineLimits(max_batch=2, max_total_tokens=7, max_context=128),
+    )
+    options = GenerationOptions(max_new_tokens=3, stop_tokens=(), context_limit=128)
+
+    async def run() -> None:
+        batcher = Batcher(engine, max_pending=4, batch_wait_ms=0, timeout=5.0)
+        with pytest.raises(RuntimeError, match="unavailable"):
+            batcher.submit(TokenRequest("unavailable", (1, 32), options))
+        await batcher.start()
+        try:
+            with pytest.raises(RuntimeError, match="already started"):
+                await batcher.start()
+            cancelled = batcher.submit(TokenRequest("cancelled", (1, 32), options))
+            batcher.release(cancelled)
+            a = batcher.submit(TokenRequest("a", (1, 32), options))
+            with pytest.raises(ValueError, match="Duplicate"):
+                batcher.submit(a.request)
+            b = batcher.submit(TokenRequest("b", (1, 33), options))
+
+            async def collect(job: Any) -> list[int]:
+                tokens = []
+                while True:
+                    event = await batcher.next_event(job)
+                    if event is None:
+                        break
+                    if event.token_id is not None:
+                        tokens.append(event.token_id)
+                batcher.release(job)
+                return tokens
+
+            left, right = await asyncio.gather(collect(a), collect(b))
+            assert left == list(engine.generate([a.request])[0].token_ids)
+            assert right == list(engine.generate([b.request])[0].token_ids)
+            assert batcher.batches == [1, 1] and batcher.cancelled_or_expired >= 1
+        finally:
+            await batcher.close()
+        assert not batcher.pending and not batcher.ready
+
+    asyncio.run(run())
+
+
 def test_api_native_stream_concat_matches_json_and_auth(
     engine: GenerationEngine,
 ) -> None:

@@ -376,3 +376,19 @@ evidence on its hosted runner,not a fix for local vfs disk exhaustion. Clean
 native receipts record PPL differences but all generation/retrieval accuracy is
 zero;quality gates remain open. CPU native/reference limits and unrun GPU/vLLM/
 large export/quantization claims are unchanged. Final800 remains unscored.
+
+## Phase9 security/runtime release risks (2026-11-07)
+
+- Optional harness sqlitedict2.1.0 has unpatched CVE-2024-35515;all-extras dependency
+  audit fails. Native evaluation avoids it;stock persistent harness caching is
+  unsupported. No global CVE ignore is used.
+- Torch2.13/CUDA13.0 replaces vulnerable older pins. Exact resume across runtime
+  changes is unsupported;new hardware/driver/BF16/DDP/FSDP acceptance is unrun.
+- Restricted DCP metadata and weights-only byte loading do not sandbox resource
+  denial of service or untrusted distributed ranks. Expected hashes require a
+  trusted channel. Upstream private metadata interfaces need regression checks.
+- Secrets review is current tracked-tree/offline,not full history. Bare hexadecimal
+  entropy is excluded because of provenance hashes;provider/keyword/base64 remain.
+- Tiny tutorial and24 safety/helpfulness examples establish plumbing only. Current
+  model quality,safety,production-data rights and complete contamination coverage
+  do not satisfy model release gates. No release/tag/upload is performed.
