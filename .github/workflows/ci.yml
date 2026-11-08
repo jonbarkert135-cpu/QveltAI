@@ -443,7 +443,7 @@ jobs:
           uv run --frozen --extra cpu --extra serving python scripts/check_secrets.py
       - name: Critical branch coverage;real property and parser fuzz cases
         run: |
-          uv run --frozen --extra cpu --extra serving coverage run --branch --source=qvelt.tokenizer.core,qvelt.data.shards,qvelt.data.loader,qvelt.posttrain.verifiers,qvelt.inference.batching -m pytest -q tests/unit/test_tokenization.py tests/unit/test_data_storage_loader.py tests/unit/test_posttrain_verifiers.py tests/integration/test_serving.py tests/unit/test_hardening_properties.py tests/unit/test_verifier_fuzz.py
+          uv run --frozen --extra cpu --extra serving coverage run --branch --source=qvelt.tokenizer.core,qvelt.data.shards,qvelt.data.loader,qvelt.posttrain.verifiers,qvelt.inference.batching -m pytest -q tests/unit/test_tokenization.py tests/unit/test_tokenizer_v3.py tests/unit/test_data_storage_loader.py tests/unit/test_posttrain_verifiers.py tests/integration/test_serving.py tests/unit/test_hardening_properties.py tests/unit/test_verifier_fuzz.py
           uv run --frozen --extra cpu --extra serving coverage report --fail-under=89
           uv run --frozen --extra cpu --extra serving coverage json -o "$RUNNER_TEMP/coverage.json"
       - name: Framework artifacts/version without publishing a tag

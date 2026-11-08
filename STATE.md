@@ -2,7 +2,44 @@
 
 Updated:2026-11-08. Implementation lead:Lead agent; named human reviewers pending.
 
-## Current task: context-efficiency owner decisions, documentation only
+## Current task: restore the critical coverage gate, 2026-11-08
+
+Base main:`94f0551ec3b34d4cf5cfed96d6f28008da10c1f7`. [Verified by CPU execution]
+the exact critical CI test selection passed114 tests in9.93s, but coverage report
+failed with exit2 at88.082437% combined statement/branch coverage against89.
+Add the existing test_tokenizer_v3.py suite to that selection; no new test
+definitions or runtime changes are needed. The updated selection passed277 tests
+in10.37s and coverage report exited0 at89.695341%. Threshold89, covered source
+scope804 statements/312 branches and exclusions0 are unchanged;9 additional
+statements and9 branches execute. Coverage7.17.2,pytest9.0.3,tokenizers0.22.2,
+Torch2.13.0+cpu and FastAPI0.162.0 were read from the installed environment.
+
+| Critical file | Combined before -> after | Missing lines before -> after |
+| --- | --- | --- |
+| tokenizer/core.py | 82.178218% ->91.089109% | 19 ->10; newly exercised94-99,182,231,244 |
+| data/loader.py | 83.703704% ->83.703704% | 35 ->35 |
+| data/shards.py | 93.846154% ->93.846154% | 4 ->4 |
+| posttrain/verifiers.py | 93.518519% ->93.518519% | 7 ->7 |
+| inference/batching.py | 94.478528% ->94.478528% | 4 ->4 |
+
+The added gate cases assert v3 control IDs/literal isolation/Unicode, rejected
+settings and corrupted policies, oversized non-publication, legacy hashes and
+independent-process determinism. Makefile has no separate critical-coverage
+target; its existing full CPU test discovery already includes v3, so it stays
+unchanged. [ADR-0063 maintenance note](DECISIONS.md#adr-0063-explicit-v3-codec-selection-without-changing-legacy-identities)
+records the selection fix. Existing model/training/serving behavior, tokenizer
+artifacts, data identities, checkpoint formats, lockfiles and coverage exclusions
+are untouched. Only CI selection and required project-memory documentation change.
+No model-quality, GPU, remote-CI or complete-loader-coverage claim; C/D/E remain
+unstarted and gated. Stop after this one local commit for owner review.
+
+Additional validation: Ruff check/format passed240 files, strict mypy passed240
+files; documentation-tool tests2 passed in0.12s, strict MkDocs passed in0.76s.
+Checked118 local links/anchors, consecutive ADR0001..0066, unchanged threshold/
+source denominator/exclusions, and that CI selection adds only the existing v3
+suite. git diff --check passes. No full-suite, GPU or remote-CI rerun is claimed.
+
+## Previous task: context-efficiency owner decisions, documentation only
 
 Base main:`cfa0aa55f39aef6a79d0496e6e32e04ba88f3861`. On2026-11-08 the owner
 accepted the context-efficiency audit and requested one documentation-only

@@ -2,6 +2,16 @@
 
 Last updated: 2026-11-08. Implementation lead: **Lead agent**; human reviewers pending.
 
+## Owner-requested critical coverage maintenance, 2026-11-08
+
+- [x] **CPU-only:** reproduce the critical CI gate failure, then include existing
+  v3 tokenizer behavior tests without lowering89 or adding coverage exclusions.
+  Measured114 ->277 passing tests;combined coverage88.082437% ->89.695341%,
+  report exit2 ->0. No runtime/test-definition/Makefile/artifact/lock changes;
+  the existing full CPU make test discovery already includes v3. Validation and
+  per-file coverage are recorded in [STATE](STATE.md). STOP for review after
+  one local commit; this maintenance does not authorize C, D, E or GPU work.
+
 ## Owner-gated frontier prerequisites: one reviewed change per step
 
 Design decisions: [ADR-0052](DECISIONS.md#adr-0052-frontier-horizon-and-gated-validation-ladder),

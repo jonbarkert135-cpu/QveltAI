@@ -2185,6 +2185,14 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
 - **Limits/revisit:** no final V, full million-entry BPE, multilingual quality,
   GPU execution, production corpus or model release was validated. Revisit under
   Step E measured corpus criteria and named human freeze review; stop before C.
+- **Maintenance evidence, 2026-11-08:** [verified by CPU execution] the critical
+  [CI coverage selection](.github/workflows/ci.yml) omitted the existing
+  [v3 behavior tests](tests/unit/test_tokenizer_v3.py). Include that suite while
+  keeping source scope, threshold89 and exclusions0 unchanged:114 tests/88.082437%
+  (report exit2) ->277 tests/89.695341% (exit0). No test definitions, runtime,
+  legacy identities or artifacts change. No dedicated Makefile critical target
+  exists; full CPU discovery already includes v3. This is gate maintenance,
+  not new architecture, tokenizer training, quality or GPU acceptance.
 
 ## ADR-0064 — Canonical token accounting and the token-count API
 
