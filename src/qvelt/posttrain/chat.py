@@ -118,6 +118,8 @@ def encode_chat(
     messages: tuple[Message, ...], tokenizer: QveltTokenizer, max_tokens: int
 ) -> tuple[list[int], bool]:
     """Right truncate, retain masked outer EOS, and never synthesize a turn ending."""
+    if tokenizer.control_version == 3:
+        raise ValueError("Tokenizer v3 requires the unimplemented chat schema3")
     if type(max_tokens) is not int or max_tokens < 4 or not 2 <= len(messages) <= 128:
         raise ValueError("Invalid chat dimensions")
     roles = {"system": 3, "user": 4, "assistant": 5}

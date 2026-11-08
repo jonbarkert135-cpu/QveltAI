@@ -7,6 +7,8 @@ from qvelt.tokenizer.core import QveltTokenizer
 def chat_prefix(
     messages: tuple[Message, ...], tokenizer: QveltTokenizer
 ) -> tuple[int, ...]:
+    if tokenizer.control_version == 3:
+        raise ValueError("Tokenizer v3 requires the unimplemented chat schema3")
     if not 1 <= len(messages) <= 64 or not all(
         isinstance(m, Message) for m in messages
     ):

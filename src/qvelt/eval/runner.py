@@ -72,6 +72,8 @@ def text_ids(tokenizer: QveltTokenizer, text: str) -> list[int]:
 
 
 def prompt_ids(tokenizer: QveltTokenizer, text: str, protocol: str) -> list[int]:
+    if protocol == "chat-v1" and tokenizer.control_version == 3:
+        raise ValueError("Tokenizer v3 requires the unimplemented chat schema3")
     ordinary = text_ids(tokenizer, text)
     return [1, 4, *ordinary, 6, 5] if protocol == "chat-v1" else [1, *ordinary]
 

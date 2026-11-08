@@ -119,6 +119,8 @@ def export_snapshot(
     if sum(f.size_bytes for f in token_meta.files) > 64 * 1024**2:
         raise ValueError("Tokenizer bundle exceeds export capacity")
     tokenizer, token_meta = load_tokenizer_bundle(token_path, tokenizer_ref.sha256)
+    if tokenizer.control_version == 3:
+        raise ValueError("Tokenizer v3 snapshots await training/schema validation")
     if tokenizer.vocab_size != config.model.vocab:
         raise ValueError("Model/tokenizer vocabularies disagree")
     cp_store = ArtifactStore(Path(checkpoint.path).parent)

@@ -1004,3 +1004,35 @@ prioritized trials are blocked on intake; see [runbook10](runbooks/10_continuous
 and [ADR-0062](DECISIONS.md#adr-0062-evidence-gated-improvement-after-each-real-training-run).
 Original experiment entries are unchanged. Documentation validation is recorded
 in the current session's STATE append, separate from ML evidence.
+
+## E-STEP-B-TOKENIZER-V3 — CPU codec integration
+
+Date:2026-11-08. Base09446b446830a2e8b38bb1a5a696db1eea8116eb plus Step B
+working changes. This is software/gradient/generation validation, not a quality
+training experiment or a Phase10 real-run diagnosis. Owner continuation selected
+Step B; no paid resource, external corpus/teacher or production freeze.
+
+Reuse the48 approved ordered tokenizer training records and12 held-out software
+probes from DATA_CARD, train manifest832c18b89e947c9953f0b79838b50223642c65c5fb66ed6672859552df42d57b.
+Tokenizers0.22.2, v3 controls128, explicit requested/actual V512, min_frequency2,
+ASCII digit isolation. Payload SHA-256:
+75635b1c4b439223e90e45ba7bf8e414c0251fdeea71db12be7056c55b5133bb.
+Recipe schema2 semantic SHA-256:
+d93f775e7bd222b9a78fdc7b523954498267c690e1f0aea0fd15aefc558dcb97.
+Independent processes with hash seeds1/47/99 and Rayon threads1/2/4 produce equal
+payload hashes. Bundle timestamps/provenance are not a deterministic hash claim.
+
+Four minimal v1/v2 payload hashes and old recipe digest/YAML hash were captured
+before editing the codec and are unchanged. Integration verifies existing CLI,
+source linkage, count metadata, held-out round trips and rejection of a v3
+payload relabelled as recipe1. These checks do not establish corpus cleanliness
+or linguistic quality. Configured large ceilings tested on tiny text are not
+actual large-vocabulary resource measurements.
+
+Real CPU decoder fixture:layers2,d64,Hq4,Hkv1,ffn128,V512,context128;
+102720 unique parameters, seed20261108, Torch2.13.0+cpu. All gradients finite;
+full/cached maximum absolute logit difference3.5762786865234375e-7; two greedy
+plain-v1 generations have equal four-action sequences. Optimizer updates0.
+SFT/chat/HF-chat/eval-chat and native snapshot export reject v3 instead of
+pretending schema3 or trained effort works. No actual server deployment tested.
+Test commands/counts and static/document checks are recorded in STATE.

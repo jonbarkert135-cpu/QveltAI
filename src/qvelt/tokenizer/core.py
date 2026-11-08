@@ -35,6 +35,28 @@ CONTROL_TOKENS = (
     )
     + tuple(f"<|reserved_{index:02d}|>" for index in range(19))
 )
+V3_CONTROL_TOKENS = (
+    CONTROL_TOKENS[:13]
+    + (
+        "<|end_tool_result|>",
+        "<|fim_prefix|>",
+        "<|fim_suffix|>",
+        "<|fim_middle|>",
+        "<|fim_end|>",
+        "<|file_start|>",
+        "<|file_end|>",
+        "<|path|>",
+        "<|section|>",
+        "<|effort_none|>",
+        "<|effort_low|>",
+        "<|effort_medium|>",
+        "<|effort_high|>",
+        "<|effort_extra_high|>",
+        "<|effort_maximum|>",
+    )
+    + tuple(f"<|reserved_{index:03d}|>" for index in range(100))
+)
+_CONTROL_SCHEMAS = (LEGACY_CONTROL_TOKENS, CONTROL_TOKENS, V3_CONTROL_TOKENS)
 MAX_DOCUMENT_BYTES = 1024 * 1024
 MAX_TOKENIZER_BYTES = 64 * 1024 * 1024
 
@@ -54,6 +76,23 @@ class TokenizerSettings:
     def __post_init__(self) -> None:
         if type(self.vocab_size) is not int or not 288 <= self.vocab_size <= 262144:
             raise TokenizerError("vocab_size must be an integer in [288, 262144]")
+        if type(self.min_frequency) is not int or not 1 <= self.min_frequency < 2**32:
+            raise TokenizerError("min_frequency must be an integer in [1, 2**32-1]")
+        if type(self.isolate_digits) is not bool:
+            raise TokenizerError("isolate_digits must be bool")
+
+
+@dataclass(frozen=True)
+class TokenizerV3Settings:
+    """Explicit v3 request; the vocabulary ceiling is not a production selection."""
+
+    vocab_size: int
+    min_frequency: int = 2
+    isolate_digits: bool = True
+
+    def __post_init__(self) -> None:
+        if type(self.vocab_size) is not int or not 384 <= self.vocab_size <= 1048576:
+            raise TokenizerError("v3 vocab_size must be an integer in [384, 1048576]")
         if type(self.min_frequency) is not int or not 1 <= self.min_frequency < 2**32:
             raise TokenizerError("min_frequency must be an integer in [1, 2**32-1]")
         if type(self.isolate_digits) is not bool:
@@ -94,19 +133,20 @@ class QveltTokenizer:
     """
 
     def __init__(self, backend: Tokenizer) -> None:
-        observed = tuple(backend.id_to_token(i) for i in range(32))
-        if observed not in (CONTROL_TOKENS, LEGACY_CONTROL_TOKENS):
+        observed = tuple(backend.id_to_token(i) for i in range(128))
+        controls = next((c for c in _CONTROL_SCHEMAS if observed[: len(c)] == c), None)
+        if controls is None:
             raise TokenizerError("Unrecognized Qvelt control-token version")
-        self.control_tokens = tuple(str(token) for token in observed)
+        self.control_tokens = controls
         for index, token in enumerate(self.control_tokens):
             if backend.token_to_id(token) != index:
-                raise TokenizerError("Control-token IDs do not match Qvelt schema 1")
+                raise TokenizerError("Control-token IDs do not match Qvelt schema")
         backend.encode_special_tokens = True
         self._backend = backend
 
     @property
     def control_version(self) -> int:
-        return 2 if self.control_tokens == CONTROL_TOKENS else 1
+        return _CONTROL_SCHEMAS.index(self.control_tokens) + 1
 
     def control_id(self, token: str) -> int:
         try:
@@ -118,7 +158,7 @@ class QveltTokenizer:
 
     @property
     def vocab_size(self) -> int:
-        """Actual vocabulary including the 32 controls and all 256 bytes."""
+        """Actual vocabulary including this version's controls and all 256 bytes."""
         return int(self._backend.get_vocab_size())
 
     def encode(self, text: str) -> list[int]:
@@ -137,7 +177,10 @@ class QveltTokenizer:
 
     def to_bytes(self) -> bytes:
         """Serialize complete backend state; not a dataset or run manifest."""
-        return str(self._backend.to_str()).encode("utf-8")
+        data = str(self._backend.to_str()).encode("utf-8")
+        if self.control_version == 3 and len(data) > MAX_TOKENIZER_BYTES:
+            raise TokenizerError("Tokenizer exceeds the 64 MiB limit")
+        return data
 
     def save(self, path: Path) -> None:
         """Commit one local JSON file atomically without overwriting."""
@@ -184,7 +227,7 @@ class QveltTokenizer:
             raise TokenizerError("Unsupported normalization, padding or model policy")
         controls = raw["added_tokens"]
         contents = tuple(item["content"] for item in controls)
-        if contents not in (CONTROL_TOKENS, LEGACY_CONTROL_TOKENS):
+        if contents not in _CONTROL_SCHEMAS:
             raise TokenizerError("Unrecognized Qvelt control-token version")
         if controls != [
             {
@@ -198,7 +241,7 @@ class QveltTokenizer:
             }
             for i, token in enumerate(contents)
         ]:
-            raise TokenizerError("Exactly 32 special controls are required")
+            raise TokenizerError("Exactly the versioned special controls are required")
         vocab = backend.get_vocab()
         if set(vocab.values()) != set(range(len(vocab))):
             raise TokenizerError("Vocabulary IDs must be contiguous")
@@ -208,7 +251,8 @@ class QveltTokenizer:
 
 
 def train_tokenizer(
-    documents: Iterable[str], settings: TokenizerSettings | None = None
+    documents: Iterable[str],
+    settings: TokenizerSettings | TokenizerV3Settings | None = None,
 ) -> QveltTokenizer:
     """Fit deterministic no-dropout BPE on the supplied document order.
 
@@ -216,6 +260,11 @@ def train_tokenizer(
     an iterator and document limit do not bound total training memory.
     """
     settings = settings or TokenizerSettings()
+    controls = (
+        V3_CONTROL_TOKENS
+        if isinstance(settings, TokenizerV3Settings)
+        else CONTROL_TOKENS
+    )
     backend = _backend(settings.isolate_digits)
     count = 0
 
@@ -224,7 +273,7 @@ def train_tokenizer(
         for document in documents:
             _validate_text(document)
             # Control spellings are ordinary input, never role annotations.
-            if any(token in document for token in CONTROL_TOKENS):
+            if any(token in document for token in controls):
                 raise TokenizerError(
                     "Training documents must not contain control spellings"
                 )
@@ -234,7 +283,7 @@ def train_tokenizer(
     trainer = trainers.BpeTrainer(
         vocab_size=settings.vocab_size,
         min_frequency=settings.min_frequency,
-        special_tokens=list(CONTROL_TOKENS),
+        special_tokens=list(controls),
         initial_alphabet=sorted(pre_tokenizers.ByteLevel.alphabet()),
         show_progress=False,
     )

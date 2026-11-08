@@ -10,11 +10,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from qvelt.tokenizer.core import (
-    CONTROL_TOKENS,
     MAX_DOCUMENT_BYTES,
     MAX_TOKENIZER_BYTES,
     QveltTokenizer,
     TokenizerError,
+    TokenizerV3Settings,
     _validate_text,
     train_tokenizer,
 )
@@ -171,7 +171,7 @@ def train_tokenizer_bundle(
         metadata=TokenizerInfo(
             "byte_bpe",
             tokenizer.vocab_size,
-            len(CONTROL_TOKENS),
+            len(tokenizer.control_tokens),
             recipe.training_data_sha256,
         ),
         files=files,
@@ -223,7 +223,9 @@ def load_tokenizer_bundle(
     if (
         recipe.training_data_sha256 != metadata.training_data_sha256
         or metadata.vocab_size != tokenizer.vocab_size
-        or metadata.reserved_tokens != len(CONTROL_TOKENS)
+        or metadata.reserved_tokens != len(tokenizer.control_tokens)
+        or (tokenizer.control_version == 3)
+        != isinstance(recipe.tokenizer, TokenizerV3Settings)
         or manifest.owner != recipe.name
         or tokenizer.vocab_size > recipe.tokenizer.vocab_size
     ):
@@ -276,7 +278,9 @@ def evaluate_tokenizer(
     documents = utf8_bytes = characters = tokens = 0
     for text in iter_documents(data_manifest, expected_data_sha256):
         ids = tokenizer.encode(text)
-        if tokenizer.decode(ids) != text or any(i < len(CONTROL_TOKENS) for i in ids):
+        if tokenizer.decode(ids) != text or any(
+            i < len(tokenizer.control_tokens) for i in ids
+        ):
             raise TokenizerError(
                 "Tokenizer failed plain-text coverage or control isolation"
             )

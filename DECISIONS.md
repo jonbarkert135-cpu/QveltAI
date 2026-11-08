@@ -2141,3 +2141,47 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   read at `fe5ee52`. No new real-run logs/config/eval were supplied in this intake;
   run-specific causes, gains, budgets and scaling predictions are [unverified].
   Revisit the queue only after identifying and validating the actual run inputs.
+
+## ADR-0063 — Explicit v3 codec selection without changing legacy identities
+
+- **Date/status:** 2026-11-08; Step B implemented for CPU engineering validation;
+  production freeze and Step C remain separate owner/human review gates.
+- **Context/links:** owner continuation authorizes the next reversible step of
+  [ADR-0053](#adr-0053-tokenizer-v3-control-block-and-explicit-new-lineage),
+  with [ADR-0057](#adr-0057-effort-conditioned-training-and-enforced-compute-budgets)
+  markers and [ADR-0061](#adr-0061-named-human-review-and-hardware-validation-gates).
+- **Choice:** add TokenizerV3Settings with mandatory requested vocab_size and a
+  bounded384..1048576 ceiling, preserving the128-control map. Accept explicit
+  recipe schema2 for v3; schema1/default TokenizerSettings remains the old v2
+  training contract and v1 remains readable. Existing recipe bytes/digest stay
+  unchanged; no default version field is inserted into old serialized settings.
+  Bundles use their existing generic reserved_tokens field and validate actual
+  controls against recipe type. No checkpoint or lockfile format change.
+- **Trust/numerics:** retain byte-BPE/digit/normalization policy and literal text
+  isolation; all v3 ordinary IDs>=128. Strict loading checks the complete table,
+  flags, policy, contiguous vocabulary and byte coverage. Bound serialized v3
+  payloads before writing to the existing64MiB reader limit. The requested ceiling
+  does not prove a million-entry artifact fits or a corpus supplies enough merges.
+- **Consumers:** native in-memory plain-v1 Engine works with a matching small
+  decoder. Explicitly reject v3 at existing SFT/chat/eval-chat/HF-chat and native
+  snapshot-export boundaries; do not infer tool/effort support from token IDs.
+  Existing packed-data version guards remain. Implement those protocols only in
+  separately reviewed work; the Step C reporting mismatch is not fixed here.
+- **Reproducibility:** require equal tokenizer payload hashes in three processes
+  with different hash seeds/thread counts; preserve recorded pre-change minimal
+  v1/v2 payload hashes and legacy recipe identity. Creation-time/provenance-bearing
+  manifest hashes are not expected to match across fresh bundle creations. Source
+  changes still invalidate historical exact resume under the existing contract.
+- **Rationale/alternatives:** separate settings plus recipe version avoid changing
+  old asdict/digest identities or silently selecting a production V. Alternatives
+  were adding a serialized default version to old recipes, choosing a final V,
+  or letting v3 enter unsupported chat/export paths. None are needed for Step B.
+- **Evidence:** [verified] installed tokenizers0.22.2 APIs and legacy hash captures
+  on09446b4, approved local fixture bundle/CLI tests, literal/control corruption
+  tests, independent-process hashes and real CPU decoder/Engine checks. The local
+  [tokenizers skill](.agents/skills/orchestra/02-tokenization/huggingface-tokenizers/SKILL.md)
+  informed API review; its speed/quality claims are not QVELT measurements.
+  See [Step B evidence](EXPERIMENTS.md#e-step-b-tokenizer-v3-cpu-codec-integration).
+- **Limits/revisit:** no final V, full million-entry BPE, multilingual quality,
+  GPU execution, production corpus or model release was validated. Revisit under
+  Step E measured corpus criteria and named human freeze review; stop before C.

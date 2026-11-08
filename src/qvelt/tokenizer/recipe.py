@@ -11,7 +11,7 @@ from typing import cast
 import yaml
 
 from qvelt.config import MAX_CONFIG_BYTES, ConfigError, parse_yaml_mapping
-from qvelt.tokenizer.core import TokenizerSettings
+from qvelt.tokenizer.core import TokenizerSettings, TokenizerV3Settings
 from qvelt.utils.manifest_types import digest, identifier
 
 
@@ -22,15 +22,20 @@ class TokenizerRecipe:
     training_data_sha256: str
     schema_version: int = 1
     name: str = "byte-bpe"
-    tokenizer: TokenizerSettings = field(default_factory=TokenizerSettings)
+    tokenizer: TokenizerSettings | TokenizerV3Settings = field(
+        default_factory=TokenizerSettings
+    )
 
     def __post_init__(self) -> None:
-        if type(self.schema_version) is not int or self.schema_version != 1:
-            raise ConfigError("tokenizer recipe: only integer schema 1 is supported")
+        if type(self.schema_version) is not int or self.schema_version not in (1, 2):
+            raise ConfigError("tokenizer recipe: supported schemas are 1 and 2")
         identifier(self.name, "recipe.name")
         digest(self.training_data_sha256, "recipe.training_data_sha256")
-        if not isinstance(self.tokenizer, TokenizerSettings):
-            raise ConfigError("recipe.tokenizer must be validated TokenizerSettings")
+        expected = (
+            TokenizerSettings if self.schema_version == 1 else TokenizerV3Settings
+        )
+        if not isinstance(self.tokenizer, expected):
+            raise ConfigError("recipe schema must match validated tokenizer settings")
 
 
 def parse_tokenizer_recipe(text: str) -> TokenizerRecipe:
@@ -45,19 +50,20 @@ def parse_tokenizer_recipe(text: str) -> TokenizerRecipe:
         "isolate_digits",
     }:
         raise ConfigError("recipe.tokenizer: expected known settings mapping")
-    defaults = TokenizerSettings()
+    version = root.get("schema_version", 1)
+    if type(version) is not int or version not in (1, 2):
+        raise ConfigError("tokenizer recipe: supported schemas are 1 and 2")
+    if version == 2 and "vocab_size" not in settings:
+        raise ConfigError("v3 recipes require an explicit vocab_size")
+    settings_type = TokenizerV3Settings if version == 2 else TokenizerSettings
     return TokenizerRecipe(
         training_data_sha256=cast(str, root.get("training_data_sha256")),
-        schema_version=cast(int, root.get("schema_version", 1)),
+        schema_version=version,
         name=cast(str, root.get("name", "byte-bpe")),
-        tokenizer=TokenizerSettings(
-            vocab_size=cast(int, settings.get("vocab_size", defaults.vocab_size)),
-            min_frequency=cast(
-                int, settings.get("min_frequency", defaults.min_frequency)
-            ),
-            isolate_digits=cast(
-                bool, settings.get("isolate_digits", defaults.isolate_digits)
-            ),
+        tokenizer=settings_type(
+            vocab_size=cast(int, settings.get("vocab_size", 32768)),
+            min_frequency=cast(int, settings.get("min_frequency", 2)),
+            isolate_digits=cast(bool, settings.get("isolate_digits", True)),
         ),
     )
 

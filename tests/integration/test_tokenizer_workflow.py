@@ -15,7 +15,7 @@ from typing import BinaryIO
 
 import pytest
 
-from qvelt.tokenizer.core import TokenizerError, TokenizerSettings
+from qvelt.tokenizer.core import TokenizerError, TokenizerSettings, TokenizerV3Settings
 from qvelt.tokenizer.recipe import TokenizerRecipe, load_tokenizer_recipe
 from qvelt.tokenizer.workflow import (
     evaluate_tokenizer,
@@ -40,6 +40,98 @@ RECIPE = load_tokenizer_recipe(ROOT / "configs/tokenizer_smoke.yaml")
 HELDOUT_ID = manifest_digest(
     parse_manifest((FIXTURES / "heldout.manifest.json").read_bytes())
 )
+
+
+def test_v3_bundle_roundtrip_and_deterministic_payload(tmp_path: Path) -> None:
+    recipe = TokenizerRecipe(
+        RECIPE.training_data_sha256,
+        schema_version=2,
+        tokenizer=TokenizerV3Settings(512),
+    )
+    digests = []
+    for name in ("first-v3", "second-v3"):
+        path = tmp_path / name
+        manifest = train_tokenizer_bundle(
+            recipe, FIXTURES / "train.manifest.json", path, ROOT
+        )
+        tokenizer, loaded = load_tokenizer_bundle(
+            path / "manifest.json", manifest_digest(manifest)
+        )
+        assert loaded == manifest
+        assert isinstance(loaded.metadata, TokenizerInfo)
+        assert loaded.metadata.reserved_tokens == 128
+        assert tokenizer.control_version == 3
+        assert tokenizer.vocab_size == 512
+        assert load_tokenizer_recipe(path / "recipe.yaml") == recipe
+        metrics = evaluate_tokenizer(
+            tokenizer, FIXTURES / "heldout.manifest.json", HELDOUT_ID
+        )
+        assert metrics.documents == 12 and metrics.tokens > 0
+        digests.append(
+            hashlib.sha256((path / "tokenizer.json").read_bytes()).hexdigest()
+        )
+    assert digests[0] == digests[1]
+    # Timestamp/provenance-bearing manifests are not claimed to have equal hashes.
+
+
+def test_v3_bundle_rejects_legacy_recipe_relabelling(tmp_path: Path) -> None:
+    recipe = TokenizerRecipe(
+        RECIPE.training_data_sha256,
+        schema_version=2,
+        tokenizer=TokenizerV3Settings(512),
+    )
+    path = tmp_path / "v3"
+    train_tokenizer_bundle(recipe, FIXTURES / "train.manifest.json", path, ROOT)
+    raw = (
+        (path / "recipe.yaml")
+        .read_bytes()
+        .replace(b"schema_version: 2", b"schema_version: 1")
+    )
+    rewrite_file(path / "manifest.json", "recipe.yaml", raw)
+    with pytest.raises(TokenizerError, match="metadata"):
+        load_tokenizer_bundle(path / "manifest.json")
+
+
+def test_v3_cli_uses_explicit_recipe_version(tmp_path: Path) -> None:
+    from qvelt.tokenizer.recipe import dump_tokenizer_recipe
+
+    recipe_path = tmp_path / "recipe.yaml"
+    recipe_path.write_text(
+        dump_tokenizer_recipe(
+            TokenizerRecipe(
+                RECIPE.training_data_sha256,
+                schema_version=2,
+                tokenizer=TokenizerV3Settings(512),
+            )
+        )
+    )
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "qvelt",
+            "tokenizer",
+            "train",
+            str(recipe_path),
+            "--data-manifest",
+            str(FIXTURES / "train.manifest.json"),
+            "--directory",
+            str(tmp_path / "cli-v3"),
+            "--repository",
+            str(ROOT),
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    output = json.loads(result.stdout)
+    assert output["metadata"]["reserved_tokens"] == 128
+    tokenizer, _ = load_tokenizer_bundle(
+        tmp_path / "cli-v3/manifest.json", output["sha256"]
+    )
+    assert tokenizer.control_version == 3
 
 
 def corpus(tmp_path: Path, parts: dict[str, bytes], documents: int) -> tuple[Path, str]:

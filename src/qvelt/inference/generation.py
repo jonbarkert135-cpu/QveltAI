@@ -220,6 +220,8 @@ class GenerationEngine:
     ) -> tuple[TokenRequest, ...]:
         if prompt_format not in ("chat-v1", "plain-v1"):
             raise ValueError("Unknown generation prompt protocol")
+        if prompt_format == "chat-v1" and self.tokenizer.control_version == 3:
+            raise ValueError("Tokenizer v3 requires the unimplemented chat schema3")
         if (
             not isinstance(requests, Sequence)
             or not 1 <= len(requests) <= self.limits.max_batch
@@ -230,7 +232,7 @@ class GenerationEngine:
             if not isinstance(request, TextRequest):
                 raise ValueError("Expected validated text request")
             ids = self.tokenizer.encode(request.prompt)
-            if any(t < 32 for t in ids):
+            if any(t < len(self.tokenizer.control_tokens) for t in ids):
                 raise ValueError("Ordinary text unexpectedly encoded a role/control ID")
             prefix = [1, 4, *ids, 6, 5] if prompt_format == "chat-v1" else [1, *ids]
             encoded.append(

@@ -1,6 +1,6 @@
 # QVELT master roadmap
 
-Last updated: 2026-11-07. Implementation lead: **Lead agent**; human reviewers pending.
+Last updated: 2026-11-08. Implementation lead: **Lead agent**; human reviewers pending.
 
 ## Owner-gated frontier prerequisites: one reviewed change per step
 
@@ -23,15 +23,20 @@ freezes require the named expert reviews in ADR-0061, not an agent's approval.
 - [x] **A:docs only.** Record the five consecutive ADRs and update STATE/PLAN.
   **CPU-validated documentation only:**original checks recorded in STATE/history.
   This owner-spec amendment is docs only and needs its own link/consistency/build
-  checks. Await review of the amendment before B; do not start B automatically.
-- [ ] **B:tokenizer v3 codec — CPU reference validation required, UNSTARTED.**
+  checks. Owner continuation2026-11-08 selected reversible Step B implementation;
+  production freeze is not approved by that continuation.
+- [x] **B:tokenizer v3 codec — implemented for CPU reference validation.**
   Implement the amended128-control table with six effort markers and configurable
   V under explicit tested v3 bounds; preserve v1/v2. No final V/default selection.
   Include larger multilingual candidates in bounds/resource planning; do not
   claim existing support above262144. Test literal isolation including effort
   injection, deterministic artifact hash, legacy compatibility and a real-tokenizer
-  CPU model <=20M parameters. Recompute sizes for the actual V. Reserve/freeze
-  review must precede production artifacts. Stop for review before C.
+  CPU model <=20M parameters. Actual fixture102720 parameters/V512; legacy hashes
+  preserved and v3 plain Engine/cache/gradient checks pass. Configurable v3 ceiling
+  reaches1048576; this is not a measured full vocabulary or selected production V.
+  [ADR-0063](DECISIONS.md#adr-0063-explicit-v3-codec-selection-without-changing-legacy-identities)
+  records semantics and limits. Reserve/freeze review must precede production
+  artifacts. STOP for review before C; schema/report/API work is not started.
 - [ ] **C:SFT schema3 — CPU reference validation required, UNSTARTED.**
   Typed tool_use/tool_result, tool role and complete shifted
   masks; CPU tests for roles, valid tool errors, orphan/duplicate results,

@@ -1,8 +1,8 @@
 # QVELT current state
 
-Updated:2026-11-07. Implementation lead:Lead agent; named human reviewers pending.
+Updated:2026-11-08. Implementation lead:Lead agent; named human reviewers pending.
 
-## Current task: Step A owner-spec amendment, documentation only
+## Previous task: Step A owner-spec amendment, documentation only
 
 Base main:`f15b8274a9cf493acc640bc2515d078ce92483b4`. The owner supplied the full
 Russian strategic specification (Q1-Q19 and principles1-5) in the conversation on
@@ -453,3 +453,39 @@ All four existing files are append-only; the sole new file is runbook10.
 git diff --check and docs-only scope checks passed. The existing summarizer's
 --help executed and confirmed directory/--archive arguments. No real-run archive,
 loss analysis, training/eval execution, MFU measurement or scale claim was made.
+
+## Current task — Step B tokenizer v3 codec, 2026-11-08
+
+Owner continuation selected the next reversible implementation step from main
+09446b446830a2e8b38bb1a5a696db1eea8116eb. [ADR-0063](DECISIONS.md#adr-0063-explicit-v3-codec-selection-without-changing-legacy-identities)
+records explicit v3 settings/recipe2, the128-control table, strict loading and
+source/recipe linkage. V remains configurable/undecided; bounds384..1048576 are
+request ceilings, not proof of full million-entry training or a production choice.
+JSON/doc limits remain64MiB/1MiB; v3 oversized serialization fails before writing.
+Existing v1/v2 control maps, minimal payload hashes, default settings and old
+recipe serialization/digest are preserved. Existing artifacts/configs/checkpoint
+formats/lockfile were not rewritten. Source changes still invalidate old exact
+resume under the existing compatibility rules.
+
+Approved local fixture:actual V512 and102720-parameter CPU decoder/Engine;
+finite gradients, full/cache max logit difference3.5762786865234375e-7 and repeat
+four-token plain generation. Optimizer updates0; no quality/model-release claim.
+V3 JSON payload hash75635b1c4b439223e90e45ba7bf8e414c0251fdeea71db12be7056c55b5133bb
+is stable across three independent hash-seed/thread-count settings. Creation-time
+bundle manifest hashes are not promised equal. See EXPERIMENTS for scope/source.
+
+Legacy chat/SFT/eval-chat/HF-chat and native snapshot export reject v3 explicitly;
+packed-data version guards remain. No schema3, reporting fix, tool execution,
+effort behaviour or capabilities endpoint was implemented. STOP for owner review
+before Step C. Named ML/legal/production freeze and GPU gates remain in force;
+the Phase10 loop still awaits real-run inputs.
+
+Step B final validation:focused tokenizer/recipe/bundle/CLI/model set263 passed
+in8.07s. All unit tests plus selected tokenizer/native/HF/SFT/safety/API/eval
+integrations939 passed,2 GPU deselected in72.47s; this is not the full distributed
+matrix. Ruff check/format pass240 files,strict mypy240 files passes. Strict MkDocs
+build passes;91 local document links/anchors and ADR0001..0063 sequence verified;
+documented recipe parses and git diff --check passes. No configured corpus,
+tracked fixture, uv.lock, checkpoint/tensor artifact or final V was changed.
+Native v3 snapshot/server deployment, large attained vocabularies, CUDA/Gloo/DDP
+recovery and real model training were not executed for this step. Stop for review.

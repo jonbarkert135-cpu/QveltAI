@@ -65,3 +65,56 @@ corpus diversity; larger training requires measured memory and approved data.
 
 Ponytail applies in full mode. The implementation reuses strict YAML construction,
 atomic IO, typed manifests, observed provenance and the pinned BPE dependency.
+
+## Step B: explicit v3 codec (2026-11-08)
+
+V3 implements the128-control table in [ADR-0053](../../DECISIONS.md#adr-0053-tokenizer-v3-control-block-and-explicit-new-lineage),
+including six reserved effort markers and100 future slots. This is a codec,
+not tool execution or trained effort support. Ordinary text, including literal
+control spellings, encodes to IDs>=128; only explicit control_id calls insert
+control IDs. Training retains the existing prohibition on literal control
+spellings in corpus text. Byte coverage/whitespace preservation are unchanged.
+
+Select v3 explicitly with TokenizerV3Settings(vocab_size=...). V is mandatory;
+there is no v3 production default. The checked request range is384..1048576,
+including controls and all256 bytes. This is a ceiling, not a promise that a
+small corpus learns that many tokens. JSON remains bounded to64MiB and documents
+to1MiB; oversized v3 serialization fails before writing. Full-vocabulary memory,
+compression, multilingual quality and production V remain Step E/human decisions.
+
+The existing tokenizer CLI accepts a new recipe schema2 for v3. Recipe schema1
+and TokenizerSettings continue selecting the historical v2 trainer; readers still
+accept v1. Old recipe serialization/digests and four minimal v1/v2 payload hashes
+are checked against values captured on unmodified09446b4/tokenizers0.22.2.
+The tokenizer recipe version is independent of the future chat schema version.
+
+Example recipe for the already-approved development fixture ONLY, not production:
+
+```yaml
+schema_version: 2
+name: v3-development-fixture
+training_data_sha256: 832c18b89e947c9953f0b79838b50223642c65c5fb66ed6672859552df42d57b
+tokenizer:
+  vocab_size: 512
+  min_frequency: 2
+  isolate_digits: true
+```
+
+Use the existing `qvelt tokenizer train`/`verify`/`evaluate` commands with this
+recipe and the registered fixture manifest. Never reuse output directories.
+Bundles retain source/recipe/provenance links and record128 reserved controls;
+the loader rejects relabelling a v3 payload with a legacy recipe. V1/v2 files,
+production configs, checkpoints and uv.lock are not migrated or rewritten.
+
+Artifact determinism means equal tokenizer.json SHA-256 for equal ordered corpus,
+settings and supported tokenizers build: tested in three independent processes
+with different Python hash seeds and Rayon thread counts. Timestamp/provenance-
+bearing bundle manifests are not promised identical hashes across new creations.
+
+A real v3 BPE/102720-parameter CPU fixture exercises loss gradients, full/cached
+logits and the native Engine's plain-v1 generation within its20M gate. No optimizer
+update or useful-model quality claim follows. Legacy chat/SFT/HF-chat formatters
+and native snapshot export explicitly reject v3 until their protocols are
+implemented/validated. Packed training remains limited by its existing control-
+version guards. Step C schema3/tool masks and chat_schema_version reporting fix,
+Step D capabilities, actual effort behaviour and production freeze are not done.

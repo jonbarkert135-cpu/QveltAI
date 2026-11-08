@@ -73,6 +73,8 @@ def llama_weights(snapshot: InferenceSnapshot) -> dict[str, Tensor]:
 
 def chat_template(controls: tuple[str, ...], version: int) -> str:
     """Conventional HF special parsing;validate the same explicit chat framing."""
+    if version not in (1, 2):
+        raise ValueError("Tokenizer v3 chat export awaits schema3 validation")
     return (
         "{%- set controls = " + json.dumps(controls) + " -%}"
         "{%- set reasoning_allowed = "
