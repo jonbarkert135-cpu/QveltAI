@@ -2,6 +2,18 @@
 
 Last updated: 2026-11-08. Implementation lead: **Lead agent**; human reviewers pending.
 
+## Owner-requested bounded Gloo evidence, 2026-11-08
+
+- [x] **CPU-only, opt-in diagnostic:** bounded repeats of existing DDP/DCP,
+  numeric/packed replay and NaN recovery; fresh ports/tmp roots, environment and
+  rank-stack evidence, isolated-process cleanup and fake-child regression tests.
+  Evidence in EXPERIMENTS:7 iterations within899.84s,2 passes/5 known inner
+  timeout verdicts;15 fake-child tests passed. Historical cause/frequency open.
+  Recorded final counts/uncertainty and competing hypotheses in EXPERIMENTS;
+  do not infer a fix or change training/replay, timeouts, default CI or artifacts.
+  Any follow-up comparison must change one diagnostic factor at a time against
+  this baseline. No GPU/paid run or Step C/D/E continuation. One commit, review stop.
+
 ## Owner-requested summary reconciliation, 2026-11-08
 
 - [x] **CPU-only documentation and error-text maintenance:** reconcile scoped

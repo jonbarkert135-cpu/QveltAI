@@ -1036,3 +1036,125 @@ plain-v1 generations have equal four-action sequences. Optimizer updates0.
 SFT/chat/HF-chat/eval-chat and native snapshot export reject v3 instead of
 pretending schema3 or trained effort works. No actual server deployment tested.
 Test commands/counts and static/document checks are recorded in STATE.
+
+## E-GLOO-DIAG-20261108 — Bounded timeout evidence, not a fix
+
+Date2026-11-08; CPU-only diagnostic, no quality/performance experiment or paid
+compute. Base main65aecf59bf8fb4f597c025e5d346d2fe873e7f40. Production Python,
+training/replay semantics, existing test assertions/timeouts, configs, artifact
+identities and locks are unchanged. Command:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python scripts/gloo_diagnostic.py --iterations 10 --iteration-timeout 180 --total-timeout 900
+```
+
+Measurement scope:existing test_distributed.py (two tests), packed replay and
+coordinated NaN recovery. Fresh explicit c10d loopback rendezvous endpoints
+replace standalone localhost:0; UUIDs and per-iteration pytest roots are fresh.
+No GLOO_SOCKET_IFNAME/MKL override; existing workers force OMP_NUM_THREADS1.
+Host was not isolated from other session checks. Repeated model seeds are the
+existing recipes' seeds, not new training seeds or quality comparisons.
+Environment:Python3.12.14,Torch2.13.0+cpu,Git build
+cf30153c4c131c8164ee7798e5022d810682e2cb,Gloo available; independent Gloo version
+not exposed by the installed public API (null, not an invented version).
+Three visible/affined CPUs; probe PyTorch intra/inter-op3/3 is the parent probe,
+not a claim about actual rank pools; rank environment records OMP1.
+
+Development attempts are excluded from the final-series rate. First attempt
+`/tmp/qvelt-gloo-diagnostic-2zkx_8dd/report.json`:10 pytest-startup errors before
+collection due to an early-import assertion-rewrite warning; no Gloo trials.
+Bootstrap regression2 initially failed, then passed without weakening warnings.
+Second attempt`/tmp/qvelt-gloo-diagnostic-zu8gekhc/report.json`:two complete passes
+56.690/53.363s, then partial iteration3 numeric-DDP90s timeout; interrupted after
+a fake detached-rank test exposed incomplete diagnostic cleanup. Two owned
+orphan ranks16830/17242 were terminated; the interruption note/raw stacks remain.
+PID-start-checked separate-rank cleanup and stale-PID protection now have tests.
+
+Final-series raw evidence is temporary, not committed:
+`/tmp/qvelt-gloo-diagnostic-h2uyqxhx/report.json`, adjacent per-iteration logs,
+rank stacks/metadata, launch/test JSONL and a saved collector-measured.py.
+Measured collector SHA256:
+de32949b7a8c4c336def1096fd450140d10de4df977ed0febb25c35d1c2e668c.
+Python stacks cannot expose native waits or exited-rank terminal stacks.
+
+[MEASURED, file/clock boundary] final iteration1 hit NaN-recovery's120s timeout.
+Its two ranks registered1.212/1.215s after launcher start. Final step4 manifest
+exists with mtime+4.659s; last metric mtime+4.539s reports3 optimizer updates and
+1 rollback. recovery-result.json, written after train_pretraining returns, is
+absent. Manifest presence is not a new checkpoint-integrity/replay validation.
+Nonempty rank0 stacks stop at phase5_worker.py:46, the training call boundary.
+[UNVERIFIED hypothesis] this favours investigating late return/teardown/native lifetime over slow startup
+for this case, but does not identify a destructor, collective or root cause.
+One supplemental live-rank snapshot reports sleeping/5 threads; wchan0 gives no
+usable native wait symbol. Do not interpret thread count as CPU utilization.
+
+### Final bounded-series results
+
+[MEASURED, executed] total899.837776s, stop_reason total_wall_time_limit,
+7 iterations started of maximum10. CLI exit1 is expected evidence of timeouts,
+not a passing distributed regression. Default test selection was not weakened.
+
+| Iteration | Seconds | Initial selected port | Recorded result |
+| --- | ---: | ---: | --- |
+| 1 | 172.523 | 40473 | NaN recovery inner120s timeout; other3 tests passed |
+| 2 | 56.873 | 44361 | All4 passed |
+| 3 | 140.766 | 50233 | Numeric replay inner90s timeout; other3 passed |
+| 4 | 179.838 | 45565 | Numeric replay inner90s timeout; outer180s limit interrupted packed replay; NaN test not started |
+| 5 | 54.288 | 43333 | All4 passed |
+| 6 | 162.991 | 35065 | Packed replay inner120s timeout; other3 passed |
+| 7 | 130.829 | 46567 | Numeric replay inner90s timeout recorded; all4 call reports exist, then total budget killed pytest before normal exit |
+
+All7 iterations have a determined set verdict:2 passed,5 had an observed inner
+timeout. The global cut in7 is not an additional Gloo failure; iterations8–10
+were not started. Iteration4's interrupted/not-started tests are not passes or
+proven additional failures. Across completed call reports:21 passed,5 failed,
+0 skipped;26 completed calls, not a full28-test observation. All-reduce/DCP7/7
+passed; numeric replay4/7 passed; packed replay5/6 completed calls passed; NaN
+recovery5/6 completed calls passed. These are test outcomes, not model quality.
+64 launch records used64 distinct rendezvous ports, with128 rank starts. Final
+PID/start-tick check found0 still-running owned ranks (zombies are not running).
+
+[MEASURED] observed failed-set fraction5/7=71.428571% for this instrumented
+series only. [ESTIMATE] illustrative Wilson95% interval35.893445%..91.778108%,
+using z=NormalDist().inv_cdf(.975), p=5/7, n=7:
+center=(p+z*z/(2*n))/(1+z*z/n),
+half=z*sqrt(p*(1-p)/n+z*z/(4*n*n))/(1+z*z/n).
+Computed with Python, not inferred from the historical suite. Independent,
+identically distributed trials are assumed by that interval; a shared host,
+serial dependence and time-budget stopping do not establish those assumptions.
+This is not a calibrated estimate of historical failure frequency. N runs cannot
+prove a fix, establish a cause or validate another Python/Torch/hardware build.
+
+### Ranked hypotheses and discriminating evidence
+
+All causes below remain UNVERIFIED; ranking is investigation priority, not a
+measured probability. Evidence columns are MEASURED reading/execution boundaries.
+
+| Priority / hypothesis | Evidence for / against | Cheapest discriminating follow-up, not run |
+| --- | --- | --- |
+| 1:late return/native resource or DDP/process-group teardown | Final checkpoint/metric precede timeout; live Python stack stops at a training call; symptoms span numeric/packed/NaN workers. No native stack identifies the wait. | Diagnostic-only entry/return/teardown timestamps plus symbolized native backtrace of a stuck rank; compare both ranks. |
+| 2:thread-pool/scheduling interaction | CPU3, workers OMP1, parent probe intra/inter-op3/3; host not isolated. No continuous CPU utilization/scheduler trace. | Paired repeats changing only MKL_NUM_THREADS to1; then separately inspect/limit inter-op threads with rank timing and utilization evidence. |
+| 3:interface/store/port lifecycle | Explicit rendezvous loopback,64 unique endpoints and no observed bind error weaken simple port reuse; Gloo data-interface default remains unset and bind/close still races. | Matched original standalone vs explicit rendezvous; separately change only GLOO_SOCKET_IFNAME=lo. Capture store/collective native wait evidence. |
+| 4:slow/asymmetric rank startup | First timeout ranks start around1.2s and final checkpoint exists around4.7s; startup cannot explain its entire120s wait. Other ranks lack explicit process-group-ready markers. | Startup/import/group-ready/first-step timestamps per rank; distinguish startup from return/exit. |
+| 5:orphan contamination across repeats | Proven defect in development collector; two orphans removed before final series. Final first-timeout and final all-rank checks find no survivors; failures persist. | Save liveness/process-group snapshots at every boundary; clean-host baseline vs controlled unrelated CPU load. |
+| 6:shared temporary paths/storage pressure | Distinct iteration/test roots; no observed path collision; first timeout checkpoint already written. Shared physical storage pressure not measured. | Same workload/budget on a separately approved scratch filesystem; capture IO latency/free space without changing test assertions. |
+
+Final collector differs from the saved measured snapshot only by replacing
+setattr(subprocess,"Popen",launch) with the equivalent direct assignment and a
+typing annotation for lint/mypy. The measured snapshot remains hash-bound above;
+the post-series fake-child suite passed15 in3.29s. No new real series is claimed
+for that syntax-only edit. Full suite, native backtraces, other Python versions,
+GPU/cluster and causal A/B experiments were not run. Stop for owner review.
+
+[MEASURED, verification] initial fake-child tests before script implementation:
+11 failed in0.18s (missing module). Targeted bootstrap test then showed2 failed
+in0.67s; detached-session cleanup test showed1 failed in1.01s. Final command:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -p no:cacheprovider tests/unit/test_gloo_diagnostic.py
+```
+
+Result15 passed in3.29s. Ruff check/format passed (242 files); mypy reported no
+issues in242 source files. Strict docs built in0.66s; deterministic local check
+passed144 links/anchors and append-only/protected-path assertions. No tests
+skipped, timeouts increased, CI selection changed or production bug claimed fixed.

@@ -2471,3 +2471,25 @@ precedes [deadline creation](src/qvelt/inference/batching.py). Bounds/timing and
 all artifact formats/identities remain unchanged. Source bytes change, so strict
 source-bound exact-resume checks remain authoritative. This maintenance grants
 no data approval, feature implementation, paid run or quality acceptance.
+
+## Maintenance note — Bounded Gloo evidence collection (2026-11-08)
+
+Extends [ADR-0016](#adr-0016-make-runtime-diagnostics-and-seed-guarantees-narrow-and-explicit)
+and [ADR-0026](#adr-0026-checkpoint-completed-updates-with-explicit-replay-compatibility).
+Choose an opt-in Linux supervisor around unchanged distributed tests, rather
+than stress loops in default CI or changes to training/replay/timeouts. Record
+fresh explicit c10d loopback rendezvous ports (a bind/close selection still races),
+unique pytest roots, inherited thread/interface settings, Python/Torch build,
+rank starts, elapsed times, exact outcomes, last logs and Python stack watchdogs.
+The installed Torch2.13 public Gloo API exposes availability, not a separate
+version; record null/version-boundary and Torch Git identity, not an invented pin.
+Signal/clean up only recorded rank PIDs whose Linux start ticks still match;
+torchrun's rank sessions must be handled separately from pytest's process group.
+This diagnostic instrumentation changes launch conditions; neither success nor
+failure alone attributes historical timeouts. A bounded sample's interval must
+state its independent-trial assumption and does not prove a fix. Preserve failed
+development attempts separately; no production source, artifact, data, lock or
+default test selection changes. Revisit with discriminating evidence, not a green
+run. Sources [verified by reading/execution]:Python3.12.14 faulthandler/subprocess
+APIs, installed Torch2.13 elastic subprocess handler start_new_session, existing
+distributed tests and fast fake-rank tests; CPU/Gloo only, no native-stack/GPU claim.

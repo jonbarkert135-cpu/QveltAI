@@ -27,7 +27,52 @@ present-tense milestone summaries below; their measurements remain historical.
   GSM8K test/MMLU/ARC evaluation approvals and GSM8K train ingress. None grants
   general production rights; named legal/ML and data/quality gates remain open.
 
+## Current task: bounded Gloo timeout evidence, 2026-11-08
+
+Base main:`65aecf59bf8fb4f597c025e5d346d2fe873e7f40`. Owner requested evidence,
+not a fix. The opt-in [diagnostic](scripts/gloo_diagnostic.py) repeats the existing
+DDP/DCP, numeric replay, packed replay and coordinated NaN-recovery assertions.
+It uses fresh explicit loopback rendezvous endpoints, unique temporary pytest
+roots, per-iteration/total time budgets, rank Python watchdog/SIGUSR1 stacks and
+PID-start-checked cleanup including torchrun's separate rank sessions. Default10
+iterations, hard maximum100; defaults180s per iteration/900s total. It is not
+added to default tests or CI. Thread/interface settings are inherited, with the
+existing tests' OMP1 override; no replay/training/source-artifact changes.
+
+[Verified by CPU execution] fast fake-child tests cover success/failure, inner
+and outer timeout, total-budget stopping, invalid bounds, fresh endpoint records
+and detached-rank stack/cleanup. The first development real attempt never entered
+tests because early module import triggered strict pytest assertion-rewrite
+warnings; a regression test was added, without weakening warnings. A second
+development attempt passed two iterations and hit numeric-DDP's90s inner timeout
+in partial iteration3; it was interrupted after a detached-rank cleanup defect
+was demonstrated by a fake-child test. Two owned orphan ranks were explicitly
+terminated. Preserve these observations separately from the final bounded series.
+Python stacks at CLI call boundaries do not identify the native wait or establish
+a Gloo root cause. Historical failure frequency remains unknown.
+
+[MEASURED, CPU execution] final series stopped at899.837776s total budget:
+7/10 maximum iterations started,2 passed,5 had recorded inner timeouts. Numeric
+replay timed out in3/4/7, packed replay in6, NaN recovery in1. Outer iteration
+limit also stopped4; total limit stopped pytest in7 after all call reports were
+recorded. Do not count interrupted tests as additional failures or passes:
+26 completed calls=21 passed/5 failed/0 skipped, not28 completed calls.
+64 launches/64 distinct ports/128 rank starts; final PID-start check found no
+running owned ranks. Observed failed-set fraction5/7; [ESTIMATE] illustrative
+Wilson95%35.89%..91.78% assumes independent identical trials, not established by
+this shared-host/time-limited series. No historical frequency/root-cause/fix claim.
+See [E-GLOO-DIAG-20261108](EXPERIMENTS.md#e-gloo-diag-20261108-bounded-timeout-evidence-not-a-fix)
+for the exact command, temporary evidence, preflight failures and ranked causes.
+[MEASURED] delivered fake-child regression15 passed in3.29s; Ruff lint/format
+and mypy242 source files passed. Strict MkDocs built in0.66s; local check144
+links/anchors passed and verified DECISIONS/EXPERIMENTS append-only scope.
+Runtime, original distributed tests, configs,
+artifact formats/identities and lockfiles unchanged. Stop for owner review.
+
 ## Current task: reconcile summaries and timeout wording, 2026-11-08
+
+> Archived task record on 2026-11-08; retained unchanged below.
+> See the [current diagnostic task](#current-task-bounded-gloo-timeout-evidence-2026-11-08).
 
 Base main:`334b4c65847d68e2fcf814c650c16f0f03b92e65`. Preserve archived text,
 append to DECISIONS only, and change no behaviour except the timeout error text:
