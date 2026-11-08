@@ -2456,3 +2456,18 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
   No compact dataset, evaluator implementation, trained capability or quality
   gain is verified. Revisit after format/fixture owner review and named legal/ML
   approval; legal clearance and measured quality cannot follow from this ADR.
+
+## Maintenance note — Current summary reconciliation (2026-11-08)
+
+[Verified by reading] source inspected at
+`334b4c65847d68e2fcf814c650c16f0f03b92e65`: scoped benchmark/train ingress,
+portable SFT/DPO/GRPO/evaluation and CPU HTTP/HF/HQQ paths already exist.
+The [current STATE summary](STATE.md#current-implementation-summary) and subsystem
+READMEs distinguish them from unverified deployment/quality; old STATE and
+DATA_CARD prose is explicitly archived with dated pointers, not removed.
+No historical ADR is edited by this note. Correct only the ServingConfig error
+text to "Invalid post-validation queue/generation timeout"; body processing
+precedes [deadline creation](src/qvelt/inference/batching.py). Bounds/timing and
+all artifact formats/identities remain unchanged. Source bytes change, so strict
+source-bound exact-resume checks remain authoritative. This maintenance grants
+no data approval, feature implementation, paid run or quality acceptance.

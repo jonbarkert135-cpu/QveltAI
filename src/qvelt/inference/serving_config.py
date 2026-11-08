@@ -57,7 +57,7 @@ class ServingConfig:
             or not math.isfinite(self.request_timeout)
             or not 0 < self.request_timeout <= 300
         ):
-            raise ConfigError("Invalid end-to-end request timeout")
+            raise ConfigError("Invalid post-validation queue/generation timeout")
         for key, low, high in (
             ("port", 1, 65535),
             ("max_pending", 1, 64),

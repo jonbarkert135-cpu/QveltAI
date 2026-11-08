@@ -2,6 +2,17 @@
 
 Last updated: 2026-11-08. Implementation lead: **Lead agent**; human reviewers pending.
 
+## Owner-requested summary reconciliation, 2026-11-08
+
+- [x] **CPU-only documentation and error-text maintenance:** reconcile scoped
+  source approvals, archive superseded STATE sections without removing their
+  content, distinguish completed A/B from pending C/D/E, and describe implemented
+  CPU evaluation/HTTP/HF/HQQ separately from unverified deployment/quality.
+  Correct only the serving timeout validation wording; timing and bounds remain
+  unchanged. Evidence and checks are in [STATE](STATE.md#current-implementation-summary).
+  Stop for owner review after one local commit; no implementation milestone is
+  authorized by this summary correction.
+
 ## Owner-requested critical coverage maintenance, 2026-11-08
 
 - [x] **CPU-only:** reproduce the critical CI gate failure, then include existing
@@ -127,7 +138,7 @@ past engineering evidence and limitations, not authorization to bypass these gat
 
 | Future acceptance work | Hardware class | Mandatory dependency |
 | --- | --- | --- |
-| A amendment; B/C/D/E as scoped above | CPU; docs validated only after checks, implementations pending | Owner review after each; named human review before production freezes. |
+| A amendment; B/C/D/E as scoped above | CPU-only; A documentation and B codec completed for their recorded scopes; C/D/E pending | Owner review after each; named human review before production freezes. |
 | G1: first small GPU validation | Needs a small rented multi-GPU node; NOT available/authorized | Owner-approved node/cost ceiling and named ML reviewer; inventory/runtime, BF16 parity, DDP/FSDP and real checkpoint/recovery tests against CPU. |
 | Bounded real GPU training, SFT/DPO/RL and sharded initialization/resharding | Needs a small rented multi-GPU node | G1 plus separately reviewed component, data and compute budget. |
 | TP/PP/EP/CP kernel and per-component distributed acceptance | Needs a small rented multi-GPU node | G1 and CPU value/gradient/layout/mask oracles; combined multi-node mesh goes to cluster class. |

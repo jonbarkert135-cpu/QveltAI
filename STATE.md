@@ -2,7 +2,56 @@
 
 Updated:2026-11-08. Implementation lead:Lead agent; named human reviewers pending.
 
+## Current implementation summary
+
+As of 2026-11-08; [verified by reading] code inspected on
+`334b4c65847d68e2fcf814c650c16f0f03b92e65`. This section supersedes old
+present-tense milestone summaries below; their measurements remain historical.
+
+- The portable framework includes [packed SFT](src/qvelt/posttrain/chat.py),
+  [LoRA](src/qvelt/posttrain/lora.py), [DPO](src/qvelt/posttrain/dpo.py), bounded
+  original-fixture [CPU GRPO](src/qvelt/posttrain/grpo_training.py), and
+  [native evaluation](src/qvelt/eval/runner.py) with an optional actual
+  [harness adapter](src/qvelt/eval/harness.py). Their implemented scope does not
+  establish useful reasoning, multi-turn recall or production model quality.
+- [Native serving](src/qvelt/inference/api.py) implements chat JSON/SSE on a
+  bounded CPU engine; [HF export](src/qvelt/inference/huggingface.py) and
+  [HQQ weight-only quantization](src/qvelt/inference/quantization.py) also exist.
+  GPU/cluster deployment, large-run resources and production isolation remain
+  separate unverified acceptance work; request-local KV is not a prefix store.
+- Tokenizer v3 codec Step B is implemented for its recorded CPU scope. Schema3,
+  its schema2 reporting fix, capabilities discovery and the measured-vocabulary
+  design remain the separately gated C -> D -> E work in [PLAN](PLAN.md).
+  Token-count, compaction and effort behaviour remain designs, not HTTP features.
+- [DATA_CARD](DATA_CARD.md#current-inventory-summary) records distinct bounded
+  GSM8K test/MMLU/ARC evaluation approvals and GSM8K train ingress. None grants
+  general production rights; named legal/ML and data/quality gates remain open.
+
+## Current task: reconcile summaries and timeout wording, 2026-11-08
+
+Base main:`334b4c65847d68e2fcf814c650c16f0f03b92e65`. Preserve archived text,
+append to DECISIONS only, and change no behaviour except the timeout error text:
+"Invalid end-to-end request timeout" becomes
+"Invalid post-validation queue/generation timeout". Body reading/validation
+precede queue submission and deadline creation; no body-read deadline is added.
+This one source-string change changes the strict source fingerprint; old exact-
+resume compatibility guards must not be bypassed. No tokenizer/checkpoint/data
+identity, lockfile, approval or model-quality change is authorized. Stop for review.
+
+[Verified by CPU execution] the new timeout-message regression first failed all
+six invalid-timeout cases against the old string (6 failed in1.26s). After the
+one-line correction, serving-policy/documentation unit tests passed15 in1.83s;
+HTTP integration tests passed18 in1.66s. Ruff lint/format passed (240 files),
+mypy reported no issues in240 source files, and strict MkDocs built in1.05s.
+A temporary deterministic check verified190 local links/anchors across seven
+summary documents, verbatim historical section preservation, append-only
+DECISIONS and the exact one-string runtime delta. No full CPU suite, remote CI,
+GPU run or old-checkpoint exact-resume attempt was performed for this maintenance.
+
 ## Current task: restore the critical coverage gate, 2026-11-08
+
+> Archived task record on 2026-11-08; retained unchanged below.
+> See the [current implementation summary](#current-implementation-summary).
 
 Base main:`94f0551ec3b34d4cf5cfed96d6f28008da10c1f7`. [Verified by CPU execution]
 the exact critical CI test selection passed114 tests in9.93s, but coverage report
@@ -460,6 +509,9 @@ model/paid training or old cloud-environment configuration change was performed.
 
 ## Last completed work and evidence
 
+> Archived/superseded on 2026-11-08: historical milestone evidence, not the latest
+> project status. See the [current implementation summary](#current-implementation-summary).
+
 - Portable RFC decoder:all four actual meta counts,tiny CPU backward,independent
   value/gradient/causality/mask oracles,seeded residual initialization and combined
   tied-embedding gradients. Constructors explicitly initialize FP32 parameters
@@ -490,6 +542,9 @@ EXPERIMENTS R012–R014,runbooks/01_data_preparation.md,02_model_execution.md an
 
 ## Open limits
 
+> Archived/superseded on 2026-11-08: limits at that historical milestone, not the
+> current capability list. See the [current implementation summary](#current-implementation-summary).
+
 Five supplied GPU tests did not run. No CUDA/NCCL,packed FSDP,real laptop/shared-
 store/multi-node validation or final-scale memory/throughput measurement. The
 functional cache copies appended state;graph-storage bytes are not allocator peak.
@@ -504,6 +559,10 @@ weighted/limited and may reuse source blocks. Reasoning RL,public evaluation and
 serving/export beyond safetensors are still future milestones.
 
 ## Next three tasks
+
+> Archived/superseded on 2026-11-08: historical work order, not authorization to
+> restart completed milestones. See the [current implementation summary](#current-implementation-summary)
+> and [current owner-gated plan](PLAN.md#owner-gated-frontier-prerequisites-one-reviewed-change-per-step).
 
 1. M7.1:build the versioned evaluation harness on original fixtures first;preserve
    fixed budgets,invalid/truncated counts and benchmark/source clearance gates.

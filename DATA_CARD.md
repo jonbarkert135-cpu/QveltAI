@@ -1,6 +1,6 @@
 # Qvelt data register
 
-Last updated: 2026-11-06. Owner: Lead agent.
+Last updated: 2026-11-08. Owner: Lead agent.
 
 ## D-EVAL-PHASE7-01 — Expanded suite sources and original controls
 
@@ -136,11 +136,30 @@ raw corpora, personal information, or credentials in Git.
 | Source / revision | Role | License / evidence | Permitted intended use | Approval |
 | --- | --- | --- | --- | --- |
 
-The candidate inventory is D01–D13 in `docs/research/data_mix.md`, with publisher
-license statements and all known restrictions per row. The Phase1 inventory initially had zero approved external entries; the later
-Phase3 GSM8K evaluation-only entry is the sole exception. Promote a candidate only after the full gate,
-including authoritative terms/upstream rights, actual shard access, transforms,
-license obligations and exact corpus revisions, has passed.
+### Current inventory summary
+
+As of 2026-11-08, the candidate inventory remains D01–D13 in
+[data_mix.md](docs/research/data_mix.md). Recorded scoped approvals now also
+include bounded GSM8K test and MMLU abstract-algebra evaluation/decontamination
+in [D-EVAL-PHASE7-01](#d-eval-phase7-01-expanded-suite-sources-and-original-controls),
+ARC-Challenge evaluation/decontamination in its
+[review closure](#d-eval-phase7-01-arc-review-closure-before-corpus-download), and
+the separate [bounded GSM8K train ingress](#d-gsm8k-train-bounded-01-original-human-written-training-problems).
+The train ingress is for development question/label import; its record does not
+claim optimization or production clearance. Evaluation approval is not training
+approval. No production external training corpus is approved, and the full
+[approval gate](#approval-gate) still applies. This summary grants no new rights.
+
+### Archived inventory summary
+
+Superseded on 2026-11-08 by the [current inventory summary](#current-inventory-summary).
+The earlier text is retained as a historical approval snapshot, not current scope:
+
+> The candidate inventory is D01–D13 in `docs/research/data_mix.md`, with publisher
+> license statements and all known restrictions per row. The Phase1 inventory initially had zero approved external entries; the later
+> Phase3 GSM8K evaluation-only entry is the sole exception. Promote a candidate only after the full gate,
+> including authoritative terms/upstream rights, actual shard access, transforms,
+> license obligations and exact corpus revisions, has passed.
 
 ## Locally authored test fixtures
 

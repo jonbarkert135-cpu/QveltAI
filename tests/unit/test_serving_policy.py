@@ -38,6 +38,17 @@ def test_serving_policy_strict_roundtrip(tmp_path: Path) -> None:
         load_serving(path)
 
 
+@pytest.mark.parametrize(
+    "timeout", [True, 0.0, -1.0, 301.0, float("nan"), float("inf")]
+)
+def test_timeout_error_names_post_validation_scope(timeout: float) -> None:
+    with pytest.raises(ConfigError) as error:
+        ServingConfig(
+            ArtifactRef("snapshot/manifest.json", "a" * 64), request_timeout=timeout
+        )
+    assert str(error.value) == "Invalid post-validation queue/generation timeout"
+
+
 def test_open_chat_exactly_matches_training_frame() -> None:
     tokenizer = train_tokenizer(
         ["Solve arithmetic. 2+2? 4 3+3?"], TokenizerSettings(vocab_size=288)
