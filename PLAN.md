@@ -44,6 +44,9 @@ freezes require the named expert reviews in ADR-0061, not an agent's approval.
   context with explicit label policy; no guessed historical labels. Keep reasoning
   separate and hash-bound to permission/retention policy. In this same change fix
   schema2 being reported as schema1, with a regression. Stop for review before D.
+  Remaining:all schema3/codec/mask implementation and the reporting fix; the
+  compaction extension in ADR-0066 is a separately reviewed follow-up, not an
+  excuse to expand C or advertise a trained capability. Hardware:CPU-only.
 - [ ] **D:capability discovery — CPU HTTP validation required, UNSTARTED.**
   Add truthful context_window/max_input_tokens/
   max_tokens/capabilities to /v1/models, derived from loaded snapshot and backend.
@@ -51,6 +54,10 @@ freezes require the named expert reviews in ADR-0061, not an agent's approval.
   enforcement is real; reject explicit effort requests. Test limits, output/
   reasoning accounting, false flags, effort rejection and JSON/SSE parity.
   Tokenizer/schema support alone must not enable HTTP tools, effort or summaries.
+  Follow [ADR-0064](DECISIONS.md#adr-0064-canonical-token-accounting-and-the-token-count-api)
+  for accounting semantics and false token_count/prefix_cache/compact support
+  until individually implemented. Remaining:discovery/validation/regression
+  work, not an available token-count endpoint. Hardware:CPU-only.
   Stop for review before E.
 - [ ] **E:design only — CPU documentation/estimate validation, UNSTARTED.**
   Plan V experiments on an owner-approved sample covering the100+ language target,
@@ -62,6 +69,43 @@ freezes require the named expert reviews in ADR-0061, not an agent's approval.
   assumptions. Define criteria without fixing V or language shares. This step
   only designs the study; acquisition/experiments need separate approvals, and
   any GPU experiment also needs G1. Stop for review after E.
+
+### Context-efficiency decisions and follow-ups, 2026-11-08
+
+The owner accepted the assessment, then selected documentation only:record
+[canonical accounting](DECISIONS.md#adr-0064-canonical-token-accounting-and-the-token-count-api),
+[engine cache requirements](DECISIONS.md#adr-0065-tenant-isolated-prefix-cache-identity-and-engine-acceptance)
+and [compaction format/evaluation](DECISIONS.md#adr-0066-versioned-compaction-with-source-linked-memory-and-drift-evaluation).
+These contracts do not implement APIs, caches, schemas, evaluators or a model.
+Preserve C -> D -> E, each with its own owner review stop; this docs commit does
+not authorize C. E remains a CPU-only measured-vocabulary study DESIGN, with all
+language/data approvals and the actual study still pending. No final V is chosen.
+
+Token accounting is the first subsequent context-efficiency implementation,
+after C/D/E and separate owner approval. Do NOT build a custom block-store
+prefix cache or train a compaction model now. All following rows are gated,
+without dates, reservations, spending or automatic continuation.
+
+| Step and objective | Hardware class | Remaining work / proof / gate |
+| --- | --- | --- |
+| This ADR/STATE/PLAN change | CPU-only documentation checks | Three ADRs and owner decisions; link/sequence/strict-build/scope checks, one commit, STOP for owner review. |
+| CE1a:canonical accounting core, first context-efficiency implementation | CPU-only | After reviewed C/D/E:shared renderer/category accounting in inference/chat and API consumers; independent token/limit/stop/unknown-count fixtures; preserve legacy codecs, RNG and lineage guards. Review stop before CE1b. |
+| CE1b:token-count HTTP and usage contract | CPU-only | After CE1a review:POST /v1/token-count and discovery/usage integration; count equals actual generation framing, auth/resource limits, no cache side effects, JSON/SSE parity, truthful unsupported fields. Review stop. |
+| CE2a:compact task format/schema extension | CPU-only | After CE1 review:versioned source-linked memory, target-only masks, pinned categories and cleared-result placeholders; parser/gradient/error/truncation/source-revision tests. No training or automatic history mutation. Review stop. |
+| CE2b:compact evaluation fixtures and owner rubric | CPU-only | After CE2a review:own synthetic gold cases first, repeated-compaction drift against originals, contradictions and matched-budget truncation/extractive baselines. Owner conversations only after specific consent/rights/secret/PII review; no other real-user data. No model quality claim from fixture oracles. Review stop. |
+| CE3:future pinned GPU engine acceptance, no custom store | Needs a small rented GPU node | G1, owner budget and engine/model/runtime/security review first; vLLM or SGLang chosen later. ADR-0065 identity/isolation/expiry/deletion/parity tests; benchmark repeated long prefixes first, multi-user load second, single-chat latency third. Review stop. |
+| CE4:target long-context/cluster acceptance | Needs a cluster | CE3 and cluster/data/ML/legal/budget gates; target total<=1,000,000 and output<=128,000 remain unverified. No training or benchmark scheduled. Review stop. |
+
+Owner answers:private KV is memory-only with a short finite TTL and chat deletion;
+TTL duration/expiry semantics remain unset. First cache is fully private; shared
+public prefixes only later under a server allowlist. Originals/summaries follow
+user retention/deletion, enterprise retention configurable, legal review pending.
+Always pin user instructions/constraints, decisions, open tasks, unresolved
+errors, paths/identifiers and permission/security decisions. Until a named ML
+reviewer exists, the owner reviews samples with ADR-0066's plain-language rubric;
+this does not replace production expert sign-off. First eval inputs are own
+synthetic data and the owner's own specifically consented conversations only.
+No new data ingestion, model training, custom cache or paid GPU work is approved.
 
 ### Hardware classes and first small GPU validation gate
 

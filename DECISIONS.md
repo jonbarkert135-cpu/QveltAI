@@ -2185,3 +2185,266 @@ remote green. No GPU/model-quality/safety acceptance or actual release/upload.
 - **Limits/revisit:** no final V, full million-entry BPE, multilingual quality,
   GPU execution, production corpus or model release was validated. Revisit under
   Step E measured corpus criteria and named human freeze review; stop before C.
+
+## ADR-0064 — Canonical token accounting and the token-count API
+
+- **Date/status:** 2026-11-08; owner-approved direction, implementation pending;
+  this entry specifies a contract, not an available endpoint.
+- **Context/links:** extend [ADR-0055](#adr-0055-truthful-deployment-capabilities-and-shared-token-budgets)
+  using [schema3](#adr-0054-sft-schema-3-with-typed-tool-blocks-and-shifted-supervision)
+  and [effort accounting](#adr-0057-effort-conditioned-training-and-enforced-compute-budgets).
+  Token accounting is the first context-efficiency implementation workstream;
+  preserve the separately reviewed C -> D -> E sequence in [PLAN](PLAN.md).
+- **Decision:** count and generation must use the same canonical validated
+  renderer and token IDs. Count all system/history/content, tool definitions and
+  results, retained reasoning, task metadata rendered into the prompt, and chat
+  framing. No silent normalization, hidden truncation or client-side estimates
+  substituted for actual encoding. Bind counts to model/checkpoint revision,
+  tokenizer payload/provenance hash, protocol/template and budget-policy revision.
+  Cache reuse never reduces logical context occupancy.
+- **Proposed endpoint:** POST /v1/token-count accepts model/messages and only
+  options actually supported by the loaded codec/backend. Future tools/task/effort
+  fields require their own support; do not accept them merely for counting.
+  Return accounting_schema_version, identity fields, prompt_tokens, a disjoint
+  prompt_tokens_breakdown, context_window, max_input_tokens, max_tokens,
+  max_completion_allowed, fits and constraint violations. Content, historical
+  reasoning, tools and framing categories sum to prompt_tokens; document category
+  ownership rather than counting the same tokens twice. No generation, cache
+  warming, cache-presence probing or history mutation occurs. Authenticate and
+  bound body/tokenization resources before processing; preserve strict errors.
+- **Admission meaning:** with actual rendered prompt P, served context C and
+  output cap O, max_completion_allowed=max(0,min(O,C-P)). fits requires at least
+  one output token, all static request limits, and any explicit requested budget
+  R to satisfy 1<=R<=O and P+R<=C. Distinguish context/body/message validity from
+  transient queue/batch/cache admission: a count response reserves no capacity
+  and is not a promise that a later request will be admitted. Count endpoints
+  must not require a client to guess or insert special-token spellings.
+- **Usage contract:** retain prompt_tokens, completion_tokens and total_tokens;
+  total=P+completion. prompt_tokens_details.cached_tokens is a subset of P,
+  zero only when reuse is known absent; unsupported/unknown measurements are
+  explicit, never fabricated. completion_tokens includes all sampled actions,
+  including terminal controls and output suppressed by stop rendering. Add
+  completion_tokens_details.reasoning_tokens only with a validated semantic
+  classifier; otherwise null with its capability false. Define disjoint final,
+  reasoning, tool-call, summary and control/other output categories. Cached reads,
+  cache writes and physically recomputed input are separate observations, not
+  interchangeable measures of FLOPs or context. Auxiliary compaction, retries,
+  model subcalls and tool work need a separate aggregate request ledger; never
+  hide them in a shorter visible answer or rewrite earlier usage retrospectively.
+- **Discovery:** extend ADR-0055 with versioned token_count, prefix_cache and
+  compact support objects. Publish tokenizer/template identity and actual limits;
+  compact includes supported and versions. Until implemented, all three remain
+  unsupported; effort_levels=[], default_effort=null, and unsupported effort,
+  tools, structured outputs and image input are rejected. Existing historical
+  reasoning input is distinct from separate reasoning output or summaries.
+  Current native C<=min(snapshot.context,2048), O<=256 are code-inspected bounds,
+  not long-context measurements; the owner target remains total<=1,000,000 and
+  output<=128,000 only after validation. Output reasoning shares R, not an extra
+  allowance. Numeric production budgets are not selected here.
+- **Acceptance/hardware:** CPU-only contract fixtures must compare count with
+  actual admitted prompt IDs, including Unicode, framing, supported reasoning,
+  limits, unknown fields, literal controls and JSON/SSE totals. Test unsupported
+  v3 chat until C is implemented, cancellation, stops and auxiliary accounting;
+  property tests use independent enumerated token/category references. Native
+  tests do not prove a later GPU adapter reports the same contract correctly.
+- **Rationale/alternatives:** one authoritative renderer prevents app/server
+  budget disagreement. Alternatives were text-length heuristics, a separate
+  counting template, advertising future limits, or discounting cached tokens.
+- **Evidence/revisit:** [verified by reading] owner decisions on 2026-11-08 and
+  [chat framing](src/qvelt/inference/chat.py), [admission](src/qvelt/inference/generation.py),
+  [HTTP schema/usage/discovery](src/qvelt/inference/api.py) at
+  `cfa0aa55f39aef6a79d0496e6e32e04ba88f3861`. The endpoint, extended usage and
+  capabilities are [unverified/unimplemented]. Revisit after each renderer,
+  backend or policy revision; do not weaken existing resume/lineage checks.
+
+## ADR-0065 — Tenant-isolated prefix-cache identity and engine acceptance
+
+- **Date/status:** 2026-11-08; owner-approved requirements for future engine
+  selection; no prefix store or deployment is implemented by this decision.
+- **Context/links:** extend [ADR-0056](#adr-0056-separate-exact-replay-topology-migration-and-statistical-reproducibility),
+  [accounting](#adr-0064-canonical-token-accounting-and-the-token-count-api),
+  [privacy](#adr-0059-data-rights-consent-and-legal-review-gates) and
+  [hardware gates](#adr-0061-named-human-review-and-hardware-validation-gates).
+- **Adoption boundary:** do NOT build a custom block-store prefix cache now.
+  Later compare pinned vLLM/SGLang revisions and adopt an engine only after
+  source/license/dependency/security review and execution against these
+  requirements. Engine choice, block size, layout and performance are undecided;
+  a vendor guide or compatible export alone does not establish acceptance.
+- **Private identity:** cache hits require exact compatible token prefixes and
+  an authenticated server-derived tenant namespace plus chat scope/deletion epoch
+  and a server-controlled salt. A chat-specific namespace is the first-version
+  default requirement so deletion has an unambiguous scope; cross-chat sharing
+  would need separate retention/deletion review. Include verified checkpoint/
+  weights/config and adapters, tokenizer payload/provenance, protocol/template/
+  task version, RoPE/positions/document masks, dtype/KV quantization/layout and
+  compatible execution/kernel policy. Client-supplied tenant/salt fields cannot
+  grant access to another scope. The present single bearer key is not proof of
+  tenant identity; a trusted identity adapter is a prerequisite.
+- **Hash requirements:** use a collision-resistant, deterministic cryptographic
+  prefix chain, such as SHA-256 over a domain-separated canonical identity and
+  then previous digest, block index/length, fixed-width token IDs and relevant
+  position/mask metadata. Never Python's built-in hash. Review the selected
+  engine's actual algorithm/serialization and collision handling; compare stored
+  tokens/identity when accepting a candidate or demonstrate an equivalent safe
+  validation. Do not accept arbitrary client KV tensors. Salt/namespace material
+  must not leak in logs. Sampling seed/temperature need not enter deterministic
+  prefill identity; RNG and repetition history remain per request. Disable reuse
+  for unvalidated stochastic/batch-dependent prefill paths.
+- **Lifetime:** first version is fully private, memory-only KV, with a short,
+  finite TTL and deletion with the chat. No KV disk spill, checkpoint, backup or
+  durable cache logs. Actual duration and idle/absolute expiry policy need owner
+  and security/legal review; this ADR selects no seconds/default. Expiry,
+  deletion, access revocation and model revision changes invalidate access and
+  release retained blocks; active work must cancel or stop retaining deleted
+  state under an explicit policy. Do not claim forensic memory erasure. Raw
+  originals and summaries follow user retention/deletion; enterprise retention
+  is configurable and legal review remains pending. Retention never implies
+  permission to train. Shared public prefixes are deferred; any later exception
+  must be an explicit immutable server allowlist, never inferred from user text.
+- **Resource/security contract:** record physical shared/private/temporary memory,
+  allocator overhead and logical request budgets; bound tenant quotas and cache
+  admission, eviction and cancellation. Test cross-tenant/chat access, salt and
+  stale-state mismatch, poisoning, forced hash collision, malformed prefixes,
+  deletion/expiry and no prompt/hash logging. Partitioning hits does not prove
+  absence of timing leakage via shared hardware, load or eviction; review those
+  channels and use stronger isolation where required. Avoid public cache probes.
+- **Replay boundary:** CPU cached/uncached equivalence uses identical canonical
+  execution and prefill chunk schedules and requires bitwise equality there.
+  Different batching/kernel/device/precision schedules require declared measured
+  tolerances, not an exactness claim. Preserve model ownership/stale-weight
+  validation and next-token boundary computation; KV alone is not next logits.
+  Engine caches are disposable serving state, not training checkpoint contents.
+  Changes to RL rollout execution/log-probabilities require separate lineage and
+  replay review; ADR-0056 does not authorize bypassing compatibility guards.
+- **Invalidation/accounting:** changing old content or clearing a tool result
+  invalidates the affected block and subsequent causal states. Do not splice old
+  suffix KV after an edit/summary. Compare compaction/refetch/rebuild cost against
+  the warm-cache baseline over expected later turns; no universal token-saving
+  threshold is established. Report cached tokens under ADR-0064 without reducing
+  logical context or implying measured acceleration.
+- **Acceptance/hardware:** CPU-only fixtures can specify identity, isolation and
+  deterministic numerical oracles without building a store. Actual engine
+  acceptance needs a small rented GPU node after G1, explicit owner budget and
+  pinned model/engine/runtime/workload. Priority is repeated long prefixes, then
+  multi-user load, then single-chat latency. Measure cold/warm parity, cached
+  input counts, memory and latency distributions. Cluster-length acceptance is
+  separate; no paid run is scheduled.
+- **Rationale/alternatives:** adopt tested storage/scheduling primitives while
+  keeping QVELT privacy and replay requirements authoritative. Alternatives were
+  a custom store now, unsalted cross-tenant reuse, persistent private KV or
+  assuming an engine's default prefix cache satisfies these requirements.
+- **Evidence/revisit:** [verified by reading] owner decisions on 2026-11-08 and
+  [request-local cache](src/qvelt/inference/generation.py),
+  [cache validation](src/qvelt/model/cache.py), [HTTP auth](src/qvelt/inference/api.py)
+  at `cfa0aa55f39aef6a79d0496e6e32e04ba88f3861`. No selected GPU engine, TTL,
+  privacy enforcement, performance or cluster claim is verified. Revisit upon
+  engine proposal, identity integration, retention review and actual hardware.
+
+## ADR-0066 — Versioned compaction with source-linked memory and drift evaluation
+
+- **Date/status:** 2026-11-08; owner-approved format/evaluation direction;
+  implementation limited to future task/schema and CPU fixtures. Do NOT train a
+  compaction model now or claim the current model can summarize faithfully.
+- **Context/links:** extend [ADR-0054](#adr-0054-sft-schema-3-with-typed-tool-blocks-and-shifted-supervision),
+  [accounting/capabilities](#adr-0064-canonical-token-accounting-and-the-token-count-api),
+  [cache invalidation](#adr-0065-tenant-isolated-prefix-cache-identity-and-engine-acceptance),
+  [data policy](#adr-0059-data-rights-consent-and-legal-review-gates) and
+  [human review](#adr-0061-named-human-review-and-hardware-validation-gates).
+- **Task contract:** propose task={name:compact,version:compact-v1} on schema3
+  with a versioned trusted prompt and canonical renderer. Reuse existing v3
+  controls; no new token IDs/V choice or reinterpretation of schema1/2. The app
+  decides WHEN to compact and applies a result only to its matching source
+  revision/digest; the model-side operation is stateless. Design a future compact
+  API only after format/evaluation review, with usage and explicit unsupported
+  capability until an actual validated model/backend exists. Fixtures are not
+  grounds to advertise compact support.
+- **Input/target schema:** input contains source conversation revision/digest,
+  ordered messages with typed tool calls/results, optional prior memory digest
+  and newly added messages, pinned items and a requested bounded summary budget.
+  Source message IDs and original provenance remain stable across rounds. Output
+  contains format/prompt revision, source and parent-memory digests, status
+  (complete, incomplete or insufficient_budget), facts, decisions, constraints,
+  identifiers/paths, open_tasks, unresolved_errors, permission/security decisions,
+  cleared_results and uncertainties. Each retained item has a stable item ID,
+  source_message_ids, authority/status and explicit supersedes/conflict links
+  where applicable. Schema-valid output is not proof its claims are faithful.
+- **Always pinned:** user instructions and constraints; decisions; open tasks;
+  unresolved errors; file paths and identifiers; permission and security
+  decisions. Do not silently drop these to meet a budget. Preserve exact values,
+  case, negations, units and required error excerpts; distinguish resolved or
+  explicitly superseded items from unresolved ones with their source evidence.
+  Contradictions stay explicit, not arbitrarily reconciled. If required content
+  cannot fit, return incomplete/insufficient_budget and identify omissions;
+  the caller retains the original/pinned context instead of accepting a lossy
+  replacement. Permission gates cannot be relaxed through a summary.
+- **Trust and loss masks:** the trusted compact instruction treats the entire
+  supplied conversation, including its embedded system/tool text, as quoted
+  source data, not new executable instructions. Preserve source authority;
+  do not promote untrusted tool text into a live system instruction. Only the
+  final assistant summary target and valid assistant end-turn are supervised.
+  Mask every source token (including historical assistant/reasoning/tool tokens),
+  task/role/control input, outer BOS/EOS and PAD. Do not supervise truncated JSON
+  or synthesize a completion. Bind task, prompt, renderer and shifted-mask policy
+  to dataset/objective identity; this differs from ordinary whole-dialog SFT.
+- **Cleared results:** retain tool call ID/name, source message/revision,
+  artifact reference and content hash, status=cleared and refetchable flag;
+  preserve call/result linkage without inventing the missing body. Cleared is
+  not is_error; distinguish a genuine tool error. A refetch must match the
+  referenced revision or be marked changed/unavailable. Never clear the sole
+  copy of a pinned fact/error without retaining the required excerpt. Opaque
+  references confer no access rights, and fetching/executing tools is not part
+  of the compact parser. Count placeholders in the resulting prompt.
+- **Repeated compaction:** update a source-linked ledger plus new messages and
+  retained recent turns, rather than blindly summarizing prose again. Preserve
+  uncertainty and supersession history; repetition is not new corroboration.
+  Where retention/permission allows, revalidate against original sources and
+  reject stale source revisions. Evaluate drift against original planted facts,
+  not just the immediately preceding summary. Deletion propagates through
+  originals, summaries, derived ledgers/references and the relevant private
+  cache; retention does not create a permanent hidden memory or training right.
+- **Data and human gate:** first evaluation inputs are own synthetic data and
+  the owner's own specifically consented conversations only; no other real-user
+  data or external teacher outputs. This is source eligibility, not blanket
+  ingestion permission: record exact revision, rights, consent, retention and
+  secret/PII review before processing any supplied conversation. Prefer safe
+  synthetic fixtures for committed tests; do not commit private transcripts.
+  Originals/summaries follow user deletion/retention; enterprise retention is
+  configurable, separately reviewed, and not an approved corpus. Legal review
+  remains pending. Until a named ML reviewer exists, the owner reviews samples
+  using the plain-language rubric below; that is not production expert sign-off.
+
+  | Owner sample-review question | Record |
+  | --- | --- |
+  | Are all required instructions, decisions, tasks, errors, paths/IDs and permission/security limits preserved? | Missing/changed item and its source; critical omission blocks replacement. |
+  | Does each claimed fact match its source, including numbers and negations? | Unsupported claim, contradiction or exact-value error. |
+  | Are unknowns, conflicts and cleared tool results clearly identified? | False certainty, invented content or broken result link. |
+  | Can work continue correctly, and does the next compaction preserve the same essentials? | Follow-up task result and differences from the original, not only the last summary. |
+  | Is the summary useful within its budget, or does it honestly report that it cannot fit? | Token counts, readability and incomplete status; brevity alone does not pass. |
+
+- **CPU acceptance fixtures:** deterministic source/gold-ledger generators with
+  held-out templates/families, language and fact-position slices; immutable seeds,
+  corpus/prompt hashes and matched token budgets. Measure critical and overall
+  planted-fact retention, unsupported claims/contradictions, exact identifiers,
+  source links, follow-up QA correctness, refetch status, source/summary token
+  ratio and complete compaction cost. Compare repeated-round decay against the
+  original facts, and truncation/extractive baselines at equal retained budgets.
+  Include prompt injection, supersession, conflicting facts, cleared vs error,
+  orphan tool links, insufficient budget and stale/deleted sources. Evaluator
+  fixtures test known answers without training; scripted oracle summaries are
+  labelled as fixtures, never model-generated evidence. Human entailment review
+  remains necessary outside deterministic planted-fact checks. Numerical fixture
+  sizes and quality acceptance thresholds need a reviewed experiment plan.
+- **Hardware/lineage:** format, masks and fixture evaluators are CPU-only. They
+  change no current artifact or training objective in this docs task. Future
+  compact training is deferred and needs separate data/budget/ML review and a
+  new objective lineage; GPU claims need G1 and a small rented node, target
+  long-context quality needs a cluster. None is scheduled or validated here.
+- **Rationale/alternatives:** source-linked typed memory makes omissions and
+  drift inspectable. Alternatives were untracked prose summary-of-summary,
+  automatic server history rewriting, truncation alone or training immediately.
+- **Evidence/revisit:** [verified by reading] owner answers on 2026-11-08 and
+  [existing schema/masks](src/qvelt/posttrain/chat.py) at
+  `cfa0aa55f39aef6a79d0496e6e32e04ba88f3861`; source/license policy is ADR-0059.
+  No compact dataset, evaluator implementation, trained capability or quality
+  gain is verified. Revisit after format/fixture owner review and named legal/ML
+  approval; legal clearance and measured quality cannot follow from this ADR.

@@ -2,6 +2,62 @@
 
 Updated:2026-11-08. Implementation lead:Lead agent; named human reviewers pending.
 
+## Current task: context-efficiency owner decisions, documentation only
+
+Base main:`cfa0aa55f39aef6a79d0496e6e32e04ba88f3861`. On2026-11-08 the owner
+accepted the context-efficiency audit and requested one documentation-only
+commit, then STOP for review. [ADR-0064](DECISIONS.md#adr-0064-canonical-token-accounting-and-the-token-count-api),
+[ADR-0065](DECISIONS.md#adr-0065-tenant-isolated-prefix-cache-identity-and-engine-acceptance)
+and [ADR-0066](DECISIONS.md#adr-0066-versioned-compaction-with-source-linked-memory-and-drift-evaluation)
+record contracts and acceptance requirements, not implemented capabilities.
+
+Owner decisions received, not independently verified enforcement:
+
+- Private KV cache is memory-only with a short finite TTL, deleted with its chat.
+  Numeric TTL and idle/absolute expiry semantics are not chosen. Originals and
+  summaries obey user retention/deletion; enterprise retention is configurable;
+  legal review remains pending. These are requirements, not deployed controls.
+- First cache is fully private. Shared public prefixes are deferred to a later
+  explicit server allowlist. No custom block-store prefix cache is to be built
+  now; a later pinned vLLM/SGLang selection must meet ADR-0065, not assumed defaults.
+- Always pin user instructions/constraints, decisions, open tasks, unresolved
+  errors, file paths/identifiers and permission/security decisions. If these
+  cannot fit, report incomplete/insufficient_budget; do not silently discard them.
+- Until a named ML reviewer exists, the owner reviews compact samples using a
+  plain-language rubric. This is not named-expert production or legal sign-off.
+- First evaluation sources:own synthetic data and the owner's own specifically
+  consented conversations only; no other real-user data. Exact corpus permission,
+  secret/PII filtering and retention still precede processing; private transcripts
+  are not committed. External teacher outputs remain OFF.
+- First GPU benchmark priority:repeated long prefixes, then multi-user load,
+  then single-chat latency. No hardware, budget or paid run is authorized here.
+
+Token accounting is first among the context-efficiency implementation follow-ups;
+the previously agreed C -> D -> E order and review stops remain. C is unstarted:
+typed tools/schema3/masks and schema2 report fix remain. D is unstarted:truthful
+discovery/unsupported-feature tests remain. E is unstarted:multilingual measured-V
+experiment design remains; no final V or corpus approval. [PLAN](PLAN.md) labels
+each follow-up CPU-only, small rented GPU node, or cluster. No compaction training
+now:only future task format/schema and CPU evaluator fixtures, separately reviewed.
+
+Current runtime remains the audited baseline:request-local concatenation KV,
+no shared prefix cache, token-count endpoint, compact task/evaluator or extended
+capability discovery. Schema3 remains unimplemented and v3 chat is explicitly
+rejected. No code/config/tokenizer/checkpoint/lockfile/artifact change or new ML
+result occurs in this task. Existing replay/lineage guards remain authoritative;
+a docs commit is not permission to override source/runtime compatibility checks.
+The owner target is not verified scale/quality and establishes no comparison to
+other models. Historical evidence below is retained; this section takes priority
+over old next-step suggestions.
+
+Documentation validation:the existing documentation-tool suite passed2 tests
+in0.15s; strict MkDocs build passed in0.72s. Checked114 local links/anchors in
+DECISIONS/STATE/PLAN, consecutive ADR0001..0066, append-only ADR history, C -> D
+-> E ordering and the exact three-file docs-only scope. git diff --check passes.
+These checks validate documents only; no new runtime/ML/GPU/security/privacy
+enforcement result is claimed. Stop after this single commit for owner review;
+no implementation or data processing starts.
+
 ## Previous task: Step A owner-spec amendment, documentation only
 
 Base main:`f15b8274a9cf493acc640bc2515d078ce92483b4`. The owner supplied the full
@@ -454,7 +510,7 @@ git diff --check and docs-only scope checks passed. The existing summarizer's
 --help executed and confirmed directory/--archive arguments. No real-run archive,
 loss analysis, training/eval execution, MFU measurement or scale claim was made.
 
-## Current task — Step B tokenizer v3 codec, 2026-11-08
+## Previous task — Step B tokenizer v3 codec, 2026-11-08
 
 Owner continuation selected the next reversible implementation step from main
 09446b446830a2e8b38bb1a5a696db1eea8116eb. [ADR-0063](DECISIONS.md#adr-0063-explicit-v3-codec-selection-without-changing-legacy-identities)
